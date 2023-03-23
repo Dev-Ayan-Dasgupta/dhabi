@@ -9,4 +9,6 @@ class ImageConstants {
   static const String onboarding4 = "${backgroundRoot}onboarding4.png";
 
   static const String splashIcon = "${iconsRoot}splash.svg";
+  static const String arrowBack = "${iconsRoot}arrow_back.svg";
+  static const String checkCircle = "${iconsRoot}check_circle.svg";
 }

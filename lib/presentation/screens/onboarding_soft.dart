@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:dialup_mobile_app/presentation/widgets/core/gradient_button.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/solid_button.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator.dart';
-import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
-import 'package:dialup_mobile_app/utils/constants/textstyles.dart';
 import 'package:dialup_mobile_app/utils/lists/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -95,22 +94,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           count: onboardingSoftList.length,
                           page: index,
                         ),
-                        SizedBox(height: (24 / Dimensions.designHeight).h),
+                        const SizeBox(height: 24),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(
-                              "Login",
-                              style: TextStyles.primaryBold.copyWith(
-                                fontSize: (20 / Dimensions.designWidth).w,
+                            InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(context, Routes.login);
+                              },
+                              child: Text(
+                                "Login",
+                                style: TextStyles.primaryBold.copyWith(
+                                  fontSize: (20 / Dimensions.designWidth).w,
+                                ),
                               ),
                             ),
-                            SizedBox(
-                              width: (10 / Dimensions.designWidth).w,
-                            ),
+                            const SizeBox(width: 10),
                           ],
                         ),
-                        SizedBox(height: (28 / Dimensions.designHeight).h),
+                        const SizeBox(height: 28),
                         Text(
                           "DHABI",
                           style: TextStyle(
@@ -120,7 +122,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             fontSize: (16 / Dimensions.designWidth).w,
                           ),
                         ),
-                        SizedBox(height: (10 / Dimensions.designHeight).h),
+                        const SizeBox(height: 10),
                         SizedBox(
                           width: 67.w,
                           child: Text(
@@ -144,15 +146,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Column(
                       children: [
                         GradientButton(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.registration);
+                          },
                           text: "Get Started",
                         ),
-                        SizedBox(height: (20 / Dimensions.designHeight).h),
+                        const SizeBox(height: 20),
                         SolidButton(
                           onTap: () {},
                           text: "Explore as a Guest",
                         ),
-                        SizedBox(height: (40 / Dimensions.designHeight).h),
+                        const SizeBox(height: 40),
                       ],
                     ),
                   ),
