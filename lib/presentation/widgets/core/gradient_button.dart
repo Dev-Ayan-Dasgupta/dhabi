@@ -35,7 +35,7 @@ class GradientButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: width ?? 100.w,
-        height: height ?? (50 / Dimensions.designHeight).h,
+        height: height ?? (60 / Dimensions.designHeight).h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
             Radius.circular(borderRadius ?? (10 / Dimensions.designHeight).h),

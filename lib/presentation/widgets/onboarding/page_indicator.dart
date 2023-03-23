@@ -18,17 +18,38 @@ class PageIndicator extends StatefulWidget {
   State<PageIndicator> createState() => _PageIndicatorState();
 }
 
-class _PageIndicatorState extends State<PageIndicator> {
+class _PageIndicatorState extends State<PageIndicator>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _progressAnimationController;
+  late final Animation _progressLengthAnimation;
+
   final padding = (28 / Dimensions.designWidth);
   final borderRadius = (8 / Dimensions.designWidth);
   final space = (10 / Dimensions.designWidth);
+
+  @override
+  void initState() {
+    super.initState();
+    _progressAnimationController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 5));
+    _progressLengthAnimation = Tween<double>(
+            begin: 0,
+            end: (100.w - (2 * padding.w) - (widget.count * space.w)) /
+                widget.count)
+        .animate(CurvedAnimation(
+            parent: _progressAnimationController, curve: Curves.linear));
+    _progressAnimationController.addListener(() {
+      setState(() {});
+    });
+    _progressAnimationController.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 100.w,
       height: (6 / Dimensions.designHeight).w,
       child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: ListView.separated(
@@ -69,19 +90,30 @@ class _PageIndicatorState extends State<PageIndicator> {
                               color: const Color.fromRGBO(217, 217, 217, 1),
                             ),
                           )
-                        : Container(
-                            width: (100.w -
-                                    (2 * padding.w) -
-                                    (widget.count * space.w)) /
-                                widget.count,
-                            height: (6 / Dimensions.designHeight).w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(borderRadius),
+                        : index == widget.page
+                            ? Container(
+                                width: _progressLengthAnimation.value,
+                                height: (6 / Dimensions.designHeight).w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(borderRadius),
+                                  ),
+                                  color: const Color.fromRGBO(217, 217, 217, 1),
+                                ),
+                              )
+                            : Container(
+                                width: (100.w -
+                                        (2 * padding.w) -
+                                        (widget.count * space.w)) /
+                                    widget.count,
+                                height: (6 / Dimensions.designHeight).w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(borderRadius),
+                                  ),
+                                  color: Colors.transparent,
+                                ),
                               ),
-                              color: Colors.transparent,
-                            ),
-                          ),
                   ],
                 );
               },
@@ -90,5 +122,11 @@ class _PageIndicatorState extends State<PageIndicator> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _progressAnimationController.dispose();
+    super.dispose();
   }
 }

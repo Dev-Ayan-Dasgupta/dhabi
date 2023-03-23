@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dialup_mobile_app/presentation/widgets/core/gradient_button.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/solid_button.dart';
 import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator.dart';
@@ -15,11 +17,40 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  final padding = (28 / Dimensions.designWidth);
+  final space = (10 / Dimensions.designWidth);
+
+  PageController pageController = PageController(initialPage: 0);
+
+  int page = 0;
+  int time = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    animateToPage();
+  }
+
+  animateToPage() async {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      time++;
+      if (time == 5 || time == 10 || time == 15) {
+        pageController.animateToPage(page + 1,
+            duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+        page++;
+        if (page == 3) {
+          timer.cancel();
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: PageView.builder(
+        controller: pageController,
         itemCount: onboardingSoftList.length,
         itemBuilder: (context, index) {
           return Stack(
@@ -61,7 +92,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         PageIndicator(
-                            count: onboardingSoftList.length, page: index),
+                          count: onboardingSoftList.length,
+                          page: index,
+                        ),
                         SizedBox(height: (24 / Dimensions.designHeight).h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -114,7 +147,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           onTap: () {},
                           text: "Get Started",
                         ),
-                        SizedBox(height: (32 / Dimensions.designHeight).h),
+                        SizedBox(height: (20 / Dimensions.designHeight).h),
                         SolidButton(
                           onTap: () {},
                           text: "Explore as a Guest",
