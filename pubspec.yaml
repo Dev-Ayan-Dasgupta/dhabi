@@ -42,3 +42,19 @@ flutter:
       fonts:
         - asset: assets/fonts/HeitiTC/heiti-tc-light.ttf
           weight: 300
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/Montserrat-Light.woff
+          weight: 200
+        - asset: assets/fonts/Montserrat/Montserrat-Italic.woff
+          style: italic
+        - asset: assets/fonts/Montserrat/Montserrat-Regular.woff
+          weight: 300
+        - asset: assets/fonts/Montserrat/Montserrat-Medium.woff
+          weight: 400
+        - asset: assets/fonts/Montserrat/Montserrat-Semibold.woff
+          weight: 500
+        - asset: assets/fonts/Montserrat/Montserrat-Bold.woff
+          weight: 600
+        - asset: assets/fonts/Montserrat/Montserrat-Extrabold.woff
+          weight: 700

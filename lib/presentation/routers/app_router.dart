@@ -1,4 +1,5 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/onboarding.dart';
 import 'package:dialup_mobile_app/presentation/screens/splash.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,10 @@ class AppRouter {
       case Routes.splash:
         return MaterialPageRoute(
           builder: (_) => const SplashScreen(),
+        );
+      case Routes.onboarding:
+        return MaterialPageRoute(
+          builder: (_) => const OnboardingScreen(),
         );
       default:
         return MaterialPageRoute(
