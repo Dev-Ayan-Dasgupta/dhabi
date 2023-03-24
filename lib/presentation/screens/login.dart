@@ -153,7 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    // TODO
+                  },
                   child: Text(
                     "Forgot your email ID or password?",
                     style: TextStyles.primaryMedium.copyWith(
@@ -168,5 +170,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

@@ -199,4 +199,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
 }

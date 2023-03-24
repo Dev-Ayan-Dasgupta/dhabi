@@ -1,11 +1,5 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/screens/login.dart';
-import 'package:dialup_mobile_app/presentation/screens/not_available.dart';
-import 'package:dialup_mobile_app/presentation/screens/onboarding_soft.dart';
-import 'package:dialup_mobile_app/presentation/screens/otp.dart';
-import 'package:dialup_mobile_app/presentation/screens/registration.dart';
-import 'package:dialup_mobile_app/presentation/screens/select_account_type.dart';
-import 'package:dialup_mobile_app/presentation/screens/splash.dart';
+import 'package:dialup_mobile_app/presentation/screens/index.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {

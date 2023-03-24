@@ -124,6 +124,8 @@ class _OTPScreenState extends State<OTPScreen> {
                                       isError: false,
                                       isComplete: true,
                                       errorCount: pinputErrorCount));
+                                  // TODO: Probably call navigation to next screen here
+                                  // TODO: maybe navigate after a small delay to show the green for sometime or log session in api call in which case don;t need to add delay
                                 } else {
                                   pinputErrorCount++;
 
@@ -183,14 +185,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         builder: (context, state) {
                           return InkWell(
                             onTap: () {
-                              if (seconds == 0) {
-                                seconds = 30;
-                                startTimer();
-                                final OTPTimerBloc otpTimerBloc =
-                                    context.read<OTPTimerBloc>();
-                                otpTimerBloc
-                                    .add(OTPTimerEvent(seconds: seconds));
-                              }
+                              resendOTP();
                             },
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
@@ -212,6 +207,7 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
               Column(
                 children: [
+                  //TODO: Potentially remove it - may not be needed as we will call API onChanged in pinput
                   GradientButton(onTap: () {}, text: "Validate"),
                   const SizeBox(height: 32),
                 ],
@@ -221,5 +217,20 @@ class _OTPScreenState extends State<OTPScreen> {
         ),
       ),
     );
+  }
+
+  void resendOTP() {
+    if (seconds == 0) {
+      seconds = 30;
+      startTimer();
+      final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
+      otpTimerBloc.add(OTPTimerEvent(seconds: seconds));
+    }
+  }
+
+  @override
+  void dispose() {
+    _pinController.dispose();
+    super.dispose();
   }
 }
