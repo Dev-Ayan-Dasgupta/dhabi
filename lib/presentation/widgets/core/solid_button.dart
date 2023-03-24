@@ -9,7 +9,9 @@ class SolidButton extends StatelessWidget {
     required this.onTap,
     this.width,
     this.height,
+    this.borderColor,
     this.borderRadius,
+    this.boxShadow,
     this.color,
     required this.text,
     this.fontColor,
@@ -21,7 +23,9 @@ class SolidButton extends StatelessWidget {
   final VoidCallback onTap;
   double? width;
   double? height;
+  Color? borderColor;
   double? borderRadius;
+  List<BoxShadow>? boxShadow;
   Color? color;
   final String text;
   Color? fontColor;
@@ -37,16 +41,20 @@ class SolidButton extends StatelessWidget {
         width: width ?? 100.w,
         height: height ?? (60 / Dimensions.designHeight).h,
         decoration: BoxDecoration(
+          border: Border.all(color: borderColor ?? Colors.transparent),
           borderRadius: BorderRadius.all(
             Radius.circular(borderRadius ?? (10 / Dimensions.designWidth).w),
           ),
+          boxShadow: boxShadow ?? [],
           color: color ?? const Color.fromRGBO(85, 85, 85, 0.2),
         ),
         child: Center(
           child: Text(
             text,
             style: TextStyles.primaryBold.copyWith(
-                fontSize: fontSize ?? (20 / Dimensions.designWidth).w),
+              color: fontColor ?? Colors.white,
+              fontSize: fontSize ?? (20 / Dimensions.designWidth).w,
+            ),
           ),
         ),
       ),

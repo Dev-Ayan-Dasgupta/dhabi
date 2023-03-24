@@ -130,7 +130,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       return const SizeBox();
                     } else {
                       return GradientButton(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.selectAccountType,
+                          );
+                          // TODO: Navigate to Not Available Screen
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   Routes.notAvailable,
+                          //   arguments:
+                          //       NotAvailableArgumentModel(country: "India")
+                          //           .toMap(),
+                          // );
+                        },
                         text: "Proceed",
                       );
                     }
@@ -138,7 +151,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   const SizeBox(height: 16),
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, Routes.login);
+                      Navigator.pushNamed(
+                        context,
+                        Routes.login,
+                      );
                     },
                     child: InkWell(
                       onTap: () {

@@ -1,4 +1,3 @@
-import 'package:dialup_mobile_app/data/bloc/email/email_bloc.dart';
 import 'package:dialup_mobile_app/data/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/data/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/data/bloc/showPassword/show_password_states.dart';
