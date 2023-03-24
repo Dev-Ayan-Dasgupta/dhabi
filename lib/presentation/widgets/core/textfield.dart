@@ -53,6 +53,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
       ),
       child: TextField(
+        controller: widget.controller,
         decoration: InputDecoration(
           border: InputBorder.none,
           suffix: widget.suffix,

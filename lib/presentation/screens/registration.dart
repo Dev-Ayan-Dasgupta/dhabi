@@ -1,8 +1,12 @@
+import 'package:dialup_mobile_app/data/bloc/email/email_bloc.dart';
+import 'package:dialup_mobile_app/data/bloc/email/email_events.dart';
+import 'package:dialup_mobile_app/data/bloc/email/email_states.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/helpers/email_validation.dart';
+import 'package:dialup_mobile_app/utils/helpers/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -16,8 +20,11 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _emailController = TextEditingController();
   bool _isEmailValid = false;
+
   @override
   Widget build(BuildContext context) {
+    final EmailValidationBloc emailValidationBloc =
+        context.read<EmailValidationBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -66,24 +73,37 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizeBox(height: 9),
                     CustomTextField(
                       controller: _emailController,
-                      suffix: !_isEmailValid
-                          ? const SizedBox()
-                          : Padding(
+                      suffix: BlocBuilder<EmailValidationBloc,
+                          EmailValidationState>(
+                        builder: (context, state) {
+                          if (!_isEmailValid) {
+                            return const SizedBox();
+                          } else {
+                            return Padding(
                               padding: EdgeInsets.only(
                                   left: (10 / Dimensions.designWidth).w),
                               child:
                                   SvgPicture.asset(ImageConstants.checkCircle),
-                            ),
+                            );
+                          }
+                        },
+                      ),
                       onChanged: (p0) {
-                        setState(() {
-                          _isEmailValid = EmailValidator.isValid(p0);
-                        });
+                        _isEmailValid = EmailValidator.isValid(p0);
+                        _isEmailValid
+                            ? emailValidationBloc
+                                .add(EmailValidatedEvent(isValid: true))
+                            : emailValidationBloc
+                                .add(EmailInvalidatedEvent(isValid: false));
                       },
                     ),
                     const SizeBox(height: 9),
-                    _isEmailValid
-                        ? const SizeBox()
-                        : Row(
+                    BlocBuilder<EmailValidationBloc, EmailValidationState>(
+                      builder: (context, state) {
+                        if (_isEmailValid) {
+                          return const SizeBox();
+                        } else {
+                          return Row(
                             children: [
                               SvgPicture.asset(ImageConstants.errorSolid),
                               const SizeBox(width: 5),
@@ -95,42 +115,53 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 ),
                               ),
                             ],
-                          ),
+                          );
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
               Column(
                 children: [
-                  !_isEmailValid
-                      ? const SizeBox()
-                      : GradientButton(
-                          onTap: () {
-                            setState(() {});
-                          },
-                          text: "Proceed",
-                        ),
+                  BlocBuilder<EmailValidationBloc, EmailValidationState>(
+                      builder: (context, state) {
+                    if (!_isEmailValid) {
+                      return const SizeBox();
+                    } else {
+                      return GradientButton(
+                        onTap: () {},
+                        text: "Proceed",
+                      );
+                    }
+                  }),
                   const SizeBox(height: 16),
                   InkWell(
                     onTap: () {
                       Navigator.pushNamed(context, Routes.login);
                     },
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Already have an Account? ',
-                        style: TextStyles.primary.copyWith(
-                          color: AppColors.primary,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Log in',
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
-                            ),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, "login");
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Already have an Account? ',
+                          style: TextStyles.primary.copyWith(
+                            color: AppColors.primary,
+                            fontSize: (16 / Dimensions.designWidth).w,
                           ),
-                        ],
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Log in',
+                              style: TextStyles.primaryBold.copyWith(
+                                color: AppColors.primary,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
