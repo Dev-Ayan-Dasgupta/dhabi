@@ -1,6 +1,7 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/email_validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,6 +15,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _emailController = TextEditingController();
+  bool _isEmailValid = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,21 +66,49 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizeBox(height: 9),
                     CustomTextField(
                       controller: _emailController,
-                      suffix: Padding(
-                        padding: EdgeInsets.only(
-                            left: (10 / Dimensions.designWidth).w),
-                        child: SvgPicture.asset(ImageConstants.checkCircle),
-                      ),
+                      suffix: !_isEmailValid
+                          ? const SizedBox()
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                  left: (10 / Dimensions.designWidth).w),
+                              child:
+                                  SvgPicture.asset(ImageConstants.checkCircle),
+                            ),
+                      onChanged: (p0) {
+                        setState(() {
+                          _isEmailValid = EmailValidator.isValid(p0);
+                        });
+                      },
                     ),
+                    const SizeBox(height: 9),
+                    _isEmailValid
+                        ? const SizeBox()
+                        : Row(
+                            children: [
+                              SvgPicture.asset(ImageConstants.errorSolid),
+                              const SizeBox(width: 5),
+                              Text(
+                                "Invalid email",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: const Color(0xFFC94540),
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                            ],
+                          ),
                   ],
                 ),
               ),
               Column(
                 children: [
-                  GradientButton(
-                    onTap: () {},
-                    text: "Proceed",
-                  ),
+                  !_isEmailValid
+                      ? const SizeBox()
+                      : GradientButton(
+                          onTap: () {
+                            setState(() {});
+                          },
+                          text: "Proceed",
+                        ),
                   const SizeBox(height: 16),
                   InkWell(
                     onTap: () {

@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dialup_mobile_app/utils/constants/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
+import 'package:dialup_mobile_app/utils/constants/textstyles.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField({
@@ -15,6 +15,8 @@ class CustomTextField extends StatefulWidget {
     this.borderRadius,
     required this.controller,
     this.suffix,
+    this.obscureText,
+    required this.onChanged,
   }) : super(key: key);
 
   final double? width;
@@ -24,6 +26,8 @@ class CustomTextField extends StatefulWidget {
   final double? borderRadius;
   final TextEditingController controller;
   final Widget? suffix;
+  final bool? obscureText;
+  final Function(String) onChanged;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -57,6 +61,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
           color: const Color(0xFF252525),
           fontSize: (16 / Dimensions.designWidth).w,
         ),
+        obscureText: widget.obscureText ?? false,
+        onChanged: widget.onChanged,
       ),
     );
   }

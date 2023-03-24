@@ -68,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
                   child: SvgPicture.asset(ImageConstants.checkCircle),
                 ),
+                onChanged: (p0) {},
               ),
               const SizeBox(height: 15),
               Text(
@@ -85,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
                   child: SvgPicture.asset(ImageConstants.checkCircle),
                 ),
+                onChanged: (p0) {},
               ),
               const SizeBox(height: 30),
               GradientButton(

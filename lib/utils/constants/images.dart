@@ -11,4 +11,5 @@ class ImageConstants {
   static const String splashIcon = "${iconsRoot}splash.svg";
   static const String arrowBack = "${iconsRoot}arrow_back.svg";
   static const String checkCircle = "${iconsRoot}check_circle.svg";
+  static const String errorSolid = "${iconsRoot}error_solid.svg";
 }
