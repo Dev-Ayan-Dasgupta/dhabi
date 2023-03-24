@@ -1,5 +1,4 @@
 import 'package:dialup_mobile_app/data/models/arguments/not_available.dart';
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';

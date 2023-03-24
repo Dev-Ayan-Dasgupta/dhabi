@@ -1,0 +1,225 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+
+import 'package:dialup_mobile_app/data/bloc/otp/pinput/error_bloc.dart';
+import 'package:dialup_mobile_app/data/bloc/otp/pinput/error_event.dart';
+import 'package:dialup_mobile_app/data/bloc/otp/pinput/error_state.dart';
+import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_bloc.dart';
+import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_event.dart';
+import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_state.dart';
+import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/pinput.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/obscure.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+class OTPScreen extends StatefulWidget {
+  const OTPScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
+
+  @override
+  State<OTPScreen> createState() => _OTPScreenState();
+}
+
+class _OTPScreenState extends State<OTPScreen> {
+  final TextEditingController _pinController = TextEditingController();
+
+  late OTPArgumentModel otpArgumentModel;
+
+  int pinputErrorCount = 0;
+  late final String obscuredEmail;
+
+  int seconds = 30;
+
+  @override
+  void initState() {
+    super.initState();
+    otpArgumentModel =
+        OTPArgumentModel.fromMap(widget.argument as dynamic ?? {});
+    obscuredEmail = ObscureHelper.obscureEmail(otpArgumentModel.email);
+    startTimer();
+  }
+
+  void startTimer() {
+    final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (seconds > 0) {
+        seconds--;
+        otpTimerBloc.add(OTPTimerEvent(seconds: seconds));
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final PinputErrorBloc pinputErrorBloc = context.read<PinputErrorBloc>();
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: const AppBarLeading(),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        behavior: HitTestBehavior.opaque,
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: (22 / Dimensions.designWidth).w,
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Center(
+                  child: Column(
+                    children: [
+                      const SizeBox(height: 30),
+                      SvgPicture.asset(ImageConstants.otp),
+                      const SizeBox(height: 20),
+                      Text(
+                        "Enter One-Time Password",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: const Color(0xFF252525),
+                          fontSize: (24 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const SizeBox(height: 15),
+                      Text(
+                        "A 6-digit code has been sent to the email: $obscuredEmail",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: const Color(0xFF343434),
+                          fontSize: (18 / Dimensions.designWidth).w,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizeBox(height: 25),
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                        builder: (context, state) {
+                          return CustomPinput(
+                            pinController: _pinController,
+                            pinColor: (!state.isError)
+                                ? (state.isComplete)
+                                    ? const Color(0XFFBCE5DD)
+                                    : const Color(0XFFEEEEEE)
+                                : (state.errorCount == 3)
+                                    ? const Color(0XFFC0D6FF)
+                                    : const Color(0XFFFFC3C0),
+                            onChanged: (p0) {
+                              if (_pinController.text.length == 6) {
+                                if (otpArgumentModel.code ==
+                                    _pinController.text) {
+                                  pinputErrorBloc.add(PinputErrorEvent(
+                                      isError: false,
+                                      isComplete: true,
+                                      errorCount: pinputErrorCount));
+                                } else {
+                                  pinputErrorCount++;
+
+                                  pinputErrorBloc.add(PinputErrorEvent(
+                                      isError: true,
+                                      isComplete: true,
+                                      errorCount: pinputErrorCount));
+                                }
+                              } else {
+                                pinputErrorBloc.add(PinputErrorEvent(
+                                    isError: false,
+                                    isComplete: false,
+                                    errorCount: pinputErrorCount));
+                              }
+                            },
+                          );
+                        },
+                      ),
+                      const SizeBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Your code will expire in ",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: const Color(0xFF636363),
+                              fontSize: (14 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          BlocBuilder<OTPTimerBloc, OTPTimerState>(
+                            builder: (context, state) {
+                              if (seconds % 60 < 10) {
+                                return Text(
+                                  "${seconds ~/ 60}:0${seconds % 60}",
+                                  style: TextStyles.primaryMedium.copyWith(
+                                    color: const Color(0xFFFF6D4F),
+                                    fontSize: (14 / Dimensions.designWidth).w,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                );
+                              } else {
+                                return Text(
+                                  "${seconds ~/ 60}:${seconds % 60}",
+                                  style: TextStyles.primaryMedium.copyWith(
+                                    color: const Color(0xFFFF6D4F),
+                                    fontSize: (14 / Dimensions.designWidth).w,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizeBox(height: 25),
+                      BlocBuilder<OTPTimerBloc, OTPTimerState>(
+                        builder: (context, state) {
+                          return InkWell(
+                            onTap: () {
+                              if (seconds == 0) {
+                                seconds = 30;
+                                startTimer();
+                                final OTPTimerBloc otpTimerBloc =
+                                    context.read<OTPTimerBloc>();
+                                otpTimerBloc
+                                    .add(OTPTimerEvent(seconds: seconds));
+                              }
+                            },
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            child: Text(
+                              "Resend code",
+                              style: TextStyles.primaryMedium.copyWith(
+                                color: seconds == 0
+                                    ? AppColors.primary
+                                    : const Color(0xFFC6C6C6),
+                                fontSize: (18 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
+                children: [
+                  GradientButton(onTap: () {}, text: "Validate"),
+                  const SizeBox(height: 32),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

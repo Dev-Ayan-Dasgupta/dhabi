@@ -1,6 +1,7 @@
 import 'package:dialup_mobile_app/data/bloc/email/email_bloc.dart';
 import 'package:dialup_mobile_app/data/bloc/email/email_events.dart';
 import 'package:dialup_mobile_app/data/bloc/email/email_states.dart';
+import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -133,8 +134,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         onTap: () {
                           Navigator.pushNamed(
                             context,
-                            Routes.selectAccountType,
+                            Routes.otp,
+                            arguments: OTPArgumentModel(
+                                    code: "123456",
+                                    email: _emailController.text)
+                                .toMap(),
                           );
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   Routes.selectAccountType,
+                          // );
                           // TODO: Navigate to Not Available Screen
                           // Navigator.pushNamed(
                           //   context,

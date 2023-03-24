@@ -1,4 +1,6 @@
 import 'package:dialup_mobile_app/data/bloc/email/email_bloc.dart';
+import 'package:dialup_mobile_app/data/bloc/otp/pinput/error_bloc.dart';
+import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_bloc.dart';
 import 'package:dialup_mobile_app/data/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/presentation/routers/app_router.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -35,6 +37,12 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider<ShowPasswordBloc>(
               create: (context) => ShowPasswordBloc(),
+            ),
+            BlocProvider<PinputErrorBloc>(
+              create: (context) => PinputErrorBloc(),
+            ),
+            BlocProvider<OTPTimerBloc>(
+              create: (context) => OTPTimerBloc(),
             ),
           ],
           child: MaterialApp(

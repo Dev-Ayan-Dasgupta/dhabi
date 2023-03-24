@@ -5,4 +5,5 @@ class Routes {
   static const String login = 'login';
   static const String selectAccountType = 'select-account-type';
   static const String notAvailable = 'not-available';
+  static const String otp = 'otp';
 }

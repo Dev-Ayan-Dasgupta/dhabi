@@ -42,10 +42,6 @@ flutter:
           weight: 400
         - asset: assets/fonts/SFProDisplay/SFPRODISPLAYBOLD.OTF
           weight: 700
-    - family: Heiti TC Light
-      fonts:
-        - asset: assets/fonts/HeitiTC/heiti-tc-light.ttf
-          weight: 300
     - family: Montserrat
       fonts:
         - asset: assets/fonts/Montserrat/Montserrat-Light.woff
