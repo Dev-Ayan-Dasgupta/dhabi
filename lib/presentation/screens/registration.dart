@@ -3,6 +3,7 @@ import 'package:dialup_mobile_app/data/bloc/email/email_events.dart';
 import 'package:dialup_mobile_app/data/bloc/email/email_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/dialog.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/email_validator.dart';
@@ -28,7 +29,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         context.read<EmailValidationBloc>();
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBarLeading(),
+        leading: AppBarLeading(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return CustomDialog(
+                  svgAssetPath: ImageConstants.warning,
+                  title: "Are you sure?",
+                  message:
+                      "Going to the previous screen will make you repeat this step.",
+                  buttonText: "Go Back",
+                  buttonAction: () {
+                    Navigator.pushReplacementNamed(context, Routes.onboarding);
+                  },
+                );
+              },
+            );
+          },
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

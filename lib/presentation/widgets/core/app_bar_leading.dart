@@ -7,7 +7,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 class AppBarLeading extends StatelessWidget {
   const AppBarLeading({
     super.key,
+    this.onTap,
   });
+
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +18,10 @@ class AppBarLeading extends StatelessWidget {
       padding:
           EdgeInsets.symmetric(horizontal: (22 / Dimensions.designWidth).w),
       child: InkWell(
-        onTap: () {
-          Navigator.pop(context);
-        },
+        onTap: onTap ??
+            () {
+              Navigator.pop(context);
+            },
         child: SvgPicture.asset(
           ImageConstants.arrowBack,
         ),

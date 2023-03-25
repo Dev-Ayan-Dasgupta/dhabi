@@ -16,4 +16,5 @@ class ImageConstants {
   static const String errorSolid = "${iconsRoot}error_solid.svg";
   static const String deleteText = "${iconsRoot}delete_text.svg";
   static const String otp = "${iconsRoot}otp.svg";
+  static const String warning = "${iconsRoot}warning.svg";
 }
