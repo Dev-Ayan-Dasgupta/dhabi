@@ -13,7 +13,10 @@ class CustomTextField extends StatefulWidget {
     this.verticalPadding,
     this.borderColor,
     this.borderRadius,
+    this.color,
     required this.controller,
+    this.enabled,
+    this.fontColor,
     this.suffix,
     this.obscureText,
     required this.onChanged,
@@ -24,7 +27,10 @@ class CustomTextField extends StatefulWidget {
   final double? verticalPadding;
   final Color? borderColor;
   final double? borderRadius;
+  final Color? color;
   final TextEditingController controller;
+  final bool? enabled;
+  final Color? fontColor;
   final Widget? suffix;
   final bool? obscureText;
   final Function(String) onChanged;
@@ -51,15 +57,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
             widget.borderRadius ?? (10 / Dimensions.designWidth).w,
           ),
         ),
+        color: widget.color ?? Colors.transparent,
       ),
       child: TextField(
         controller: widget.controller,
+        enabled: widget.enabled,
         decoration: InputDecoration(
           border: InputBorder.none,
           suffix: widget.suffix,
         ),
         style: TextStyles.primaryMedium.copyWith(
-          color: const Color(0xFF252525),
+          color: widget.fontColor ?? const Color(0xFF252525),
           fontSize: (16 / Dimensions.designWidth).w,
         ),
         obscureText: widget.obscureText ?? false,

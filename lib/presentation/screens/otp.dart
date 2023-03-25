@@ -7,9 +7,10 @@ import 'package:dialup_mobile_app/data/bloc/otp/pinput/error_state.dart';
 import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_bloc.dart';
 import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_event.dart';
 import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_state.dart';
+import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/pinput.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/obscure.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,9 @@ class _OTPScreenState extends State<OTPScreen> {
     otpArgumentModel =
         OTPArgumentModel.fromMap(widget.argument as dynamic ?? {});
     obscuredEmail = ObscureHelper.obscureEmail(otpArgumentModel.email);
+    final PinputErrorBloc pinputErrorBloc = context.read<PinputErrorBloc>();
+    pinputErrorBloc.add(
+        PinputErrorEvent(isError: false, isComplete: false, errorCount: 0));
     startTimer();
   }
 
@@ -116,16 +120,30 @@ class _OTPScreenState extends State<OTPScreen> {
                                 : (state.errorCount == 3)
                                     ? const Color(0XFFC0D6FF)
                                     : const Color(0XFFFFC3C0),
-                            onChanged: (p0) {
+                            onChanged: (p0) async {
                               if (_pinController.text.length == 6) {
                                 if (otpArgumentModel.code ==
                                     _pinController.text) {
-                                  pinputErrorBloc.add(PinputErrorEvent(
+                                  pinputErrorBloc.add(
+                                    PinputErrorEvent(
                                       isError: false,
                                       isComplete: true,
-                                      errorCount: pinputErrorCount));
+                                      errorCount: pinputErrorCount,
+                                    ),
+                                  );
                                   // TODO: Probably call navigation to next screen here
                                   // TODO: maybe navigate after a small delay to show the green for sometime or log session in api call in which case don;t need to add delay
+                                  await Future.delayed(
+                                      const Duration(seconds: 1));
+                                  if (context.mounted) {
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      Routes.selectAccountType,
+                                      arguments: CreateAccountArgumentModel(
+                                        email: otpArgumentModel.email,
+                                      ).toMap(),
+                                    );
+                                  }
                                 } else {
                                   pinputErrorCount++;
 

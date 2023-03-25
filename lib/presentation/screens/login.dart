@@ -29,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool showPassword = false;
   int matchPasswordErrorCount = 0;
+  int toggle = 0;
 
   @override
   void initState() {
@@ -47,7 +48,25 @@ class _LoginScreenState extends State<LoginScreen> {
         context.read<MatchPasswordBloc>();
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBarLeading(),
+        leading: AppBarLeading(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return CustomDialog(
+                  svgAssetPath: ImageConstants.warning,
+                  title: "Are you sure?",
+                  message:
+                      "Going to the previous screen will make you repeat this step.",
+                  buttonText: "Go Back",
+                  buttonAction: () {
+                    Navigator.pushReplacementNamed(context, Routes.onboarding);
+                  },
+                );
+              },
+            );
+          },
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -156,8 +175,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               left: (10 / Dimensions.designWidth).w),
                           child: InkWell(
                             onTap: () {
-                              showPasswordBloc
-                                  .add(HidePasswordEvent(showPassword: false));
+                              showPasswordBloc.add(HidePasswordEvent(
+                                  showPassword: false, toggle: ++toggle));
                               showPassword = !showPassword;
                             },
                             child: Icon(
@@ -178,8 +197,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               left: (10 / Dimensions.designWidth).w),
                           child: InkWell(
                             onTap: () {
-                              showPasswordBloc.add(
-                                  DisplayPasswordEvent(showPassword: true));
+                              showPasswordBloc.add(DisplayPasswordEvent(
+                                  showPassword: true, toggle: ++toggle));
                               showPassword = !showPassword;
                             },
                             child: Icon(

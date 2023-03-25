@@ -3,7 +3,6 @@ import 'package:dialup_mobile_app/data/bloc/email/email_events.dart';
 import 'package:dialup_mobile_app/data/bloc/email/email_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/dialog.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/email_validator.dart';
@@ -155,9 +154,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             context,
                             Routes.otp,
                             arguments: OTPArgumentModel(
-                                    code: "123456",
-                                    email: _emailController.text)
-                                .toMap(),
+                              code: "123456",
+                              email: _emailController.text,
+                            ).toMap(),
                           );
                           // Navigator.pushNamed(
                           //   context,
@@ -179,33 +178,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   const SizeBox(height: 16),
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.login,
-                      );
+                      Navigator.pushNamed(context, Routes.login);
                     },
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, "login");
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Already have an Account? ',
-                          style: TextStyles.primary.copyWith(
-                            color: AppColors.primary,
-                            fontSize: (16 / Dimensions.designWidth).w,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Log in',
-                              style: TextStyles.primaryBold.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ],
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Already have an Account? ',
+                        style: TextStyles.primary.copyWith(
+                          color: AppColors.primary,
+                          fontSize: (16 / Dimensions.designWidth).w,
                         ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Log in',
+                            style: TextStyles.primaryBold.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

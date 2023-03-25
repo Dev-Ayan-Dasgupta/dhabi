@@ -1,4 +1,5 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/create_password.dart';
 import 'package:dialup_mobile_app/presentation/screens/index.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,9 @@ class AppRouter {
         );
       case Routes.selectAccountType:
         return MaterialPageRoute(
-          builder: (_) => const SelectAccountTypeScreen(),
+          builder: (_) => SelectAccountTypeScreen(
+            argument: args,
+          ),
         );
       case Routes.notAvailable:
         return MaterialPageRoute(
@@ -35,6 +38,12 @@ class AppRouter {
       case Routes.otp:
         return MaterialPageRoute(
           builder: (_) => OTPScreen(
+            argument: args,
+          ),
+        );
+      case Routes.createPassword:
+        return MaterialPageRoute(
+          builder: (_) => CreatePasswordScreen(
             argument: args,
           ),
         );

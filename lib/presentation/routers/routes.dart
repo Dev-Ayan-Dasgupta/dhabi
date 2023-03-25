@@ -6,4 +6,5 @@ class Routes {
   static const String selectAccountType = 'select-account-type';
   static const String notAvailable = 'not-available';
   static const String otp = 'otp';
+  static const String createPassword = 'cretae-password';
 }

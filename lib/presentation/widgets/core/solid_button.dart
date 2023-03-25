@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 class SolidButton extends StatelessWidget {
-  SolidButton({
+  const SolidButton({
     Key? key,
     required this.onTap,
     this.width,
@@ -21,17 +21,17 @@ class SolidButton extends StatelessWidget {
   }) : super(key: key);
 
   final VoidCallback onTap;
-  double? width;
-  double? height;
-  Color? borderColor;
-  double? borderRadius;
-  List<BoxShadow>? boxShadow;
-  Color? color;
+  final double? width;
+  final double? height;
+  final Color? borderColor;
+  final double? borderRadius;
+  final List<BoxShadow>? boxShadow;
+  final Color? color;
   final String text;
-  Color? fontColor;
-  String? fontFamily;
-  double? fontSize;
-  FontWeight? fontWeight;
+  final Color? fontColor;
+  final String? fontFamily;
+  final double? fontSize;
+  final FontWeight? fontWeight;
 
   @override
   Widget build(BuildContext context) {

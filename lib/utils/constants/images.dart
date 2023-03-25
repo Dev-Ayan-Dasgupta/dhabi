@@ -17,4 +17,8 @@ class ImageConstants {
   static const String deleteText = "${iconsRoot}delete_text.svg";
   static const String otp = "${iconsRoot}otp.svg";
   static const String warning = "${iconsRoot}warning.svg";
+  static const String checkSmall = "${iconsRoot}check_small.svg";
+  static const String checkedBox = "${iconsRoot}checked_box.svg";
+  static const String uncheckedBox = "${iconsRoot}unchecked_box.svg";
+  static const String warningSmall = "${iconsRoot}warning_small.svg";
 }

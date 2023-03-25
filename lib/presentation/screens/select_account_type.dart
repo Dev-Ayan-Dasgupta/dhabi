@@ -1,11 +1,23 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+
+import 'package:dialup_mobile_app/data/bloc/buttonFocus/button_focus_bloc.dart';
+import 'package:dialup_mobile_app/data/bloc/buttonFocus/button_focus_event.dart';
+import 'package:dialup_mobile_app/data/bloc/buttonFocus/button_focus_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 
 class SelectAccountTypeScreen extends StatefulWidget {
-  const SelectAccountTypeScreen({Key? key}) : super(key: key);
+  const SelectAccountTypeScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<SelectAccountTypeScreen> createState() =>
@@ -13,8 +25,23 @@ class SelectAccountTypeScreen extends StatefulWidget {
 }
 
 class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
+  bool isPersonalFocussed = false;
+  bool isBusinessFocussed = false;
+  int toggles = 0;
+
+  late CreateAccountArgumentModel createAccountArgumentModel;
+
+  @override
+  void initState() {
+    super.initState();
+    createAccountArgumentModel =
+        CreateAccountArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ButtonFocussedBloc buttonFocussedBloc =
+        context.read<ButtonFocussedBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -47,40 +74,74 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                     ),
                   ),
                   const SizeBox(height: 30),
-                  SolidButton(
-                    onTap: () {},
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color.fromRGBO(0, 0, 0, 0.1),
-                        offset: Offset(
-                          (3 / Dimensions.designWidth).w,
-                          (4 / Dimensions.designHeight).h,
-                        ),
-                        blurRadius: (3 / Dimensions.designWidth).w,
-                        // spreadRadius: (2 / Dimensions.designWidth).w,
-                      ),
-                    ],
-                    fontColor: AppColors.primary,
-                    text: "Personal",
+                  BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
+                    builder: (context, state) {
+                      return SolidButton(
+                        onTap: () {
+                          isPersonalFocussed = true;
+                          isBusinessFocussed = false;
+                          toggles++;
+                          buttonFocussedBloc.add(
+                            ButtonFocussedEvent(
+                              isFocussed: isPersonalFocussed,
+                              toggles: toggles,
+                            ),
+                          );
+                        },
+                        color: Colors.white,
+                        borderColor: isPersonalFocussed
+                            ? AppColors.primary
+                            : Colors.transparent,
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromRGBO(0, 0, 0, 0.1),
+                            offset: Offset(
+                              (3 / Dimensions.designWidth).w,
+                              (4 / Dimensions.designHeight).h,
+                            ),
+                            blurRadius: (3 / Dimensions.designWidth).w,
+                            // spreadRadius: (2 / Dimensions.designWidth).w,
+                          ),
+                        ],
+                        fontColor: AppColors.primary,
+                        text: "Personal",
+                      );
+                    },
                   ),
                   const SizeBox(height: 30),
-                  SolidButton(
-                    onTap: () {},
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color.fromRGBO(0, 0, 0, 0.1),
-                        offset: Offset(
-                          (3 / Dimensions.designWidth).w,
-                          (4 / Dimensions.designHeight).h,
-                        ),
-                        blurRadius: (3 / Dimensions.designWidth).w,
-                        // spreadRadius: (2 / Dimensions.designWidth).w,
-                      ),
-                    ],
-                    fontColor: AppColors.primary,
-                    text: "Business",
+                  BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
+                    builder: (context, state) {
+                      return SolidButton(
+                        onTap: () {
+                          isPersonalFocussed = false;
+                          isBusinessFocussed = true;
+                          toggles++;
+                          buttonFocussedBloc.add(
+                            ButtonFocussedEvent(
+                              isFocussed: isBusinessFocussed,
+                              toggles: toggles,
+                            ),
+                          );
+                        },
+                        color: Colors.white,
+                        borderColor: isBusinessFocussed
+                            ? AppColors.primary
+                            : Colors.transparent,
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromRGBO(0, 0, 0, 0.1),
+                            offset: Offset(
+                              (3 / Dimensions.designWidth).w,
+                              (4 / Dimensions.designHeight).h,
+                            ),
+                            blurRadius: (3 / Dimensions.designWidth).w,
+                            // spreadRadius: (2 / Dimensions.designWidth).w,
+                          ),
+                        ],
+                        fontColor: AppColors.primary,
+                        text: "Business",
+                      );
+                    },
                   ),
                 ],
               ),
@@ -88,32 +149,40 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
             Center(
               child: Column(
                 children: [
+                  GradientButton(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.createPassword,
+                        arguments: CreateAccountArgumentModel(
+                                email: createAccountArgumentModel.email)
+                            .toMap(),
+                      );
+                    },
+                    text: "Proceed",
+                  ),
+                  const SizeBox(height: 16),
                   InkWell(
                     onTap: () {
                       Navigator.pushNamed(context, Routes.login);
                     },
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, "login");
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Already have an Account? ',
-                          style: TextStyles.primary.copyWith(
-                            color: AppColors.primary,
-                            fontSize: (16 / Dimensions.designWidth).w,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Log in',
-                              style: TextStyles.primaryBold.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ],
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Already have an Account? ',
+                        style: TextStyles.primary.copyWith(
+                          color: AppColors.primary,
+                          fontSize: (16 / Dimensions.designWidth).w,
                         ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Log in',
+                            style: TextStyles.primaryBold.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
