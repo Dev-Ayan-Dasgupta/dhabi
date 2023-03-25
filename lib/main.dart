@@ -1,11 +1,6 @@
-import 'package:dialup_mobile_app/data/bloc/email/email_bloc.dart';
-import 'package:dialup_mobile_app/data/bloc/otp/pinput/error_bloc.dart';
-import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_bloc.dart';
-import 'package:dialup_mobile_app/data/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/presentation/routers/app_router.dart';
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 void main() async {
@@ -30,31 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterSizer(
       builder: (context, orientation, screenType) {
-        return MultiBlocProvider(
-          providers: [
-            BlocProvider<EmailValidationBloc>(
-              create: (context) => EmailValidationBloc(),
-            ),
-            BlocProvider<ShowPasswordBloc>(
-              create: (context) => ShowPasswordBloc(),
-            ),
-            BlocProvider<PinputErrorBloc>(
-              create: (context) => PinputErrorBloc(),
-            ),
-            BlocProvider<OTPTimerBloc>(
-              create: (context) => OTPTimerBloc(),
-            ),
-          ],
-          child: MaterialApp(
-            title: 'Dhabi',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            initialRoute: Routes.splash,
-            onGenerateRoute: appRouter.onGenerateRoute,
-          ),
-        );
+        return CustomMultiBlocProvider(appRouter: appRouter);
       },
     );
   }
