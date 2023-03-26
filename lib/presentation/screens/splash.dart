@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/utils/constants/images.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void navigate(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 3));
     if (context.mounted) {
-      Navigator.pushReplacementNamed(context, Routes.onboarding);
+      Navigator.pushReplacementNamed(context, Routes.onboarding,
+          arguments: OnboardingArgumentModel(isInitial: true).toMap());
     }
   }
 

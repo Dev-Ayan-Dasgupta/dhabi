@@ -1,21 +1,33 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator.dart';
-import 'package:dialup_mobile_app/utils/lists/index.dart';
+import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:local_auth/local_auth.dart';
+
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
+import 'package:dialup_mobile_app/utils/lists/index.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
+  const OnboardingScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
+  late OnboardingArgumentModel onboardingArgumentModel;
+
   final padding = (28 / Dimensions.designWidth);
   final space = (10 / Dimensions.designWidth);
 
@@ -27,6 +39,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   void initState() {
     super.initState();
+    onboardingArgumentModel =
+        OnboardingArgumentModel.fromMap(widget.argument as dynamic ?? {});
     animateToPage();
   }
 
@@ -98,17 +112,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(context, Routes.login);
-                              },
-                              child: Text(
-                                "Login",
-                                style: TextStyles.primaryBold.copyWith(
-                                  fontSize: (20 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                            ),
+                            onboardingArgumentModel.isInitial
+                                ? InkWell(
+                                    onTap: () {
+                                      biometricPrompt();
+                                    },
+                                    child: Text(
+                                      "Login",
+                                      style: TextStyles.primaryBold.copyWith(
+                                        fontSize:
+                                            (20 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  )
+                                : InkWell(
+                                    onTap: () {
+                                      // TODO: Navigate to explore dashboard
+                                    },
+                                    child: Text(
+                                      "Explore",
+                                      style: TextStyles.primaryBold.copyWith(
+                                        fontSize:
+                                            (20 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ),
                             const SizeBox(width: 10),
                           ],
                         ),
@@ -145,17 +173,33 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         horizontal: (28 / Dimensions.designWidth).w),
                     child: Column(
                       children: [
-                        GradientButton(
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.registration);
-                          },
-                          text: "Get Started",
-                        ),
+                        onboardingArgumentModel.isInitial
+                            ? GradientButton(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.registration);
+                                },
+                                text: "Get Started",
+                              )
+                            : GradientButton(
+                                onTap: () {
+                                  biometricPrompt();
+                                },
+                                text: "Login",
+                              ),
                         const SizeBox(height: 20),
-                        SolidButton(
-                          onTap: () {},
-                          text: "Explore as a Guest",
-                        ),
+                        onboardingArgumentModel.isInitial
+                            ? SolidButton(
+                                onTap: () {},
+                                text: "Explore as a Guest",
+                              )
+                            : SolidButton(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.registration);
+                                },
+                                text: "Register",
+                              ),
                         const SizeBox(height: 40),
                       ],
                     ),
@@ -167,5 +211,34 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         },
       ),
     );
+  }
+
+  void biometricPrompt() async {
+    bool isBiometricSupported = await LocalAuthentication().isDeviceSupported();
+    if (!isBiometricSupported) {
+      if (context.mounted) {
+        Navigator.pushNamed(context, Routes.login);
+      }
+    } else {
+      bool isAuthenticated = await BiometricHelper.authenticateUser();
+      if (isAuthenticated) {
+        if (context.mounted) {
+          Navigator.pushNamed(context, Routes.login);
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Biometric Authentication failed.',
+                style: TextStyles.primary.copyWith(
+                  fontSize: (12 / Dimensions.designWidth).w,
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    }
   }
 }

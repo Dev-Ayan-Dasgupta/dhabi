@@ -13,7 +13,9 @@ class AppRouter {
         );
       case Routes.onboarding:
         return MaterialPageRoute(
-          builder: (_) => const OnboardingScreen(),
+          builder: (_) => OnboardingScreen(
+            argument: args,
+          ),
         );
       case Routes.registration:
         return MaterialPageRoute(
