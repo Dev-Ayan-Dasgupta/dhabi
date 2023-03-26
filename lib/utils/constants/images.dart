@@ -1,6 +1,7 @@
 class ImageConstants {
   static const String backgroundRoot = "./assets/images/backgrounds/";
   static const String iconsRoot = "./assets/images/icons/";
+  static const String bannersRoot = "./assets/images/banners/";
 
   // * BACKGROUND IMAGES
   static const String splashBackGround = "${backgroundRoot}splash.png";
@@ -22,4 +23,16 @@ class ImageConstants {
   static const String uncheckedBox = "${iconsRoot}unchecked_box.svg";
   static const String warningSmall = "${iconsRoot}warning_small.svg";
   static const String warningBlue = "${iconsRoot}warning_blue.svg";
+  static const String dhabiText = "${iconsRoot}dhabi_text.svg";
+  static const String notifications = "${iconsRoot}notifications.svg";
+  static const String add = "${iconsRoot}add.svg";
+  static const String arrowOutward = "${iconsRoot}arrow_outward.svg";
+  static const String barChart = "${iconsRoot}bar_chart.svg";
+  static const String dot = "${iconsRoot}dot.svg";
+  static const String phoneAndroid = "${iconsRoot}phone_android.svg";
+  static const String documentScanner = "${iconsRoot}document_scanner.svg";
+  static const String article = "${iconsRoot}article.svg";
+
+  // * BANNERS
+  static const String dashboard = "${bannersRoot}dashboard.png";
 }

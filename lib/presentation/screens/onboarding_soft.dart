@@ -11,7 +11,7 @@ import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
-import 'package:dialup_mobile_app/utils/lists/index.dart';
+import 'package:dialup_mobile_app/utils/lists/onboarding_soft.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({

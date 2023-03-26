@@ -155,7 +155,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                 children: [
                   GradientButton(
                     onTap: () {
-                      Navigator.pushNamed(
+                      Navigator.pushReplacementNamed(
                         context,
                         Routes.createPassword,
                         arguments: CreateAccountArgumentModel(
@@ -168,7 +168,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                   const SizeBox(height: 16),
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, Routes.login);
+                      Navigator.pushReplacementNamed(context, Routes.login);
                     },
                     child: RichText(
                       text: TextSpan(

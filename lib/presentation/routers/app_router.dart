@@ -1,6 +1,7 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/create_password.dart';
 import 'package:dialup_mobile_app/presentation/screens/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -46,6 +47,12 @@ class AppRouter {
       case Routes.createPassword:
         return MaterialPageRoute(
           builder: (_) => CreatePasswordScreen(
+            argument: args,
+          ),
+        );
+      case Routes.retailDashboard:
+        return MaterialPageRoute(
+          builder: (_) => RetailDashboardScreen(
             argument: args,
           ),
         );

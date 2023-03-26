@@ -15,6 +15,8 @@ import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
+import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -426,8 +428,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                       builder: (context, state) {
                         if (allTrue) {
                           return GradientButton(
-                            // TODO: Implement Navigation here
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.retailDashboard,
+                                arguments: RetailDashboardArgumentModel(
+                                  imgUrl:
+                                      "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                  name: createAccountArgumentModel.email,
+                                ).toMap(),
+                              );
+                            },
                             text: "Create Profile",
                           );
                         } else {
