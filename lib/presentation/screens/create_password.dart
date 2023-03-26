@@ -91,12 +91,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
     final ShowPasswordBloc passwordBloc = context.read<ShowPasswordBloc>();
     final ShowPasswordBloc confirmPasswordBloc =
         context.read<ShowPasswordBloc>();
-    final CriteriaBloc criteriaBloc = context.read<CriteriaBloc>();
-    final MatchPasswordBloc matchPasswordBloc =
-        context.read<MatchPasswordBloc>();
-    final CheckBoxBloc checkBoxBloc = context.read<CheckBoxBloc>();
-    final CreatePasswordBloc createPasswordBloc =
-        context.read<CreatePasswordBloc>();
 
     return Scaffold(
       appBar: AppBar(
@@ -112,13 +106,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                       "Going to the previous screen will make you repeat this step.",
                   buttonText: "Go Back",
                   buttonAction: () {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      Routes.selectAccountType,
-                      arguments: CreateAccountArgumentModel(
-                        email: createAccountArgumentModel.email,
-                      ).toMap(),
-                    );
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                 );
               },
@@ -209,68 +198,9 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               ),
                             ),
                             onChanged: (p0) {
-                              if (p0.length >= 8) {
-                                criteriaBloc
-                                    .add(CriteriaMin8Event(hasMin8: true));
-                                hasMin8 = true;
-                              } else {
-                                criteriaBloc
-                                    .add(CriteriaMin8Event(hasMin8: false));
-                                hasMin8 = false;
-                              }
-
-                              if (p0.contains(RegExp(r'[0-9]'))) {
-                                criteriaBloc.add(
-                                    CriteriaNumericEvent(hasNumeric: true));
-                                hasNumeric = true;
-                              } else {
-                                criteriaBloc.add(
-                                    CriteriaNumericEvent(hasNumeric: false));
-                                hasNumeric = false;
-                              }
-
-                              if (p0.contains(RegExp(r'[A-Z]')) &&
-                                  p0.contains(RegExp(r'[a-z]'))) {
-                                criteriaBloc.add(CriteriaUpperLowerEvent(
-                                    hasUpperLower: true));
-                                hasUpperLower = true;
-                              } else {
-                                criteriaBloc.add(CriteriaUpperLowerEvent(
-                                    hasUpperLower: false));
-                                hasUpperLower = false;
-                              }
-
-                              if (p0.contains(
-                                  RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                                criteriaBloc.add(
-                                    CriteriaSpecialEvent(hasSpecial: true));
-                                hasSpecial = true;
-                              } else {
-                                criteriaBloc.add(
-                                    CriteriaSpecialEvent(hasSpecial: false));
-                                hasSpecial = false;
-                              }
-
-                              if (_passwordController.text ==
-                                  _confirmPasswordController.text) {
-                                isMatch = true;
-                                matchPasswordBloc.add(MatchPasswordEvent(
-                                    isMatch: isMatch, count: 0));
-                              } else {
-                                isMatch = false;
-                                matchPasswordBloc.add(MatchPasswordEvent(
-                                    isMatch: isMatch, count: 0));
-                              }
-
-                              allTrue = hasMin8 &&
-                                  hasNumeric &&
-                                  hasUpperLower &&
-                                  hasSpecial &&
-                                  isMatch &&
-                                  isChecked;
-
-                              createPasswordBloc
-                                  .add(CreatePasswordEvent(allTrue: allTrue));
+                              triggerCriteriaEvent(p0);
+                              triggerPasswordMatchEvent();
+                              triggerAllTrueEvent();
                             },
                             obscureText: !showPassword,
                           );
@@ -294,68 +224,9 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               ),
                             ),
                             onChanged: (p0) {
-                              if (p0.length >= 8) {
-                                criteriaBloc
-                                    .add(CriteriaMin8Event(hasMin8: true));
-                                hasMin8 = true;
-                              } else {
-                                criteriaBloc
-                                    .add(CriteriaMin8Event(hasMin8: false));
-                                hasMin8 = false;
-                              }
-
-                              if (p0.contains(RegExp(r'[0-9]'))) {
-                                criteriaBloc.add(
-                                    CriteriaNumericEvent(hasNumeric: true));
-                                hasNumeric = true;
-                              } else {
-                                criteriaBloc.add(
-                                    CriteriaNumericEvent(hasNumeric: false));
-                                hasNumeric = false;
-                              }
-
-                              if (p0.contains(RegExp(r'[A-Z]')) &&
-                                  p0.contains(RegExp(r'[a-z]'))) {
-                                criteriaBloc.add(CriteriaUpperLowerEvent(
-                                    hasUpperLower: true));
-                                hasUpperLower = true;
-                              } else {
-                                criteriaBloc.add(CriteriaUpperLowerEvent(
-                                    hasUpperLower: false));
-                                hasUpperLower = false;
-                              }
-
-                              if (p0.contains(
-                                  RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                                criteriaBloc.add(
-                                    CriteriaSpecialEvent(hasSpecial: true));
-                                hasSpecial = true;
-                              } else {
-                                criteriaBloc.add(
-                                    CriteriaSpecialEvent(hasSpecial: false));
-                                hasSpecial = false;
-                              }
-
-                              if (_passwordController.text ==
-                                  _confirmPasswordController.text) {
-                                isMatch = true;
-                                matchPasswordBloc.add(MatchPasswordEvent(
-                                    isMatch: isMatch, count: 0));
-                              } else {
-                                isMatch = false;
-                                matchPasswordBloc.add(MatchPasswordEvent(
-                                    isMatch: isMatch, count: 0));
-                              }
-
-                              allTrue = hasMin8 &&
-                                  hasNumeric &&
-                                  hasUpperLower &&
-                                  hasSpecial &&
-                                  isMatch &&
-                                  isChecked;
-
-                              createPasswordBloc
-                                  .add(CreatePasswordEvent(allTrue: allTrue));
+                              triggerCriteriaEvent(p0);
+                              triggerPasswordMatchEvent();
+                              triggerAllTrueEvent();
                             },
                             obscureText: !showPassword,
                           );
@@ -400,26 +271,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                   ),
                                 ),
                                 onChanged: (p0) {
-                                  if (_passwordController.text ==
-                                      _confirmPasswordController.text) {
-                                    isMatch = true;
-                                    matchPasswordBloc.add(MatchPasswordEvent(
-                                        isMatch: isMatch, count: 0));
-                                  } else {
-                                    isMatch = false;
-                                    matchPasswordBloc.add(MatchPasswordEvent(
-                                        isMatch: isMatch, count: 0));
-                                  }
-
-                                  allTrue = hasMin8 &&
-                                      hasNumeric &&
-                                      hasUpperLower &&
-                                      hasSpecial &&
-                                      isMatch &&
-                                      isChecked;
-
-                                  createPasswordBloc.add(
-                                      CreatePasswordEvent(allTrue: allTrue));
+                                  triggerPasswordMatchEvent();
+                                  triggerAllTrueEvent();
                                 },
                                 obscureText: !showConfirmPassword,
                               );
@@ -448,26 +301,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                   ),
                                 ),
                                 onChanged: (p0) {
-                                  if (_passwordController.text ==
-                                      _confirmPasswordController.text) {
-                                    isMatch = true;
-                                    matchPasswordBloc.add(MatchPasswordEvent(
-                                        isMatch: isMatch, count: 0));
-                                  } else {
-                                    isMatch = false;
-                                    matchPasswordBloc.add(MatchPasswordEvent(
-                                        isMatch: isMatch, count: 0));
-                                  }
-
-                                  allTrue = hasMin8 &&
-                                      hasNumeric &&
-                                      hasUpperLower &&
-                                      hasSpecial &&
-                                      isMatch &&
-                                      isChecked;
-
-                                  createPasswordBloc.add(
-                                      CreatePasswordEvent(allTrue: allTrue));
+                                  triggerPasswordMatchEvent();
+                                  triggerAllTrueEvent();
                                 },
                                 obscureText: !showConfirmPassword,
                               );
@@ -533,17 +368,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               return InkWell(
                                 onTap: () {
                                   isChecked = false;
-                                  checkBoxBloc
-                                      .add(CheckBoxEvent(isChecked: isChecked));
-
-                                  allTrue = hasMin8 &&
-                                      hasNumeric &&
-                                      hasUpperLower &&
-                                      hasSpecial &&
-                                      isMatch &&
-                                      isChecked;
-                                  createPasswordBloc.add(
-                                      CreatePasswordEvent(allTrue: allTrue));
+                                  triggerCheckBoxEvent(isChecked);
+                                  triggerAllTrueEvent();
                                 },
                                 child:
                                     SvgPicture.asset(ImageConstants.checkedBox),
@@ -552,17 +378,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               return InkWell(
                                 onTap: () {
                                   isChecked = true;
-                                  checkBoxBloc
-                                      .add(CheckBoxEvent(isChecked: isChecked));
-
-                                  allTrue = hasMin8 &&
-                                      hasNumeric &&
-                                      hasUpperLower &&
-                                      hasSpecial &&
-                                      isMatch &&
-                                      isChecked;
-                                  createPasswordBloc.add(
-                                      CreatePasswordEvent(allTrue: allTrue));
+                                  triggerCheckBoxEvent(isChecked);
+                                  triggerAllTrueEvent();
                                 },
                                 child: SvgPicture.asset(
                                     ImageConstants.uncheckedBox),
@@ -610,6 +427,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                       builder: (context, state) {
                         if (allTrue) {
                           return GradientButton(
+                            // TODO: Implement Navigation here
                             onTap: () {},
                             text: "Create Profile",
                           );
@@ -631,5 +449,70 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         ),
       ),
     );
+  }
+
+  void triggerCriteriaEvent(String p0) {
+    final CriteriaBloc criteriaBloc = context.read<CriteriaBloc>();
+
+    if (p0.length >= 8) {
+      criteriaBloc.add(CriteriaMin8Event(hasMin8: true));
+      hasMin8 = true;
+    } else {
+      criteriaBloc.add(CriteriaMin8Event(hasMin8: false));
+      hasMin8 = false;
+    }
+
+    if (p0.contains(RegExp(r'[0-9]'))) {
+      criteriaBloc.add(CriteriaNumericEvent(hasNumeric: true));
+      hasNumeric = true;
+    } else {
+      criteriaBloc.add(CriteriaNumericEvent(hasNumeric: false));
+      hasNumeric = false;
+    }
+
+    if (p0.contains(RegExp(r'[A-Z]')) && p0.contains(RegExp(r'[a-z]'))) {
+      criteriaBloc.add(CriteriaUpperLowerEvent(hasUpperLower: true));
+      hasUpperLower = true;
+    } else {
+      criteriaBloc.add(CriteriaUpperLowerEvent(hasUpperLower: false));
+      hasUpperLower = false;
+    }
+
+    if (p0.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      criteriaBloc.add(CriteriaSpecialEvent(hasSpecial: true));
+      hasSpecial = true;
+    } else {
+      criteriaBloc.add(CriteriaSpecialEvent(hasSpecial: false));
+      hasSpecial = false;
+    }
+  }
+
+  void triggerPasswordMatchEvent() {
+    final MatchPasswordBloc matchPasswordBloc =
+        context.read<MatchPasswordBloc>();
+    if (_passwordController.text == _confirmPasswordController.text) {
+      isMatch = true;
+      matchPasswordBloc.add(MatchPasswordEvent(isMatch: isMatch, count: 0));
+    } else {
+      isMatch = false;
+      matchPasswordBloc.add(MatchPasswordEvent(isMatch: isMatch, count: 0));
+    }
+  }
+
+  void triggerCheckBoxEvent(bool isChecked) {
+    final CheckBoxBloc checkBoxBloc = context.read<CheckBoxBloc>();
+    checkBoxBloc.add(CheckBoxEvent(isChecked: isChecked));
+  }
+
+  void triggerAllTrueEvent() {
+    allTrue = hasMin8 &&
+        hasNumeric &&
+        hasUpperLower &&
+        hasSpecial &&
+        isMatch &&
+        isChecked;
+    final CreatePasswordBloc createPasswordBloc =
+        context.read<CreatePasswordBloc>();
+    createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
   }
 }

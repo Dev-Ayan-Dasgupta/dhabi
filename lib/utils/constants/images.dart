@@ -21,4 +21,5 @@ class ImageConstants {
   static const String checkedBox = "${iconsRoot}checked_box.svg";
   static const String uncheckedBox = "${iconsRoot}unchecked_box.svg";
   static const String warningSmall = "${iconsRoot}warning_small.svg";
+  static const String warningBlue = "${iconsRoot}warning_blue.svg";
 }

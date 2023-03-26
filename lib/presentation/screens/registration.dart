@@ -40,7 +40,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       "Going to the previous screen will make you repeat this step.",
                   buttonText: "Go Back",
                   buttonAction: () {
-                    Navigator.pushReplacementNamed(context, Routes.onboarding);
+                    Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                 );
               },

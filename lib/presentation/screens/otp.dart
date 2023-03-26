@@ -38,7 +38,7 @@ class _OTPScreenState extends State<OTPScreen> {
   int pinputErrorCount = 0;
   late final String obscuredEmail;
 
-  int seconds = 30;
+  int seconds = 300;
 
   @override
   void initState() {
@@ -90,24 +90,66 @@ class _OTPScreenState extends State<OTPScreen> {
                   child: Column(
                     children: [
                       const SizeBox(height: 30),
-                      SvgPicture.asset(ImageConstants.otp),
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                          builder: (context, state) {
+                        if (pinputErrorCount < 3) {
+                          return SvgPicture.asset(
+                            ImageConstants.otp,
+                            width: (78 / Dimensions.designWidth).w,
+                            height: (70 / Dimensions.designHeight).h,
+                          );
+                        } else {
+                          return SvgPicture.asset(
+                            ImageConstants.warningBlue,
+                            width: (100 / Dimensions.designWidth).w,
+                            height: (100 / Dimensions.designWidth).w,
+                          );
+                        }
+                      }),
                       const SizeBox(height: 20),
-                      Text(
-                        "Enter One-Time Password",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: const Color(0xFF252525),
-                          fontSize: (24 / Dimensions.designWidth).w,
-                        ),
-                      ),
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                          builder: (context, state) {
+                        if (pinputErrorCount < 3) {
+                          return Text(
+                            "Enter One-Time Password",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: const Color(0xFF252525),
+                              fontSize: (24 / Dimensions.designWidth).w,
+                            ),
+                          );
+                        } else {
+                          return Text(
+                            "Oops!",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: const Color(0xFF252525),
+                              fontSize: (24 / Dimensions.designWidth).w,
+                            ),
+                          );
+                        }
+                      }),
                       const SizeBox(height: 15),
-                      Text(
-                        "A 6-digit code has been sent to the email: $obscuredEmail",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: const Color(0xFF343434),
-                          fontSize: (18 / Dimensions.designWidth).w,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                          builder: (context, state) {
+                        if (pinputErrorCount < 3) {
+                          return Text(
+                            "A 6-digit code has been sent to the email: $obscuredEmail",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: const Color(0xFF343434),
+                              fontSize: (18 / Dimensions.designWidth).w,
+                            ),
+                            textAlign: TextAlign.center,
+                          );
+                        } else {
+                          return Text(
+                            "Reached the maximum number of entries.\nTry again later.",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: const Color(0xFF343434),
+                              fontSize: (18 / Dimensions.designWidth).w,
+                            ),
+                            textAlign: TextAlign.center,
+                          );
+                        }
+                      }),
                       const SizeBox(height: 25),
                       BlocBuilder<PinputErrorBloc, PinputErrorState>(
                         builder: (context, state) {
@@ -117,7 +159,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                 ? (state.isComplete)
                                     ? const Color(0XFFBCE5DD)
                                     : const Color(0XFFEEEEEE)
-                                : (state.errorCount == 3)
+                                : (state.errorCount >= 3)
                                     ? const Color(0XFFC0D6FF)
                                     : const Color(0XFFFFC3C0),
                             onChanged: (p0) async {
@@ -159,66 +201,94 @@ class _OTPScreenState extends State<OTPScreen> {
                                     errorCount: pinputErrorCount));
                               }
                             },
+                            enabled: state.errorCount < 3 ? true : false,
                           );
                         },
                       ),
-                      const SizeBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Your code will expire in ",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0xFF636363),
-                              fontSize: (14 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          BlocBuilder<OTPTimerBloc, OTPTimerState>(
-                            builder: (context, state) {
-                              if (seconds % 60 < 10) {
-                                return Text(
-                                  "${seconds ~/ 60}:0${seconds % 60}",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: const Color(0xFFFF6D4F),
-                                    fontSize: (14 / Dimensions.designWidth).w,
-                                    fontWeight: FontWeight.w600,
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                          builder: (context, state) {
+                        if (pinputErrorCount < 3) {
+                          return Column(
+                            children: [
+                              const SizeBox(height: 30),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Your code will expire in ",
+                                    style: TextStyles.primaryMedium.copyWith(
+                                      color: const Color(0xFF636363),
+                                      fontSize: (14 / Dimensions.designWidth).w,
+                                    ),
                                   ),
-                                );
-                              } else {
-                                return Text(
-                                  "${seconds ~/ 60}:${seconds % 60}",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: const Color(0xFFFF6D4F),
-                                    fontSize: (14 / Dimensions.designWidth).w,
-                                    fontWeight: FontWeight.w600,
+                                  BlocBuilder<OTPTimerBloc, OTPTimerState>(
+                                    builder: (context, state) {
+                                      if (seconds % 60 < 10) {
+                                        return Text(
+                                          "${seconds ~/ 60}:0${seconds % 60}",
+                                          style:
+                                              TextStyles.primaryMedium.copyWith(
+                                            color: const Color(0xFFFF6D4F),
+                                            fontSize:
+                                                (14 / Dimensions.designWidth).w,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        );
+                                      } else {
+                                        return Text(
+                                          "${seconds ~/ 60}:${seconds % 60}",
+                                          style:
+                                              TextStyles.primaryMedium.copyWith(
+                                            color: const Color(0xFFFF6D4F),
+                                            fontSize:
+                                                (14 / Dimensions.designWidth).w,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        );
+                                      }
+                                    },
                                   ),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizeBox(height: 25),
-                      BlocBuilder<OTPTimerBloc, OTPTimerState>(
-                        builder: (context, state) {
-                          return InkWell(
-                            onTap: () {
-                              resendOTP();
-                            },
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            child: Text(
-                              "Resend code",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: seconds == 0
-                                    ? AppColors.primary
-                                    : const Color(0xFFC6C6C6),
-                                fontSize: (18 / Dimensions.designWidth).w,
+                                ],
                               ),
-                            ),
+                              const SizeBox(height: 25),
+                              BlocBuilder<OTPTimerBloc, OTPTimerState>(
+                                builder: (context, state) {
+                                  return InkWell(
+                                    onTap: () {
+                                      resendOTP();
+                                    },
+                                    highlightColor: Colors.transparent,
+                                    splashColor: Colors.transparent,
+                                    child: Text(
+                                      "Resend code",
+                                      style: TextStyles.primaryMedium.copyWith(
+                                        color: seconds == 0
+                                            ? AppColors.primary
+                                            : const Color(0xFFC6C6C6),
+                                        fontSize:
+                                            (18 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
                           );
-                        },
-                      ),
+                        } else {
+                          return Column(
+                            children: [
+                              const SizeBox(height: 20),
+                              Text(
+                                "OTP Frozen",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: const Color(0xFF636363),
+                                  fontSize: (14 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                      }),
                     ],
                   ),
                 ),
@@ -226,7 +296,14 @@ class _OTPScreenState extends State<OTPScreen> {
               Column(
                 children: [
                   //TODO: Potentially remove it - may not be needed as we will call API onChanged in pinput
-                  GradientButton(onTap: () {}, text: "Validate"),
+                  BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                      builder: (context, state) {
+                    if (pinputErrorCount < 3) {
+                      return GradientButton(onTap: () {}, text: "Validate");
+                    } else {
+                      return SolidButton(onTap: () {}, text: "Validate");
+                    }
+                  }),
                   const SizeBox(height: 32),
                 ],
               ),

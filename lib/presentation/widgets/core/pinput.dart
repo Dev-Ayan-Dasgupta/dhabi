@@ -11,11 +11,13 @@ class CustomPinput extends StatefulWidget {
     required this.pinController,
     this.pinColor,
     required this.onChanged,
+    this.enabled,
   }) : super(key: key);
 
   final TextEditingController pinController;
   final Color? pinColor;
   final Function(String) onChanged;
+  final bool? enabled;
 
   @override
   State<CustomPinput> createState() => _CustomPinputState();
@@ -42,6 +44,7 @@ class _CustomPinputState extends State<CustomPinput> {
         ),
       ),
       onChanged: widget.onChanged,
+      enabled: widget.enabled ?? true,
     );
   }
 }
