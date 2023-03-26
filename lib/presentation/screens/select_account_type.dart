@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
-import 'package:dialup_mobile_app/data/bloc/buttonFocus/button_focus_bloc.dart';
-import 'package:dialup_mobile_app/data/bloc/buttonFocus/button_focus_event.dart';
-import 'package:dialup_mobile_app/data/bloc/buttonFocus/button_focus_state.dart';
+import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_bloc.dart';
+import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_event.dart';
+import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';

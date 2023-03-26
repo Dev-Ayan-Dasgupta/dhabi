@@ -1,5 +1,5 @@
-import 'package:dialup_mobile_app/data/bloc/showPassword/show_password_events.dart';
-import 'package:dialup_mobile_app/data/bloc/showPassword/show_password_states.dart';
+import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
+import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ShowPasswordBloc extends Bloc<ShowPasswordEvent, ShowPasswordState> {

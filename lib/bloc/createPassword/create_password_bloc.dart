@@ -1,5 +1,5 @@
-import 'package:dialup_mobile_app/data/bloc/createPassword/create_password_event.dart';
-import 'package:dialup_mobile_app/data/bloc/createPassword/create_password_state.dart';
+import 'package:dialup_mobile_app/bloc/createPassword/create_password_event.dart';
+import 'package:dialup_mobile_app/bloc/createPassword/create_password_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreatePasswordBloc

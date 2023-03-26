@@ -1,5 +1,5 @@
-import 'package:dialup_mobile_app/data/bloc/checkBox.dart/check_box_event.dart';
-import 'package:dialup_mobile_app/data/bloc/checkBox.dart/check_box_state.dart';
+import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
+import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CheckBoxBloc extends Bloc<CheckBoxEvent, CheckBoxState> {

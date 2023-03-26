@@ -1,5 +1,5 @@
-import 'package:dialup_mobile_app/data/bloc/criteria/criteria_event.dart';
-import 'package:dialup_mobile_app/data/bloc/criteria/criteria_state.dart';
+import 'package:dialup_mobile_app/bloc/criteria/criteria_event.dart';
+import 'package:dialup_mobile_app/bloc/criteria/criteria_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CriteriaBloc extends Bloc<CriteriaEvent, CriteriaState> {

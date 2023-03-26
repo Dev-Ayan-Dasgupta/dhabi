@@ -1,5 +1,5 @@
-import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_event.dart';
-import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_state.dart';
+import 'package:dialup_mobile_app/bloc/otp/timer/timer_event.dart';
+import 'package:dialup_mobile_app/bloc/otp/timer/timer_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OTPTimerBloc extends Bloc<OTPTimerEvent, OTPTimerState> {

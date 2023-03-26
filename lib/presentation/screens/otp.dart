@@ -1,12 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
-import 'package:dialup_mobile_app/data/bloc/otp/pinput/error_bloc.dart';
-import 'package:dialup_mobile_app/data/bloc/otp/pinput/error_event.dart';
-import 'package:dialup_mobile_app/data/bloc/otp/pinput/error_state.dart';
-import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_bloc.dart';
-import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_event.dart';
-import 'package:dialup_mobile_app/data/bloc/otp/timer/timer_state.dart';
+import 'package:dialup_mobile_app/bloc/otp/pinput/error_bloc.dart';
+import 'package:dialup_mobile_app/bloc/otp/pinput/error_event.dart';
+import 'package:dialup_mobile_app/bloc/otp/pinput/error_state.dart';
+import 'package:dialup_mobile_app/bloc/otp/timer/timer_bloc.dart';
+import 'package:dialup_mobile_app/bloc/otp/timer/timer_event.dart';
+import 'package:dialup_mobile_app/bloc/otp/timer/timer_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';

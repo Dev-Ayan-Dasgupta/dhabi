@@ -1,6 +1,6 @@
-import 'package:dialup_mobile_app/data/bloc/email/email_bloc.dart';
-import 'package:dialup_mobile_app/data/bloc/email/email_events.dart';
-import 'package:dialup_mobile_app/data/bloc/email/email_states.dart';
+import 'package:dialup_mobile_app/bloc/email/email_bloc.dart';
+import 'package:dialup_mobile_app/bloc/email/email_events.dart';
+import 'package:dialup_mobile_app/bloc/email/email_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
