@@ -2,6 +2,7 @@ import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/criteria/criteria_bloc.dart';
+import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_bloc.dart';
 import 'package:dialup_mobile_app/bloc/email/email_bloc.dart';
 import 'package:dialup_mobile_app/bloc/emailExists/email_exists_bloc.dart';
 import 'package:dialup_mobile_app/bloc/matchPassword/match_password_bloc.dart';
@@ -54,6 +55,9 @@ class CustomMultiBlocProvider extends StatelessWidget {
         ),
         BlocProvider<CreatePasswordBloc>(
           create: (context) => CreatePasswordBloc(),
+        ),
+        BlocProvider<SummaryTileBloc>(
+          create: (context) => SummaryTileBloc(),
         ),
       ],
       child: MaterialApp(

@@ -31,7 +31,7 @@ class DashboardOnboarding extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 100.w,
-      height: (275 / Dimensions.designWidth).w,
+      height: (260 / Dimensions.designWidth).w,
       padding: EdgeInsets.all((20 / Dimensions.designWidth).w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(

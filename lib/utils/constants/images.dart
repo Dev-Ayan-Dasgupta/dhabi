@@ -32,6 +32,7 @@ class ImageConstants {
   static const String phoneAndroid = "${iconsRoot}phone_android.svg";
   static const String documentScanner = "${iconsRoot}document_scanner.svg";
   static const String article = "${iconsRoot}article.svg";
+  static const String transaction = "${iconsRoot}transaction.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";
