@@ -3,23 +3,27 @@ import 'dart:convert';
 
 class OTPArgumentModel {
   final String code;
-  final String email;
+  final String emailOrPhone;
+  final bool isEmail;
   OTPArgumentModel({
     required this.code,
-    required this.email,
+    required this.emailOrPhone,
+    required this.isEmail,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'code': code,
-      'email': email,
+      'emailOrPhone': emailOrPhone,
+      'isEmail': isEmail,
     };
   }
 
   factory OTPArgumentModel.fromMap(Map<String, dynamic> map) {
     return OTPArgumentModel(
       code: map['code'] as String,
-      email: map['email'] as String,
+      emailOrPhone: map['emailOrPhone'] as String,
+      isEmail: map['isEmail'] as bool,
     );
   }
 

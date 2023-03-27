@@ -3,6 +3,7 @@ import 'package:dialup_mobile_app/bloc/email/email_events.dart';
 import 'package:dialup_mobile_app/bloc/email/email_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/circle_avatar.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/input_validator.dart';
@@ -11,55 +12,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({Key? key}) : super(key: key);
+class VerifyMobileScreen extends StatefulWidget {
+  const VerifyMobileScreen({Key? key}) : super(key: key);
 
   @override
-  State<RegistrationScreen> createState() => _RegistrationScreenState();
+  State<VerifyMobileScreen> createState() => _VerifyMobileScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  bool _isEmailValid = false;
-
+class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
+  final TextEditingController _phoneController = TextEditingController();
+  bool _isPhoneValid = false;
   @override
   Widget build(BuildContext context) {
     final EmailValidationBloc emailValidationBloc =
         context.read<EmailValidationBloc>();
     return Scaffold(
       appBar: AppBar(
-        leading: AppBarLeading(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return CustomDialog(
-                  svgAssetPath: ImageConstants.warning,
-                  title: "Are you sure?",
-                  message:
-                      "Going to the previous screen will make you repeat this step.",
-                  // buttonText: "Go Back",
-                  // buttonAction: () {
-                  //   Navigator.pop(context);
-                  //   Navigator.pop(context);
-                  // },
-                  actionWidget: Column(
-                    children: [
-                      GradientButton(
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        text: "Go Back",
-                      ),
-                      const SizeBox(height: 22),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        ),
+        leading: const AppBarLeading(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -80,7 +49,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   children: [
                     const SizeBox(height: 10),
                     Text(
-                      "Let's get started!",
+                      "Verify Mobile Number",
                       style: TextStyles.primaryBold.copyWith(
                         color: AppColors.primary,
                         fontSize: (28 / Dimensions.designWidth).w,
@@ -88,15 +57,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const SizeBox(height: 22),
                     Text(
-                      "This email address will be used as your User ID for your account creation",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: const Color.fromRGBO(0, 0, 0, 0.4),
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 30),
-                    Text(
-                      "Email",
+                      "Mobile Number",
                       style: TextStyles.primaryMedium.copyWith(
                         color: const Color(0xFF636363),
                         fontSize: (16 / Dimensions.designWidth).w,
@@ -104,11 +65,31 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const SizeBox(height: 9),
                     CustomTextField(
-                      controller: _emailController,
+                      controller: _phoneController,
+                      prefix: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomCircleAvatar(
+                            width: (25 / Dimensions.designWidth).w,
+                            height: (25 / Dimensions.designWidth).w,
+                            imgUrl:
+                                "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
+                          ),
+                          const SizeBox(width: 7),
+                          Text(
+                            "+971",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: const Color(0xFF636363),
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          const SizeBox(width: 7),
+                        ],
+                      ),
                       suffix: BlocBuilder<EmailValidationBloc,
                           EmailValidationState>(
                         builder: (context, state) {
-                          if (!_isEmailValid) {
+                          if (!_isPhoneValid) {
                             return const SizedBox();
                           } else {
                             return Padding(
@@ -124,8 +105,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         },
                       ),
                       onChanged: (p0) {
-                        _isEmailValid = InputValidator.isEnailValid(p0);
-                        _isEmailValid
+                        _isPhoneValid = InputValidator.isPhoneValid("+971$p0");
+                        _isPhoneValid
                             ? emailValidationBloc
                                 .add(EmailValidatedEvent(isValid: true))
                             : emailValidationBloc
@@ -135,7 +116,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizeBox(height: 9),
                     BlocBuilder<EmailValidationBloc, EmailValidationState>(
                       builder: (context, state) {
-                        if (_isEmailValid) {
+                        if (_isPhoneValid) {
                           return const SizeBox();
                         } else {
                           return Row(
@@ -143,7 +124,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               SvgPicture.asset(ImageConstants.errorSolid),
                               const SizeBox(width: 5),
                               Text(
-                                "Invalid email",
+                                "Invalid mobile number",
                                 style: TextStyles.primaryMedium.copyWith(
                                   color: const Color(0xFFC94540),
                                   fontSize: (16 / Dimensions.designWidth).w,
@@ -161,7 +142,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 children: [
                   BlocBuilder<EmailValidationBloc, EmailValidationState>(
                       builder: (context, state) {
-                    if (!_isEmailValid) {
+                    if (!_isPhoneValid) {
                       return const SizeBox();
                     } else {
                       return GradientButton(
@@ -171,8 +152,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             Routes.otp,
                             arguments: OTPArgumentModel(
                               code: "123456",
-                              emailOrPhone: _emailController.text,
-                              isEmail: true,
+                              emailOrPhone: _phoneController.text,
+                              isEmail: false,
                             ).toMap(),
                           );
                         },
@@ -180,34 +161,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       );
                     }
                   }),
-                  const SizeBox(height: 16),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.login);
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Already have an Account? ',
-                        style: TextStyles.primary.copyWith(
-                          color: AppColors.primary,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Log in',
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   const SizeBox(height: 32),
                 ],
-              ),
+              )
             ],
           ),
         ),
@@ -217,7 +173,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 }

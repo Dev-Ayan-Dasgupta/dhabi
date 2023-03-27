@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
 import 'package:flutter/material.dart';
@@ -204,7 +205,9 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen> {
               stage1: true,
               stage2: false,
               stage3: false,
-              onTap1: () {},
+              onTap1: () {
+                Navigator.pushNamed(context, Routes.verifyMobile);
+              },
               onTap2: () {},
               onTap3: () {},
             ),

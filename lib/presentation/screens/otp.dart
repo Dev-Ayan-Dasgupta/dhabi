@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/bloc/otp/timer/timer_event.dart';
 import 'package:dialup_mobile_app/bloc/otp/timer/timer_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
+import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -37,6 +38,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   int pinputErrorCount = 0;
   late final String obscuredEmail;
+  late final String obscuredPhone;
 
   int seconds = 300;
 
@@ -45,7 +47,12 @@ class _OTPScreenState extends State<OTPScreen> {
     super.initState();
     otpArgumentModel =
         OTPArgumentModel.fromMap(widget.argument as dynamic ?? {});
-    obscuredEmail = ObscureHelper.obscureEmail(otpArgumentModel.email);
+    if (otpArgumentModel.isEmail) {
+      obscuredEmail = ObscureHelper.obscureEmail(otpArgumentModel.emailOrPhone);
+    } else {
+      obscuredPhone =
+          ObscureHelper.obscurePhone("+971${otpArgumentModel.emailOrPhone}");
+    }
     final PinputErrorBloc pinputErrorBloc = context.read<PinputErrorBloc>();
     pinputErrorBloc.add(
         PinputErrorEvent(isError: false, isComplete: false, errorCount: 0));
@@ -93,11 +100,19 @@ class _OTPScreenState extends State<OTPScreen> {
                       BlocBuilder<PinputErrorBloc, PinputErrorState>(
                           builder: (context, state) {
                         if (pinputErrorCount < 3) {
-                          return SvgPicture.asset(
-                            ImageConstants.otp,
-                            width: (78 / Dimensions.designWidth).w,
-                            height: (70 / Dimensions.designHeight).h,
-                          );
+                          if (otpArgumentModel.isEmail) {
+                            return SvgPicture.asset(
+                              ImageConstants.otp,
+                              width: (78 / Dimensions.designWidth).w,
+                              height: (70 / Dimensions.designHeight).h,
+                            );
+                          } else {
+                            return SvgPicture.asset(
+                              ImageConstants.phoneAndroid,
+                              width: (50 / Dimensions.designWidth).w,
+                              height: (83 / Dimensions.designHeight).h,
+                            );
+                          }
                         } else {
                           return SvgPicture.asset(
                             ImageConstants.warningBlue,
@@ -131,14 +146,25 @@ class _OTPScreenState extends State<OTPScreen> {
                       BlocBuilder<PinputErrorBloc, PinputErrorState>(
                           builder: (context, state) {
                         if (pinputErrorCount < 3) {
-                          return Text(
-                            "A 6-digit code has been sent to the email: $obscuredEmail",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0xFF343434),
-                              fontSize: (18 / Dimensions.designWidth).w,
-                            ),
-                            textAlign: TextAlign.center,
-                          );
+                          if (otpArgumentModel.isEmail) {
+                            return Text(
+                              "A 6-digit code has been sent to the email: $obscuredEmail",
+                              style: TextStyles.primaryMedium.copyWith(
+                                color: const Color(0xFF343434),
+                                fontSize: (18 / Dimensions.designWidth).w,
+                              ),
+                              textAlign: TextAlign.center,
+                            );
+                          } else {
+                            return Text(
+                              "A 6-digit code has been sent to the mobile number: $obscuredPhone",
+                              style: TextStyles.primaryMedium.copyWith(
+                                color: const Color(0xFF343434),
+                                fontSize: (18 / Dimensions.designWidth).w,
+                              ),
+                              textAlign: TextAlign.center,
+                            );
+                          }
                         } else {
                           return Text(
                             "Reached the maximum number of entries.\nTry again later.",
@@ -173,18 +199,62 @@ class _OTPScreenState extends State<OTPScreen> {
                                       errorCount: pinputErrorCount,
                                     ),
                                   );
-                                  // TODO: Probably call navigation to next screen here
-                                  // TODO: maybe navigate after a small delay to show the green for sometime or log session in api call in which case don;t need to add delay
+
                                   await Future.delayed(
-                                      const Duration(seconds: 1));
+                                      const Duration(milliseconds: 750));
                                   if (context.mounted) {
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      Routes.selectAccountType,
-                                      arguments: CreateAccountArgumentModel(
-                                        email: otpArgumentModel.email,
-                                      ).toMap(),
-                                    );
+                                    if (otpArgumentModel.isEmail) {
+                                      Navigator.pushReplacementNamed(
+                                        context,
+                                        Routes.selectAccountType,
+                                        arguments: CreateAccountArgumentModel(
+                                          email: otpArgumentModel.emailOrPhone,
+                                        ).toMap(),
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return CustomDialog(
+                                            svgAssetPath:
+                                                ImageConstants.checkCircle,
+                                            title: "You’re One Step Closer!",
+                                            message: "Select below to continue",
+                                            // buttonText: "Scan ID",
+                                            // buttonAction: () {},
+                                            actionWidget: Column(
+                                              children: [
+                                                GradientButton(
+                                                  onTap: () {},
+                                                  text: "Scan ID",
+                                                ),
+                                                const SizeBox(height: 15),
+                                                SolidButton(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                    Navigator.pushReplacementNamed(
+                                                        context,
+                                                        Routes.retailDashboard,
+                                                        arguments:
+                                                            RetailDashboardArgumentModel(
+                                                          imgUrl:
+                                                              "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                                          name:
+                                                              "ayan@qolarisdata.com",
+                                                        ).toMap());
+                                                  },
+                                                  text: "Skip for now",
+                                                  color: const Color.fromRGBO(
+                                                      34, 97, 105, 0.17),
+                                                  fontColor: AppColors.primary,
+                                                ),
+                                                const SizeBox(height: 22),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
                                   }
                                 } else {
                                   pinputErrorCount++;

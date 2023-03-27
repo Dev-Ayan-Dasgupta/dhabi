@@ -12,15 +12,15 @@ class CustomDialog extends StatelessWidget {
     required this.svgAssetPath,
     required this.title,
     required this.message,
-    required this.buttonText,
-    required this.buttonAction,
+    required this.actionWidget,
   }) : super(key: key);
 
   final String svgAssetPath;
   final String title;
   final String message;
-  final String buttonText;
-  final VoidCallback buttonAction;
+  // final String buttonText;
+  // final VoidCallback buttonAction;
+  final Widget actionWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,11 @@ class CustomDialog extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset(svgAssetPath),
+                          SvgPicture.asset(
+                            svgAssetPath,
+                            width: (147 / Dimensions.designWidth).w,
+                            height: (147 / Dimensions.designWidth).w,
+                          ),
                           const SizeBox(height: 40),
                           Text(
                             title,
@@ -74,12 +78,13 @@ class CustomDialog extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      GradientButton(onTap: buttonAction, text: buttonText),
-                      const SizeBox(height: 22),
-                    ],
-                  )
+                  // Column(
+                  //   children: [
+                  //     GradientButton(onTap: buttonAction, text: buttonText),
+                  //     const SizeBox(height: 22),
+                  //   ],
+                  // )
+                  actionWidget,
                 ],
               ),
             ),

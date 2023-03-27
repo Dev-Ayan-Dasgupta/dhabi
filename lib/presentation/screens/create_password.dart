@@ -105,11 +105,23 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   title: "Are you sure?",
                   message:
                       "Going to the previous screen will make you repeat this step.",
-                  buttonText: "Go Back",
-                  buttonAction: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
+                  // buttonText: "Go Back",
+                  // buttonAction: () {
+                  //   Navigator.pop(context);
+                  //   Navigator.pop(context);
+                  // },
+                  actionWidget: Column(
+                    children: [
+                      GradientButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        text: "Go Back",
+                      ),
+                      const SizeBox(height: 22),
+                    ],
+                  ),
                 );
               },
             );

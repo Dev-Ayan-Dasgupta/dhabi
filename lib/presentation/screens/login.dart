@@ -11,7 +11,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/login/attempts.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/helpers/email_validator.dart';
+import 'package:dialup_mobile_app/utils/helpers/input_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -58,11 +58,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   title: "Are you sure?",
                   message:
                       "Going to the previous screen will make you repeat this step.",
-                  buttonText: "Go Back",
-                  buttonAction: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  },
+                  // buttonText: "Go Back",
+                  // buttonAction: () {
+                  //   Navigator.pop(context);
+                  //   Navigator.pop(context);
+                  // },
+                  actionWidget: Column(
+                    children: [
+                      GradientButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        text: "Go Back",
+                      ),
+                      const SizeBox(height: 22),
+                    ],
+                  ),
                 );
               },
             );
@@ -128,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   onChanged: (p0) {
-                    if (EmailValidator.isValid(p0)) {
+                    if (InputValidator.isEnailValid(p0)) {
                       if (p0 != "ayan@qolarisdata.com") {
                         emailExistsBloc
                             .add(EmailExistsEvent(emailExists: false));
