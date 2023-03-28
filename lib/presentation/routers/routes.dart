@@ -9,4 +9,5 @@ class Routes {
   static const String createPassword = 'cretae-password';
   static const String retailDashboard = 'retail-dashboard';
   static const String verifyMobile = 'verify-mobile';
+  static const String businessDashboard = 'business-dashboard';
 }

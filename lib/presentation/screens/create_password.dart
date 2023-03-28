@@ -441,15 +441,20 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                         if (allTrue) {
                           return GradientButton(
                             onTap: () {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                Routes.retailDashboard,
-                                arguments: RetailDashboardArgumentModel(
-                                  imgUrl:
-                                      "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                  name: createAccountArgumentModel.email,
-                                ).toMap(),
-                              );
+                              if (createAccountArgumentModel.isRetail) {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  Routes.retailDashboard,
+                                  arguments: RetailDashboardArgumentModel(
+                                    imgUrl:
+                                        "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                    name: createAccountArgumentModel.email,
+                                  ).toMap(),
+                                );
+                              } else {
+                                Navigator.pushReplacementNamed(
+                                    context, Routes.businessDashboard);
+                              }
                             },
                             text: "Create Profile",
                           );

@@ -24,6 +24,7 @@ class ImageConstants {
   static const String warningSmall = "${iconsRoot}warning_small.svg";
   static const String warningBlue = "${iconsRoot}warning_blue.svg";
   static const String dhabiText = "${iconsRoot}dhabi_text.svg";
+  static const String dhabiBusinessText = "${iconsRoot}dhabi_business_text.svg";
   static const String notifications = "${iconsRoot}notifications.svg";
   static const String add = "${iconsRoot}add.svg";
   static const String arrowOutward = "${iconsRoot}arrow_outward.svg";
@@ -33,6 +34,7 @@ class ImageConstants {
   static const String documentScanner = "${iconsRoot}document_scanner.svg";
   static const String article = "${iconsRoot}article.svg";
   static const String transaction = "${iconsRoot}transaction.svg";
+  static const String menu = "${iconsRoot}menu.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

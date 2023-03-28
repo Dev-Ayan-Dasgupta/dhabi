@@ -209,6 +209,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                         Routes.selectAccountType,
                                         arguments: CreateAccountArgumentModel(
                                           email: otpArgumentModel.emailOrPhone,
+                                          isRetail: true,
                                         ).toMap(),
                                       );
                                     } else {

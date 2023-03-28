@@ -1,4 +1,5 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/dashboard.dart';
 import 'package:dialup_mobile_app/presentation/screens/create_password.dart';
 import 'package:dialup_mobile_app/presentation/screens/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
@@ -54,6 +55,12 @@ class AppRouter {
       case Routes.retailDashboard:
         return MaterialPageRoute(
           builder: (_) => RetailDashboardScreen(
+            argument: args,
+          ),
+        );
+      case Routes.businessDashboard:
+        return MaterialPageRoute(
+          builder: (_) => BusinessDashboardScreen(
             argument: args,
           ),
         );

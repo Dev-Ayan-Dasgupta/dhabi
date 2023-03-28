@@ -29,3 +29,21 @@ class AppBarLeading extends StatelessWidget {
     );
   }
 }
+
+class AppBarMenu extends StatelessWidget {
+  const AppBarMenu({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: (15 / Dimensions.designWidth).w,
+      ),
+      child: SvgPicture.asset(
+        ImageConstants.menu,
+      ),
+    );
+  }
+}

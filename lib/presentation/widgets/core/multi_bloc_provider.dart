@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/bloc/matchPassword/match_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/otp/pinput/error_bloc.dart';
 import 'package:dialup_mobile_app/bloc/otp/timer/timer_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
+import 'package:dialup_mobile_app/bloc/tabBar/tabbar_bloc.dart';
 import 'package:dialup_mobile_app/presentation/routers/app_router.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,9 @@ class CustomMultiBlocProvider extends StatelessWidget {
         ),
         BlocProvider<SummaryTileBloc>(
           create: (context) => SummaryTileBloc(),
+        ),
+        BlocProvider<TabbarBloc>(
+          create: (context) => TabbarBloc(),
         ),
       ],
       child: MaterialApp(

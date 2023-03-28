@@ -155,13 +155,25 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                 children: [
                   GradientButton(
                     onTap: () {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.createPassword,
-                        arguments: CreateAccountArgumentModel(
-                                email: createAccountArgumentModel.email)
-                            .toMap(),
-                      );
+                      if (isPersonalFocussed) {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.createPassword,
+                          arguments: CreateAccountArgumentModel(
+                            email: createAccountArgumentModel.email,
+                            isRetail: true,
+                          ).toMap(),
+                        );
+                      } else {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.createPassword,
+                          arguments: CreateAccountArgumentModel(
+                            email: createAccountArgumentModel.email,
+                            isRetail: false,
+                          ).toMap(),
+                        );
+                      }
                     },
                     text: "Proceed",
                   ),
