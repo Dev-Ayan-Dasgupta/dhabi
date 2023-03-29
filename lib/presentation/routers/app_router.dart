@@ -1,5 +1,8 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/dashboard.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/loans/request.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/loans/success_request.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/thank_you.dart';
 import 'package:dialup_mobile_app/presentation/screens/create_password.dart';
 import 'package:dialup_mobile_app/presentation/screens/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
@@ -66,9 +69,21 @@ class AppRouter {
         );
       case Routes.verifyMobile:
         return MaterialPageRoute(
-          builder: (_) => const VerifyMobileScreen(
-              // argument: args,
-              ),
+          builder: (_) => VerifyMobileScreen(
+            argument: args,
+          ),
+        );
+      case Routes.thankYou:
+        return MaterialPageRoute(
+          builder: (_) => const ThankYouScreen(),
+        );
+      case Routes.request:
+        return MaterialPageRoute(
+          builder: (_) => const RequestScreen(),
+        );
+      case Routes.requestSuccess:
+        return MaterialPageRoute(
+          builder: (_) => const LoanRequestSuccess(),
         );
       default:
         return MaterialPageRoute(

@@ -38,11 +38,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   title: "Are you sure?",
                   message:
                       "Going to the previous screen will make you repeat this step.",
-                  // buttonText: "Go Back",
-                  // buttonAction: () {
-                  //   Navigator.pop(context);
-                  //   Navigator.pop(context);
-                  // },
                   actionWidget: Column(
                     children: [
                       GradientButton(
@@ -173,6 +168,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                               code: "123456",
                               emailOrPhone: _emailController.text,
                               isEmail: true,
+                              isBusiness: false,
                             ).toMap(),
                           );
                         },

@@ -8,6 +8,8 @@ import 'package:dialup_mobile_app/bloc/emailExists/email_exists_bloc.dart';
 import 'package:dialup_mobile_app/bloc/matchPassword/match_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/otp/pinput/error_bloc.dart';
 import 'package:dialup_mobile_app/bloc/otp/timer/timer_bloc.dart';
+import 'package:dialup_mobile_app/bloc/request/loan_selected_bloc.dart';
+import 'package:dialup_mobile_app/bloc/request/request_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_bloc.dart';
 import 'package:dialup_mobile_app/presentation/routers/app_router.dart';
@@ -63,12 +65,19 @@ class CustomMultiBlocProvider extends StatelessWidget {
         BlocProvider<TabbarBloc>(
           create: (context) => TabbarBloc(),
         ),
+        BlocProvider<RequestBloc>(
+          create: (context) => RequestBloc(),
+        ),
+        BlocProvider<LoanSelectedBloc>(
+          create: (context) => LoanSelectedBloc(),
+        ),
       ],
       child: MaterialApp(
         title: 'Dhabi',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.white,
         ),
         initialRoute: Routes.splash,
         onGenerateRoute: appRouter.onGenerateRoute,

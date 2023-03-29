@@ -7,8 +7,8 @@ import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/stage_tile.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 
-class DashboardOnboarding extends StatelessWidget {
-  const DashboardOnboarding({
+class RetailDashboardOnboarding extends StatelessWidget {
+  const RetailDashboardOnboarding({
     Key? key,
     required this.progress,
     required this.stage1,

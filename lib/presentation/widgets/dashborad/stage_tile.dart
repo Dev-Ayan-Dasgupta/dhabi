@@ -1,9 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 
 class DashboardStageTile extends StatelessWidget {
   const DashboardStageTile({
@@ -13,6 +14,7 @@ class DashboardStageTile extends StatelessWidget {
     required this.statusIconPath,
     required this.iconPath,
     required this.text,
+    this.color,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -20,6 +22,7 @@ class DashboardStageTile extends StatelessWidget {
   final String statusIconPath;
   final String iconPath;
   final String text;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +35,9 @@ class DashboardStageTile extends StatelessWidget {
             padding: EdgeInsets.all(
               (10 / Dimensions.designWidth).w,
             ),
-            decoration: const BoxDecoration(
-              boxShadow: [BoxShadows.primary],
-              color: Colors.white,
+            decoration: BoxDecoration(
+              boxShadow: const [BoxShadows.primary],
+              color: color ?? Colors.white,
             ),
             child: Column(
               children: [

@@ -1,3 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/data/models/arguments/verify_mobile.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:dialup_mobile_app/bloc/email/email_bloc.dart';
 import 'package:dialup_mobile_app/bloc/email/email_events.dart';
 import 'package:dialup_mobile_app/bloc/email/email_states.dart';
@@ -7,21 +14,31 @@ import 'package:dialup_mobile_app/presentation/widgets/core/circle_avatar.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/input_validator.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class VerifyMobileScreen extends StatefulWidget {
-  const VerifyMobileScreen({Key? key}) : super(key: key);
+  const VerifyMobileScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<VerifyMobileScreen> createState() => _VerifyMobileScreenState();
 }
 
 class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
+  late VerifyMobileArgumentModel verifyMobileArgumentModel;
   final TextEditingController _phoneController = TextEditingController();
   bool _isPhoneValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+    verifyMobileArgumentModel =
+        VerifyMobileArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final EmailValidationBloc emailValidationBloc =
@@ -154,6 +171,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                               code: "123456",
                               emailOrPhone: _phoneController.text,
                               isEmail: false,
+                              isBusiness: verifyMobileArgumentModel.isBusiness,
                             ).toMap(),
                           );
                         },

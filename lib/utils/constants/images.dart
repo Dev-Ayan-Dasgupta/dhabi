@@ -35,6 +35,7 @@ class ImageConstants {
   static const String article = "${iconsRoot}article.svg";
   static const String transaction = "${iconsRoot}transaction.svg";
   static const String menu = "${iconsRoot}menu.svg";
+  static const String statement = "${iconsRoot}statement.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

@@ -37,6 +37,7 @@ class DashboardActivityTile extends StatelessWidget {
                 iconPath,
                 width: (16 / Dimensions.designWidth).w,
                 height: (16 / Dimensions.designWidth).w,
+                color: AppColors.primary,
               ),
             ),
           ),

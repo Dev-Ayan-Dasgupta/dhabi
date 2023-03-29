@@ -5,10 +5,12 @@ class OTPArgumentModel {
   final String code;
   final String emailOrPhone;
   final bool isEmail;
+  final bool isBusiness;
   OTPArgumentModel({
     required this.code,
     required this.emailOrPhone,
     required this.isEmail,
+    required this.isBusiness,
   });
 
   Map<String, dynamic> toMap() {
@@ -16,6 +18,7 @@ class OTPArgumentModel {
       'code': code,
       'emailOrPhone': emailOrPhone,
       'isEmail': isEmail,
+      'isBusiness': isBusiness,
     };
   }
 
@@ -24,6 +27,7 @@ class OTPArgumentModel {
       code: map['code'] as String,
       emailOrPhone: map['emailOrPhone'] as String,
       isEmail: map['isEmail'] as bool,
+      isBusiness: map['isBusiness'] as bool,
     );
   }
 

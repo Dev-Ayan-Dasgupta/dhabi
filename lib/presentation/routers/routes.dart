@@ -10,4 +10,7 @@ class Routes {
   static const String retailDashboard = 'retail-dashboard';
   static const String verifyMobile = 'verify-mobile';
   static const String businessDashboard = 'business-dashboard';
+  static const String thankYou = 'thank-you';
+  static const String request = 'request';
+  static const String requestSuccess = 'request-success';
 }

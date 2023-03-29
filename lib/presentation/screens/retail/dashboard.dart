@@ -6,6 +6,7 @@ import 'package:dialup_mobile_app/bloc/tabBar/tabbar_bloc.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_event.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
+import 'package:dialup_mobile_app/data/models/arguments/verify_mobile.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
@@ -33,12 +34,15 @@ class RetailDashboardScreen extends StatefulWidget {
 class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     with SingleTickerProviderStateMixin {
   late RetailDashboardArgumentModel retailDashboardArgumentModel;
-  final ScrollController _scrollController = ScrollController();
+
   late TabController tabController;
+  int tabIndex = 0;
+
+  final ScrollController _scrollController = ScrollController();
   double _scrollOffset = 0;
   int _scrollIndex = 0;
+
   final bool hasOnboarded = false;
-  int tabIndex = 0;
 
   @override
   void initState() {
@@ -61,8 +65,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       if (tabController.indexIsChanging ||
           tabController.index != tabController.previousIndex) {
         tabIndex = tabController.index;
-        // setState(() {});
-        // TODO: Figure out how to do this with bloc
         tabbarBloc.add(TabbarEvent(index: tabIndex));
         _scrollOffset = 0;
         _scrollIndex = 0;
@@ -71,8 +73,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     _scrollController.addListener(() {
       _scrollOffset = _scrollController.offset + 120;
       _scrollIndex = _scrollOffset ~/ 188;
-      // setState(() {});
-      // TODO: Figure out how to do this with bloc
+
       final SummaryTileBloc summaryTileBloc = context.read<SummaryTileBloc>();
       summaryTileBloc.add(SummaryTileEvent(scrollIndex: _scrollIndex));
     });
@@ -113,8 +114,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                             onTap: (index) {
                               _scrollOffset = 0;
                               _scrollIndex = 0;
-                              // setState(() {});
-                              // TODO: Figure out how to do this with bloc
                               tabbarBloc.add(TabbarEvent(index: index));
                             },
                             indicatorColor: Colors.transparent,
@@ -467,13 +466,19 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
               const SizeBox(height: 15),
               hasOnboarded
                   ? const SizeBox(height: 265)
-                  : DashboardOnboarding(
+                  : RetailDashboardOnboarding(
                       progress: (1 / 3),
                       stage1: true,
                       stage2: false,
                       stage3: false,
                       onTap1: () {
-                        Navigator.pushNamed(context, Routes.verifyMobile);
+                        Navigator.pushNamed(
+                          context,
+                          Routes.verifyMobile,
+                          arguments:
+                              VerifyMobileArgumentModel(isBusiness: false)
+                                  .toMap(),
+                        );
                       },
                       onTap2: () {},
                       onTap3: () {},

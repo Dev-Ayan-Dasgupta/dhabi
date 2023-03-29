@@ -204,6 +204,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                       const Duration(milliseconds: 750));
                                   if (context.mounted) {
                                     if (otpArgumentModel.isEmail) {
+                                      Navigator.pop(context);
                                       Navigator.pushReplacementNamed(
                                         context,
                                         Routes.selectAccountType,
@@ -213,48 +214,57 @@ class _OTPScreenState extends State<OTPScreen> {
                                         ).toMap(),
                                       );
                                     } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return CustomDialog(
-                                            svgAssetPath:
-                                                ImageConstants.checkCircle,
-                                            title: "You’re One Step Closer!",
-                                            message: "Select below to continue",
-                                            // buttonText: "Scan ID",
-                                            // buttonAction: () {},
-                                            actionWidget: Column(
-                                              children: [
-                                                GradientButton(
-                                                  onTap: () {},
-                                                  text: "Scan ID",
-                                                ),
-                                                const SizeBox(height: 15),
-                                                SolidButton(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                    Navigator.pushReplacementNamed(
-                                                        context,
-                                                        Routes.retailDashboard,
-                                                        arguments:
-                                                            RetailDashboardArgumentModel(
-                                                          imgUrl:
-                                                              "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                                          name:
-                                                              "ayan@qolarisdata.com",
-                                                        ).toMap());
-                                                  },
-                                                  text: "Skip for now",
-                                                  color: const Color.fromRGBO(
-                                                      34, 97, 105, 0.17),
-                                                  fontColor: AppColors.primary,
-                                                ),
-                                                const SizeBox(height: 22),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      );
+                                      if (otpArgumentModel.isBusiness) {
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacementNamed(
+                                            context, Routes.thankYou);
+                                      } else {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return CustomDialog(
+                                              svgAssetPath:
+                                                  ImageConstants.checkCircle,
+                                              title: "You're One Step Closer!",
+                                              message:
+                                                  "Select below to continue",
+                                              // buttonText: "Scan ID",
+                                              // buttonAction: () {},
+                                              actionWidget: Column(
+                                                children: [
+                                                  GradientButton(
+                                                    onTap: () {},
+                                                    text: "Scan ID",
+                                                  ),
+                                                  const SizeBox(height: 15),
+                                                  SolidButton(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                      Navigator.pushReplacementNamed(
+                                                          context,
+                                                          Routes
+                                                              .retailDashboard,
+                                                          arguments:
+                                                              RetailDashboardArgumentModel(
+                                                            imgUrl:
+                                                                "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                                            name:
+                                                                "ayan@qolarisdata.com",
+                                                          ).toMap());
+                                                    },
+                                                    text: "Skip for now",
+                                                    color: const Color.fromRGBO(
+                                                        34, 97, 105, 0.17),
+                                                    fontColor:
+                                                        AppColors.primary,
+                                                  ),
+                                                  const SizeBox(height: 22),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
                                     }
                                   }
                                 } else {
