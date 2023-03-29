@@ -13,4 +13,9 @@ class Routes {
   static const String thankYou = 'thank-you';
   static const String request = 'request';
   static const String requestSuccess = 'request-success';
+  static const String loanDetails = 'loan-details';
+  static const String applicationAddress = 'application-address';
+  static const String applicationIncome = 'application-income';
+  static const String applicationTax = 'application-tax';
+  static const String applicationAccount = 'application-account';
 }

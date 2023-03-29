@@ -14,6 +14,9 @@ class ImageConstants {
   static const String splashIcon = "${iconsRoot}splash.svg";
   static const String arrowBack = "${iconsRoot}arrow_back.svg";
   static const String checkCircle = "${iconsRoot}check_circle.svg";
+  static const String checkCircleGreen = "${iconsRoot}check_circle_green.svg";
+  static const String checkCircleOutlined =
+      "${iconsRoot}check_circle_outlined.svg";
   static const String errorSolid = "${iconsRoot}error_solid.svg";
   static const String deleteText = "${iconsRoot}delete_text.svg";
   static const String otp = "${iconsRoot}otp.svg";
@@ -36,6 +39,7 @@ class ImageConstants {
   static const String transaction = "${iconsRoot}transaction.svg";
   static const String menu = "${iconsRoot}menu.svg";
   static const String statement = "${iconsRoot}statement.svg";
+  static const String document = "${iconsRoot}document.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

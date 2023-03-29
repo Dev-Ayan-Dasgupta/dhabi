@@ -41,7 +41,8 @@ class SolidButton extends StatelessWidget {
         width: width ?? 100.w,
         height: height ?? (60 / Dimensions.designHeight).h,
         decoration: BoxDecoration(
-          border: Border.all(color: borderColor ?? Colors.transparent),
+          border:
+              Border.all(color: borderColor ?? Colors.transparent, width: 2),
           borderRadius: BorderRadius.all(
             Radius.circular(borderRadius ?? (10 / Dimensions.designWidth).w),
           ),

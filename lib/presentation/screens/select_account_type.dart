@@ -94,7 +94,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                         },
                         color: Colors.white,
                         borderColor: isPersonalFocussed
-                            ? AppColors.primary
+                            ? const Color.fromRGBO(0, 184, 148, 0.21)
                             : Colors.transparent,
                         boxShadow: [
                           BoxShadow(
@@ -129,7 +129,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                         },
                         color: Colors.white,
                         borderColor: isBusinessFocussed
-                            ? AppColors.primary
+                            ? const Color.fromRGBO(0, 184, 148, 0.21)
                             : Colors.transparent,
                         boxShadow: [
                           BoxShadow(

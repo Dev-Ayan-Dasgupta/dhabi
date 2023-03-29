@@ -7,7 +7,6 @@ import 'package:dialup_mobile_app/bloc/tabBar/tabbar_event.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/verify_mobile.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/appBar/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/tabs/tab.dart';
@@ -350,34 +349,27 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                   scrollDirection: Axis.horizontal,
                                   itemCount: 6,
                                   itemBuilder: (context, index) {
-                                    if (index == 0) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                          left: (15 / Dimensions.designWidth).w,
-                                        ),
-                                        child: AccountSummaryTile(
-                                          onTap: () {},
-                                          imgUrl:
-                                              "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                          accountType: "Savings",
-                                          currency: "AED",
-                                          amount: 0.00,
-                                          subText: "Powered by FH",
-                                          subImgUrl:
-                                              "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-                                        ),
-                                      );
-                                    } else {
-                                      return AccountSummaryTile(
-                                        onTap: () {},
-                                        imgUrl: "",
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        left: (index == 0)
+                                            ? (15 / Dimensions.designWidth).w
+                                            : 0,
+                                      ),
+                                      child: AccountSummaryTile(
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                              context, Routes.loanDetails);
+                                        },
+                                        imgUrl:
+                                            "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                         accountType: "Savings",
-                                        currency: "USD",
+                                        currency: "AED",
                                         amount: 0.00,
-                                        subText: "",
-                                        subImgUrl: "",
-                                      );
-                                    }
+                                        subText: "Powered by FH",
+                                        subImgUrl:
+                                            "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+                                      ),
+                                    );
                                   },
                                 ),
                               ),
@@ -535,20 +527,15 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                   scrollDirection: Axis.horizontal,
                   itemCount: 2,
                   itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: (15 / Dimensions.designWidth).w,
-                        ),
-                        child: const DashboardBannerImage(
-                          imgUrl: ImageConstants.dashboard,
-                        ),
-                      );
-                    } else {
-                      return const DashboardBannerImage(
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        left:
+                            (index == 0) ? (15 / Dimensions.designWidth).w : 0,
+                      ),
+                      child: const DashboardBannerImage(
                         imgUrl: ImageConstants.dashboard,
-                      );
-                    }
+                      ),
+                    );
                   },
                 ),
               ),

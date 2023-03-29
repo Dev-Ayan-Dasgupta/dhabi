@@ -61,9 +61,9 @@ class CustomRadioButton extends StatelessWidget {
               child: Center(
                 child: isSelected
                     ? SvgPicture.asset(
-                        ImageConstants.dot,
-                        width: (15 / Dimensions.designWidth).w,
-                        height: (15 / Dimensions.designWidth).w,
+                        ImageConstants.checkCircle,
+                        width: (25 / Dimensions.designWidth).w,
+                        height: (25 / Dimensions.designWidth).w,
                       )
                     : const SizeBox(),
               ),

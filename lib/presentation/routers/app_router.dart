@@ -1,10 +1,15 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/dashboard.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/loans/details.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/loans/request.dart';
-import 'package:dialup_mobile_app/presentation/screens/business/loans/success_request.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/loans/request_success.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/thank_you.dart';
 import 'package:dialup_mobile_app/presentation/screens/create_password.dart';
 import 'package:dialup_mobile_app/presentation/screens/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/application/account.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/application/address.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/application/income.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/application/tax.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verify_mobile.dart';
 import 'package:flutter/material.dart';
@@ -84,6 +89,26 @@ class AppRouter {
       case Routes.requestSuccess:
         return MaterialPageRoute(
           builder: (_) => const LoanRequestSuccess(),
+        );
+      case Routes.loanDetails:
+        return MaterialPageRoute(
+          builder: (_) => const LoanDetailsScreen(),
+        );
+      case Routes.applicationAddress:
+        return MaterialPageRoute(
+          builder: (_) => const ApplicationAddressScreen(),
+        );
+      case Routes.applicationIncome:
+        return MaterialPageRoute(
+          builder: (_) => const ApplicationIncomeScreen(),
+        );
+      case Routes.applicationTax:
+        return MaterialPageRoute(
+          builder: (_) => const ApplicationTaxScreen(),
+        );
+      case Routes.applicationAccount:
+        return MaterialPageRoute(
+          builder: (_) => const ApplicationAccountScreen(),
         );
       default:
         return MaterialPageRoute(

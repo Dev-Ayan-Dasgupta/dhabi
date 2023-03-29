@@ -1,8 +1,5 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/gradient_button.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
-import 'package:dialup_mobile_app/utils/constants/images.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -24,7 +21,7 @@ class LoanRequestSuccess extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    ImageConstants.checkCircle,
+                    ImageConstants.checkCircleOutlined,
                     width: (214 / Dimensions.designWidth).w,
                     height: (214 / Dimensions.designWidth).w,
                   ),
@@ -39,7 +36,7 @@ class LoanRequestSuccess extends StatelessWidget {
                   ),
                   const SizeBox(height: 20),
                   Text(
-                    "Our agent will contact you shortly. Request No.: 231056",
+                    "Our agent will contact you shortly. Request No.: 231056",
                     style: TextStyles.primary.copyWith(
                       color: const Color(0xFF252525),
                       fontSize: (16 / Dimensions.designWidth).w,
