@@ -21,6 +21,7 @@ class CustomTextField extends StatefulWidget {
     this.suffix,
     this.obscureText,
     required this.onChanged,
+    this.hintText,
   }) : super(key: key);
 
   final double? width;
@@ -36,6 +37,7 @@ class CustomTextField extends StatefulWidget {
   final Widget? suffix;
   final bool? obscureText;
   final Function(String) onChanged;
+  final String? hintText;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -68,6 +70,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           border: InputBorder.none,
           prefix: widget.prefix,
           suffix: widget.suffix,
+          hintText: widget.hintText ?? "",
+          hintStyle: TextStyles.primaryMedium.copyWith(
+            color: widget.fontColor ?? const Color.fromRGBO(37, 37, 37, 0.5),
+            fontSize: (16 / Dimensions.designWidth).w,
+          ),
         ),
         style: TextStyles.primaryMedium.copyWith(
           color: widget.fontColor ?? const Color(0xFF252525),

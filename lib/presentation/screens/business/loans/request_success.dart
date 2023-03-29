@@ -1,4 +1,3 @@
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -50,8 +49,9 @@ class LoanRequestSuccess extends StatelessWidget {
               children: [
                 GradientButton(
                   onTap: () {
-                    Navigator.pushReplacementNamed(
-                        context, Routes.businessDashboard);
+                    // Navigator.pushReplacementNamed(
+                    //     context, Routes.businessDashboard);
+                    Navigator.pop(context);
                   },
                   text: "Home",
                 ),

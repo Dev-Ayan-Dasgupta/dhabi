@@ -1,5 +1,4 @@
 import 'package:dialup_mobile_app/data/models/details_tile.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/details_tile.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/summary_tile.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';

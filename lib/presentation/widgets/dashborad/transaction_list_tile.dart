@@ -54,9 +54,15 @@ class DashboardTransactionListTile extends StatelessWidget {
                     ImageConstants.transaction,
                     width: (20.73 / Dimensions.designWidth).w,
                     height: (8.7 / Dimensions.designWidth).w,
-                    color: isCredit
-                        ? const Color(0XFF00B894)
-                        : const Color(0XFF054047),
+                    colorFilter: isCredit
+                        ? const ColorFilter.mode(
+                            Color(0XFF00B894),
+                            BlendMode.srcIn,
+                          )
+                        : const ColorFilter.mode(
+                            Color(0XFF054047),
+                            BlendMode.srcIn,
+                          ),
                   ),
                 ),
               ),

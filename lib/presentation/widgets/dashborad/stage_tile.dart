@@ -76,9 +76,9 @@ class DashboardStageTile extends StatelessWidget {
               statusIconPath,
               width: (15 / Dimensions.designWidth).w,
               height: (15 / Dimensions.designWidth).w,
-              color: isCompleted
-                  ? const Color(0XFF00B894)
-                  : const Color(0XFFD9D9D9),
+              colorFilter: isCompleted
+                  ? const ColorFilter.mode(Color(0XFF00B894), BlendMode.srcIn)
+                  : const ColorFilter.mode(Color(0XFFD9D9D9), BlendMode.srcIn),
             ),
           )
         ],

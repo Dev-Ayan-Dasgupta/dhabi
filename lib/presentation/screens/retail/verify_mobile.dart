@@ -10,7 +10,6 @@ import 'package:dialup_mobile_app/bloc/email/email_events.dart';
 import 'package:dialup_mobile_app/bloc/email/email_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/circle_avatar.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/input_validator.dart';

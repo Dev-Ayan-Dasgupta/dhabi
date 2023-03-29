@@ -49,7 +49,8 @@ class StatementTypeTile extends StatelessWidget {
                   iconPath,
                   width: (25 / Dimensions.designWidth).w,
                   height: (25 / Dimensions.designWidth).w,
-                  color: const Color(0xFF1A3640),
+                  colorFilter: const ColorFilter.mode(
+                      Color(0xFF1A3640), BlendMode.srcIn),
                 ),
               ),
             ),

@@ -479,7 +479,9 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                         );
                       },
                       onTap2: () {},
-                      onTap3: () {},
+                      onTap3: () {
+                        Navigator.pushNamed(context, Routes.applicationAddress);
+                      },
                     ),
             ],
           ),
