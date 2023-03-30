@@ -27,7 +27,7 @@ class DashboardActivityTile extends StatelessWidget {
           child: Container(
             width: (64 / Dimensions.designWidth).w,
             height: (64 / Dimensions.designWidth).w,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               boxShadow: [BoxShadows.primary],
               color: Colors.white,

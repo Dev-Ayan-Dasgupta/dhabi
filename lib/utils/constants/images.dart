@@ -40,6 +40,7 @@ class ImageConstants {
   static const String menu = "${iconsRoot}menu.svg";
   static const String statement = "${iconsRoot}statement.svg";
   static const String document = "${iconsRoot}document.svg";
+  static const String help = "${iconsRoot}help.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

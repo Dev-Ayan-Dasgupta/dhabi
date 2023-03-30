@@ -1,7 +1,12 @@
+import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
+import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
+import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/application/progress.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 class ApplicationAddressScreen extends StatefulWidget {
@@ -23,11 +28,42 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _zipController = TextEditingController();
 
+  bool isResidenceYearSelected = false;
+  bool isAddress1Entered = false;
+  bool isCityEntered = false;
+  int toggles = 0;
+
+  final List<String> items = [
+    'Item1',
+    'Item2',
+    'Item3',
+    'Item4',
+    'Item5',
+    'Item6',
+    'Item7',
+    'Item8',
+  ];
+
+  String? selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final DropdownSelectedBloc residenceSelectedBloc =
+        context.read<DropdownSelectedBloc>();
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBarLeading(),
+        leading: AppBarLeading(
+          onTap: () {
+            residenceSelectedBloc.add(DropdownSelectedEvent(
+                isDropdownSelected: false, toggles: toggles));
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -93,7 +129,20 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       const SizeBox(height: 9),
                       CustomTextField(
                         controller: _address1Controller,
-                        onChanged: (p0) {},
+                        onChanged: (p0) {
+                          if (_address1Controller.text.isEmpty) {
+                            isAddress1Entered = false;
+                          } else {
+                            isAddress1Entered = true;
+                          }
+                          residenceSelectedBloc.add(
+                            DropdownSelectedEvent(
+                              isDropdownSelected: isResidenceYearSelected &&
+                                  (isAddress1Entered && isCityEntered),
+                              toggles: toggles,
+                            ),
+                          );
+                        },
                         hintText: "Address",
                       ),
                       const SizeBox(height: 20),
@@ -121,8 +170,21 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       const SizeBox(height: 9),
                       CustomTextField(
                         controller: _cityController,
-                        onChanged: (p0) {},
-                        hintText: "",
+                        onChanged: (p0) {
+                          if (_cityController.text.isEmpty) {
+                            isCityEntered = false;
+                          } else {
+                            isCityEntered = true;
+                          }
+                          residenceSelectedBloc.add(
+                            DropdownSelectedEvent(
+                              isDropdownSelected: isResidenceYearSelected &&
+                                  (isAddress1Entered && isCityEntered),
+                              toggles: toggles,
+                            ),
+                          );
+                        },
+                        hintText: "City",
                       ),
                       const SizeBox(height: 20),
                       Text(
@@ -161,10 +223,26 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                         ),
                       ),
                       const SizeBox(height: 9),
-                      CustomTextField(
-                        controller: _zipController,
-                        onChanged: (p0) {},
-                        hintText: "0000",
+                      BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                        builder: (context, state) {
+                          return CustomDropDown(
+                            title: "Year",
+                            items: items,
+                            value: selectedValue,
+                            onChanged: (value) {
+                              toggles++;
+                              isResidenceYearSelected = true;
+                              selectedValue = value as String;
+                              residenceSelectedBloc.add(
+                                DropdownSelectedEvent(
+                                  isDropdownSelected: isResidenceYearSelected &&
+                                      (isAddress1Entered && isCityEntered),
+                                  toggles: toggles,
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                       const SizeBox(height: 30),
                     ],
@@ -172,8 +250,26 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                 ),
               ),
               const SizeBox(height: 20),
-              GradientButton(onTap: () {}, text: "Continue"),
-              const SizeBox(height: 20),
+              BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                builder: (context, state) {
+                  if (state.isDropdownSelected) {
+                    return Column(
+                      children: [
+                        GradientButton(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, Routes.applicationIncome);
+                          },
+                          text: "Continue",
+                        ),
+                        const SizeBox(height: 20),
+                      ],
+                    );
+                  } else {
+                    return const SizeBox();
+                  }
+                },
+              ),
             ],
           ),
         ),

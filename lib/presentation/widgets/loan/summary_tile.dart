@@ -28,7 +28,7 @@ class LoanSummaryTile extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular((20 / Dimensions.designWidth).w),
         ),
-        boxShadow: const [BoxShadows.primary],
+        boxShadow: [BoxShadows.primary],
         color: Colors.white,
       ),
       child: Column(

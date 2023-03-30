@@ -38,7 +38,7 @@ class RetailDashboardOnboarding extends StatelessWidget {
           topLeft: Radius.circular((20 / Dimensions.designWidth).w),
           topRight: Radius.circular((20 / Dimensions.designWidth).w),
         ),
-        boxShadow: const [BoxShadows.primary],
+        boxShadow: [BoxShadows.primary],
         color: Colors.white,
       ),
       child: Column(

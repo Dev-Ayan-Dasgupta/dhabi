@@ -29,7 +29,7 @@ class StatementTypeTile extends StatelessWidget {
           (10 / Dimensions.designWidth).w,
         ),
         decoration: BoxDecoration(
-          boxShadow: const [BoxShadows.primary],
+          boxShadow: [BoxShadows.primary],
           color: color ?? Colors.white,
         ),
         child: Column(

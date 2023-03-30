@@ -1,12 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
+import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
+import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'package:dialup_mobile_app/bloc/request/loan_selected_bloc.dart';
-import 'package:dialup_mobile_app/bloc/request/loan_selected_event.dart';
-import 'package:dialup_mobile_app/bloc/request/loan_selected_state.dart';
 import 'package:dialup_mobile_app/bloc/request/request_bloc.dart';
 import 'package:dialup_mobile_app/bloc/request/request_event.dart';
 import 'package:dialup_mobile_app/bloc/request/request_state.dart';
@@ -36,7 +35,7 @@ class _RequestScreenState extends State<RequestScreen> {
     'Item5',
     'Item6',
     'Item7',
-    'Item8',
+    'Item8'
   ];
 
   String? selectedValue;
@@ -44,9 +43,10 @@ class _RequestScreenState extends State<RequestScreen> {
   @override
   void initState() {
     super.initState();
-    final LoanSelectedBloc loanSelectedBloc = context.read<LoanSelectedBloc>();
-    loanSelectedBloc.add(
-        LoanSelectedEvent(isLoanSelected: isLoanSelected, toggles: toggles));
+    final DropdownSelectedBloc loanSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    loanSelectedBloc.add(DropdownSelectedEvent(
+        isDropdownSelected: isLoanSelected, toggles: toggles));
     final RequestBloc requestBloc = context.read<RequestBloc>();
     requestBloc.add(RequestEvent(isEarly: false, isPartial: false));
   }
@@ -54,7 +54,8 @@ class _RequestScreenState extends State<RequestScreen> {
   @override
   Widget build(BuildContext context) {
     final RequestBloc requestBloc = context.read<RequestBloc>();
-    final LoanSelectedBloc loanSelectedBloc = context.read<LoanSelectedBloc>();
+    final DropdownSelectedBloc loanSelectedBloc =
+        context.read<DropdownSelectedBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -102,6 +103,13 @@ class _RequestScreenState extends State<RequestScreen> {
                               isPartial: isPartialSettlement,
                             ),
                           );
+                          loanSelectedBloc.add(
+                            DropdownSelectedEvent(
+                              isDropdownSelected: isLoanSelected &&
+                                  (isPartialSettlement || isEarlySettlement),
+                              toggles: toggles,
+                            ),
+                          );
                         },
                       );
                     },
@@ -121,6 +129,13 @@ class _RequestScreenState extends State<RequestScreen> {
                               isPartial: isPartialSettlement,
                             ),
                           );
+                          loanSelectedBloc.add(
+                            DropdownSelectedEvent(
+                              isDropdownSelected: isLoanSelected &&
+                                  (isPartialSettlement || isEarlySettlement),
+                              toggles: toggles,
+                            ),
+                          );
                         },
                       );
                     },
@@ -134,7 +149,7 @@ class _RequestScreenState extends State<RequestScreen> {
                     ),
                   ),
                   const SizeBox(height: 10),
-                  BlocBuilder<LoanSelectedBloc, LoanSelectedState>(
+                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
                     builder: (context, state) {
                       return CustomDropDown(
                         title: "Select a Loan Account",
@@ -145,8 +160,8 @@ class _RequestScreenState extends State<RequestScreen> {
                           isLoanSelected = true;
                           selectedValue = value as String;
                           loanSelectedBloc.add(
-                            LoanSelectedEvent(
-                              isLoanSelected: isLoanSelected &&
+                            DropdownSelectedEvent(
+                              isDropdownSelected: isLoanSelected &&
                                   (isPartialSettlement || isEarlySettlement),
                               toggles: toggles,
                             ),
@@ -160,9 +175,9 @@ class _RequestScreenState extends State<RequestScreen> {
             ),
             Column(
               children: [
-                BlocBuilder<LoanSelectedBloc, LoanSelectedState>(
+                BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
                   builder: (context, state) {
-                    if (state.isLoanSelected) {
+                    if (state.isDropdownSelected) {
                       return GradientButton(
                         onTap: () {
                           Navigator.pushReplacementNamed(
