@@ -22,6 +22,7 @@ class CustomTextField extends StatefulWidget {
     this.obscureText,
     required this.onChanged,
     this.hintText,
+    this.keyboardType,
   }) : super(key: key);
 
   final double? width;
@@ -38,6 +39,7 @@ class CustomTextField extends StatefulWidget {
   final bool? obscureText;
   final Function(String) onChanged;
   final String? hintText;
+  final TextInputType? keyboardType;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -82,6 +84,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         obscureText: widget.obscureText ?? false,
         onChanged: widget.onChanged,
+        keyboardType: widget.keyboardType ?? TextInputType.text,
       ),
     );
   }

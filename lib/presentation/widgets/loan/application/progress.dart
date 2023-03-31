@@ -178,7 +178,7 @@ class ApplicationProgress extends StatelessWidget {
             Text(
               "Address",
               style: TextStyles.primary.copyWith(
-                color: const Color(0XFF414141),
+                color: const Color.fromRGBO(29, 29, 29, 0.5),
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
@@ -186,7 +186,7 @@ class ApplicationProgress extends StatelessWidget {
             Text(
               "Income",
               style: TextStyles.primary.copyWith(
-                color: const Color(0XFF414141),
+                color: const Color.fromRGBO(29, 29, 29, 0.5),
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
@@ -194,7 +194,7 @@ class ApplicationProgress extends StatelessWidget {
             Text(
               "Tax",
               style: TextStyles.primary.copyWith(
-                color: const Color(0XFF414141),
+                color: const Color.fromRGBO(29, 29, 29, 0.5),
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
@@ -202,7 +202,7 @@ class ApplicationProgress extends StatelessWidget {
             Text(
               "Account",
               style: TextStyles.primary.copyWith(
-                color: const Color(0XFF414141),
+                color: const Color.fromRGBO(29, 29, 29, 0.5),
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),

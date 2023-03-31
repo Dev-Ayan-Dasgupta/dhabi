@@ -1,21 +1,20 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
-
-class CustomRadioButton extends StatelessWidget {
-  const CustomRadioButton({
+class MultiSelectButton extends StatelessWidget {
+  const MultiSelectButton({
     Key? key,
     required this.isSelected,
-    required this.text,
+    required this.content,
     required this.onTap,
   }) : super(key: key);
 
   final bool isSelected;
-  final String text;
+  final Widget content;
   final VoidCallback onTap;
 
   @override
@@ -34,16 +33,14 @@ class CustomRadioButton extends StatelessWidget {
           borderRadius: BorderRadius.all(
             Radius.circular((10 / Dimensions.designWidth).w),
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    offset: Offset((4 / Dimensions.designWidth).w,
-                        (4 / Dimensions.designWidth).w),
-                    blurRadius: (8 / Dimensions.designWidth).w,
-                    color: const Color.fromRGBO(0, 0, 0, 0.1),
-                  ),
-                ]
-              : [],
+          boxShadow: [
+            BoxShadow(
+              offset: Offset((4 / Dimensions.designWidth).w,
+                  (4 / Dimensions.designWidth).w),
+              blurRadius: (8 / Dimensions.designWidth).w,
+              color: const Color.fromRGBO(0, 0, 0, 0.1),
+            ),
+          ],
           color: Colors.white,
         ),
         child: Row(
@@ -69,13 +66,7 @@ class CustomRadioButton extends StatelessWidget {
               ),
             ),
             const SizeBox(width: 25),
-            Text(
-              text,
-              style: TextStyles.primary.copyWith(
-                color: const Color(0xFF1A3C40),
-                fontSize: (18 / Dimensions.designWidth).w,
-              ),
-            ),
+            content,
           ],
         ),
       ),

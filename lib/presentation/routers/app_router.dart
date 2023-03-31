@@ -5,12 +5,15 @@ import 'package:dialup_mobile_app/presentation/screens/business/loans/request.da
 import 'package:dialup_mobile_app/presentation/screens/business/loans/request_success.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/thank_you.dart';
 import 'package:dialup_mobile_app/presentation/screens/create_password.dart';
+import 'package:dialup_mobile_app/presentation/screens/error_screen.dart';
 import 'package:dialup_mobile_app/presentation/screens/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/account.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/address.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/income.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/application/tax.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/application/tax_crs.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/application/tax_fatca.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verify_mobile.dart';
 import 'package:flutter/material.dart';
 
@@ -102,13 +105,27 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const ApplicationIncomeScreen(),
         );
-      case Routes.applicationTax:
+      case Routes.applicationTaxFATCA:
         return MaterialPageRoute(
-          builder: (_) => const ApplicationTaxScreen(),
+          builder: (_) => const ApplicationTaxFATCAScreen(),
+        );
+      case Routes.applicationTaxCRS:
+        return MaterialPageRoute(
+          builder: (_) => const ApplicationTaxCRSScreen(),
         );
       case Routes.applicationAccount:
         return MaterialPageRoute(
           builder: (_) => const ApplicationAccountScreen(),
+        );
+      case Routes.termsAndConditions:
+        return MaterialPageRoute(
+          builder: (_) => const TermsAndConditionsScreen(),
+        );
+      case Routes.errorScreen:
+        return MaterialPageRoute(
+          builder: (_) => ErrorScreen(
+            argument: args,
+          ),
         );
       default:
         return MaterialPageRoute(

@@ -16,6 +16,9 @@ class Routes {
   static const String loanDetails = 'loan-details';
   static const String applicationAddress = 'application-address';
   static const String applicationIncome = 'application-income';
-  static const String applicationTax = 'application-tax';
+  static const String applicationTaxFATCA = 'application-tax-fatca';
+  static const String applicationTaxCRS = 'application-tax-crs';
   static const String applicationAccount = 'application-account';
+  static const String termsAndConditions = 'terms-and-conditions';
+  static const String errorScreen = 'error-screen';
 }

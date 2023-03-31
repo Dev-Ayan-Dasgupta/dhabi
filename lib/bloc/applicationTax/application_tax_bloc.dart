@@ -1,5 +1,5 @@
-import 'package:dialup_mobile_app/bloc/application_tax/application_tax_event.dart';
-import 'package:dialup_mobile_app/bloc/application_tax/application_tax_state.dart';
+import 'package:dialup_mobile_app/bloc/applicationTax/application_tax_event.dart';
+import 'package:dialup_mobile_app/bloc/applicationTax/application_tax_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ApplicationTaxBloc
@@ -7,7 +7,8 @@ class ApplicationTaxBloc
   ApplicationTaxBloc()
       : super(
           ApplicationTaxState(
-            isUS: false,
+            isUSCitizen: false,
+            isUSResident: false,
             isPPonly: true,
             isTINvalid: false,
             isCRS: false,
@@ -17,7 +18,8 @@ class ApplicationTaxBloc
     on<ApplicationTaxEvent>(
       (event, emit) => emit(
         ApplicationTaxState(
-          isUS: event.isUS,
+          isUSCitizen: event.isUSCitizen,
+          isUSResident: event.isUSResident,
           isPPonly: event.isPPonly,
           isTINvalid: event.isTINvalid,
           isCRS: event.isCRS,

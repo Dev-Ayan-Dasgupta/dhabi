@@ -114,7 +114,8 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
                     children: [
                       GradientButton(
                         onTap: () {
-                          Navigator.pushNamed(context, Routes.applicationTax);
+                          Navigator.pushNamed(
+                              context, Routes.applicationTaxFATCA);
                         },
                         text: "Continue",
                       ),

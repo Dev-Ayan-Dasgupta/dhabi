@@ -13,6 +13,8 @@ class ImageConstants {
   // * ICON VECTORS
   static const String splashIcon = "${iconsRoot}splash.svg";
   static const String arrowBack = "${iconsRoot}arrow_back.svg";
+  static const String arrowDownward = "${iconsRoot}arrow_downward.svg";
+  static const String arrowUpward = "${iconsRoot}arrow_upward.svg";
   static const String checkCircle = "${iconsRoot}check_circle.svg";
   static const String checkCircleGreen = "${iconsRoot}check_circle_green.svg";
   static const String checkCircleOutlined =
