@@ -38,18 +38,32 @@ class _ErrorScreenState extends State<ErrorScreen> {
         child: Column(
           children: [
             Expanded(
-              child: Center(
-                child: Column(
-                  children: [
-                    SvgPicture.asset(
-                      errorArgumentModel.iconPath,
-                      width: (215 / Dimensions.designWidth).w,
-                      height: (215 / Dimensions.designWidth).w,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    errorArgumentModel.iconPath,
+                    width: (215 / Dimensions.designWidth).w,
+                    height: (215 / Dimensions.designWidth).w,
+                  ),
+                  const SizeBox(height: 30),
+                  Text(
+                    errorArgumentModel.title,
+                    style: TextStyles.primaryBold.copyWith(
+                      color: const Color(0xFF252525),
+                      fontSize: (24 / Dimensions.designWidth).w,
                     ),
-                    const SizeBox(height: 20),
-                    const SizeBox(height: 20),
-                  ],
-                ),
+                  ),
+                  const SizeBox(height: 20),
+                  Text(
+                    errorArgumentModel.message,
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: const Color(0xFF252525),
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
             Column(
@@ -58,7 +72,7 @@ class _ErrorScreenState extends State<ErrorScreen> {
                   onTap: errorArgumentModel.onTap,
                   text: errorArgumentModel.buttonText,
                 ),
-                const SizeBox(height: 32),
+                const SizeBox(height: 20),
               ],
             )
           ],

@@ -68,9 +68,10 @@ class _CustomDropDownState extends State<CustomDropDown> {
             borderRadius: BorderRadius.all(
               Radius.circular((10 / Dimensions.designWidth).w),
             ),
+            boxShadow: [BoxShadows.primary],
             color: Colors.white,
           ),
-          elevation: 2,
+          elevation: 1,
         ),
         iconStyleData: IconStyleData(
           icon: const Icon(

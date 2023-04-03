@@ -15,6 +15,7 @@ class ImageConstants {
   static const String arrowBack = "${iconsRoot}arrow_back.svg";
   static const String arrowDownward = "${iconsRoot}arrow_downward.svg";
   static const String arrowUpward = "${iconsRoot}arrow_upward.svg";
+  static const String arrowForwardIos = "${iconsRoot}arrow_forward_ios.svg";
   static const String checkCircle = "${iconsRoot}check_circle.svg";
   static const String checkCircleGreen = "${iconsRoot}check_circle_green.svg";
   static const String checkCircleOutlined =
@@ -43,6 +44,8 @@ class ImageConstants {
   static const String statement = "${iconsRoot}statement.svg";
   static const String document = "${iconsRoot}document.svg";
   static const String help = "${iconsRoot}help.svg";
+  static const String percent = "${iconsRoot}percent.svg";
+  static const String rates = "${iconsRoot}rates.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

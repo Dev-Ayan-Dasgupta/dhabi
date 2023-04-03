@@ -21,4 +21,7 @@ class Routes {
   static const String applicationAccount = 'application-account';
   static const String termsAndConditions = 'terms-and-conditions';
   static const String errorScreen = 'error-screen';
+  static const String interestRates = 'interest-rates';
+  static const String createDeposits = 'create-deposits';
+  static const String depositConfirmation = 'deposit-confirmation';
 }

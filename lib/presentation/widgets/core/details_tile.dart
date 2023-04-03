@@ -22,6 +22,7 @@ class DetailsTile extends StatelessWidget {
       children: [
         Expanded(
           child: ListView.builder(
+            shrinkWrap: true,
             itemCount: length,
             itemBuilder: (context, index) {
               return Container(

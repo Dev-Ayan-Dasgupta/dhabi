@@ -13,6 +13,9 @@ import 'package:dialup_mobile_app/presentation/screens/retail/application/income
 import 'package:dialup_mobile_app/presentation/screens/retail/application/tax_crs.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/tax_fatca.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/deposits/create_deposits.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/deposits/deposit_confirmation.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/deposits/interest_rates.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verify_mobile.dart';
 import 'package:flutter/material.dart';
@@ -127,6 +130,19 @@ class AppRouter {
             argument: args,
           ),
         );
+      case Routes.interestRates:
+        return MaterialPageRoute(
+          builder: (_) => const InterestRatesScreen(),
+        );
+      case Routes.createDeposits:
+        return MaterialPageRoute(
+          builder: (_) => const CreateDepositsScreen(),
+        );
+      case Routes.depositConfirmation:
+        return MaterialPageRoute(
+          builder: (_) => const DepositConfirmationScreen(),
+        );
+
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

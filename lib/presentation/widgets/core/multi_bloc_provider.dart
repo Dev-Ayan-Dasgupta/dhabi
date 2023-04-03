@@ -5,9 +5,11 @@ import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/criteria/criteria_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_bloc.dart';
+import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/email/email_bloc.dart';
 import 'package:dialup_mobile_app/bloc/emailExists/email_exists_bloc.dart';
+import 'package:dialup_mobile_app/bloc/errorMessage/error_message_bloc.dart';
 import 'package:dialup_mobile_app/bloc/matchPassword/match_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/multiSelect/multi_select_bloc.dart';
 import 'package:dialup_mobile_app/bloc/otp/pinput/error_bloc.dart';
@@ -90,6 +92,12 @@ class CustomMultiBlocProvider extends StatelessWidget {
         ),
         BlocProvider<ScrollDirectionBloc>(
           create: (context) => ScrollDirectionBloc(),
+        ),
+        BlocProvider<ErrorMessageBloc>(
+          create: (context) => ErrorMessageBloc(),
+        ),
+        BlocProvider<DateSelectionBloc>(
+          create: (context) => DateSelectionBloc(),
         ),
       ],
       child: MaterialApp(

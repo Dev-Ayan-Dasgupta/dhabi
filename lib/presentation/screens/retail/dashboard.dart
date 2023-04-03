@@ -163,34 +163,24 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                   scrollDirection: Axis.horizontal,
                                   itemCount: 6,
                                   itemBuilder: (context, index) {
-                                    if (index == 0) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                          left: (15 / Dimensions.designWidth).w,
-                                        ),
-                                        child: AccountSummaryTile(
-                                          onTap: () {},
-                                          imgUrl:
-                                              "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                          accountType: "Savings",
-                                          currency: "AED",
-                                          amount: 0.00,
-                                          subText: "Powered by FH",
-                                          subImgUrl:
-                                              "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-                                        ),
-                                      );
-                                    } else {
-                                      return AccountSummaryTile(
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        left: (index == 0)
+                                            ? (15 / Dimensions.designWidth).w
+                                            : 0,
+                                      ),
+                                      child: AccountSummaryTile(
                                         onTap: () {},
-                                        imgUrl: "",
+                                        imgUrl:
+                                            "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                         accountType: "Savings",
-                                        currency: "USD",
+                                        currency: "AED",
                                         amount: 0.00,
-                                        subText: "",
-                                        subImgUrl: "",
-                                      );
-                                    }
+                                        subText: "Powered by FH",
+                                        subImgUrl:
+                                            "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+                                      ),
+                                    );
                                   },
                                 ),
                               ),
@@ -256,34 +246,29 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                   scrollDirection: Axis.horizontal,
                                   itemCount: 6,
                                   itemBuilder: (context, index) {
-                                    if (index == 0) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                          left: (15 / Dimensions.designWidth).w,
-                                        ),
-                                        child: AccountSummaryTile(
-                                          onTap: () {},
-                                          imgUrl:
-                                              "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                          accountType: "Savings",
-                                          currency: "AED",
-                                          amount: 0.00,
-                                          subText: "Powered by FH",
-                                          subImgUrl:
-                                              "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-                                        ),
-                                      );
-                                    } else {
-                                      return AccountSummaryTile(
-                                        onTap: () {},
-                                        imgUrl: "",
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        left: (index == 0)
+                                            ? (15 / Dimensions.designWidth).w
+                                            : 0,
+                                      ),
+                                      child: AccountSummaryTile(
+                                        onTap: () {
+                                          if (index == 0) {
+                                            Navigator.pushNamed(
+                                                context, Routes.createDeposits);
+                                          }
+                                        },
+                                        imgUrl:
+                                            "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                         accountType: "Savings",
-                                        currency: "USD",
+                                        currency: "AED",
                                         amount: 0.00,
-                                        subText: "",
-                                        subImgUrl: "",
-                                      );
-                                    }
+                                        subText: "Powered by FH",
+                                        subImgUrl:
+                                            "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+                                      ),
+                                    );
                                   },
                                 ),
                               ),
@@ -319,15 +304,12 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   DashboardActivityTile(
-                                    iconPath: ImageConstants.add,
-                                    activityText: "Add Money",
-                                    onTap: () {},
-                                  ),
-                                  const SizeBox(width: 40),
-                                  DashboardActivityTile(
-                                    iconPath: ImageConstants.arrowOutward,
-                                    activityText: "Send Money",
-                                    onTap: () {},
+                                    iconPath: ImageConstants.percent,
+                                    activityText: "Rates",
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, Routes.interestRates);
+                                    },
                                   ),
                                   const SizeBox(width: 40),
                                   DashboardActivityTile(
@@ -349,34 +331,24 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                   scrollDirection: Axis.horizontal,
                                   itemCount: 6,
                                   itemBuilder: (context, index) {
-                                    if (index == 0) {
-                                      return Padding(
-                                        padding: EdgeInsets.only(
-                                          left: (15 / Dimensions.designWidth).w,
-                                        ),
-                                        child: AccountSummaryTile(
-                                          onTap: () {},
-                                          imgUrl:
-                                              "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                          accountType: "Savings",
-                                          currency: "AED",
-                                          amount: 0.00,
-                                          subText: "Powered by FH",
-                                          subImgUrl:
-                                              "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-                                        ),
-                                      );
-                                    } else {
-                                      return AccountSummaryTile(
+                                    return Padding(
+                                      padding: EdgeInsets.only(
+                                        left: (index == 0)
+                                            ? (15 / Dimensions.designWidth).w
+                                            : 0,
+                                      ),
+                                      child: AccountSummaryTile(
                                         onTap: () {},
-                                        imgUrl: "",
+                                        imgUrl:
+                                            "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                         accountType: "Savings",
-                                        currency: "USD",
+                                        currency: "AED",
                                         amount: 0.00,
-                                        subText: "",
-                                        subImgUrl: "",
-                                      );
-                                    }
+                                        subText: "Powered by FH",
+                                        subImgUrl:
+                                            "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+                                      ),
+                                    );
                                   },
                                 ),
                               ),
@@ -385,10 +357,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                 builder: (context, state) {
                                   return Padding(
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 47.w -
-                                            ((6 - 1) *
-                                                (6.5 / Dimensions.designWidth)
-                                                    .w)),
+                                      horizontal: 47.w -
+                                          ((6 - 1) *
+                                              (6.5 / Dimensions.designWidth).w),
+                                    ),
                                     child: SizedBox(
                                       width: 90.w,
                                       height: (9 / Dimensions.designWidth).w,
