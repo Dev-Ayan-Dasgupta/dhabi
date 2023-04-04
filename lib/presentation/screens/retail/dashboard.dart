@@ -258,6 +258,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                             Navigator.pushNamed(
                                                 context, Routes.createDeposits);
                                           }
+                                          if (index == 1) {
+                                            Navigator.pushNamed(
+                                                context, Routes.depositDetails);
+                                          }
                                         },
                                         imgUrl:
                                             "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",

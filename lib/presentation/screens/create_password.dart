@@ -105,11 +105,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   title: "Are you sure?",
                   message:
                       "Going to the previous screen will make you repeat this step.",
-                  // buttonText: "Go Back",
-                  // buttonAction: () {
-                  //   Navigator.pop(context);
-                  //   Navigator.pop(context);
-                  // },
                   actionWidget: Column(
                     children: [
                       GradientButton(
@@ -384,8 +379,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                   triggerCheckBoxEvent(isChecked);
                                   triggerAllTrueEvent();
                                 },
-                                child:
-                                    SvgPicture.asset(ImageConstants.checkedBox),
+                                child: SvgPicture.asset(
+                                  ImageConstants.checkedBox,
+                                  width: (14 / Dimensions.designWidth).w,
+                                  height: (14 / Dimensions.designWidth).w,
+                                ),
                               );
                             } else {
                               return InkWell(
@@ -395,7 +393,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                   triggerAllTrueEvent();
                                 },
                                 child: SvgPicture.asset(
-                                    ImageConstants.uncheckedBox),
+                                  ImageConstants.uncheckedBox,
+                                  width: (14 / Dimensions.designWidth).w,
+                                  height: (14 / Dimensions.designWidth).w,
+                                ),
                               );
                             }
                           },

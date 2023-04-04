@@ -24,4 +24,7 @@ class Routes {
   static const String interestRates = 'interest-rates';
   static const String createDeposits = 'create-deposits';
   static const String depositConfirmation = 'deposit-confirmation';
+  static const String depositDetails = 'deposit-details';
+  static const String depositStatement = 'deposit-statement';
+  static const String prematureWithdrawal = 'premature-withdrawal';
 }
