@@ -125,7 +125,9 @@ class AppRouter {
         );
       case Routes.termsAndConditions:
         return MaterialPageRoute(
-          builder: (_) => const TermsAndConditionsScreen(),
+          builder: (_) => TermsAndConditionsScreen(
+            argument: args,
+          ),
         );
       case Routes.errorScreen:
         return MaterialPageRoute(

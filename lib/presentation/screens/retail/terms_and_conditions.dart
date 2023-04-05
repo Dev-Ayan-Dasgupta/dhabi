@@ -1,3 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
@@ -7,16 +13,19 @@ import 'package:dialup_mobile_app/bloc/scrollDirection/scroll_direction_state.da
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/constants/text.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class TermsAndConditionsScreen extends StatefulWidget {
-  const TermsAndConditionsScreen({Key? key}) : super(key: key);
+  const TermsAndConditionsScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<TermsAndConditionsScreen> createState() =>
@@ -28,9 +37,13 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
   final ScrollController _scrollController = ScrollController();
   bool scrollDown = true;
 
+  late CreateAccountArgumentModel createAccountArgumentModel;
+
   @override
   void initState() {
     super.initState();
+    createAccountArgumentModel =
+        CreateAccountArgumentModel.fromMap(widget.argument as dynamic ?? {});
     final ScrollDirectionBloc scrollDirectionBloc =
         context.read<ScrollDirectionBloc>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -151,7 +164,19 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                       builder: (context, state) {
                         if (isChecked) {
                           return GradientButton(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.pushNamed(
+                                  context, Routes.retailDashboard,
+                                  arguments: RetailDashboardArgumentModel(
+                                    imgUrl:
+                                        "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                    name: createAccountArgumentModel.email,
+                                  ).toMap());
+                            },
                             text: "I Agree",
                           );
                         } else {
