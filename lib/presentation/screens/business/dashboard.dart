@@ -587,7 +587,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                               if (index == 0) {
                                 return const SizeBox(height: 50);
                               }
-                              return const DashboardTransactionListTile(
+                              return DashboardTransactionListTile(
+                                onTap: () {},
                                 isCredit: true,
                                 title:
                                     "Tax non filer debit Tax non filer debit",

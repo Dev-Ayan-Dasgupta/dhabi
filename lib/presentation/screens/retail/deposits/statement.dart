@@ -70,7 +70,8 @@ class _DepositStatementScreenState extends State<DepositStatementScreen> {
               child: ListView.builder(
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return const DashboardTransactionListTile(
+                  return DashboardTransactionListTile(
+                    onTap: () {},
                     isCredit: true,
                     title: "Monthly Int. Payout",
                     name: "Int. earned",

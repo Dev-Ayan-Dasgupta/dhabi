@@ -40,7 +40,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   double _scrollOffset = 0;
   int _scrollIndex = 0;
 
-  final bool hasOnboarded = false;
+  final bool hasOnboarded = true;
 
   @override
   void initState() {
@@ -224,13 +224,19 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                   DashboardActivityTile(
                                     iconPath: ImageConstants.arrowOutward,
                                     activityText: "Send Money",
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, Routes.sendMoney);
+                                    },
                                   ),
                                   const SizeBox(width: 40),
                                   DashboardActivityTile(
                                     iconPath: ImageConstants.barChart,
                                     activityText: "Insights",
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, Routes.insights);
+                                    },
                                   ),
                                 ],
                               ),
@@ -319,7 +325,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                   DashboardActivityTile(
                                     iconPath: ImageConstants.barChart,
                                     activityText: "Insights",
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, Routes.insights);
+                                    },
                                   ),
                                 ],
                               ),
@@ -490,7 +499,11 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                               if (index == 0) {
                                 return const SizeBox(height: 50);
                               }
-                              return const DashboardTransactionListTile(
+                              return DashboardTransactionListTile(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.transferDetails);
+                                },
                                 isCredit: true,
                                 title:
                                     "Tax non filer debit Tax non filer debit",
@@ -552,317 +565,317 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   }
 }
 
-class ExploreView extends StatelessWidget {
-  const ExploreView({
-    super.key,
-    required ScrollController scrollController,
-    required int scrollIndex,
-  })  : _scrollController = scrollController,
-        _scrollIndex = scrollIndex;
+// class ExploreView extends StatelessWidget {
+//   const ExploreView({
+//     super.key,
+//     required ScrollController scrollController,
+//     required int scrollIndex,
+//   })  : _scrollController = scrollController,
+//         _scrollIndex = scrollIndex;
 
-  final ScrollController _scrollController;
-  final int _scrollIndex;
+//   final ScrollController _scrollController;
+//   final int _scrollIndex;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizeBox(height: 9.5),
-        Expanded(
-          child: ListView.builder(
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    left: (15 / Dimensions.designWidth).w,
-                  ),
-                  child: AccountSummaryTile(
-                    onTap: () {},
-                    imgUrl:
-                        "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                    accountType: "Savings",
-                    currency: "AED",
-                    amount: 0.00,
-                    subText: "Powered by FH",
-                    subImgUrl:
-                        "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-                  ),
-                );
-              } else {
-                return AccountSummaryTile(
-                  onTap: () {},
-                  imgUrl: "",
-                  accountType: "Savings",
-                  currency: "USD",
-                  amount: 0.00,
-                  subText: "",
-                  subImgUrl: "",
-                );
-              }
-            },
-          ),
-        ),
-        const SizeBox(height: 10),
-        BlocBuilder<SummaryTileBloc, SummaryTileState>(
-          builder: (context, state) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal:
-                      47.w - ((6 - 1) * (6.5 / Dimensions.designWidth).w)),
-              child: SizedBox(
-                width: 90.w,
-                height: (9 / Dimensions.designWidth).w,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 6,
-                  itemBuilder: (context, index) {
-                    return ScrollIndicator(
-                      isCurrent: (index == _scrollIndex),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-        const SizeBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DashboardActivityTile(
-              iconPath: ImageConstants.add,
-              activityText: "Add Money",
-              onTap: () {},
-            ),
-            const SizeBox(width: 40),
-            DashboardActivityTile(
-              iconPath: ImageConstants.arrowOutward,
-              activityText: "Send Money",
-              onTap: () {},
-            ),
-            const SizeBox(width: 40),
-            DashboardActivityTile(
-              iconPath: ImageConstants.barChart,
-              activityText: "Insights",
-              onTap: () {},
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         const SizeBox(height: 9.5),
+//         Expanded(
+//           child: ListView.builder(
+//             controller: _scrollController,
+//             scrollDirection: Axis.horizontal,
+//             itemCount: 6,
+//             itemBuilder: (context, index) {
+//               if (index == 0) {
+//                 return Padding(
+//                   padding: EdgeInsets.only(
+//                     left: (15 / Dimensions.designWidth).w,
+//                   ),
+//                   child: AccountSummaryTile(
+//                     onTap: () {},
+//                     imgUrl:
+//                         "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
+//                     accountType: "Savings",
+//                     currency: "AED",
+//                     amount: 0.00,
+//                     subText: "Powered by FH",
+//                     subImgUrl:
+//                         "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+//                   ),
+//                 );
+//               } else {
+//                 return AccountSummaryTile(
+//                   onTap: () {},
+//                   imgUrl: "",
+//                   accountType: "Savings",
+//                   currency: "USD",
+//                   amount: 0.00,
+//                   subText: "",
+//                   subImgUrl: "",
+//                 );
+//               }
+//             },
+//           ),
+//         ),
+//         const SizeBox(height: 10),
+//         BlocBuilder<SummaryTileBloc, SummaryTileState>(
+//           builder: (context, state) {
+//             return Padding(
+//               padding: EdgeInsets.symmetric(
+//                   horizontal:
+//                       47.w - ((6 - 1) * (6.5 / Dimensions.designWidth).w)),
+//               child: SizedBox(
+//                 width: 90.w,
+//                 height: (9 / Dimensions.designWidth).w,
+//                 child: ListView.builder(
+//                   scrollDirection: Axis.horizontal,
+//                   physics: const NeverScrollableScrollPhysics(),
+//                   itemCount: 6,
+//                   itemBuilder: (context, index) {
+//                     return ScrollIndicator(
+//                       isCurrent: (index == _scrollIndex),
+//                     );
+//                   },
+//                 ),
+//               ),
+//             );
+//           },
+//         ),
+//         const SizeBox(height: 15),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             DashboardActivityTile(
+//               iconPath: ImageConstants.add,
+//               activityText: "Add Money",
+//               onTap: () {},
+//             ),
+//             const SizeBox(width: 40),
+//             DashboardActivityTile(
+//               iconPath: ImageConstants.arrowOutward,
+//               activityText: "Send Money",
+//               onTap: () {},
+//             ),
+//             const SizeBox(width: 40),
+//             DashboardActivityTile(
+//               iconPath: ImageConstants.barChart,
+//               activityText: "Insights",
+//               onTap: () {},
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+// }
 
-class DepositsView extends StatelessWidget {
-  const DepositsView({
-    super.key,
-    required ScrollController scrollController,
-    required int scrollIndex,
-  })  : _scrollController = scrollController,
-        _scrollIndex = scrollIndex;
+// class DepositsView extends StatelessWidget {
+//   const DepositsView({
+//     super.key,
+//     required ScrollController scrollController,
+//     required int scrollIndex,
+//   })  : _scrollController = scrollController,
+//         _scrollIndex = scrollIndex;
 
-  final ScrollController _scrollController;
-  final int _scrollIndex;
+//   final ScrollController _scrollController;
+//   final int _scrollIndex;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizeBox(height: 9.5),
-        Expanded(
-          child: ListView.builder(
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    left: (15 / Dimensions.designWidth).w,
-                  ),
-                  child: AccountSummaryTile(
-                    onTap: () {},
-                    imgUrl:
-                        "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                    accountType: "Savings",
-                    currency: "AED",
-                    amount: 0.00,
-                    subText: "Powered by FH",
-                    subImgUrl:
-                        "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-                  ),
-                );
-              } else {
-                return AccountSummaryTile(
-                  onTap: () {},
-                  imgUrl: "",
-                  accountType: "Savings",
-                  currency: "USD",
-                  amount: 0.00,
-                  subText: "",
-                  subImgUrl: "",
-                );
-              }
-            },
-          ),
-        ),
-        const SizeBox(height: 10),
-        BlocBuilder<SummaryTileBloc, SummaryTileState>(
-          builder: (context, state) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal:
-                      47.w - ((6 - 1) * (6.5 / Dimensions.designWidth).w)),
-              child: SizedBox(
-                width: 90.w,
-                height: (9 / Dimensions.designWidth).w,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 6,
-                  itemBuilder: (context, index) {
-                    return ScrollIndicator(
-                      isCurrent: (index == _scrollIndex),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-        const SizeBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DashboardActivityTile(
-              iconPath: ImageConstants.add,
-              activityText: "Add Money",
-              onTap: () {},
-            ),
-            const SizeBox(width: 40),
-            DashboardActivityTile(
-              iconPath: ImageConstants.arrowOutward,
-              activityText: "Send Money",
-              onTap: () {},
-            ),
-            const SizeBox(width: 40),
-            DashboardActivityTile(
-              iconPath: ImageConstants.barChart,
-              activityText: "Insights",
-              onTap: () {},
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         const SizeBox(height: 9.5),
+//         Expanded(
+//           child: ListView.builder(
+//             controller: _scrollController,
+//             scrollDirection: Axis.horizontal,
+//             itemCount: 6,
+//             itemBuilder: (context, index) {
+//               if (index == 0) {
+//                 return Padding(
+//                   padding: EdgeInsets.only(
+//                     left: (15 / Dimensions.designWidth).w,
+//                   ),
+//                   child: AccountSummaryTile(
+//                     onTap: () {},
+//                     imgUrl:
+//                         "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
+//                     accountType: "Savings",
+//                     currency: "AED",
+//                     amount: 0.00,
+//                     subText: "Powered by FH",
+//                     subImgUrl:
+//                         "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+//                   ),
+//                 );
+//               } else {
+//                 return AccountSummaryTile(
+//                   onTap: () {},
+//                   imgUrl: "",
+//                   accountType: "Savings",
+//                   currency: "USD",
+//                   amount: 0.00,
+//                   subText: "",
+//                   subImgUrl: "",
+//                 );
+//               }
+//             },
+//           ),
+//         ),
+//         const SizeBox(height: 10),
+//         BlocBuilder<SummaryTileBloc, SummaryTileState>(
+//           builder: (context, state) {
+//             return Padding(
+//               padding: EdgeInsets.symmetric(
+//                   horizontal:
+//                       47.w - ((6 - 1) * (6.5 / Dimensions.designWidth).w)),
+//               child: SizedBox(
+//                 width: 90.w,
+//                 height: (9 / Dimensions.designWidth).w,
+//                 child: ListView.builder(
+//                   scrollDirection: Axis.horizontal,
+//                   physics: const NeverScrollableScrollPhysics(),
+//                   itemCount: 6,
+//                   itemBuilder: (context, index) {
+//                     return ScrollIndicator(
+//                       isCurrent: (index == _scrollIndex),
+//                     );
+//                   },
+//                 ),
+//               ),
+//             );
+//           },
+//         ),
+//         const SizeBox(height: 15),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             DashboardActivityTile(
+//               iconPath: ImageConstants.add,
+//               activityText: "Add Money",
+//               onTap: () {},
+//             ),
+//             const SizeBox(width: 40),
+//             DashboardActivityTile(
+//               iconPath: ImageConstants.arrowOutward,
+//               activityText: "Send Money",
+//               onTap: () {},
+//             ),
+//             const SizeBox(width: 40),
+//             DashboardActivityTile(
+//               iconPath: ImageConstants.barChart,
+//               activityText: "Insights",
+//               onTap: () {},
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+// }
 
-class HomeView extends StatelessWidget {
-  const HomeView({
-    super.key,
-    required ScrollController scrollController,
-    required int scrollIndex,
-  })  : _scrollController = scrollController,
-        _scrollIndex = scrollIndex;
+// class HomeView extends StatelessWidget {
+//   const HomeView({
+//     super.key,
+//     required ScrollController scrollController,
+//     required int scrollIndex,
+//   })  : _scrollController = scrollController,
+//         _scrollIndex = scrollIndex;
 
-  final ScrollController _scrollController;
-  final int _scrollIndex;
+//   final ScrollController _scrollController;
+//   final int _scrollIndex;
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizeBox(height: 9.5),
-        Expanded(
-          child: ListView.builder(
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                    left: (15 / Dimensions.designWidth).w,
-                  ),
-                  child: AccountSummaryTile(
-                    onTap: () {},
-                    imgUrl:
-                        "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                    accountType: "Savings",
-                    currency: "AED",
-                    amount: 0.00,
-                    subText: "Powered by FH",
-                    subImgUrl:
-                        "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-                  ),
-                );
-              } else {
-                return AccountSummaryTile(
-                  onTap: () {},
-                  imgUrl: "",
-                  accountType: "Savings",
-                  currency: "USD",
-                  amount: 0.00,
-                  subText: "",
-                  subImgUrl: "",
-                );
-              }
-            },
-          ),
-        ),
-        const SizeBox(height: 10),
-        BlocBuilder<SummaryTileBloc, SummaryTileState>(
-          builder: (context, state) {
-            return Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal:
-                      47.w - ((6 - 1) * (6.5 / Dimensions.designWidth).w)),
-              child: SizedBox(
-                width: 90.w,
-                height: (9 / Dimensions.designWidth).w,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 6,
-                  itemBuilder: (context, index) {
-                    return ScrollIndicator(
-                      isCurrent: (index == _scrollIndex),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-        const SizeBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DashboardActivityTile(
-              iconPath: ImageConstants.add,
-              activityText: "Add Money",
-              onTap: () {},
-            ),
-            const SizeBox(width: 40),
-            DashboardActivityTile(
-              iconPath: ImageConstants.arrowOutward,
-              activityText: "Send Money",
-              onTap: () {},
-            ),
-            const SizeBox(width: 40),
-            DashboardActivityTile(
-              iconPath: ImageConstants.barChart,
-              activityText: "Insights",
-              onTap: () {},
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         const SizeBox(height: 9.5),
+//         Expanded(
+//           child: ListView.builder(
+//             controller: _scrollController,
+//             scrollDirection: Axis.horizontal,
+//             itemCount: 6,
+//             itemBuilder: (context, index) {
+//               if (index == 0) {
+//                 return Padding(
+//                   padding: EdgeInsets.only(
+//                     left: (15 / Dimensions.designWidth).w,
+//                   ),
+//                   child: AccountSummaryTile(
+//                     onTap: () {},
+//                     imgUrl:
+//                         "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
+//                     accountType: "Savings",
+//                     currency: "AED",
+//                     amount: 0.00,
+//                     subText: "Powered by FH",
+//                     subImgUrl:
+//                         "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+//                   ),
+//                 );
+//               } else {
+//                 return AccountSummaryTile(
+//                   onTap: () {},
+//                   imgUrl: "",
+//                   accountType: "Savings",
+//                   currency: "USD",
+//                   amount: 0.00,
+//                   subText: "",
+//                   subImgUrl: "",
+//                 );
+//               }
+//             },
+//           ),
+//         ),
+//         const SizeBox(height: 10),
+//         BlocBuilder<SummaryTileBloc, SummaryTileState>(
+//           builder: (context, state) {
+//             return Padding(
+//               padding: EdgeInsets.symmetric(
+//                   horizontal:
+//                       47.w - ((6 - 1) * (6.5 / Dimensions.designWidth).w)),
+//               child: SizedBox(
+//                 width: 90.w,
+//                 height: (9 / Dimensions.designWidth).w,
+//                 child: ListView.builder(
+//                   scrollDirection: Axis.horizontal,
+//                   physics: const NeverScrollableScrollPhysics(),
+//                   itemCount: 6,
+//                   itemBuilder: (context, index) {
+//                     return ScrollIndicator(
+//                       isCurrent: (index == _scrollIndex),
+//                     );
+//                   },
+//                 ),
+//               ),
+//             );
+//           },
+//         ),
+//         const SizeBox(height: 15),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           children: [
+//             DashboardActivityTile(
+//               iconPath: ImageConstants.add,
+//               activityText: "Add Money",
+//               onTap: () {},
+//             ),
+//             const SizeBox(width: 40),
+//             DashboardActivityTile(
+//               iconPath: ImageConstants.arrowOutward,
+//               activityText: "Send Money",
+//               onTap: () {},
+//             ),
+//             const SizeBox(width: 40),
+//             DashboardActivityTile(
+//               iconPath: ImageConstants.barChart,
+//               activityText: "Insights",
+//               onTap: () {},
+//             ),
+//           ],
+//         ),
+//       ],
+//     );
+//   }
+// }

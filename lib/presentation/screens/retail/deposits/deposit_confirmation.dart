@@ -31,6 +31,8 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
     DetailsTileModel(key: "Interest Amount", value: "USD 300"),
     DetailsTileModel(key: "Interest Payout", value: "On maturity"),
     DetailsTileModel(key: "On Maturity", value: "Auto renewal"),
+    DetailsTileModel(key: "Credit Account Number", value: "235437484001"),
+    DetailsTileModel(key: "Date of Maturity", value: "12 December 2022"),
   ];
 
   bool isChecked = false;

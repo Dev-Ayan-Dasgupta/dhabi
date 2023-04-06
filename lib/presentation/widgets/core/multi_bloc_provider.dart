@@ -4,6 +4,7 @@ import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/criteria/criteria_bloc.dart';
+import 'package:dialup_mobile_app/bloc/currencyPicker/currency_picker_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
@@ -98,6 +99,9 @@ class CustomMultiBlocProvider extends StatelessWidget {
         ),
         BlocProvider<DateSelectionBloc>(
           create: (context) => DateSelectionBloc(),
+        ),
+        BlocProvider<CurrencyPickerBloc>(
+          create: (context) => CurrencyPickerBloc(),
         ),
       ],
       child: MaterialApp(

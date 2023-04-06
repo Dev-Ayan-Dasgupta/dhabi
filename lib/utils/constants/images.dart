@@ -46,6 +46,12 @@ class ImageConstants {
   static const String help = "${iconsRoot}help.svg";
   static const String percent = "${iconsRoot}percent.svg";
   static const String rates = "${iconsRoot}rates.svg";
+  static const String accountBalance = "${iconsRoot}account_balance.svg";
+  static const String flagCircle = "${iconsRoot}flag_circle.svg";
+  static const String moveDown = "${iconsRoot}move_down.svg";
+  static const String public = "${iconsRoot}public.svg";
+  static const String cancel = "${iconsRoot}cancel.svg";
+  static const String hourglassBottom = "${iconsRoot}hourglass_bottom.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

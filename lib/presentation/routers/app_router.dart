@@ -7,19 +7,12 @@ import 'package:dialup_mobile_app/presentation/screens/business/thank_you.dart';
 import 'package:dialup_mobile_app/presentation/screens/create_password.dart';
 import 'package:dialup_mobile_app/presentation/screens/error_screen.dart';
 import 'package:dialup_mobile_app/presentation/screens/index.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/application/account.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/application/address.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/application/income.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/application/tax_crs.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/application/tax_fatca.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/application/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/deposits/create_deposits.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/deposits/deposit_confirmation.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/deposits/deposit_details.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/deposits/interest_rates.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/deposits/premature_withdrawal.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/deposits/statement.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/deposits/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/insights.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/transfer/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verify_mobile.dart';
 import 'package:flutter/material.dart';
 
@@ -158,6 +151,26 @@ class AppRouter {
       case Routes.depositStatement:
         return MaterialPageRoute(
           builder: (_) => const DepositStatementScreen(),
+        );
+      case Routes.insights:
+        return MaterialPageRoute(
+          builder: (_) => const InsightsScreen(),
+        );
+      case Routes.transferDetails:
+        return MaterialPageRoute(
+          builder: (_) => const TransferDetailsScreen(),
+        );
+      case Routes.sendMoney:
+        return MaterialPageRoute(
+          builder: (_) => const SendMoneyScreen(),
+        );
+      case Routes.sendMoneyFrom:
+        return MaterialPageRoute(
+          builder: (_) => const SendMoneyFromScreen(),
+        );
+      case Routes.sendMoneyTo:
+        return MaterialPageRoute(
+          builder: (_) => const SendMoneyToScreen(),
         );
       default:
         return MaterialPageRoute(
