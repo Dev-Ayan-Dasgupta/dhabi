@@ -33,6 +33,7 @@ class ImageConstants {
   static const String dhabiBusinessText = "${iconsRoot}dhabi_business_text.svg";
   static const String notifications = "${iconsRoot}notifications.svg";
   static const String add = "${iconsRoot}add.svg";
+  static const String addCircle = "${iconsRoot}add_circle.svg";
   static const String arrowOutward = "${iconsRoot}arrow_outward.svg";
   static const String barChart = "${iconsRoot}bar_chart.svg";
   static const String dot = "${iconsRoot}dot.svg";
@@ -53,6 +54,7 @@ class ImageConstants {
   static const String cancel = "${iconsRoot}cancel.svg";
   static const String hourglassBottom = "${iconsRoot}hourglass_bottom.svg";
   static const String equals = "${iconsRoot}equals.svg";
+  static const String search = "${iconsRoot}search.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

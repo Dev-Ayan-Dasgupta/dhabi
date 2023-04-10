@@ -1,9 +1,14 @@
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TransferAmountScreen extends StatefulWidget {
   const TransferAmountScreen({Key? key}) : super(key: key);
@@ -17,8 +22,17 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       TextEditingController(text: "0");
   final TextEditingController _receiveController =
       TextEditingController(text: "0");
+
+  final bool isBetweenAccounts = true;
+  bool isShowButton = true;
+  bool isNotZero = false;
+  final double maxBalance = 1000;
+  final double exchangeRate = 0.34304;
+
   @override
   Widget build(BuildContext context) {
+    final ShowButtonBloc showProceedButtonBloc = context.read<ShowButtonBloc>();
+    final ShowButtonBloc toggleCaptionsBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -36,7 +50,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-          )
+          ),
         ],
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -68,17 +82,44 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                       ),
                     ),
                     const SizeBox(height: 30),
-                    Text(
-                      "You Send",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0XFF636363),
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: (context, state) {
+                        return Text(
+                          !isNotZero ? "You Send" : "You're Sending",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: const Color(0XFF636363),
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        );
+                      },
                     ),
                     const SizeBox(height: 10),
                     CustomTextField(
                       controller: _sendController,
-                      onChanged: (p0) {},
+                      onChanged: (p0) {
+                        if (_sendController.text.isEmpty ||
+                            double.parse(_sendController.text) == 0) {
+                          isNotZero = false;
+                          toggleCaptionsBloc
+                              .add(ShowButtonEvent(show: isNotZero));
+                        } else {
+                          isNotZero = true;
+                          toggleCaptionsBloc
+                              .add(ShowButtonEvent(show: isNotZero));
+                        }
+                        if (double.parse(_sendController.text) > maxBalance) {
+                          isShowButton = false;
+                          showProceedButtonBloc
+                              .add(ShowButtonEvent(show: isShowButton));
+                        } else {
+                          isShowButton = true;
+                          showProceedButtonBloc
+                              .add(ShowButtonEvent(show: isShowButton));
+                        }
+                        _receiveController.text =
+                            (double.parse(p0) * exchangeRate)
+                                .toStringAsFixed(2);
+                      },
                       keyboardType: TextInputType.number,
                       suffix: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -100,32 +141,65 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                       ),
                     ),
                     const SizeBox(height: 7),
-                    Text(
-                      "Available to transfer AED 1000",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0XFF818181),
-                        fontSize: (15 / Dimensions.designWidth).w,
-                      ),
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: (context, state) {
+                        return Row(
+                          children: [
+                            isShowButton
+                                ? const SizeBox()
+                                : SvgPicture.asset(
+                                    ImageConstants.errorSolid,
+                                    width: (30 / Dimensions.designWidth).w,
+                                    height: (30 / Dimensions.designHeight).w,
+                                  ),
+                            Text(
+                              isShowButton
+                                  ? "Available to transfer AED 1000"
+                                  : " Insufficient balance",
+                              style: TextStyles.primaryMedium.copyWith(
+                                color: isShowButton
+                                    ? const Color(0XFF818181)
+                                    : const Color(0XFFC94540),
+                                fontSize: (15 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                     const SizeBox(height: 10),
-                    const FeeExchangeRate(
-                      transferFeeCurrency: "USD",
-                      transferFee: 5,
-                      exchangeRateSenderCurrency: "USD",
-                      exchangeRate: 0.34304,
-                      exchangeRateReceiverCurrency: "AED",
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: (context, state) {
+                        return FeeExchangeRate(
+                          transferFeeCurrency: "USD",
+                          transferFee: isShowButton ? 5 : 0,
+                          exchangeRateSenderCurrency: "USD",
+                          exchangeRate: isShowButton ? exchangeRate : 0,
+                          exchangeRateReceiverCurrency: "AED",
+                        );
+                      },
                     ),
                     const SizeBox(height: 10),
-                    Text(
-                      "You Receive",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0XFF636363),
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: (context, state) {
+                        return Text(
+                          !isNotZero
+                              ? isBetweenAccounts
+                                  ? "You Receive"
+                                  : "They Receive"
+                              : isBetweenAccounts
+                                  ? "You will receive"
+                                  : "They will receive",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: const Color(0XFF636363),
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        );
+                      },
                     ),
                     const SizeBox(height: 10),
                     CustomTextField(
-                      controller: _sendController,
+                      controller: _receiveController,
                       onChanged: (p0) {},
                       enabled: false,
                       suffix: Row(
@@ -152,14 +226,23 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
               ),
               Column(
                 children: [
-                  GradientButton(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          Routes.transferConfirmation,
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      if (isShowButton && isNotZero) {
+                        return GradientButton(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              Routes.transferConfirmation,
+                            );
+                          },
+                          text: "Proceed",
                         );
-                      },
-                      text: "Proceed"),
+                      } else {
+                        return const SizeBox();
+                      }
+                    },
+                  ),
                   const SizeBox(height: 20),
                 ],
               ),

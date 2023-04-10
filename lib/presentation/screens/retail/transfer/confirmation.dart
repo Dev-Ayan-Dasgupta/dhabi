@@ -3,8 +3,10 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:local_auth/local_auth.dart';
 
 class TransferConfirmationScreen extends StatefulWidget {
   const TransferConfirmationScreen({Key? key}) : super(key: key);
@@ -89,36 +91,7 @@ class _TransferConfirmationScreenState
             Column(
               children: [
                 GradientButton(
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      Routes.errorScreen,
-                      arguments: ErrorArgumentModel(
-                        hasSecondaryButton: true,
-                        iconPath: ImageConstants.checkCircleOutlined,
-                        title: "Success!",
-                        message:
-                            "Your transaction has been completed\n\nTransfer reference: 254455588800",
-                        buttonText: "Home",
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        buttonTextSecondary: "Make another transaction",
-                        onTapSecondary: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                      ).toMap(),
-                    );
-                  },
+                  onTap: biometricPrompt,
                   text: "Transfer",
                 ),
                 const SizeBox(height: 20),
@@ -128,5 +101,61 @@ class _TransferConfirmationScreenState
         ),
       ),
     );
+  }
+
+  void biometricPrompt() async {
+    bool isBiometricSupported = await LocalAuthentication().isDeviceSupported();
+    if (!isBiometricSupported) {
+      if (context.mounted) {
+        Navigator.pushNamed(context, Routes.password);
+      }
+    } else {
+      bool isAuthenticated = await BiometricHelper.authenticateUser();
+      if (isAuthenticated) {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.errorScreen,
+            arguments: ErrorArgumentModel(
+              hasSecondaryButton: true,
+              iconPath: ImageConstants.checkCircleOutlined,
+              title: "Success!",
+              message:
+                  "Your transaction has been completed\n\nTransfer reference: 254455588800",
+              buttonText: "Home",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              buttonTextSecondary: "Make another transaction",
+              onTapSecondary: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+            ).toMap(),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Biometric Authentication failed.',
+                style: TextStyles.primary.copyWith(
+                  fontSize: (12 / Dimensions.designWidth).w,
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    }
   }
 }

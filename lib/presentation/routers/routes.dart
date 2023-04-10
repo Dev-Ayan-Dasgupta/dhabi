@@ -34,4 +34,7 @@ class Routes {
   static const String sendMoneyTo = 'send-money-to';
   static const String transferAmount = 'transfer-amount';
   static const String transferConfirmation = 'transfer-confirmation';
+  static const String selectRecipient = 'select-recipient';
+  static const String recipientDetails = 'recipient-details';
+  static const String password = 'password';
 }

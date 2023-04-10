@@ -13,6 +13,7 @@ import 'package:dialup_mobile_app/presentation/screens/retail/deposits/index.dar
 import 'package:dialup_mobile_app/presentation/screens/retail/insights.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/transfer/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/transfer/password.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verify_mobile.dart';
 import 'package:flutter/material.dart';
 
@@ -179,6 +180,18 @@ class AppRouter {
       case Routes.transferAmount:
         return MaterialPageRoute(
           builder: (_) => const TransferAmountScreen(),
+        );
+      case Routes.selectRecipient:
+        return MaterialPageRoute(
+          builder: (_) => const SelectRecipientScreen(),
+        );
+      case Routes.recipientDetails:
+        return MaterialPageRoute(
+          builder: (_) => const RecipientDetailsScreen(),
+        );
+      case Routes.password:
+        return MaterialPageRoute(
+          builder: (_) => const PasswordScreen(),
         );
       default:
         return MaterialPageRoute(

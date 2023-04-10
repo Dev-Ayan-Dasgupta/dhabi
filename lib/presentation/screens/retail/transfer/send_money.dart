@@ -49,7 +49,9 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 ),
                 const SizeBox(height: 10),
                 SendMoneyTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.selectRecipient);
+                  },
                   iconPath: ImageConstants.accountBalance,
                   text: "Within Dhabi Account",
                 ),
