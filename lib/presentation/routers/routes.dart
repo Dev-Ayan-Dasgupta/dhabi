@@ -32,5 +32,6 @@ class Routes {
   static const String sendMoney = 'send-money';
   static const String sendMoneyFrom = 'send-money-from';
   static const String sendMoneyTo = 'send-money-to';
+  static const String transferAmount = 'transfer-amount';
   static const String transferConfirmation = 'transfer-confirmation';
 }

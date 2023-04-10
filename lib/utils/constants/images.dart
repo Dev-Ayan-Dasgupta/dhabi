@@ -52,6 +52,7 @@ class ImageConstants {
   static const String public = "${iconsRoot}public.svg";
   static const String cancel = "${iconsRoot}cancel.svg";
   static const String hourglassBottom = "${iconsRoot}hourglass_bottom.svg";
+  static const String equals = "${iconsRoot}equals.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

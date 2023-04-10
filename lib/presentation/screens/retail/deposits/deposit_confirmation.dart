@@ -127,6 +127,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                             context,
                             Routes.errorScreen,
                             arguments: ErrorArgumentModel(
+                              hasSecondaryButton: false,
                               iconPath: ImageConstants.checkCircleOutlined,
                               title: "Congratulations!",
                               message:

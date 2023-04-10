@@ -172,6 +172,14 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const SendMoneyToScreen(),
         );
+      case Routes.transferConfirmation:
+        return MaterialPageRoute(
+          builder: (_) => const TransferConfirmationScreen(),
+        );
+      case Routes.transferAmount:
+        return MaterialPageRoute(
+          builder: (_) => const TransferAmountScreen(),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(

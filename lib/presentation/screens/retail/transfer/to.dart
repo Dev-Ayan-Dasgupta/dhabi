@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -39,7 +40,7 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
             VaultAccountCard(
               isVault: true,
               onTap: () {
-                // Navigator.pushNamed(context, Routes.sendMoneyTo);
+                Navigator.pushNamed(context, Routes.transferAmount);
               },
               title: "Vault",
               imgUrl:
