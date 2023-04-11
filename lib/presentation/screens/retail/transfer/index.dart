@@ -8,3 +8,4 @@ export './select_recipient.dart';
 export './recipient_details.dart';
 export './select_country.dart';
 export './password.dart';
+export './recipient_receive_mode.dart';

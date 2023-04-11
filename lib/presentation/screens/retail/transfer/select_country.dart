@@ -150,7 +150,8 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
                             : filteredCountries[index];
                         return CountryTile(
                           onTap: () {
-                            Navigator.pushNamed(context, Routes.transferAmount);
+                            Navigator.pushNamed(
+                                context, Routes.recipientReceiveMode);
                           },
                           flagImgUrl: item.flagImgUrl,
                           country: item.country,
