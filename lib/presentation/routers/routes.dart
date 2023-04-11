@@ -38,5 +38,7 @@ class Routes {
   static const String recipientDetails = 'recipient-details';
   static const String selectCountry = 'select-country';
   static const String recipientReceiveMode = 'recipient-receive-mode';
+  static const String addRecipDetRem = 'add-recipient-details-remittance';
+  static const String addRecipDetUae = 'add-recipient-details-uae';
   static const String password = 'password';
 }

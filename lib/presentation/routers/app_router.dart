@@ -196,6 +196,14 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const RecipientReceiveModeScreen(),
         );
+      case Routes.addRecipDetRem:
+        return MaterialPageRoute(
+          builder: (_) => const AddRecipientDetailsRemittanceScreen(),
+        );
+      case Routes.addRecipDetUae:
+        return MaterialPageRoute(
+          builder: (_) => const AddRecipientDetailsUaeScreen(),
+        );
       case Routes.password:
         return MaterialPageRoute(
           builder: (_) => const PasswordScreen(),

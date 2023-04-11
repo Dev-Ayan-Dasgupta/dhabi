@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/recipient_receive_mode_tile.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -55,7 +56,9 @@ class _RecipientReceiveModeScreenState
             ),
             const SizeBox(height: 20),
             RecipientReceiveModeTile(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, Routes.addRecipDetRem);
+              },
               title: "To Bank",
               limitAmount: 10000,
               limitCurrency: "EUR",

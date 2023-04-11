@@ -9,3 +9,5 @@ export './recipient_details.dart';
 export './select_country.dart';
 export './password.dart';
 export './recipient_receive_mode.dart';
+export './add_recipient_details_rem.dart';
+export './add_recipient_details_uae.dart';

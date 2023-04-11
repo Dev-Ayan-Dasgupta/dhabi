@@ -57,7 +57,9 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 ),
                 const SizeBox(height: 10),
                 SendMoneyTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.addRecipDetUae);
+                  },
                   iconPath: ImageConstants.flagCircle,
                   text: "Within UAE",
                 ),
