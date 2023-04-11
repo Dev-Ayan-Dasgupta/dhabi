@@ -2,6 +2,7 @@
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -199,7 +200,9 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                             : filteredRecipients[index];
                         return RecipientsTile(
                           isWithinDhabi: item.isWithinDhabi,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.transferAmount);
+                          },
                           flagImgUrl: item.flagImgUrl,
                           name: item.name,
                           accountNumber: item.accountNumber,
@@ -241,19 +244,4 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
     _searchController.dispose();
     super.dispose();
   }
-}
-
-class RecipientModel {
-  final bool isWithinDhabi;
-  final String flagImgUrl;
-  final String name;
-  final String accountNumber;
-  final String currency;
-  RecipientModel({
-    required this.isWithinDhabi,
-    required this.flagImgUrl,
-    required this.name,
-    required this.accountNumber,
-    required this.currency,
-  });
 }

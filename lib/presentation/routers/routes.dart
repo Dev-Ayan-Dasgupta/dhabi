@@ -36,5 +36,6 @@ class Routes {
   static const String transferConfirmation = 'transfer-confirmation';
   static const String selectRecipient = 'select-recipient';
   static const String recipientDetails = 'recipient-details';
+  static const String selectCountry = 'select-country';
   static const String password = 'password';
 }

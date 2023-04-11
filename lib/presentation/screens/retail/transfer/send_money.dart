@@ -63,7 +63,9 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 ),
                 const SizeBox(height: 10),
                 SendMoneyTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.selectCountry);
+                  },
                   iconPath: ImageConstants.public,
                   text: "Foreign Currency Transfer",
                 ),

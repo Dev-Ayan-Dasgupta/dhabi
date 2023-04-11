@@ -6,3 +6,5 @@ export './confirmation.dart';
 export './amount.dart';
 export './select_recipient.dart';
 export './recipient_details.dart';
+export './select_country.dart';
+export './password.dart';
