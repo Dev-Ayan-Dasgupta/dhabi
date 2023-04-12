@@ -19,6 +19,7 @@ class DateDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.all((15 / Dimensions.designWidth).w),
         decoration: BoxDecoration(

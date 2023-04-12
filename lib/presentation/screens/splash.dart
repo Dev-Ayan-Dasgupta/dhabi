@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
@@ -78,10 +77,6 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     if (!mounted) return;
-
-    // setState(() {
-
-    // });
 
     _deviceData = deviceData;
     log("_deviceData -> $_deviceData");
