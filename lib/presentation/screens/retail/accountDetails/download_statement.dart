@@ -44,8 +44,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
   String? selectedFormat;
 
   DateTime auxFromDate = DateTime.now();
-  DateTime auxToDate = DateTime.now();
   DateTime tempFromDate = DateTime.now();
+  DateTime auxToDate = DateTime.now();
   DateTime tempToDate = DateTime.now();
 
   bool isFormatSelected = false;
@@ -242,6 +242,9 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                                               fromDate =
                                                   DateFormat('d MMMM, yyyy')
                                                       .format(auxFromDate);
+                                              isOneMonth = false;
+                                              isThreeMonths = false;
+                                              isSixMonths = false;
                                               fromDateSelectionBloc.add(
                                                 DateSelectionEvent(
                                                     isDateSelected:
@@ -337,8 +340,9 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                                         height:
                                             (170 / Dimensions.designWidth).w,
                                         child: CupertinoDatePicker(
+                                          initialDateTime: auxToDate
+                                              .add(const Duration(seconds: 1)),
                                           minimumDate: auxFromDate,
-                                          initialDateTime: auxToDate,
                                           maximumDate: DateTime.now(),
                                           mode: CupertinoDatePickerMode.date,
                                           onDateTimeChanged: (p0) {
@@ -401,6 +405,9 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                                               toDate =
                                                   DateFormat('d MMMM, yyyy')
                                                       .format(auxToDate);
+                                              isOneMonth = false;
+                                              isThreeMonths = false;
+                                              isSixMonths = false;
                                               toDateSelectionBloc.add(
                                                 DateSelectionEvent(
                                                     isDateSelected:
@@ -464,6 +471,19 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                     builder: (context, state) {
                       return DownloadStatementButton(
                         onTap: () {
+                          isFromDateSelected = false;
+                          fromDate = "From Date";
+                          isToDateSelected = false;
+                          toDate = "To Date";
+                          auxToDate = DateTime.now();
+                          tempToDate = DateTime.now();
+                          auxFromDate = DateTime.now();
+                          tempFromDate = DateTime.now();
+                          fromDateSelectionBloc.add(DateSelectionEvent(
+                              isDateSelected: isFromDateSelected));
+                          toDateSelectionBloc.add(DateSelectionEvent(
+                              isDateSelected: isToDateSelected));
+
                           isOneMonth = true;
                           isThreeMonths = false;
                           isSixMonths = false;
@@ -485,6 +505,19 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                     builder: (context, state) {
                       return DownloadStatementButton(
                         onTap: () {
+                          isFromDateSelected = false;
+                          fromDate = "From Date";
+                          isToDateSelected = false;
+                          toDate = "To Date";
+                          auxToDate = DateTime.now();
+                          tempToDate = DateTime.now();
+                          auxFromDate = DateTime.now();
+                          tempFromDate = DateTime.now();
+                          fromDateSelectionBloc.add(DateSelectionEvent(
+                              isDateSelected: isFromDateSelected));
+                          toDateSelectionBloc.add(DateSelectionEvent(
+                              isDateSelected: isToDateSelected));
+
                           isOneMonth = false;
                           isThreeMonths = true;
                           isSixMonths = false;
@@ -506,6 +539,19 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                     builder: (context, state) {
                       return DownloadStatementButton(
                         onTap: () {
+                          isFromDateSelected = false;
+                          fromDate = "From Date";
+                          isToDateSelected = false;
+                          toDate = "To Date";
+                          auxToDate = DateTime.now();
+                          tempToDate = DateTime.now();
+                          auxFromDate = DateTime.now();
+                          tempFromDate = DateTime.now();
+                          fromDateSelectionBloc.add(DateSelectionEvent(
+                              isDateSelected: isFromDateSelected));
+                          toDateSelectionBloc.add(DateSelectionEvent(
+                              isDateSelected: isToDateSelected));
+
                           isOneMonth = false;
                           isThreeMonths = false;
                           isSixMonths = true;
