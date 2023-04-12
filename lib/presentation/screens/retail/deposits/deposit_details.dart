@@ -36,7 +36,12 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
               horizontal: (15 / Dimensions.designWidth).w,
               vertical: (15 / Dimensions.designWidth).w,
             ),
-            child: SvgPicture.asset(ImageConstants.statement),
+            child: InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, Routes.downloadStatement);
+              },
+              child: SvgPicture.asset(ImageConstants.statement),
+            ),
           )
         ],
         backgroundColor: Colors.transparent,

@@ -168,7 +168,6 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                         style: TextStyles.primary.copyWith(
                           color: const Color(0XFF252525),
                           fontSize: (16 / Dimensions.designWidth).w,
-                          fontWeight: FontWeight.w300,
                         ),
                       ),
                       const Spacer(),

@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/presentation/screens/business/thank_you.dart';
 import 'package:dialup_mobile_app/presentation/screens/create_password.dart';
 import 'package:dialup_mobile_app/presentation/screens/error_screen.dart';
 import 'package:dialup_mobile_app/presentation/screens/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/accountDetails/download_statement.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/deposits/index.dart';
@@ -207,6 +208,10 @@ class AppRouter {
       case Routes.password:
         return MaterialPageRoute(
           builder: (_) => const PasswordScreen(),
+        );
+      case Routes.downloadStatement:
+        return MaterialPageRoute(
+          builder: (_) => const DownloadStatementScreen(),
         );
       default:
         return MaterialPageRoute(

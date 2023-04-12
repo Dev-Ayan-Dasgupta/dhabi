@@ -42,7 +42,6 @@ class _CustomSearchBoxState extends State<CustomSearchBox> {
   Widget build(BuildContext context) {
     return Container(
       width: widget.width ?? 100.w,
-      // height: (50 / Dimensions.designWidth).w,
       padding: EdgeInsets.symmetric(
         horizontal: (widget.horizontalPadding ?? 16 / Dimensions.designWidth).w,
         vertical: widget.verticalPadding ?? (0 / Dimensions.designWidth).w,

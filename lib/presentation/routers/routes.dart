@@ -41,4 +41,5 @@ class Routes {
   static const String addRecipDetRem = 'add-recipient-details-remittance';
   static const String addRecipDetUae = 'add-recipient-details-uae';
   static const String password = 'password';
+  static const String downloadStatement = 'download-statement';
 }

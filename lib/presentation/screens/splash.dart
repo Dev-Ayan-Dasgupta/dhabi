@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/utils/constants/images.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -19,10 +23,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-  // Map<String, dynamic> _deviceData = <String, dynamic>{};
+  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  Map<String, dynamic> _deviceData = <String, dynamic>{};
 
-  String? _deviceId;
+  // String? _deviceId;
 
   @override
   void initState() {
@@ -31,112 +35,114 @@ class _SplashScreenState extends State<SplashScreen> {
     navigate(context);
   }
 
-  Future<void> initPlatformState() async {
-    String? deviceId;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      deviceId = await PlatformDeviceId.getDeviceId;
-    } on PlatformException {
-      deviceId = 'Failed to get deviceId.';
-    }
-
-    if (!mounted) return;
-
-    _deviceId = deviceId;
-    debugPrint("deviceId -> $_deviceId");
-  }
-
   // Future<void> initPlatformState() async {
-  //   var deviceData = <String, dynamic>{};
-
+  //   String? deviceId;
+  //   // Platform messages may fail, so we use a try/catch PlatformException.
   //   try {
-  //     if (kIsWeb) {
-  //       deviceData = _readWebBrowserInfo(await deviceInfoPlugin.webBrowserInfo);
-  //     } else {
-  //       if (Platform.isAndroid) {
-  //         deviceData =
-  //             _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
-  //       } else if (Platform.isIOS) {
-  //         deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
-  //       } else if (Platform.isLinux) {
-  //         // deviceData = _readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo);
-  //       } else if (Platform.isMacOS) {
-  //         // deviceData = _readMacOsDeviceInfo(await deviceInfoPlugin.macOsInfo);
-  //       } else if (Platform.isWindows) {
-  //         // deviceData =
-  //         //     _readWindowsDeviceInfo(await deviceInfoPlugin.windowsInfo);
-  //       }
-  //     }
+  //     deviceId = await PlatformDeviceId.getDeviceId;
   //   } on PlatformException {
-  //     deviceData = <String, dynamic>{
-  //       'Error:': 'Failed to get platform version.'
-  //     };
+  //     deviceId = 'Failed to get deviceId.';
   //   }
 
   //   if (!mounted) return;
 
-  //   setState(() {
-  //     _deviceData = deviceData;
-  //     log("_deviceData -> $_deviceData");
-  //   });
+  //   _deviceId = deviceId;
+  //   debugPrint("deviceId -> $_deviceId");
   // }
 
-  // Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
-  //   return <String, dynamic>{
-  //     'version.securityPatch': build.version.securityPatch,
-  //     'version.sdkInt': build.version.sdkInt,
-  //     'version.release': build.version.release,
-  //     'version.previewSdkInt': build.version.previewSdkInt,
-  //     'version.incremental': build.version.incremental,
-  //     'version.codename': build.version.codename,
-  //     'version.baseOS': build.version.baseOS,
-  //     'board': build.board,
-  //     'bootloader': build.bootloader,
-  //     'brand': build.brand,
-  //     'device': build.device,
-  //     'display': build.display,
-  //     'fingerprint': build.fingerprint,
-  //     'hardware': build.hardware,
-  //     'host': build.host,
-  //     'id': build.id,
-  //     'manufacturer': build.manufacturer,
-  //     'model': build.model,
-  //     'product': build.product,
-  //     'supported32BitAbis': build.supported32BitAbis,
-  //     'supported64BitAbis': build.supported64BitAbis,
-  //     'supportedAbis': build.supportedAbis,
-  //     'tags': build.tags,
-  //     'type': build.type,
-  //     'isPhysicalDevice': build.isPhysicalDevice,
-  //     'systemFeatures': build.systemFeatures,
-  //     'displaySizeInches':
-  //         ((build.displayMetrics.sizeInches * 10).roundToDouble() / 10),
-  //     'displayWidthPixels': build.displayMetrics.widthPx,
-  //     'displayWidthInches': build.displayMetrics.widthInches,
-  //     'displayHeightPixels': build.displayMetrics.heightPx,
-  //     'displayHeightInches': build.displayMetrics.heightInches,
-  //     'displayXDpi': build.displayMetrics.xDpi,
-  //     'displayYDpi': build.displayMetrics.yDpi,
-  //     'serialNumber': build.serialNumber,
-  //   };
-  // }
+  Future<void> initPlatformState() async {
+    var deviceData = <String, dynamic>{};
 
-  // Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
-  //   return <String, dynamic>{
-  //     'name': data.name,
-  //     'systemName': data.systemName,
-  //     'systemVersion': data.systemVersion,
-  //     'model': data.model,
-  //     'localizedModel': data.localizedModel,
-  //     'identifierForVendor': data.identifierForVendor,
-  //     'isPhysicalDevice': data.isPhysicalDevice,
-  //     'utsname.sysname:': data.utsname.sysname,
-  //     'utsname.nodename:': data.utsname.nodename,
-  //     'utsname.release:': data.utsname.release,
-  //     'utsname.version:': data.utsname.version,
-  //     'utsname.machine:': data.utsname.machine,
-  //   };
-  // }
+    try {
+      if (kIsWeb) {
+        deviceData = _readWebBrowserInfo(await deviceInfoPlugin.webBrowserInfo);
+      } else {
+        if (Platform.isAndroid) {
+          deviceData =
+              _readAndroidBuildData(await deviceInfoPlugin.androidInfo);
+        } else if (Platform.isIOS) {
+          deviceData = _readIosDeviceInfo(await deviceInfoPlugin.iosInfo);
+        } else if (Platform.isLinux) {
+          // deviceData = _readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo);
+        } else if (Platform.isMacOS) {
+          // deviceData = _readMacOsDeviceInfo(await deviceInfoPlugin.macOsInfo);
+        } else if (Platform.isWindows) {
+          // deviceData =
+          //     _readWindowsDeviceInfo(await deviceInfoPlugin.windowsInfo);
+        }
+      }
+    } on PlatformException {
+      deviceData = <String, dynamic>{
+        'Error:': 'Failed to get platform version.'
+      };
+    }
+
+    if (!mounted) return;
+
+    // setState(() {
+
+    // });
+
+    _deviceData = deviceData;
+    log("_deviceData -> $_deviceData");
+  }
+
+  Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
+    return <String, dynamic>{
+      'version.securityPatch': build.version.securityPatch,
+      'version.sdkInt': build.version.sdkInt,
+      'version.release': build.version.release,
+      'version.previewSdkInt': build.version.previewSdkInt,
+      'version.incremental': build.version.incremental,
+      'version.codename': build.version.codename,
+      'version.baseOS': build.version.baseOS,
+      'board': build.board,
+      'bootloader': build.bootloader,
+      'brand': build.brand,
+      'device': build.device,
+      'display': build.display,
+      'fingerprint': build.fingerprint,
+      'hardware': build.hardware,
+      'host': build.host,
+      'id': build.id,
+      'manufacturer': build.manufacturer,
+      'model': build.model,
+      'product': build.product,
+      'supported32BitAbis': build.supported32BitAbis,
+      'supported64BitAbis': build.supported64BitAbis,
+      'supportedAbis': build.supportedAbis,
+      'tags': build.tags,
+      'type': build.type,
+      'isPhysicalDevice': build.isPhysicalDevice,
+      'systemFeatures': build.systemFeatures,
+      'displaySizeInches':
+          ((build.displayMetrics.sizeInches * 10).roundToDouble() / 10),
+      'displayWidthPixels': build.displayMetrics.widthPx,
+      'displayWidthInches': build.displayMetrics.widthInches,
+      'displayHeightPixels': build.displayMetrics.heightPx,
+      'displayHeightInches': build.displayMetrics.heightInches,
+      'displayXDpi': build.displayMetrics.xDpi,
+      'displayYDpi': build.displayMetrics.yDpi,
+      'serialNumber': build.serialNumber,
+    };
+  }
+
+  Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
+    return <String, dynamic>{
+      'name': data.name,
+      'systemName': data.systemName,
+      'systemVersion': data.systemVersion,
+      'model': data.model,
+      'localizedModel': data.localizedModel,
+      'identifierForVendor': data.identifierForVendor,
+      'isPhysicalDevice': data.isPhysicalDevice,
+      'utsname.sysname:': data.utsname.sysname,
+      'utsname.nodename:': data.utsname.nodename,
+      'utsname.release:': data.utsname.release,
+      'utsname.version:': data.utsname.version,
+      'utsname.machine:': data.utsname.machine,
+    };
+  }
 
   // Map<String, dynamic> _readLinuxDeviceInfo(LinuxDeviceInfo data) {
   //   return <String, dynamic>{
@@ -154,25 +160,25 @@ class _SplashScreenState extends State<SplashScreen> {
   //   };
   // }
 
-  // Map<String, dynamic> _readWebBrowserInfo(WebBrowserInfo data) {
-  //   return <String, dynamic>{
-  //     'browserName': describeEnum(data.browserName),
-  //     'appCodeName': data.appCodeName,
-  //     'appName': data.appName,
-  //     'appVersion': data.appVersion,
-  //     'deviceMemory': data.deviceMemory,
-  //     'language': data.language,
-  //     'languages': data.languages,
-  //     'platform': data.platform,
-  //     'product': data.product,
-  //     'productSub': data.productSub,
-  //     'userAgent': data.userAgent,
-  //     'vendor': data.vendor,
-  //     'vendorSub': data.vendorSub,
-  //     'hardwareConcurrency': data.hardwareConcurrency,
-  //     'maxTouchPoints': data.maxTouchPoints,
-  //   };
-  // }
+  Map<String, dynamic> _readWebBrowserInfo(WebBrowserInfo data) {
+    return <String, dynamic>{
+      'browserName': describeEnum(data.browserName),
+      'appCodeName': data.appCodeName,
+      'appName': data.appName,
+      'appVersion': data.appVersion,
+      'deviceMemory': data.deviceMemory,
+      'language': data.language,
+      'languages': data.languages,
+      'platform': data.platform,
+      'product': data.product,
+      'productSub': data.productSub,
+      'userAgent': data.userAgent,
+      'vendor': data.vendor,
+      'vendorSub': data.vendorSub,
+      'hardwareConcurrency': data.hardwareConcurrency,
+      'maxTouchPoints': data.maxTouchPoints,
+    };
+  }
 
   // Map<String, dynamic> _readMacOsDeviceInfo(MacOsDeviceInfo data) {
   //   return <String, dynamic>{
