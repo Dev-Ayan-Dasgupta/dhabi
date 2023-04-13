@@ -6,17 +6,25 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 
-class SendMoneyTile extends StatelessWidget {
-  const SendMoneyTile({
+class TopicTile extends StatelessWidget {
+  const TopicTile({
     Key? key,
     required this.onTap,
     required this.iconPath,
     required this.text,
+    this.color,
+    this.fontColor,
+    this.highlightColor,
+    this.iconColor,
   }) : super(key: key);
 
   final VoidCallback onTap;
   final String iconPath;
   final String text;
+  final Color? color;
+  final Color? fontColor;
+  final Color? highlightColor;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +37,7 @@ class SendMoneyTile extends StatelessWidget {
             Radius.circular((10 / Dimensions.designWidth).w),
           ),
           boxShadow: [BoxShadows.primary],
-          color: Colors.white,
+          color: color ?? Colors.white,
         ),
         child: Row(
           children: [
@@ -43,7 +51,8 @@ class SendMoneyTile extends StatelessWidget {
                       borderRadius: BorderRadius.all(
                         Radius.circular((7 / Dimensions.designWidth).w),
                       ),
-                      color: const Color.fromRGBO(0, 184, 48, 0.1),
+                      color: highlightColor ??
+                          const Color.fromRGBO(0, 184, 48, 0.1),
                     ),
                     child: Center(
                       child: SvgPicture.asset(iconPath),
@@ -54,7 +63,7 @@ class SendMoneyTile extends StatelessWidget {
                     text,
                     style: TextStyles.primaryMedium.copyWith(
                       fontSize: (18 / Dimensions.designWidth).w,
-                      color: const Color(0XFF1A3C40),
+                      color: fontColor ?? const Color(0XFF1A3C40),
                     ),
                   ),
                 ],
@@ -62,6 +71,10 @@ class SendMoneyTile extends StatelessWidget {
             ),
             SvgPicture.asset(
               ImageConstants.arrowForwardIos,
+              colorFilter: ColorFilter.mode(
+                iconColor ?? AppColors.primary,
+                BlendMode.srcIn,
+              ),
               width: (6.7 / Dimensions.designWidth).w,
               height: (11.3 / Dimensions.designWidth).w,
             ),

@@ -15,3 +15,4 @@ export './multi_select_button.dart';
 export './date_dropdown.dart';
 export './info_card.dart';
 export './action_button.dart';
+export './topic_tile.dart';

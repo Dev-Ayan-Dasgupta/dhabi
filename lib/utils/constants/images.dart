@@ -62,6 +62,18 @@ class ImageConstants {
   static const String contentCopy = "${iconsRoot}content_copy.svg";
   static const String mastercardLogo = "${iconsRoot}mastercard_logo.png";
   static const String share = "${iconsRoot}share.svg";
+  static const String security = "${iconsRoot}security.svg";
+  static const String faq = "${iconsRoot}faq.svg";
+  static const String settingsAccountBox =
+      "${iconsRoot}settings_account_box.svg";
+  static const String handshake = "${iconsRoot}handshake.svg";
+  static const String atTheRate = "${iconsRoot}at_the_rate.svg";
+  static const String rotate = "${iconsRoot}rotate.svg";
+  static const String logout = "${iconsRoot}logout.svg";
+  static const String addAPhoto = "${iconsRoot}add_a_photo.svg";
+  static const String sentimentSatisfied =
+      "${iconsRoot}sentiment_satisfied.svg";
+  static const String edit = "${iconsRoot}edit.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

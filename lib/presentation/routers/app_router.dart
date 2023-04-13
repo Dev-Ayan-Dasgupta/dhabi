@@ -12,7 +12,10 @@ import 'package:dialup_mobile_app/presentation/screens/retail/application/index.
 import 'package:dialup_mobile_app/presentation/screens/retail/cardsVault/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/deposits/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/dormant/dormant.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/insights.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/notifications/notifications.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/profile/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/transfer/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verify_mobile.dart';
@@ -221,6 +224,46 @@ class AppRouter {
       case Routes.actions:
         return MaterialPageRoute(
           builder: (_) => const ActionsScreen(),
+        );
+      case Routes.profileHome:
+        return MaterialPageRoute(
+          builder: (_) => const ProfileHomeScreen(),
+        );
+      case Routes.profile:
+        return MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        );
+      case Routes.selectAccount:
+        return MaterialPageRoute(
+          builder: (_) => const SelectAccountScreen(),
+        );
+      case Routes.security:
+        return MaterialPageRoute(
+          builder: (_) => const SecurityScreen(),
+        );
+      case Routes.changePassword:
+        return MaterialPageRoute(
+          builder: (_) => const ChangePassword(),
+        );
+      case Routes.faq:
+        return MaterialPageRoute(
+          builder: (_) => const FaqScreen(),
+        );
+      case Routes.requestType:
+        return MaterialPageRoute(
+          builder: (_) => const RequestTypeScreen(),
+        );
+      case Routes.updateAddress:
+        return MaterialPageRoute(
+          builder: (_) => const UpdateAddressScreen(),
+        );
+      case Routes.notifications:
+        return MaterialPageRoute(
+          builder: (_) => const NotificatonsScreen(),
+        );
+      case Routes.dormant:
+        return MaterialPageRoute(
+          builder: (_) => const DormantScreen(),
         );
       default:
         return MaterialPageRoute(

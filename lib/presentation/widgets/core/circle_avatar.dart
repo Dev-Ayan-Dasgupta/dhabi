@@ -27,6 +27,7 @@ class CustomCircleAvatar extends StatelessWidget {
               ? const NetworkImage(
                   "https://www.flagsimporter.com/static/frontend/Mgs/orson/en_US/Magefan_Blog/images/default-no-image.png")
               : NetworkImage(imgUrl),
+          fit: BoxFit.fill,
         ),
       ),
     );

@@ -57,7 +57,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
             Text(
               "Card",
               style: TextStyles.primaryMedium.copyWith(
-                color: const Color(0XFF252525),
+                color: const Color.fromRGBO(9, 9, 9, 0.7),
                 fontSize: (16 / Dimensions.designWidth).w,
               ),
             ),
@@ -92,7 +92,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
             Text(
               "Payments",
               style: TextStyles.primaryMedium.copyWith(
-                color: const Color(0XFF252525),
+                color: const Color.fromRGBO(9, 9, 9, 0.7),
                 fontSize: (16 / Dimensions.designWidth).w,
               ),
             ),

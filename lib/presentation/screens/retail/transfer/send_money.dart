@@ -1,7 +1,6 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/recent_transfers_tile.dart';
-import 'package:dialup_mobile_app/presentation/widgets/transfer/send_money_tile.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -40,7 +39,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                   ),
                 ),
                 const SizeBox(height: 30),
-                SendMoneyTile(
+                TopicTile(
                   onTap: () {
                     Navigator.pushNamed(context, Routes.sendMoneyFrom);
                   },
@@ -48,7 +47,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                   text: "Between Accounts",
                 ),
                 const SizeBox(height: 10),
-                SendMoneyTile(
+                TopicTile(
                   onTap: () {
                     Navigator.pushNamed(context, Routes.selectRecipient);
                   },
@@ -56,7 +55,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                   text: "Within Dhabi Account",
                 ),
                 const SizeBox(height: 10),
-                SendMoneyTile(
+                TopicTile(
                   onTap: () {
                     Navigator.pushNamed(context, Routes.addRecipDetUae);
                   },
@@ -64,7 +63,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                   text: "Within UAE",
                 ),
                 const SizeBox(height: 10),
-                SendMoneyTile(
+                TopicTile(
                   onTap: () {
                     Navigator.pushNamed(context, Routes.selectCountry);
                   },

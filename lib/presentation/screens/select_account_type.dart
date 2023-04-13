@@ -44,11 +44,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
         context.read<ButtonFocussedBloc>();
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBarLeading(
-            // onTap: () {
-            //   Navigator.pop(context);
-            // },
-            ),
+        leading: const AppBarLeading(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

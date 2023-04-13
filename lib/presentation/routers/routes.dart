@@ -44,4 +44,14 @@ class Routes {
   static const String downloadStatement = 'download-statement';
   static const String vault = 'vault';
   static const String actions = 'actions';
+  static const String profileHome = 'profile-home';
+  static const String profile = 'profile';
+  static const String selectAccount = 'select-account';
+  static const String security = 'security';
+  static const String changePassword = 'change-password';
+  static const String faq = 'faq';
+  static const String requestType = 'request-type';
+  static const String updateAddress = 'update-address';
+  static const String notifications = 'notifications';
+  static const String dormant = 'dormant';
 }
