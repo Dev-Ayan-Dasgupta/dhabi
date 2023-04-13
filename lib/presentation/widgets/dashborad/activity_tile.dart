@@ -12,11 +12,15 @@ class DashboardActivityTile extends StatelessWidget {
     required this.iconPath,
     required this.activityText,
     required this.onTap,
+    this.iconSize,
+    this.isSelected,
   }) : super(key: key);
 
   final String iconPath;
   final String activityText;
   final VoidCallback onTap;
+  final double? iconSize;
+  final bool? isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +31,42 @@ class DashboardActivityTile extends StatelessWidget {
           child: Container(
             width: (64 / Dimensions.designWidth).w,
             height: (64 / Dimensions.designWidth).w,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [BoxShadows.primary],
-              color: Colors.white,
-            ),
+            decoration: isSelected != null
+                ? isSelected!
+                    ? BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [BoxShadows.primary],
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            Color(0xFF1A3C40),
+                            Color(0xFF236269),
+                            Color(0xFF1A3C40),
+                          ],
+                        ))
+                    : BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [BoxShadows.primary],
+                        color: Colors.white,
+                      )
+                : BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [BoxShadows.primary],
+                    color: Colors.white,
+                  ),
             child: Center(
               child: SvgPicture.asset(
                 iconPath,
-                width: (16 / Dimensions.designWidth).w,
-                height: (16 / Dimensions.designWidth).w,
-                colorFilter:
-                    const ColorFilter.mode(AppColors.primary, BlendMode.srcIn),
+                width: ((iconSize ?? 16) / Dimensions.designWidth).w,
+                height: ((iconSize ?? 16) / Dimensions.designWidth).w,
+                colorFilter: ColorFilter.mode(
+                    isSelected != null
+                        ? isSelected!
+                            ? Colors.white
+                            : AppColors.primary
+                        : AppColors.primary,
+                    BlendMode.srcIn),
               ),
             ),
           ),

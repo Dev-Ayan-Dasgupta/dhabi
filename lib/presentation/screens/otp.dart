@@ -45,6 +45,12 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   void initState() {
     super.initState();
+    argumentInitialization();
+    blocInitialization();
+    startTimer();
+  }
+
+  void argumentInitialization() {
     otpArgumentModel =
         OTPArgumentModel.fromMap(widget.argument as dynamic ?? {});
     if (otpArgumentModel.isEmail) {
@@ -53,22 +59,27 @@ class _OTPScreenState extends State<OTPScreen> {
       obscuredPhone =
           ObscureHelper.obscurePhone("+971${otpArgumentModel.emailOrPhone}");
     }
+  }
+
+  void blocInitialization() {
     final PinputErrorBloc pinputErrorBloc = context.read<PinputErrorBloc>();
     pinputErrorBloc.add(
         PinputErrorEvent(isError: false, isComplete: false, errorCount: 0));
-    startTimer();
   }
 
   void startTimer() {
     final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (seconds > 0) {
-        seconds--;
-        otpTimerBloc.add(OTPTimerEvent(seconds: seconds));
-      } else {
-        timer.cancel();
-      }
-    });
+    Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (seconds > 0) {
+          seconds--;
+          otpTimerBloc.add(OTPTimerEvent(seconds: seconds));
+        } else {
+          timer.cancel();
+        }
+      },
+    );
   }
 
   @override
@@ -373,20 +384,6 @@ class _OTPScreenState extends State<OTPScreen> {
                     ],
                   ),
                 ),
-              ),
-              Column(
-                children: [
-                  //TODO: Potentially remove it - may not be needed as we will call API onChanged in pinput
-                  BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                      builder: (context, state) {
-                    if (pinputErrorCount < 3) {
-                      return GradientButton(onTap: () {}, text: "Validate");
-                    } else {
-                      return SolidButton(onTap: () {}, text: "Validate");
-                    }
-                  }),
-                  const SizeBox(height: 32),
-                ],
               ),
             ],
           ),

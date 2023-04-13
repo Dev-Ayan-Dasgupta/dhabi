@@ -1,19 +1,26 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
-class DownloadStatementButton extends StatelessWidget {
-  const DownloadStatementButton({
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+
+class ActionButton extends StatelessWidget {
+  const ActionButton({
     Key? key,
     required this.onTap,
     required this.text,
     required this.isSelected,
+    this.color,
+    this.fontColor,
+    this.boxShadow,
   }) : super(key: key);
 
   final VoidCallback onTap;
   final String text;
   final bool isSelected;
+  final Color? color;
+  final Color? fontColor;
+  final List<BoxShadow>? boxShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +31,8 @@ class DownloadStatementButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
               Radius.circular((10 / Dimensions.designWidth).w)),
-          boxShadow: [BoxShadows.primary],
-          color: Colors.white,
+          boxShadow: boxShadow ?? [BoxShadows.primary],
+          color: color ?? Colors.white,
           border: Border.all(
             color: isSelected
                 ? const Color.fromRGBO(0, 184, 148, 0.21)
@@ -39,9 +46,10 @@ class DownloadStatementButton extends StatelessWidget {
             Text(
               text,
               style: TextStyles.primary.copyWith(
-                color: isSelected
-                    ? const Color(0XFF252525)
-                    : const Color.fromRGBO(0, 0, 0, 0.4),
+                color: fontColor ??
+                    (isSelected
+                        ? const Color(0XFF252525)
+                        : const Color.fromRGBO(0, 0, 0, 0.4)),
                 fontSize: (16 / Dimensions.designWidth).w,
               ),
             ),

@@ -11,8 +11,9 @@ class LoanRequestSuccess extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: (22 / Dimensions.designWidth).w),
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
         child: Column(
           children: [
             Expanded(

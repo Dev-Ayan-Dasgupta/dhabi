@@ -42,4 +42,6 @@ class Routes {
   static const String addRecipDetUae = 'add-recipient-details-uae';
   static const String password = 'password';
   static const String downloadStatement = 'download-statement';
+  static const String vault = 'vault';
+  static const String actions = 'actions';
 }

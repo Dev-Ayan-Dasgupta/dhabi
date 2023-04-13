@@ -55,7 +55,15 @@ class ImageConstants {
   static const String hourglassBottom = "${iconsRoot}hourglass_bottom.svg";
   static const String equals = "${iconsRoot}equals.svg";
   static const String search = "${iconsRoot}search.svg";
+  static const String settings = "${iconsRoot}settings.svg";
+  static const String acUnit = "${iconsRoot}ac_unit.svg";
+  static const String appleWallet = "${iconsRoot}apple_wallet.svg";
+  static const String googleWallet = "${iconsRoot}google_wallet.svg";
+  static const String contentCopy = "${iconsRoot}content_copy.svg";
+  static const String mastercardLogo = "${iconsRoot}mastercard_logo.png";
+  static const String share = "${iconsRoot}share.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";
+  static const String cardBase = "${bannersRoot}card_base.png";
 }

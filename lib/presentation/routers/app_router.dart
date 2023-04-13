@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/presentation/screens/error_screen.dart';
 import 'package:dialup_mobile_app/presentation/screens/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/accountDetails/download_statement.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/cardsVault/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/deposits/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/insights.dart';
@@ -212,6 +213,14 @@ class AppRouter {
       case Routes.downloadStatement:
         return MaterialPageRoute(
           builder: (_) => const DownloadStatementScreen(),
+        );
+      case Routes.vault:
+        return MaterialPageRoute(
+          builder: (_) => const VaultScreen(),
+        );
+      case Routes.actions:
+        return MaterialPageRoute(
+          builder: (_) => const ActionsScreen(),
         );
       default:
         return MaterialPageRoute(

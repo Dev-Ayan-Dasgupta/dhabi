@@ -72,8 +72,9 @@ class _RequestScreenState extends State<RequestScreen> {
         elevation: 0,
       ),
       body: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: (22 / Dimensions.designWidth).w),
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
         child: Column(
           children: [
             Expanded(

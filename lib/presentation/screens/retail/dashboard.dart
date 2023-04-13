@@ -170,7 +170,12 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                             : 0,
                                       ),
                                       child: AccountSummaryTile(
-                                        onTap: () {},
+                                        onTap: () {
+                                          if (index == 2) {
+                                            Navigator.pushNamed(
+                                                context, Routes.vault);
+                                          }
+                                        },
                                         imgUrl:
                                             "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                         accountType: "Savings",

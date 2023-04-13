@@ -7,7 +7,6 @@ import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/download_statement_button.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/cupertino.dart';
@@ -469,7 +468,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   const SizeBox(height: 10),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
-                      return DownloadStatementButton(
+                      return ActionButton(
                         onTap: () {
                           isFromDateSelected = false;
                           fromDate = "From Date";
@@ -503,7 +502,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   const SizeBox(height: 10),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
-                      return DownloadStatementButton(
+                      return ActionButton(
                         onTap: () {
                           isFromDateSelected = false;
                           fromDate = "From Date";
@@ -537,7 +536,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   const SizeBox(height: 10),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
-                      return DownloadStatementButton(
+                      return ActionButton(
                         onTap: () {
                           isFromDateSelected = false;
                           fromDate = "From Date";
