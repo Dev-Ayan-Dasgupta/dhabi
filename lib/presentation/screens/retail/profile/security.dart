@@ -1,6 +1,7 @@
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,9 @@ class _SecurityScreenState extends State<SecurityScreen> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.changePassword);
+                  },
                   child: SvgPicture.asset(
                     ImageConstants.arrowForwardIos,
                     width: (6.7 / Dimensions.designWidth).w,

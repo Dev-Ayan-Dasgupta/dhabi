@@ -178,6 +178,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (showPassword) {
                       return CustomTextField(
                         controller: _passwordController,
+                        minLines: 1,
+                        maxLines: 1,
                         suffix: Padding(
                           padding: EdgeInsets.only(
                               left: (10 / Dimensions.designWidth).w),
@@ -200,6 +202,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     } else {
                       return CustomTextField(
                         controller: _passwordController,
+                        minLines: 1,
+                        maxLines: 1,
                         suffix: Padding(
                           padding: EdgeInsets.only(
                               left: (10 / Dimensions.designWidth).w),
@@ -267,7 +271,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 count: matchPasswordErrorCount));
                           } else {
                             // TODO: Call Navigation to next page, testing for now, API later
-                            Navigator.pushNamed(context, Routes.splash);
+                            Navigator.pushNamed(
+                                context, Routes.retailDashboard);
                           }
                         },
                         text: "Login",

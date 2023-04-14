@@ -100,10 +100,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
           helperStyle: TextStyles.primaryMedium.copyWith(
             color: widget.controller.text.length == widget.maxLength
                 ? const Color(0XFFC94540)
-                : widget.controller.text.length > (widget.maxLength! - 20)
-                    ? Colors.orange
-                    : widget.helperColor ??
-                        const Color.fromRGBO(37, 37, 37, 0.5),
+                : widget.maxLength != null
+                    ? widget.controller.text.length > (widget.maxLength! - 20)
+                        ? Colors.orange
+                        : widget.helperColor ??
+                            const Color.fromRGBO(37, 37, 37, 0.5)
+                    : const Color.fromRGBO(37, 37, 37, 0.5),
             fontSize: (14 / Dimensions.designWidth).w,
           ),
         ),

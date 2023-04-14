@@ -158,4 +158,10 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _remarkController.dispose();
+    super.dispose();
+  }
 }

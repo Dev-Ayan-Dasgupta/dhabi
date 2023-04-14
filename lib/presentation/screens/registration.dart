@@ -135,7 +135,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         } else {
                           return Row(
                             children: [
-                              SvgPicture.asset(ImageConstants.errorSolid),
+                              SvgPicture.asset(
+                                ImageConstants.errorSolid,
+                                width: (14 / Dimensions.designWidth).w,
+                                height: (14 / Dimensions.designWidth).w,
+                              ),
                               const SizeBox(width: 5),
                               Text(
                                 "Invalid email",

@@ -124,7 +124,9 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                   const SizeBox(height: 10),
                   TopicTile(
                     color: const Color(0XFFFAFAFA),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.faq);
+                    },
                     iconPath: ImageConstants.faq,
                     text: "FAQs",
                   ),

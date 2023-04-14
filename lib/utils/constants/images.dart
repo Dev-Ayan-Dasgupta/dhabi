@@ -74,6 +74,8 @@ class ImageConstants {
   static const String sentimentSatisfied =
       "${iconsRoot}sentiment_satisfied.svg";
   static const String edit = "${iconsRoot}edit.svg";
+  static const String xmark = "${iconsRoot}xmark.svg";
+  static const String plus = "${iconsRoot}plus.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";
