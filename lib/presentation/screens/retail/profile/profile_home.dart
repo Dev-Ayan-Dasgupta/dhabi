@@ -137,7 +137,9 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
               children: [
                 TopicTile(
                   color: const Color(0XFFFAFAFA),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.selectAccount);
+                  },
                   iconPath: ImageConstants.rotate,
                   text: "Switch Entities",
                 ),
