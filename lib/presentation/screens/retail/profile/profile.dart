@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -231,7 +232,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizeBox(width: 20),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, Routes.updateAddress);
+                            },
                             child: SvgPicture.asset(
                               ImageConstants.edit,
                               width: (18 / Dimensions.designWidth).w,
