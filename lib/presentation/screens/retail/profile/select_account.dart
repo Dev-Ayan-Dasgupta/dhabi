@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,10 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                   return Column(
                     children: [
                       SolidButton(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, Routes.businessDashboard);
+                        },
                         text: "Company ${index + 1}",
                         color: Colors.white,
                         boxShadow: [BoxShadows.primary],

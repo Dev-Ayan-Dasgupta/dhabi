@@ -53,5 +53,7 @@ class Routes {
   static const String requestType = 'request-type';
   static const String updateAddress = 'update-address';
   static const String notifications = 'notifications';
+  static const String explore = 'explore';
+  static const String businessDepositDetails = 'business-deposit-details';
   static const String dormant = 'dormant';
 }

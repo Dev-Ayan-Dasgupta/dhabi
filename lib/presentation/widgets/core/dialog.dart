@@ -12,14 +12,14 @@ class CustomDialog extends StatelessWidget {
     required this.svgAssetPath,
     required this.title,
     required this.message,
+    required this.auxWidget,
     required this.actionWidget,
   }) : super(key: key);
 
   final String svgAssetPath;
   final String title;
   final String message;
-  // final String buttonText;
-  // final VoidCallback buttonAction;
+  final Widget auxWidget;
   final Widget actionWidget;
 
   @override
@@ -74,16 +74,11 @@ class CustomDialog extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           ),
+                          auxWidget,
                         ],
                       ),
                     ),
                   ),
-                  // Column(
-                  //   children: [
-                  //     GradientButton(onTap: buttonAction, text: buttonText),
-                  //     const SizeBox(height: 22),
-                  //   ],
-                  // )
                   actionWidget,
                 ],
               ),

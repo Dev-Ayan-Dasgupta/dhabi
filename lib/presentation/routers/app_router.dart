@@ -1,5 +1,7 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/dashboard.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/deposit_details.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/explore.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/loans/details.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/loans/request.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/loans/request_success.dart';
@@ -260,6 +262,14 @@ class AppRouter {
       case Routes.notifications:
         return MaterialPageRoute(
           builder: (_) => const NotificatonsScreen(),
+        );
+      case Routes.businessDepositDetails:
+        return MaterialPageRoute(
+          builder: (_) => const BusinessDepositDetailsScreen(),
+        );
+      case Routes.explore:
+        return MaterialPageRoute(
+          builder: (_) => const ExploreScreen(),
         );
       case Routes.dormant:
         return MaterialPageRoute(

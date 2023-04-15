@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/bloc/matchPassword/match_password_state.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/login/attempts.dart';
@@ -34,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+
     final MatchPasswordBloc matchPasswordBloc =
         context.read<MatchPasswordBloc>();
     matchPasswordBloc
@@ -58,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   title: "Are you sure?",
                   message:
                       "Going to the previous screen will make you repeat this step.",
+                  auxWidget: const SizeBox(),
                   actionWidget: Column(
                     children: [
                       GradientButton(
@@ -272,7 +275,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           } else {
                             // TODO: Call Navigation to next page, testing for now, API later
                             Navigator.pushNamed(
-                                context, Routes.retailDashboard);
+                              context,
+                              Routes.retailDashboard,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl:
+                                    "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                name: "ayan@qolarisdata.com",
+                              ).toMap(),
+                            );
                           }
                         },
                         text: "Login",

@@ -239,8 +239,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                               title: "You're One Step Closer!",
                                               message:
                                                   "Select below to continue",
-                                              // buttonText: "Scan ID",
-                                              // buttonAction: () {},
+                                              auxWidget: const SizeBox(),
                                               actionWidget: Column(
                                                 children: [
                                                   GradientButton(

@@ -1,19 +1,23 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 
 class DetailsTile extends StatelessWidget {
   const DetailsTile({
     Key? key,
     required this.length,
     required this.details,
+    this.coloredIndex,
+    this.fontColor,
   }) : super(key: key);
 
   final int length;
   final List<DetailsTileModel> details;
+  final int? coloredIndex;
+  final Color? fontColor;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +67,9 @@ class DetailsTile extends StatelessWidget {
                     Text(
                       details[index].value,
                       style: TextStyles.primary.copyWith(
-                        color: const Color(0xFF292929),
+                        color: (index == coloredIndex)
+                            ? fontColor
+                            : const Color(0xFF292929),
                         fontSize: (14 / Dimensions.designWidth).w,
                       ),
                     ),

@@ -105,6 +105,9 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                           return TabBar(
                             controller: tabController,
                             onTap: (index) {
+                              if (index == 3) {
+                                Navigator.pushNamed(context, Routes.explore);
+                              }
                               _scrollOffset = 0;
                               _scrollIndex = 0;
                               tabbarBloc.add(TabbarEvent(index: index));
@@ -327,7 +330,10 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                   DashboardActivityTile(
                                     iconPath: ImageConstants.arrowOutward,
                                     activityText: "Send Money",
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.pushNamed(context,
+                                          Routes.businessDepositDetails);
+                                    },
                                   ),
                                   const SizeBox(width: 40),
                                   DashboardActivityTile(

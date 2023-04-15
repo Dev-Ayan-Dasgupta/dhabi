@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
 import 'package:dialup_mobile_app/utils/constants/images.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,14 @@ class AppBarAction extends StatelessWidget {
       padding:
           EdgeInsets.symmetric(horizontal: (15 / Dimensions.designWidth).w),
       child: InkWell(
-        onTap: () {},
-        child: SvgPicture.asset(ImageConstants.notifications),
+        onTap: () {
+          Navigator.pushNamed(context, Routes.notifications);
+        },
+        child: SvgPicture.asset(
+          ImageConstants.notifications,
+          width: (22 / Dimensions.designWidth).w,
+          height: (27.5 / Dimensions.designWidth).w,
+        ),
       ),
     );
   }

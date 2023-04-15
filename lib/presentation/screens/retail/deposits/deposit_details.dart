@@ -57,7 +57,6 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
                     "Deposit Details",
                     style: TextStyles.primaryBold.copyWith(
@@ -95,6 +94,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
                           title: "Are you sure?",
                           message:
                               "Penal rate will apply in case of premature withdrawal.",
+                          auxWidget: const SizeBox(),
                           actionWidget: Column(
                             children: [
                               GradientButton(
