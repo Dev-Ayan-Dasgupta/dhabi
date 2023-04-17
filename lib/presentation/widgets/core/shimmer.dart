@@ -23,3 +23,33 @@ class CustomShimmer extends StatelessWidget {
     );
   }
 }
+
+class ShimmerContainer extends StatelessWidget {
+  const ShimmerContainer({
+    super.key,
+    required this.width,
+    required this.height,
+    this.color,
+    this.borderRadius,
+    this.shape,
+  });
+
+  final double width;
+  final double height;
+  final Color? color;
+  final BorderRadiusGeometry? borderRadius;
+  final BoxShape? shape;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: color ?? Colors.white,
+        borderRadius: borderRadius,
+        shape: shape ?? BoxShape.rectangle,
+      ),
+    );
+  }
+}

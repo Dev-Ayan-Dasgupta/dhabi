@@ -44,40 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShowPasswordBloc showPasswordBloc = context.read<ShowPasswordBloc>();
-    final EmailExistsBloc emailExistsBloc = context.read<EmailExistsBloc>();
-    final MatchPasswordBloc matchPasswordBloc =
-        context.read<MatchPasswordBloc>();
     return Scaffold(
       appBar: AppBar(
-        leading: AppBarLeading(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return CustomDialog(
-                  svgAssetPath: ImageConstants.warning,
-                  title: "Are you sure?",
-                  message:
-                      "Going to the previous screen will make you repeat this step.",
-                  auxWidget: const SizeBox(),
-                  actionWidget: Column(
-                    children: [
-                      GradientButton(
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        text: "Go Back",
-                      ),
-                      const SizeBox(height: 22),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        ),
+        leading: AppBarLeading(onTap: promptUser),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -138,19 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  onChanged: (p0) {
-                    if (InputValidator.isEnailValid(p0)) {
-                      if (p0 != "ayan@qolarisdata.com") {
-                        emailExistsBloc
-                            .add(EmailExistsEvent(emailExists: false));
-                      } else {
-                        emailExistsBloc
-                            .add(EmailExistsEvent(emailExists: true));
-                      }
-                    } else {
-                      emailExistsBloc.add(EmailExistsEvent(emailExists: true));
-                    }
-                  },
+                  onChanged: emailValidation,
                 ),
                 const SizeBox(height: 7),
                 BlocBuilder<EmailExistsBloc, EmailExistsState>(
@@ -188,11 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: EdgeInsets.only(
                               left: (10 / Dimensions.designWidth).w),
                           child: InkWell(
-                            onTap: () {
-                              showPasswordBloc.add(HidePasswordEvent(
-                                  showPassword: false, toggle: ++toggle));
-                              showPassword = !showPassword;
-                            },
+                            onTap: hidePassword,
                             child: Icon(
                               Icons.visibility_off_outlined,
                               color: const Color.fromRGBO(34, 97, 105, 0.5),
@@ -212,11 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           padding: EdgeInsets.only(
                               left: (10 / Dimensions.designWidth).w),
                           child: InkWell(
-                            onTap: () {
-                              showPasswordBloc.add(DisplayPasswordEvent(
-                                  showPassword: true, toggle: ++toggle));
-                              showPassword = !showPassword;
-                            },
+                            onTap: showsPassword,
                             child: Icon(
                               Icons.visibility_outlined,
                               color: const Color.fromRGBO(34, 97, 105, 0.5),
@@ -245,15 +194,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizeBox(height: 22),
-                          state.count < 3
-                              ? Center(
-                                  child: LoginAttempt(
-                                      message:
-                                          "Incorrect password - ${3 - state.count} attempts left"),
-                                )
-                              : const LoginAttempt(
-                                  message:
-                                      "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials"),
+                          Ternary(
+                            condition: state.count < 3,
+                            truthy: Center(
+                              child: LoginAttempt(
+                                message:
+                                    "Incorrect password - ${3 - state.count} attempts left",
+                              ),
+                            ),
+                            falsy: const LoginAttempt(
+                              message:
+                                  "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials",
+                            ),
+                          )
                         ],
                       );
                     } else {
@@ -266,34 +219,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   builder: (context, state) {
                     if (state.count < 3) {
                       return GradientButton(
-                        onTap: () {
-                          // TODO: Use API to conduct validation, for now testing with mock static data
-                          if (_passwordController.text != "AyanDg16@#") {
-                            matchPasswordErrorCount++;
-                            matchPasswordBloc.add(MatchPasswordEvent(
-                                isMatch: false,
-                                count: matchPasswordErrorCount));
-                          } else {
-                            // TODO: Call Navigation to next page, testing for now, API later
-                            Navigator.pushNamed(
-                              context,
-                              Routes.retailDashboard,
-                              arguments: RetailDashboardArgumentModel(
-                                imgUrl:
-                                    "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                name: "ayan@qolarisdata.com",
-                              ).toMap(),
-                            );
-                          }
-                        },
+                        onTap: onSubmit,
                         text: "Login",
                       );
                     } else {
-                      return SolidButton(
-                        onTap: () {},
-                        text: "Login",
-                        color: const Color(0xFF818181),
-                      );
+                      return const SizeBox();
                     }
                   },
                 ),
@@ -301,9 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: InkWell(
-                    onTap: () {
-                      // TODO: call API
-                    },
+                    onTap: onForgotEmailPwd,
                     child: Text(
                       "Forgot your email ID or password?",
                       style: TextStyles.primaryMedium.copyWith(
@@ -319,6 +247,86 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void promptUser() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Are you sure?",
+          message:
+              "Going to the previous screen will make you repeat this step.",
+          auxWidget: const SizeBox(),
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                text: "Go Back",
+              ),
+              const SizeBox(height: 22),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void emailValidation(String p0) {
+    final EmailExistsBloc emailExistsBloc = context.read<EmailExistsBloc>();
+    if (InputValidator.isEmailValid(p0)) {
+      if (p0 != "ayan@qolarisdata.com") {
+        emailExistsBloc.add(EmailExistsEvent(emailExists: false));
+      } else {
+        emailExistsBloc.add(EmailExistsEvent(emailExists: true));
+      }
+    } else {
+      emailExistsBloc.add(EmailExistsEvent(emailExists: true));
+    }
+  }
+
+  void hidePassword() {
+    final ShowPasswordBloc showPasswordBloc = context.read<ShowPasswordBloc>();
+    showPasswordBloc
+        .add(HidePasswordEvent(showPassword: false, toggle: ++toggle));
+    showPassword = !showPassword;
+  }
+
+  void showsPassword() {
+    final ShowPasswordBloc showPasswordBloc = context.read<ShowPasswordBloc>();
+    showPasswordBloc
+        .add(DisplayPasswordEvent(showPassword: true, toggle: ++toggle));
+    showPassword = !showPassword;
+  }
+
+  void onSubmit() {
+    final MatchPasswordBloc matchPasswordBloc =
+        context.read<MatchPasswordBloc>();
+    // TODO: Use API to conduct validation, for now testing with mock static data
+    if (_passwordController.text != "AyanDg16@#") {
+      matchPasswordErrorCount++;
+      matchPasswordBloc.add(
+          MatchPasswordEvent(isMatch: false, count: matchPasswordErrorCount));
+    } else {
+      // TODO: Call Navigation to next page, testing for now, API later
+      Navigator.pushNamed(
+        context,
+        Routes.retailDashboard,
+        arguments: RetailDashboardArgumentModel(
+          imgUrl:
+              "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+          name: "ayan@qolarisdata.com",
+        ).toMap(),
+      );
+    }
+  }
+
+  void onForgotEmailPwd() {
+    // TODO: call API
   }
 
   @override

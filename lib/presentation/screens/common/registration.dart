@@ -24,38 +24,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final EmailValidationBloc emailValidationBloc =
-        context.read<EmailValidationBloc>();
     return Scaffold(
       appBar: AppBar(
-        leading: AppBarLeading(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return CustomDialog(
-                  svgAssetPath: ImageConstants.warning,
-                  title: "Are you sure?",
-                  message:
-                      "Going to the previous screen will make you repeat this step.",
-                  auxWidget: const SizeBox(),
-                  actionWidget: Column(
-                    children: [
-                      GradientButton(
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        text: "Go Back",
-                      ),
-                      const SizeBox(height: 22),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        ),
+        leading: AppBarLeading(onTap: promptUser),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -119,14 +90,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           }
                         },
                       ),
-                      onChanged: (p0) {
-                        _isEmailValid = InputValidator.isEnailValid(p0);
-                        _isEmailValid
-                            ? emailValidationBloc
-                                .add(EmailValidatedEvent(isValid: true))
-                            : emailValidationBloc
-                                .add(EmailInvalidatedEvent(isValid: false));
-                      },
+                      onChanged: emailValidation,
                     ),
                     const SizeBox(height: 9),
                     BlocBuilder<EmailValidationBloc, EmailValidationState>(
@@ -160,28 +124,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Column(
                 children: [
                   BlocBuilder<EmailValidationBloc, EmailValidationState>(
-                      builder: (context, state) {
-                    if (!_isEmailValid) {
-                      return const SizeBox();
-                    } else {
-                      return GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.otp,
-                            arguments: OTPArgumentModel(
-                              code: "123456",
-                              emailOrPhone: _emailController.text,
-                              isEmail: true,
-                              isBusiness: false,
-                            ).toMap(),
-                          );
-                        },
-                        text: "Proceed",
-                      );
-                    }
-                  }),
-                  const SizeBox(height: 16),
+                    builder: (context, state) {
+                      if (!_isEmailValid) {
+                        return const SizeBox();
+                      } else {
+                        return GradientButton(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              Routes.otp,
+                              arguments: OTPArgumentModel(
+                                code: "123456",
+                                emailOrPhone: _emailController.text,
+                                isEmail: true,
+                                isBusiness: false,
+                              ).toMap(),
+                            );
+                          },
+                          text: "Proceed",
+                        );
+                      }
+                    },
+                  ),
+                  const SizeBox(height: 10),
                   InkWell(
                     onTap: () {
                       Navigator.pushNamed(context, Routes.login);
@@ -206,7 +171,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                   ),
-                  const SizeBox(height: 32),
+                  const SizeBox(height: 20),
                 ],
               ),
             ],
@@ -214,6 +179,42 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
+  }
+
+  void promptUser() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Are you sure?",
+          message:
+              "Going to the previous screen will make you repeat this step.",
+          auxWidget: const SizeBox(),
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                text: "Go Back",
+              ),
+              const SizeBox(height: 22),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void emailValidation(String p0) {
+    final EmailValidationBloc emailValidationBloc =
+        context.read<EmailValidationBloc>();
+    _isEmailValid = InputValidator.isEmailValid(p0);
+    _isEmailValid
+        ? emailValidationBloc.add(EmailValidatedEvent(isValid: true))
+        : emailValidationBloc.add(EmailInvalidatedEvent(isValid: false));
   }
 
   @override

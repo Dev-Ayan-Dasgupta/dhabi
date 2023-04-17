@@ -40,7 +40,7 @@ class _OTPScreenState extends State<OTPScreen> {
   late final String obscuredEmail;
   late final String obscuredPhone;
 
-  int seconds = 300;
+  late int seconds;
 
   @override
   void initState() {
@@ -68,6 +68,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   void startTimer() {
+    seconds = otpArgumentModel.isEmail ? 300 : 90;
     final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
     Timer.periodic(
       const Duration(seconds: 1),
@@ -279,7 +280,6 @@ class _OTPScreenState extends State<OTPScreen> {
                                   }
                                 } else {
                                   pinputErrorCount++;
-
                                   pinputErrorBloc.add(PinputErrorEvent(
                                       isError: true,
                                       isComplete: true,
@@ -345,9 +345,7 @@ class _OTPScreenState extends State<OTPScreen> {
                               BlocBuilder<OTPTimerBloc, OTPTimerState>(
                                 builder: (context, state) {
                                   return InkWell(
-                                    onTap: () {
-                                      resendOTP();
-                                    },
+                                    onTap: resendOTP,
                                     highlightColor: Colors.transparent,
                                     splashColor: Colors.transparent,
                                     child: Text(

@@ -1,4 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,8 +43,6 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ButtonFocussedBloc buttonFocussedBloc =
-        context.read<ButtonFocussedBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -78,15 +79,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                     builder: (context, state) {
                       return SolidButton(
                         onTap: () {
-                          isPersonalFocussed = true;
-                          isBusinessFocussed = false;
-                          toggles++;
-                          buttonFocussedBloc.add(
-                            ButtonFocussedEvent(
-                              isFocussed: isPersonalFocussed,
-                              toggles: toggles,
-                            ),
-                          );
+                          onButtonTap(true, false);
                         },
                         color: Colors.white,
                         borderColor: isPersonalFocussed
@@ -100,7 +93,6 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                               (4 / Dimensions.designHeight).h,
                             ),
                             blurRadius: (3 / Dimensions.designWidth).w,
-                            // spreadRadius: (2 / Dimensions.designWidth).w,
                           ),
                         ],
                         fontColor: AppColors.primary,
@@ -113,15 +105,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                     builder: (context, state) {
                       return SolidButton(
                         onTap: () {
-                          isPersonalFocussed = false;
-                          isBusinessFocussed = true;
-                          toggles++;
-                          buttonFocussedBloc.add(
-                            ButtonFocussedEvent(
-                              isFocussed: isBusinessFocussed,
-                              toggles: toggles,
-                            ),
-                          );
+                          onButtonTap(false, true);
                         },
                         color: Colors.white,
                         borderColor: isBusinessFocussed
@@ -135,7 +119,6 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                               (4 / Dimensions.designHeight).h,
                             ),
                             blurRadius: (3 / Dimensions.designWidth).w,
-                            // spreadRadius: (2 / Dimensions.designWidth).w,
                           ),
                         ],
                         fontColor: AppColors.primary,
@@ -149,31 +132,28 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
             Center(
               child: Column(
                 children: [
-                  GradientButton(
-                    onTap: () {
-                      if (isPersonalFocussed) {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.createPassword,
-                          arguments: CreateAccountArgumentModel(
-                            email: createAccountArgumentModel.email,
-                            isRetail: true,
-                          ).toMap(),
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      if (isPersonalFocussed || isBusinessFocussed) {
+                        return GradientButton(
+                          onTap: () {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              Routes.createPassword,
+                              arguments: CreateAccountArgumentModel(
+                                email: createAccountArgumentModel.email,
+                                isRetail: isPersonalFocussed ? true : false,
+                              ).toMap(),
+                            );
+                          },
+                          text: "Proceed",
                         );
                       } else {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.createPassword,
-                          arguments: CreateAccountArgumentModel(
-                            email: createAccountArgumentModel.email,
-                            isRetail: false,
-                          ).toMap(),
-                        );
+                        return const SizeBox();
                       }
                     },
-                    text: "Proceed",
                   ),
-                  const SizeBox(height: 16),
+                  const SizeBox(height: 10),
                   InkWell(
                     onTap: () {
                       Navigator.pushReplacementNamed(context, Routes.login);
@@ -198,13 +178,32 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                       ),
                     ),
                   ),
-                  const SizeBox(height: 32),
+                  const SizeBox(height: 10),
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void onButtonTap(bool isPersonal, bool isBusiness) {
+    final ButtonFocussedBloc buttonFocussedBloc =
+        context.read<ButtonFocussedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    isPersonalFocussed = isPersonal;
+    isBusinessFocussed = isBusiness;
+    toggles++;
+    buttonFocussedBloc.add(
+      ButtonFocussedEvent(
+        isFocussed: isPersonal ? isPersonalFocussed : isBusinessFocussed,
+        toggles: toggles,
+      ),
+    );
+    showButtonBloc.add(
+      ShowButtonEvent(
+          show: isPersonal ? isPersonalFocussed : isBusinessFocussed),
     );
   }
 }

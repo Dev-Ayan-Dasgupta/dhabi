@@ -56,14 +56,6 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final DropdownSelectedBloc formatSelectionBloc =
-        context.read<DropdownSelectedBloc>();
-    final DateSelectionBloc fromDateSelectionBloc =
-        context.read<DateSelectionBloc>();
-    final DateSelectionBloc toDateSelectionBloc =
-        context.read<DateSelectionBloc>();
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -102,24 +94,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                         title: "Select File Format",
                         items: items,
                         value: selectedFormat,
-                        onChanged: (value) {
-                          toggles++;
-                          isFormatSelected = true;
-                          selectedFormat = value as String;
-                          formatSelectionBloc.add(
-                            DropdownSelectedEvent(
-                              isDropdownSelected: isFormatSelected,
-                              toggles: toggles,
-                            ),
-                          );
-                          showButtonBloc.add(ShowButtonEvent(
-                              show: isFormatSelected &&
-                                  ((isOneMonth ||
-                                          isThreeMonths ||
-                                          isSixMonths) ||
-                                      (isFromDateSelected &&
-                                          isToDateSelected))));
-                        },
+                        onChanged: onSelectFileFormat,
                       );
                     },
                   ),
@@ -135,158 +110,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   BlocBuilder<DateSelectionBloc, DateSelectionState>(
                     builder: (context, state) {
                       return DateDropdown(
-                        onTap: () {
-                          showCupertinoModalPopup(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return Material(
-                                color: Colors.transparent,
-                                child: Container(
-                                  height: (300 / Dimensions.designWidth).w,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          (20 / Dimensions.designWidth).w),
-                                      topRight: Radius.circular(
-                                          (20 / Dimensions.designWidth).w),
-                                    ),
-                                    color: Colors.white,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      BlocBuilder<ShowButtonBloc,
-                                          ShowButtonState>(
-                                        builder: (context, state) {
-                                          return Text(
-                                            DateFormat('EEE, d MMM, yyyy')
-                                                .format(auxFromDate),
-                                            style:
-                                                TextStyles.primaryBold.copyWith(
-                                              color: const Color(0xFF252525),
-                                              fontSize:
-                                                  (18 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      const SizeBox(height: 20),
-                                      SizedBox(
-                                        height:
-                                            (170 / Dimensions.designWidth).w,
-                                        child: CupertinoDatePicker(
-                                          initialDateTime: auxFromDate,
-                                          maximumDate: DateTime.now(),
-                                          mode: CupertinoDatePickerMode.date,
-                                          onDateTimeChanged: (p0) {
-                                            tempFromDate = p0;
-                                            fromDate =
-                                                DateFormat('d MMMM, yyyy')
-                                                    .format(auxFromDate);
-                                            showButtonBloc.add(ShowButtonEvent(
-                                                show: isFormatSelected &&
-                                                    ((isOneMonth ||
-                                                            isThreeMonths ||
-                                                            isSixMonths) ||
-                                                        (isFromDateSelected &&
-                                                            isToDateSelected))));
-                                          },
-                                        ),
-                                      ),
-                                      const SizeBox(height: 20),
-                                      Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              tempFromDate = auxFromDate;
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              width: (50.w) - 1,
-                                              color: Colors.white,
-                                              child: Center(
-                                                child: Text(
-                                                  "CANCEL",
-                                                  style: TextStyles
-                                                      .primaryMedium
-                                                      .copyWith(
-                                                    color: AppColors.primary,
-                                                    fontSize: (16 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 1,
-                                            height: 30,
-                                            color: Colors.black12,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              isFromDateSelected = true;
-                                              if (fromDate == "To Date") {
-                                                fromDate =
-                                                    DateFormat('d MMMM, yyyy')
-                                                        .format(
-                                                  DateTime.now(),
-                                                );
-                                              }
-                                              auxFromDate = tempFromDate;
-                                              fromDate =
-                                                  DateFormat('d MMMM, yyyy')
-                                                      .format(auxFromDate);
-                                              isOneMonth = false;
-                                              isThreeMonths = false;
-                                              isSixMonths = false;
-                                              fromDateSelectionBloc.add(
-                                                DateSelectionEvent(
-                                                    isDateSelected:
-                                                        isFromDateSelected),
-                                              );
-                                              showButtonBloc.add(ShowButtonEvent(
-                                                  show: isFormatSelected &&
-                                                      ((isOneMonth ||
-                                                              isThreeMonths ||
-                                                              isSixMonths) ||
-                                                          (isFromDateSelected &&
-                                                              isToDateSelected))));
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              width: (50.w) - 1,
-                                              color: Colors.white,
-                                              child: Center(
-                                                child: Text(
-                                                  "OK",
-                                                  style: TextStyles
-                                                      .primaryMedium
-                                                      .copyWith(
-                                                    color: AppColors.primary,
-                                                    fontSize: (16 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizeBox(height: 20),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
+                        onTap: onFromDateSelected,
                         isSelected: isFromDateSelected,
                         text: fromDate,
                       );
@@ -297,159 +121,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                     builder: (context, state) {
                       return DateDropdown(
                         isSelected: isToDateSelected,
-                        onTap: () {
-                          showCupertinoModalPopup(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) {
-                              return Material(
-                                color: Colors.transparent,
-                                child: Container(
-                                  height: (300 / Dimensions.designWidth).w,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          (20 / Dimensions.designWidth).w),
-                                      topRight: Radius.circular(
-                                          (20 / Dimensions.designWidth).w),
-                                    ),
-                                    color: Colors.white,
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      BlocBuilder<ShowButtonBloc,
-                                          ShowButtonState>(
-                                        builder: (context, state) {
-                                          return Text(
-                                            DateFormat('EEE, d MMM, yyyy')
-                                                .format(auxToDate),
-                                            style:
-                                                TextStyles.primaryBold.copyWith(
-                                              color: const Color(0xFF252525),
-                                              fontSize:
-                                                  (18 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      const SizeBox(height: 20),
-                                      SizedBox(
-                                        height:
-                                            (170 / Dimensions.designWidth).w,
-                                        child: CupertinoDatePicker(
-                                          initialDateTime: auxToDate
-                                              .add(const Duration(seconds: 1)),
-                                          minimumDate: auxFromDate,
-                                          maximumDate: DateTime.now(),
-                                          mode: CupertinoDatePickerMode.date,
-                                          onDateTimeChanged: (p0) {
-                                            tempToDate = p0;
-                                            toDate = DateFormat('d MMMM, yyyy')
-                                                .format(auxToDate);
-                                            showButtonBloc.add(ShowButtonEvent(
-                                                show: isFormatSelected &&
-                                                    ((isOneMonth ||
-                                                            isThreeMonths ||
-                                                            isSixMonths) ||
-                                                        (isFromDateSelected &&
-                                                            isToDateSelected))));
-                                          },
-                                        ),
-                                      ),
-                                      const SizeBox(height: 20),
-                                      Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              tempToDate = auxToDate;
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              width: (50.w) - 1,
-                                              color: Colors.white,
-                                              child: Center(
-                                                child: Text(
-                                                  "CANCEL",
-                                                  style: TextStyles
-                                                      .primaryMedium
-                                                      .copyWith(
-                                                    color: AppColors.primary,
-                                                    fontSize: (16 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 1,
-                                            height: 30,
-                                            color: Colors.black12,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              isToDateSelected = true;
-                                              if (toDate == "To Date") {
-                                                toDate =
-                                                    DateFormat('d MMMM, yyyy')
-                                                        .format(
-                                                  DateTime.now(),
-                                                );
-                                              }
-                                              auxToDate = tempToDate;
-                                              toDate =
-                                                  DateFormat('d MMMM, yyyy')
-                                                      .format(auxToDate);
-                                              isOneMonth = false;
-                                              isThreeMonths = false;
-                                              isSixMonths = false;
-                                              toDateSelectionBloc.add(
-                                                DateSelectionEvent(
-                                                    isDateSelected:
-                                                        isToDateSelected),
-                                              );
-                                              showButtonBloc.add(ShowButtonEvent(
-                                                  show: isFormatSelected &&
-                                                      ((isOneMonth ||
-                                                              isThreeMonths ||
-                                                              isSixMonths) ||
-                                                          (isFromDateSelected &&
-                                                              isToDateSelected))));
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              width: (50.w) - 1,
-                                              color: Colors.white,
-                                              child: Center(
-                                                child: Text(
-                                                  "OK",
-                                                  style: TextStyles
-                                                      .primaryMedium
-                                                      .copyWith(
-                                                    color: AppColors.primary,
-                                                    fontSize: (16 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizeBox(height: 20),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
+                        onTap: onToDateSelected,
                         text: toDate,
                       );
                     },
@@ -469,31 +141,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
                       return ActionButton(
-                        onTap: () {
-                          isFromDateSelected = false;
-                          fromDate = "From Date";
-                          isToDateSelected = false;
-                          toDate = "To Date";
-                          auxToDate = DateTime.now();
-                          tempToDate = DateTime.now();
-                          auxFromDate = DateTime.now();
-                          tempFromDate = DateTime.now();
-                          fromDateSelectionBloc.add(DateSelectionEvent(
-                              isDateSelected: isFromDateSelected));
-                          toDateSelectionBloc.add(DateSelectionEvent(
-                              isDateSelected: isToDateSelected));
-
-                          isOneMonth = true;
-                          isThreeMonths = false;
-                          isSixMonths = false;
-                          showButtonBloc.add(ShowButtonEvent(
-                              show: isFormatSelected &&
-                                  ((isOneMonth ||
-                                          isThreeMonths ||
-                                          isSixMonths) ||
-                                      (isFromDateSelected &&
-                                          isToDateSelected))));
-                        },
+                        onTap: onOneMonthTap,
                         text: "Download Last 1 Month Statement",
                         isSelected: isOneMonth,
                       );
@@ -503,31 +151,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
                       return ActionButton(
-                        onTap: () {
-                          isFromDateSelected = false;
-                          fromDate = "From Date";
-                          isToDateSelected = false;
-                          toDate = "To Date";
-                          auxToDate = DateTime.now();
-                          tempToDate = DateTime.now();
-                          auxFromDate = DateTime.now();
-                          tempFromDate = DateTime.now();
-                          fromDateSelectionBloc.add(DateSelectionEvent(
-                              isDateSelected: isFromDateSelected));
-                          toDateSelectionBloc.add(DateSelectionEvent(
-                              isDateSelected: isToDateSelected));
-
-                          isOneMonth = false;
-                          isThreeMonths = true;
-                          isSixMonths = false;
-                          showButtonBloc.add(ShowButtonEvent(
-                              show: isFormatSelected &&
-                                  ((isOneMonth ||
-                                          isThreeMonths ||
-                                          isSixMonths) ||
-                                      (isFromDateSelected &&
-                                          isToDateSelected))));
-                        },
+                        onTap: onThreeMonthsTap,
                         text: "Download Last 3 Months Statement",
                         isSelected: isThreeMonths,
                       );
@@ -537,31 +161,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
                       return ActionButton(
-                        onTap: () {
-                          isFromDateSelected = false;
-                          fromDate = "From Date";
-                          isToDateSelected = false;
-                          toDate = "To Date";
-                          auxToDate = DateTime.now();
-                          tempToDate = DateTime.now();
-                          auxFromDate = DateTime.now();
-                          tempFromDate = DateTime.now();
-                          fromDateSelectionBloc.add(DateSelectionEvent(
-                              isDateSelected: isFromDateSelected));
-                          toDateSelectionBloc.add(DateSelectionEvent(
-                              isDateSelected: isToDateSelected));
-
-                          isOneMonth = false;
-                          isThreeMonths = false;
-                          isSixMonths = true;
-                          showButtonBloc.add(ShowButtonEvent(
-                              show: isFormatSelected &&
-                                  ((isOneMonth ||
-                                          isThreeMonths ||
-                                          isSixMonths) ||
-                                      (isFromDateSelected &&
-                                          isToDateSelected))));
-                        },
+                        onTap: onSixMonthsTap,
                         text: "Download Last 6 Months Statement",
                         isSelected: isSixMonths,
                       );
@@ -591,6 +191,392 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  onSelectFileFormat(Object? value) {
+    final DropdownSelectedBloc formatSelectionBloc =
+        context.read<DropdownSelectedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    toggles++;
+    isFormatSelected = true;
+    selectedFormat = value as String;
+    formatSelectionBloc.add(
+      DropdownSelectedEvent(
+        isDropdownSelected: isFormatSelected,
+        toggles: toggles,
+      ),
+    );
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
+      ),
+    );
+  }
+
+  void onFromDateSelected() {
+    showCupertinoModalPopup(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Material(
+          color: Colors.transparent,
+          child: Container(
+            height: (300 / Dimensions.designWidth).w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular((20 / Dimensions.designWidth).w),
+                topRight: Radius.circular((20 / Dimensions.designWidth).w),
+              ),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: (context, state) {
+                    return Text(
+                      DateFormat('EEE, d MMM, yyyy').format(auxFromDate),
+                      style: TextStyles.primaryBold.copyWith(
+                        color: const Color(0xFF252525),
+                        fontSize: (18 / Dimensions.designWidth).w,
+                      ),
+                    );
+                  },
+                ),
+                const SizeBox(height: 20),
+                SizedBox(
+                  height: (170 / Dimensions.designWidth).w,
+                  child: CupertinoDatePicker(
+                    initialDateTime: auxFromDate,
+                    maximumDate: DateTime.now(),
+                    mode: CupertinoDatePickerMode.date,
+                    onDateTimeChanged: onFromDateChanged,
+                  ),
+                ),
+                const SizeBox(height: 20),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        tempFromDate = auxFromDate;
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: (50.w) - 1,
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(
+                            "CANCEL",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 1,
+                      height: 30,
+                      color: Colors.black12,
+                    ),
+                    InkWell(
+                      onTap: onFromDateOk,
+                      child: Container(
+                        width: (50.w) - 1,
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(
+                            "OK",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizeBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  onFromDateChanged(DateTime p0) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    tempFromDate = p0;
+    fromDate = DateFormat('d MMMM, yyyy').format(auxFromDate);
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
+      ),
+    );
+  }
+
+  onFromDateOk() {
+    final DateSelectionBloc fromDateSelectionBloc =
+        context.read<DateSelectionBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    isFromDateSelected = true;
+    if (fromDate == "To Date") {
+      fromDate = DateFormat('d MMMM, yyyy').format(
+        DateTime.now(),
+      );
+    }
+    auxFromDate = tempFromDate;
+    fromDate = DateFormat('d MMMM, yyyy').format(auxFromDate);
+    isOneMonth = false;
+    isThreeMonths = false;
+    isSixMonths = false;
+    fromDateSelectionBloc.add(
+      DateSelectionEvent(isDateSelected: isFromDateSelected),
+    );
+    showButtonBloc.add(ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected))));
+    Navigator.pop(context);
+  }
+
+  void onToDateSelected() {
+    showCupertinoModalPopup(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Material(
+          color: Colors.transparent,
+          child: Container(
+            height: (300 / Dimensions.designWidth).w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular((20 / Dimensions.designWidth).w),
+                topRight: Radius.circular((20 / Dimensions.designWidth).w),
+              ),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: (context, state) {
+                    return Text(
+                      DateFormat('EEE, d MMM, yyyy').format(auxToDate),
+                      style: TextStyles.primaryBold.copyWith(
+                        color: const Color(0xFF252525),
+                        fontSize: (18 / Dimensions.designWidth).w,
+                      ),
+                    );
+                  },
+                ),
+                const SizeBox(height: 20),
+                SizedBox(
+                  height: (170 / Dimensions.designWidth).w,
+                  child: CupertinoDatePicker(
+                    initialDateTime: auxToDate.add(const Duration(seconds: 1)),
+                    minimumDate: auxFromDate,
+                    maximumDate: DateTime.now(),
+                    mode: CupertinoDatePickerMode.date,
+                    onDateTimeChanged: onToDateChanged,
+                  ),
+                ),
+                const SizeBox(height: 20),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        tempToDate = auxToDate;
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: (50.w) - 1,
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(
+                            "CANCEL",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 1,
+                      height: 30,
+                      color: Colors.black12,
+                    ),
+                    InkWell(
+                      onTap: onToDateOk,
+                      child: Container(
+                        width: (50.w) - 1,
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(
+                            "OK",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizeBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void onToDateChanged(DateTime p0) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    tempToDate = p0;
+    toDate = DateFormat('d MMMM, yyyy').format(auxToDate);
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
+      ),
+    );
+  }
+
+  void onToDateOk() {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    final DateSelectionBloc toDateSelectionBloc =
+        context.read<DateSelectionBloc>();
+    isToDateSelected = true;
+    if (toDate == "To Date") {
+      toDate = DateFormat('d MMMM, yyyy').format(
+        DateTime.now(),
+      );
+    }
+    auxToDate = tempToDate;
+    toDate = DateFormat('d MMMM, yyyy').format(auxToDate);
+    isOneMonth = false;
+    isThreeMonths = false;
+    isSixMonths = false;
+    toDateSelectionBloc.add(
+      DateSelectionEvent(isDateSelected: isToDateSelected),
+    );
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
+      ),
+    );
+    Navigator.pop(context);
+  }
+
+  void onOneMonthTap() {
+    final DateSelectionBloc fromDateSelectionBloc =
+        context.read<DateSelectionBloc>();
+    final DateSelectionBloc toDateSelectionBloc =
+        context.read<DateSelectionBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+
+    isFromDateSelected = false;
+    fromDate = "From Date";
+    isToDateSelected = false;
+    toDate = "To Date";
+    auxToDate = DateTime.now();
+    tempToDate = DateTime.now();
+    auxFromDate = DateTime.now();
+    tempFromDate = DateTime.now();
+    fromDateSelectionBloc
+        .add(DateSelectionEvent(isDateSelected: isFromDateSelected));
+    toDateSelectionBloc
+        .add(DateSelectionEvent(isDateSelected: isToDateSelected));
+
+    isOneMonth = true;
+    isThreeMonths = false;
+    isSixMonths = false;
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
+      ),
+    );
+  }
+
+  void onThreeMonthsTap() {
+    final DateSelectionBloc fromDateSelectionBloc =
+        context.read<DateSelectionBloc>();
+    final DateSelectionBloc toDateSelectionBloc =
+        context.read<DateSelectionBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+
+    isFromDateSelected = false;
+    fromDate = "From Date";
+    isToDateSelected = false;
+    toDate = "To Date";
+    auxToDate = DateTime.now();
+    tempToDate = DateTime.now();
+    auxFromDate = DateTime.now();
+    tempFromDate = DateTime.now();
+    fromDateSelectionBloc
+        .add(DateSelectionEvent(isDateSelected: isFromDateSelected));
+    toDateSelectionBloc
+        .add(DateSelectionEvent(isDateSelected: isToDateSelected));
+
+    isOneMonth = false;
+    isThreeMonths = true;
+    isSixMonths = false;
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
+      ),
+    );
+  }
+
+  void onSixMonthsTap() {
+    final DateSelectionBloc fromDateSelectionBloc =
+        context.read<DateSelectionBloc>();
+    final DateSelectionBloc toDateSelectionBloc =
+        context.read<DateSelectionBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+
+    isFromDateSelected = false;
+    fromDate = "From Date";
+    isToDateSelected = false;
+    toDate = "To Date";
+    auxToDate = DateTime.now();
+    tempToDate = DateTime.now();
+    auxFromDate = DateTime.now();
+    tempFromDate = DateTime.now();
+    fromDateSelectionBloc
+        .add(DateSelectionEvent(isDateSelected: isFromDateSelected));
+    toDateSelectionBloc
+        .add(DateSelectionEvent(isDateSelected: isToDateSelected));
+
+    isOneMonth = false;
+    isThreeMonths = false;
+    isSixMonths = true;
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
       ),
     );
   }

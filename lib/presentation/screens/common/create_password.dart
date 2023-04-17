@@ -50,6 +50,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
   int toggle = 0;
 
+  // ? boolean flags for criteria
   bool hasMin8 = false;
   bool hasNumeric = false;
   bool hasUpperLower = false;
@@ -64,11 +65,22 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   @override
   void initState() {
     super.initState();
+    argumentInitialization();
+    controllerInitialization();
+    blocInitialization();
+  }
+
+  void argumentInitialization() {
     createAccountArgumentModel =
         CreateAccountArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
+  void controllerInitialization() {
     _emailController =
         TextEditingController(text: createAccountArgumentModel.email);
+  }
 
+  void blocInitialization() {
     final CriteriaBloc criteriaBloc = context.read<CriteriaBloc>();
     criteriaBloc.add(CriteriaMin8Event(hasMin8: hasMin8));
     criteriaBloc.add(CriteriaNumericEvent(hasNumeric: hasNumeric));
@@ -96,32 +108,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: AppBarLeading(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return CustomDialog(
-                  svgAssetPath: ImageConstants.warning,
-                  title: "Are you sure?",
-                  message:
-                      "Going to the previous screen will make you repeat this step.",
-                  auxWidget: const SizeBox(),
-                  actionWidget: Column(
-                    children: [
-                      GradientButton(
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        },
-                        text: "Go Back",
-                      ),
-                      const SizeBox(height: 22),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
+          onTap: promptUser,
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -520,6 +507,33 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void promptUser() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Are you sure?",
+          message:
+              "Going to the previous screen will make you repeat this step.",
+          auxWidget: const SizeBox(),
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                text: "Go Back",
+              ),
+              const SizeBox(height: 22),
+            ],
+          ),
+        );
+      },
     );
   }
 
