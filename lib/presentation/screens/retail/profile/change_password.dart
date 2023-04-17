@@ -597,7 +597,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
-                                  Routes.errorScreen,
+                                  Routes.errorSuccessScreen,
                                   arguments: ErrorArgumentModel(
                                     hasSecondaryButton: false,
                                     iconPath:

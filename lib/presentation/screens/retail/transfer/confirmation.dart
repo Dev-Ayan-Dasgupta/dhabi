@@ -115,7 +115,7 @@ class _TransferConfirmationScreenState
         if (context.mounted) {
           Navigator.pushNamed(
             context,
-            Routes.errorScreen,
+            Routes.errorSuccessScreen,
             arguments: ErrorArgumentModel(
               hasSecondaryButton: true,
               iconPath: ImageConstants.checkCircleOutlined,

@@ -237,7 +237,7 @@ class _RequestScreenState extends State<RequestScreen> {
                         onTap: () {
                           Navigator.pushNamed(
                             context,
-                            Routes.errorScreen,
+                            Routes.errorSuccessScreen,
                             arguments: ErrorArgumentModel(
                               hasSecondaryButton: false,
                               iconPath: ImageConstants.checkCircleOutlined,

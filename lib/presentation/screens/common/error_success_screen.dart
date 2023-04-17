@@ -6,8 +6,8 @@ import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ErrorScreen extends StatefulWidget {
-  const ErrorScreen({
+class ErrorSuccessScreen extends StatefulWidget {
+  const ErrorSuccessScreen({
     Key? key,
     this.argument,
   }) : super(key: key);
@@ -15,10 +15,10 @@ class ErrorScreen extends StatefulWidget {
   final Object? argument;
 
   @override
-  State<ErrorScreen> createState() => _ErrorScreenState();
+  State<ErrorSuccessScreen> createState() => _ErrorSuccessScreenState();
 }
 
-class _ErrorScreenState extends State<ErrorScreen> {
+class _ErrorSuccessScreenState extends State<ErrorSuccessScreen> {
   late ErrorArgumentModel errorArgumentModel;
 
   @override

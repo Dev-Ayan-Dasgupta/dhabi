@@ -165,7 +165,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                           onTap: () {
                             Navigator.pushNamed(
                               context,
-                              Routes.errorScreen,
+                              Routes.errorSuccessScreen,
                               arguments: ErrorArgumentModel(
                                 hasSecondaryButton: true,
                                 iconPath: ImageConstants.checkCircleOutlined,

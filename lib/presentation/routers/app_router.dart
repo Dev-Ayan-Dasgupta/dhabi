@@ -1,8 +1,6 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
-import 'package:dialup_mobile_app/presentation/screens/create_password.dart';
-import 'package:dialup_mobile_app/presentation/screens/error_screen.dart';
-import 'package:dialup_mobile_app/presentation/screens/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/accountDetails/download_statement.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/cardsVault/index.dart';
@@ -129,9 +127,9 @@ class AppRouter {
             argument: args,
           ),
         );
-      case Routes.errorScreen:
+      case Routes.errorSuccessScreen:
         return MaterialPageRoute(
-          builder: (_) => ErrorScreen(
+          builder: (_) => ErrorSuccessScreen(
             argument: args,
           ),
         );

@@ -125,7 +125,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                         onTap: () {
                           Navigator.pushNamed(
                             context,
-                            Routes.errorScreen,
+                            Routes.errorSuccessScreen,
                             arguments: ErrorArgumentModel(
                               hasSecondaryButton: false,
                               iconPath: ImageConstants.checkCircleOutlined,
