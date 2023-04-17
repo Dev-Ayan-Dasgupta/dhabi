@@ -93,7 +93,7 @@ class DashboardTransactionListTile extends StatelessWidget {
                       child: Text(
                         name,
                         style: TextStyles.primary.copyWith(
-                          color: const Color.fromRGBO(0, 0, 0, 0.4),
+                          color: AppColors.grey40,
                           fontSize: (14 / Dimensions.designWidth).w,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -112,7 +112,7 @@ class DashboardTransactionListTile extends StatelessWidget {
                       : "- ${amount.toStringAsFixed(2)} $currency",
                   style: TextStyles.primary.copyWith(
                     color: isCredit
-                        ? const Color(0XFF00B894)
+                        ? AppColors.primaryBright
                         : const Color(0XFF054047),
                     fontSize: (14 / Dimensions.designWidth).w,
                   ),
@@ -121,7 +121,7 @@ class DashboardTransactionListTile extends StatelessWidget {
                 Text(
                   date,
                   style: TextStyles.primary.copyWith(
-                    color: const Color.fromRGBO(0, 0, 0, 0.4),
+                    color: AppColors.grey40,
                     fontSize: (14 / Dimensions.designWidth).w,
                   ),
                 ),

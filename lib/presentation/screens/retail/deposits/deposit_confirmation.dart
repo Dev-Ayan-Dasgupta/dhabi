@@ -67,7 +67,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                   Text(
                     "Please review the deposit details and click proceed to confirm",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: const Color(0xFF636363),
+                      color: AppColors.black63,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -117,7 +117,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                     ),
                   ],
                 ),
-                const SizeBox(height: 20),
+                const SizeBox(height: 10),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: (context, state) {
                     if (isChecked) {
@@ -144,11 +144,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                         text: "I Agree",
                       );
                     } else {
-                      return SolidButton(
-                        onTap: () {},
-                        text: "I Agree",
-                        color: Colors.black12,
-                      );
+                      return const SizeBox();
                     }
                   },
                 ),

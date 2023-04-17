@@ -78,7 +78,7 @@ class _CustomSearchBoxState extends State<CustomSearchBox> {
                 ),
               ),
               style: TextStyles.primaryMedium.copyWith(
-                color: widget.fontColor ?? const Color(0xFF252525),
+                color: widget.fontColor ?? AppColors.black25,
                 fontSize: (16 / Dimensions.designWidth).w,
               ),
               onChanged: widget.onChanged,

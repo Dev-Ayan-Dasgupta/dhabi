@@ -123,7 +123,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
                           return FlutterSwitch(
                             width: (45 / Dimensions.designWidth).w,
                             height: (25 / Dimensions.designWidth).w,
-                            activeColor: const Color(0XFF00B894),
+                            activeColor: AppColors.primaryBright,
                             inactiveColor: const Color(0XFFD7D9D8),
                             toggleSize: (15 / Dimensions.designWidth).w,
                             value: isOnlinePayments,
@@ -154,7 +154,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
                           return FlutterSwitch(
                             width: (45 / Dimensions.designWidth).w,
                             height: (25 / Dimensions.designWidth).w,
-                            activeColor: const Color(0XFF00B894),
+                            activeColor: AppColors.primaryBright,
                             inactiveColor: const Color(0XFFD7D9D8),
                             toggleSize: (15 / Dimensions.designWidth).w,
                             value: isPaymentAbroad,

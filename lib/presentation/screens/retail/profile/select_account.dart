@@ -38,7 +38,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
             Text(
               "Please select from the company account you wish to reset the password",
               style: TextStyles.primaryMedium.copyWith(
-                color: const Color.fromRGBO(0, 0, 0, 0.4),
+                color: AppColors.grey40,
                 fontSize: (16 / Dimensions.designWidth).w,
               ),
             ),
@@ -72,7 +72,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                 Text(
                   "Please select from the personal account you wish to reset the password",
                   style: TextStyles.primaryMedium.copyWith(
-                    color: const Color.fromRGBO(0, 0, 0, 0.4),
+                    color: AppColors.grey40,
                     fontSize: (16 / Dimensions.designWidth).w,
                   ),
                 ),

@@ -107,7 +107,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 Text(
                                   "Current Password",
                                   style: TextStyles.primaryMedium.copyWith(
-                                    color: const Color(0xFF636363),
+                                    color: AppColors.black63,
                                     fontSize: (16 / Dimensions.designWidth).w,
                                   ),
                                 ),
@@ -211,7 +211,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                         "Password incorrect",
                                         style:
                                             TextStyles.primaryMedium.copyWith(
-                                          color: const Color(0xFFC94540),
+                                          color: AppColors.red,
                                           fontSize:
                                               (16 / Dimensions.designWidth).w,
                                         ),
@@ -227,7 +227,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             Text(
                               "New Password",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -319,7 +319,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                         "Password does not meet the criteria",
                                         style:
                                             TextStyles.primaryMedium.copyWith(
-                                          color: const Color(0xFFC94540),
+                                          color: AppColors.red,
                                           fontSize:
                                               (16 / Dimensions.designWidth).w,
                                         ),
@@ -335,7 +335,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                             Text(
                               "Confirm New Password",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -479,16 +479,16 @@ class _ChangePasswordState extends State<ChangePassword> {
                                 return PasswordCriteria(
                                   criteria1Color: hasMin8
                                       ? AppColors.primary
-                                      : const Color(0xFFC94540),
+                                      : AppColors.red,
                                   criteria2Color: hasNumeric
                                       ? AppColors.primary
-                                      : const Color(0xFFC94540),
+                                      : AppColors.red,
                                   criteria3Color: hasUpperLower
                                       ? AppColors.primary
-                                      : const Color(0xFFC94540),
+                                      : AppColors.red,
                                   criteria4Color: hasSpecial
                                       ? AppColors.primary
-                                      : const Color(0xFFC94540),
+                                      : AppColors.red,
                                   criteria1Widget: hasMin8
                                       ? SvgPicture.asset(
                                           ImageConstants.checkSmall)

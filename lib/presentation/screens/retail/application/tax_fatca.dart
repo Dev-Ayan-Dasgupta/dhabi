@@ -117,7 +117,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                       Text(
                                         "You are a U.S. Citizen",
                                         style: TextStyles.primary.copyWith(
-                                          color: const Color(0xFF636363),
+                                          color: AppColors.black63,
                                           fontSize:
                                               (16 / Dimensions.designWidth).w,
                                         ),
@@ -133,7 +133,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                         text: TextSpan(
                                           text: 'Press ',
                                           style: TextStyles.primary.copyWith(
-                                            color: const Color(0xFF636363),
+                                            color: AppColors.black63,
                                             fontSize:
                                                 (15 / Dimensions.designWidth).w,
                                           ),
@@ -142,7 +142,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                               text: 'Yes',
                                               style: TextStyles.primaryBold
                                                   .copyWith(
-                                                color: const Color(0xFF636363),
+                                                color: AppColors.black63,
                                                 fontSize: (15 /
                                                         Dimensions.designWidth)
                                                     .w,
@@ -152,7 +152,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                               text: ' if:',
                                               style:
                                                   TextStyles.primary.copyWith(
-                                                color: const Color(0xFF636363),
+                                                color: AppColors.black63,
                                                 fontSize: (15 /
                                                         Dimensions.designWidth)
                                                     .w,
@@ -165,7 +165,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                       Text(
                                         "You are a U.S. Citizen or Resident?",
                                         style: TextStyles.primary.copyWith(
-                                          color: const Color(0xFF636363),
+                                          color: AppColors.black63,
                                           fontSize:
                                               (16 / Dimensions.designWidth).w,
                                         ),
@@ -317,7 +317,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                       Text(
                                         "US TIN or SSN Number",
                                         style: TextStyles.primary.copyWith(
-                                          color: const Color(0xFF636363),
+                                          color: AppColors.black63,
                                           fontSize:
                                               (16 / Dimensions.designWidth).w,
                                         ),
@@ -367,7 +367,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                               "Must be 9 digits",
                                               style:
                                                   TextStyles.primary.copyWith(
-                                                color: const Color(0xFFC94540),
+                                                color: AppColors.red,
                                                 fontSize: (16 /
                                                         Dimensions.designWidth)
                                                     .w,

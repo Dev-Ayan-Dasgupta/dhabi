@@ -61,7 +61,7 @@ class CustomDialog extends StatelessWidget {
                           Text(
                             title,
                             style: TextStyles.primaryBold.copyWith(
-                              color: const Color(0xFF252525),
+                              color: AppColors.black25,
                               fontSize: (24 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -69,7 +69,7 @@ class CustomDialog extends StatelessWidget {
                           Text(
                             message,
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0xFF252525),
+                              color: AppColors.black25,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                             textAlign: TextAlign.center,

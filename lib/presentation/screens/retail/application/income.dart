@@ -78,7 +78,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
                   Text(
                     "Source of Income",
                     style: TextStyles.primary.copyWith(
-                      color: const Color(0xFF636363),
+                      color: AppColors.black63,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),

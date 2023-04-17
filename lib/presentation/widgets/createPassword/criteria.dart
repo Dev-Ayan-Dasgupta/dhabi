@@ -56,7 +56,7 @@ class PasswordCriteria extends StatelessWidget {
               Text(
                 "Minimum 8 characters",
                 style: TextStyles.primaryMedium.copyWith(
-                  color: criteria1Color ?? const Color(0xFFC94540),
+                  color: criteria1Color ?? AppColors.red,
                   fontSize: (16 / Dimensions.designWidth).w,
                 ),
               ),
@@ -70,7 +70,7 @@ class PasswordCriteria extends StatelessWidget {
               Text(
                 "Must Contain one Numeric value",
                 style: TextStyles.primaryMedium.copyWith(
-                  color: criteria2Color ?? const Color(0xFFC94540),
+                  color: criteria2Color ?? AppColors.red,
                   fontSize: (16 / Dimensions.designWidth).w,
                 ),
               ),
@@ -84,7 +84,7 @@ class PasswordCriteria extends StatelessWidget {
               Text(
                 "Must include upper and lower cases",
                 style: TextStyles.primaryMedium.copyWith(
-                  color: criteria3Color ?? const Color(0xFFC94540),
+                  color: criteria3Color ?? AppColors.red,
                   fontSize: (16 / Dimensions.designWidth).w,
                 ),
               ),
@@ -98,7 +98,7 @@ class PasswordCriteria extends StatelessWidget {
               Text(
                 "Must include one special character (!,@,#...)",
                 style: TextStyles.primaryMedium.copyWith(
-                  color: criteria4Color ?? const Color(0xFFC94540),
+                  color: criteria4Color ?? AppColors.red,
                   fontSize: (16 / Dimensions.designWidth).w,
                 ),
               ),

@@ -62,7 +62,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                     Text(
                       "IBAN / Account number",
                       style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0XFF636363),
+                        color: AppColors.red,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
@@ -85,14 +85,14 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                               Text(
                                 "Recipient Name",
                                 style: TextStyles.primaryMedium.copyWith(
-                                  color: const Color(0XFF636363),
+                                  color: AppColors.red,
                                   fontSize: (16 / Dimensions.designWidth).w,
                                 ),
                               ),
                               const SizeBox(height: 10),
                               CustomTextField(
                                 enabled: false,
-                                color: const Color(0XFFEEEEEE),
+                                color: AppColors.blackEE,
                                 controller: _recipientNameController,
                                 onChanged: (p0) {},
                               ),

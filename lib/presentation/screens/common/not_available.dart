@@ -56,7 +56,7 @@ class _NotAvaiableScreenState extends State<NotAvaiableScreen> {
                     text: TextSpan(
                       text: "Thanks for your interest in joining Dhabi! ",
                       style: TextStyles.primary.copyWith(
-                        color: const Color.fromRGBO(0, 0, 0, 0.4),
+                        color: AppColors.grey40,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                       children: <TextSpan>[
@@ -71,7 +71,7 @@ class _NotAvaiableScreenState extends State<NotAvaiableScreen> {
                           text:
                               ' will soon be one of the many countries where Dhabi operates.',
                           style: TextStyles.primary.copyWith(
-                            color: const Color.fromRGBO(0, 0, 0, 0.4),
+                            color: AppColors.grey40,
                             fontSize: (16 / Dimensions.designWidth).w,
                           ),
                         ),

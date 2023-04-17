@@ -87,7 +87,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                         return Text(
                           !isNotZero ? "You Send" : "You're Sending",
                           style: TextStyles.primaryMedium.copyWith(
-                            color: const Color(0XFF636363),
+                            color: AppColors.red,
                             fontSize: (16 / Dimensions.designWidth).w,
                           ),
                         );
@@ -127,7 +127,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                           Text(
                             "AED  ",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -159,7 +159,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                               style: TextStyles.primaryMedium.copyWith(
                                 color: isShowButton
                                     ? const Color(0XFF818181)
-                                    : const Color(0XFFC94540),
+                                    : AppColors.red,
                                 fontSize: (15 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -191,7 +191,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                   ? "You will receive"
                                   : "They will receive",
                           style: TextStyles.primaryMedium.copyWith(
-                            color: const Color(0XFF636363),
+                            color: AppColors.red,
                             fontSize: (16 / Dimensions.designWidth).w,
                           ),
                         );
@@ -208,7 +208,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                           Text(
                             "USD  ",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),

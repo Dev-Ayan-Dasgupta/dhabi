@@ -70,7 +70,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                   Text(
                     "Please select the type of account you wish to open",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: const Color.fromRGBO(0, 0, 0, 0.4),
+                      color: AppColors.grey40,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),

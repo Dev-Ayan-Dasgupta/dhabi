@@ -161,607 +161,696 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
           child: Column(
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizeBox(height: 10),
-                      Text(
-                        "Create Deposits",
-                        style: TextStyles.primaryBold.copyWith(
-                          color: AppColors.primary,
-                          fontSize: (28 / Dimensions.designWidth).w,
-                        ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizeBox(height: 10),
+                    Text(
+                      "Create Deposits",
+                      style: TextStyles.primaryBold.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (28 / Dimensions.designWidth).w,
                       ),
-                      const SizeBox(height: 10),
-                      SizedBox(
-                        height: (146 / Dimensions.designWidth).w,
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return AccountSummaryTile(
-                              onTap: () {},
-                              imgUrl:
-                                  "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                              accountType: "Savings",
-                              currency: "USD",
-                              amount: 20000,
-                              subText: "",
-                              subImgUrl: "",
-                            );
-                          },
-                        ),
-                      ),
-                      const SizeBox(height: 10),
-                      BlocBuilder<SummaryTileBloc, SummaryTileState>(
-                        builder: (context, state) {
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 47.w -
-                                    (22 / Dimensions.designWidth).w -
-                                    ((5 - 1) *
-                                        (6.5 / Dimensions.designWidth).w)),
-                            child: SizedBox(
-                              width: 90.w,
-                              height: (9 / Dimensions.designWidth).w,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: 5,
-                                itemBuilder: (context, index) {
-                                  return ScrollIndicator(
-                                    isCurrent: (index == _scrollIndex),
-                                  );
-                                },
-                              ),
-                            ),
+                    ),
+                    const SizeBox(height: 10),
+                    SizedBox(
+                      height: (146 / Dimensions.designWidth).w,
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return AccountSummaryTile(
+                            onTap: () {},
+                            imgUrl:
+                                "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
+                            accountType: "Savings",
+                            currency: "USD",
+                            amount: 20000,
+                            subText: "",
+                            subImgUrl: "",
                           );
                         },
                       ),
-                      const SizeBox(height: 20),
-                      Container(
-                        padding:
-                            EdgeInsets.all((10 / Dimensions.designWidth).w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular((3 / Dimensions.designWidth).w),
+                    ),
+                    const SizeBox(height: 10),
+                    BlocBuilder<SummaryTileBloc, SummaryTileState>(
+                      builder: (context, state) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 47.w -
+                                  (22 / Dimensions.designWidth).w -
+                                  ((5 - 1) * (6.5 / Dimensions.designWidth).w)),
+                          child: SizedBox(
+                            width: 90.w,
+                            height: (9 / Dimensions.designWidth).w,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: 5,
+                              itemBuilder: (context, index) {
+                                return ScrollIndicator(
+                                  isCurrent: (index == _scrollIndex),
+                                );
+                              },
+                            ),
                           ),
-                          color: const Color(0xFFEEEEEE),
-                        ),
+                        );
+                      },
+                    ),
+                    const SizeBox(height: 20),
+                    Expanded(
+                      child: SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Amount Limit Criteria",
-                              style: TextStyles.primaryBold.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                                fontWeight: FontWeight.w600,
+                            Container(
+                              padding: EdgeInsets.all(
+                                  (10 / Dimensions.designWidth).w),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      (3 / Dimensions.designWidth).w),
+                                ),
+                                color: const Color(0xFFEEEEEE),
                               ),
-                            ),
-                            const SizeBox(height: 15),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Minimum amount required",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: AppColors.primary,
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                                Text(
-                                  "USD ${minAmtReq.toStringAsFixed(2)}",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: AppColors.primary,
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizeBox(height: 7),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Maximum amount required",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: AppColors.primary,
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                                Text(
-                                  "USD ${maxAmtReq.toStringAsFixed(2)}",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: AppColors.primary,
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizeBox(height: 10),
-                      Text(
-                        "Deposit Amount (USD)",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: const Color(0xFF636363),
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const SizeBox(height: 7),
-                      CustomTextField(
-                        controller: _depositController,
-                        hintText: "E.g., 500",
-                        onChanged: (p0) {
-                          if (double.parse(p0) < minAmtReq ||
-                              double.parse(p0) > maxAmtReq) {
-                            errorMsg = "Please check the amount limit criteria";
-                            errorMessageBloc.add(
-                              ErrorMessageEvent(hasError: errorMsg.isEmpty),
-                            );
-                          } else if (double.parse(p0) > bal) {
-                            errorMsg = "Insufficient fund";
-                            errorMessageBloc.add(
-                              ErrorMessageEvent(hasError: errorMsg.isEmpty),
-                            );
-                          } else {
-                            errorMsg = "";
-                            errorMessageBloc.add(
-                              ErrorMessageEvent(hasError: errorMsg.isEmpty),
-                            );
-                          }
-                          showPeriodSection.add(
-                            ShowButtonEvent(
-                                show: showPeriod &&
-                                    errorMsg.isEmpty &&
-                                    _depositController.text.isNotEmpty),
-                          );
-                          showButtonBloc.add(ShowButtonEvent(
-                              show: isShowButton &&
-                                  errorMsg.isEmpty &&
-                                  _depositController.text.isNotEmpty));
-                        },
-                      ),
-                      const SizeBox(height: 5),
-                      BlocBuilder<ErrorMessageBloc, ErrorMessageState>(
-                        builder: (context, state) {
-                          if (errorMsg.isNotEmpty) {
-                            return Text(
-                              errorMsg,
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFFC94540),
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            );
-                          } else {
-                            return const SizeBox();
-                          }
-                        },
-                      ),
-                      const SizeBox(height: 10),
-                      Text(
-                        "Tenure",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: const Color(0xFF636363),
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const SizeBox(height: 10),
-                      InkWell(
-                        onTap: () {
-                          showCupertinoModalPopup(
-                            context: context,
-                            builder: (_) {
-                              return Material(
-                                color: Colors.transparent,
-                                child: Container(
-                                  height: (300 / Dimensions.designWidth).w,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(
-                                          (20 / Dimensions.designWidth).w),
-                                      topRight: Radius.circular(
-                                          (20 / Dimensions.designWidth).w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Amount Limit Criteria",
+                                    style: TextStyles.primaryBold.copyWith(
+                                      color: AppColors.primary,
+                                      fontSize: (16 / Dimensions.designWidth).w,
+                                      fontWeight: FontWeight.w600,
                                     ),
-                                    color: Colors.white,
                                   ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                  const SizeBox(height: 15),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        DateFormat('EEE, d MMM, yyyy')
-                                            .format(DateTime.now()),
-                                        style: TextStyles.primaryBold.copyWith(
-                                          color: const Color(0xFF252525),
-                                          fontSize:
-                                              (18 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                      const SizeBox(height: 20),
-                                      SizedBox(
-                                        height:
-                                            (170 / Dimensions.designWidth).w,
-                                        child: CupertinoDatePicker(
-                                          mode: CupertinoDatePickerMode.date,
-                                          onDateTimeChanged: (p0) {
-                                            date = DateFormat('d MMMM, yyyy')
-                                                .format(p0);
-                                          },
-                                        ),
-                                      ),
-                                      const SizeBox(height: 20),
-                                      Row(
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              width: (50.w) - 1,
-                                              color: Colors.white,
-                                              child: Center(
-                                                child: Text(
-                                                  "CANCEL",
-                                                  style: TextStyles
-                                                      .primaryMedium
-                                                      .copyWith(
-                                                    color: AppColors.primary,
-                                                    fontSize: (16 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: 1,
-                                            height: 30,
-                                            color: Colors.black12,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              if (date.isNotEmpty) {
-                                                dateSelectionBloc.add(
-                                                    const DateSelectionEvent(
-                                                        isDateSelected: true));
-                                                showPeriod = true;
-                                                showPeriodSection.add(
-                                                  ShowButtonEvent(
-                                                      show: showPeriod &&
-                                                          errorMsg.isEmpty &&
-                                                          _depositController
-                                                              .text.isNotEmpty),
-                                                );
-                                              }
-
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              width: (50.w) - 1,
-                                              color: Colors.white,
-                                              child: Center(
-                                                child: Text(
-                                                  "OK",
-                                                  style: TextStyles
-                                                      .primaryMedium
-                                                      .copyWith(
-                                                    color: AppColors.primary,
-                                                    fontSize: (16 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizeBox(height: 20),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.all((15 / Dimensions.designWidth).w),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(
-                                (10 / Dimensions.designWidth).w)),
-                            boxShadow: [BoxShadows.primary],
-                            color: Colors.white,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Date",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: const Color(0xFF636363),
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  BlocBuilder<DateSelectionBloc,
-                                      DateSelectionState>(
-                                    builder: (context, state) {
-                                      return Text(
-                                        "$date\t\t\t\t",
+                                        "Minimum amount required",
                                         style:
                                             TextStyles.primaryMedium.copyWith(
-                                          color: const Color(0xFF636363),
+                                          color: AppColors.primary,
                                           fontSize:
                                               (16 / Dimensions.designWidth).w,
                                         ),
-                                      );
-                                    },
+                                      ),
+                                      Text(
+                                        "USD ${minAmtReq.toStringAsFixed(2)}",
+                                        style:
+                                            TextStyles.primaryMedium.copyWith(
+                                          color: AppColors.primary,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SvgPicture.asset(
-                                    ImageConstants.arrowForwardIos,
-                                    width: (10 / Dimensions.designWidth).w,
-                                    height: (16 / Dimensions.designWidth).w,
-                                    colorFilter: const ColorFilter.mode(
-                                      AppColors.primary,
-                                      BlendMode.srcIn,
-                                    ),
+                                  const SizeBox(height: 7),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Maximum amount required",
+                                        style:
+                                            TextStyles.primaryMedium.copyWith(
+                                          color: AppColors.primary,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                      Text(
+                                        "USD ${maxAmtReq.toStringAsFixed(2)}",
+                                        style:
+                                            TextStyles.primaryMedium.copyWith(
+                                          color: AppColors.primary,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                          builder: (context, state) {
-                        if (showPeriod &&
-                            errorMsg.isEmpty &&
-                            _depositController.text.isNotEmpty) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizeBox(height: 10),
-                              Container(
-                                width: 100.w,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: (15 / Dimensions.designWidth).w,
-                                    vertical: (8 / Dimensions.designWidth).w),
+                            ),
+                            const SizeBox(height: 10),
+                            Text(
+                              "Deposit Amount (USD)",
+                              style: TextStyles.primaryMedium.copyWith(
+                                color: AppColors.black63,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                            const SizeBox(height: 7),
+                            CustomTextField(
+                              controller: _depositController,
+                              hintText: "E.g., 500",
+                              onChanged: (p0) {
+                                if (double.parse(p0) < minAmtReq ||
+                                    double.parse(p0) > maxAmtReq) {
+                                  errorMsg =
+                                      "Please check the amount limit criteria";
+                                  errorMessageBloc.add(
+                                    ErrorMessageEvent(
+                                        hasError: errorMsg.isEmpty),
+                                  );
+                                } else if (double.parse(p0) > bal) {
+                                  errorMsg = "Insufficient fund";
+                                  errorMessageBloc.add(
+                                    ErrorMessageEvent(
+                                        hasError: errorMsg.isEmpty),
+                                  );
+                                } else {
+                                  errorMsg = "";
+                                  errorMessageBloc.add(
+                                    ErrorMessageEvent(
+                                        hasError: errorMsg.isEmpty),
+                                  );
+                                }
+                                showPeriodSection.add(
+                                  ShowButtonEvent(
+                                      show: showPeriod &&
+                                          errorMsg.isEmpty &&
+                                          _depositController.text.isNotEmpty),
+                                );
+                                showButtonBloc.add(ShowButtonEvent(
+                                    show: isShowButton &&
+                                        errorMsg.isEmpty &&
+                                        _depositController.text.isNotEmpty));
+                              },
+                            ),
+                            const SizeBox(height: 5),
+                            BlocBuilder<ErrorMessageBloc, ErrorMessageState>(
+                              builder: (context, state) {
+                                if (errorMsg.isNotEmpty) {
+                                  return Text(
+                                    errorMsg,
+                                    style: TextStyles.primaryMedium.copyWith(
+                                      color: AppColors.red,
+                                      fontSize: (16 / Dimensions.designWidth).w,
+                                    ),
+                                  );
+                                } else {
+                                  return const SizeBox();
+                                }
+                              },
+                            ),
+                            const SizeBox(height: 10),
+                            Text(
+                              "Tenure",
+                              style: TextStyles.primaryMedium.copyWith(
+                                color: AppColors.black63,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                            const SizeBox(height: 10),
+                            InkWell(
+                              onTap: () {
+                                showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (_) {
+                                    return Material(
+                                      color: Colors.transparent,
+                                      child: Container(
+                                        height:
+                                            (300 / Dimensions.designWidth).w,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(
+                                                (20 / Dimensions.designWidth)
+                                                    .w),
+                                            topRight: Radius.circular(
+                                                (20 / Dimensions.designWidth)
+                                                    .w),
+                                          ),
+                                          color: Colors.white,
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              DateFormat('EEE, d MMM, yyyy')
+                                                  .format(DateTime.now()),
+                                              style: TextStyles.primaryBold
+                                                  .copyWith(
+                                                color: AppColors.black25,
+                                                fontSize: (18 /
+                                                        Dimensions.designWidth)
+                                                    .w,
+                                              ),
+                                            ),
+                                            const SizeBox(height: 20),
+                                            SizedBox(
+                                              height:
+                                                  (170 / Dimensions.designWidth)
+                                                      .w,
+                                              child: CupertinoDatePicker(
+                                                mode: CupertinoDatePickerMode
+                                                    .date,
+                                                onDateTimeChanged: (p0) {
+                                                  date =
+                                                      DateFormat('d MMMM, yyyy')
+                                                          .format(p0);
+                                                },
+                                              ),
+                                            ),
+                                            const SizeBox(height: 20),
+                                            Row(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Container(
+                                                    width: (50.w) - 1,
+                                                    color: Colors.white,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "CANCEL",
+                                                        style: TextStyles
+                                                            .primaryMedium
+                                                            .copyWith(
+                                                          color:
+                                                              AppColors.primary,
+                                                          fontSize: (16 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: 1,
+                                                  height: 30,
+                                                  color: Colors.black12,
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    if (date.isNotEmpty) {
+                                                      dateSelectionBloc.add(
+                                                          const DateSelectionEvent(
+                                                              isDateSelected:
+                                                                  true));
+                                                      showPeriod = true;
+                                                      showPeriodSection.add(
+                                                        ShowButtonEvent(
+                                                            show: showPeriod &&
+                                                                errorMsg
+                                                                    .isEmpty &&
+                                                                _depositController
+                                                                    .text
+                                                                    .isNotEmpty),
+                                                      );
+                                                    }
+
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Container(
+                                                    width: (50.w) - 1,
+                                                    color: Colors.white,
+                                                    child: Center(
+                                                      child: Text(
+                                                        "OK",
+                                                        style: TextStyles
+                                                            .primaryMedium
+                                                            .copyWith(
+                                                          color:
+                                                              AppColors.primary,
+                                                          fontSize: (16 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizeBox(height: 20),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(
+                                    (15 / Dimensions.designWidth).w),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(
                                       Radius.circular(
                                           (10 / Dimensions.designWidth).w)),
-                                  color: const Color(0XFFEEEEEE),
+                                  boxShadow: [BoxShadows.primary],
+                                  color: Colors.white,
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
+                                    Text(
+                                      "Date",
+                                      style: TextStyles.primaryMedium.copyWith(
+                                        color: AppColors.black63,
+                                        fontSize:
+                                            (16 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
                                     Row(
                                       children: [
+                                        BlocBuilder<DateSelectionBloc,
+                                            DateSelectionState>(
+                                          builder: (context, state) {
+                                            return Text(
+                                              "$date\t\t\t\t",
+                                              style: TextStyles.primaryMedium
+                                                  .copyWith(
+                                                color: AppColors.black63,
+                                                fontSize: (16 /
+                                                        Dimensions.designWidth)
+                                                    .w,
+                                              ),
+                                            );
+                                          },
+                                        ),
                                         SvgPicture.asset(
-                                          ImageConstants.warningSmall,
+                                          ImageConstants.arrowForwardIos,
                                           width:
-                                              (20 / Dimensions.designWidth).w,
+                                              (10 / Dimensions.designWidth).w,
                                           height:
-                                              (20 / Dimensions.designWidth).w,
+                                              (16 / Dimensions.designWidth).w,
                                           colorFilter: const ColorFilter.mode(
                                             AppColors.primary,
                                             BlendMode.srcIn,
                                           ),
                                         ),
-                                        const SizeBox(width: 10),
-                                        Text(
-                                          "Tenure",
-                                          style:
-                                              TextStyles.primaryMedium.copyWith(
-                                            color: AppColors.primary,
-                                            fontSize:
-                                                (18 / Dimensions.designWidth).w,
-                                          ),
-                                        ),
                                       ],
-                                    ),
-                                    Text(
-                                      "6.10%",
-                                      style: TextStyles.primaryMedium.copyWith(
-                                        color: AppColors.primary,
-                                        fontSize:
-                                            (18 / Dimensions.designWidth).w,
-                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              const SizeBox(height: 20),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Interest Payout ",
-                                    style: TextStyles.primaryMedium.copyWith(
-                                      color: const Color(0xFF636363),
-                                      fontSize: (16 / Dimensions.designWidth).w,
-                                    ),
-                                  ),
-                                  SvgPicture.asset(
-                                    ImageConstants.help,
-                                    width: (16.67 / Dimensions.designWidth).w,
-                                    height: (16.67 / Dimensions.designWidth).w,
-                                    colorFilter: const ColorFilter.mode(
-                                      Color(0XFFA1A1A1),
-                                      BlendMode.srcIn,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizeBox(height: 7),
-                              BlocBuilder<DropdownSelectedBloc,
-                                  DropdownSelectedState>(
-                                builder: (context, state) {
-                                  return CustomDropDown(
-                                    title: "Select",
-                                    items: items,
-                                    value: selectedPayout,
-                                    onChanged: (p0) {
-                                      selectedPayout = p0 as String;
-                                      isShowButton = true;
-                                      dropdownSelectedBloc.add(
-                                        DropdownSelectedEvent(
-                                            isDropdownSelected: true,
-                                            toggles: 1),
-                                      );
-                                      showButtonBloc.add(ShowButtonEvent(
-                                          show: isShowButton &&
-                                              errorMsg.isEmpty &&
-                                              _depositController
-                                                  .text.isNotEmpty));
-                                    },
+                            ),
+                            BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                              builder: (context, state) {
+                                if (showPeriod &&
+                                    errorMsg.isEmpty &&
+                                    _depositController.text.isNotEmpty) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizeBox(height: 10),
+                                      Container(
+                                        width: 100.w,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                (15 / Dimensions.designWidth).w,
+                                            vertical:
+                                                (8 / Dimensions.designWidth).w),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  (10 / Dimensions.designWidth)
+                                                      .w)),
+                                          color: AppColors.blackEE,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                SvgPicture.asset(
+                                                  ImageConstants.warningSmall,
+                                                  width: (20 /
+                                                          Dimensions
+                                                              .designWidth)
+                                                      .w,
+                                                  height: (20 /
+                                                          Dimensions
+                                                              .designWidth)
+                                                      .w,
+                                                  colorFilter:
+                                                      const ColorFilter.mode(
+                                                    AppColors.primary,
+                                                    BlendMode.srcIn,
+                                                  ),
+                                                ),
+                                                const SizeBox(width: 10),
+                                                Text(
+                                                  "Tenure",
+                                                  style: TextStyles
+                                                      .primaryMedium
+                                                      .copyWith(
+                                                    color: AppColors.primary,
+                                                    fontSize: (18 /
+                                                            Dimensions
+                                                                .designWidth)
+                                                        .w,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              "6.10%",
+                                              style: TextStyles.primaryMedium
+                                                  .copyWith(
+                                                color: AppColors.primary,
+                                                fontSize: (18 /
+                                                        Dimensions.designWidth)
+                                                    .w,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizeBox(height: 20),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Interest Payout ",
+                                            style: TextStyles.primaryMedium
+                                                .copyWith(
+                                              color: AppColors.black63,
+                                              fontSize:
+                                                  (16 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                          ),
+                                          SvgPicture.asset(
+                                            ImageConstants.help,
+                                            width:
+                                                (16.67 / Dimensions.designWidth)
+                                                    .w,
+                                            height:
+                                                (16.67 / Dimensions.designWidth)
+                                                    .w,
+                                            colorFilter: const ColorFilter.mode(
+                                              Color(0XFFA1A1A1),
+                                              BlendMode.srcIn,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizeBox(height: 7),
+                                      BlocBuilder<DropdownSelectedBloc,
+                                          DropdownSelectedState>(
+                                        builder: (context, state) {
+                                          return CustomDropDown(
+                                            title: "Select",
+                                            items: items,
+                                            value: selectedPayout,
+                                            onChanged: (p0) {
+                                              selectedPayout = p0 as String;
+                                              isShowButton = true;
+                                              dropdownSelectedBloc.add(
+                                                DropdownSelectedEvent(
+                                                    isDropdownSelected: true,
+                                                    toggles: 1),
+                                              );
+                                              showButtonBloc.add(
+                                                  ShowButtonEvent(
+                                                      show: isShowButton &&
+                                                          errorMsg.isEmpty &&
+                                                          _depositController
+                                                              .text
+                                                              .isNotEmpty));
+                                            },
+                                          );
+                                        },
+                                      ),
+                                      const SizeBox(height: 20),
+                                      Text(
+                                        "On maturity",
+                                        style:
+                                            TextStyles.primaryMedium.copyWith(
+                                          color: AppColors.black63,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                      const SizeBox(height: 10),
+                                      Row(
+                                        children: [
+                                          BlocBuilder<ButtonFocussedBloc,
+                                              ButtonFocussedState>(
+                                            builder: (context, state) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  isAutoRenewal = true;
+                                                  isAutoClosure = false;
+                                                  maturityBloc.add(
+                                                    ButtonFocussedEvent(
+                                                        isFocussed:
+                                                            isAutoRenewal,
+                                                        toggles: 1),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: (18 /
+                                                          Dimensions
+                                                              .designWidth)
+                                                      .w,
+                                                  height: (18 /
+                                                          Dimensions
+                                                              .designWidth)
+                                                      .w,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color: const Color(
+                                                            0XFFDDDDDD)),
+                                                  ),
+                                                  child: isAutoRenewal
+                                                      ? Center(
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            ImageConstants.dot,
+                                                            width: (10 /
+                                                                    Dimensions
+                                                                        .designWidth)
+                                                                .w,
+                                                            height: (10 /
+                                                                    Dimensions
+                                                                        .designWidth)
+                                                                .w,
+                                                            colorFilter:
+                                                                const ColorFilter
+                                                                    .mode(
+                                                              Color(0XFF00B894),
+                                                              BlendMode.srcIn,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : const SizeBox(),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          const SizeBox(width: 5),
+                                          Text(
+                                            "Auto Renewal",
+                                            style: TextStyles.primaryMedium
+                                                .copyWith(
+                                              color: AppColors.black63,
+                                              fontSize:
+                                                  (16 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                          ),
+                                          const SizeBox(width: 30),
+                                          BlocBuilder<ButtonFocussedBloc,
+                                              ButtonFocussedState>(
+                                            builder: (context, state) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  isAutoRenewal = false;
+                                                  isAutoClosure = true;
+                                                  maturityBloc.add(
+                                                    ButtonFocussedEvent(
+                                                        isFocussed:
+                                                            isAutoRenewal,
+                                                        toggles: 1),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  width: (18 /
+                                                          Dimensions
+                                                              .designWidth)
+                                                      .w,
+                                                  height: (18 /
+                                                          Dimensions
+                                                              .designWidth)
+                                                      .w,
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        width: 1,
+                                                        color: const Color(
+                                                            0XFFDDDDDD)),
+                                                  ),
+                                                  child: isAutoClosure
+                                                      ? Center(
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            ImageConstants.dot,
+                                                            width: (10 /
+                                                                    Dimensions
+                                                                        .designWidth)
+                                                                .w,
+                                                            height: (10 /
+                                                                    Dimensions
+                                                                        .designWidth)
+                                                                .w,
+                                                            colorFilter:
+                                                                const ColorFilter
+                                                                    .mode(
+                                                              Color(0XFF00B894),
+                                                              BlendMode.srcIn,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : const SizeBox(),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          const SizeBox(width: 5),
+                                          Text(
+                                            "Auto Closure",
+                                            style: TextStyles.primaryMedium
+                                                .copyWith(
+                                              color: AppColors.black63,
+                                              fontSize:
+                                                  (16 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizeBox(height: 10),
+                                    ],
                                   );
-                                },
-                              ),
-                              const SizeBox(height: 20),
-                              Text(
-                                "On maturity",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: const Color(0xFF636363),
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                              const SizeBox(height: 10),
-                              Row(
-                                children: [
-                                  BlocBuilder<ButtonFocussedBloc,
-                                      ButtonFocussedState>(
-                                    builder: (context, state) {
-                                      return InkWell(
-                                        onTap: () {
-                                          isAutoRenewal = true;
-                                          isAutoClosure = false;
-                                          maturityBloc.add(
-                                            ButtonFocussedEvent(
-                                                isFocussed: isAutoRenewal,
-                                                toggles: 1),
-                                          );
-                                        },
-                                        child: Container(
-                                          width:
-                                              (18 / Dimensions.designWidth).w,
-                                          height:
-                                              (18 / Dimensions.designWidth).w,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                width: 1,
-                                                color: const Color(0XFFDDDDDD)),
-                                          ),
-                                          child: isAutoRenewal
-                                              ? Center(
-                                                  child: SvgPicture.asset(
-                                                    ImageConstants.dot,
-                                                    width: (10 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                    height: (10 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                    colorFilter:
-                                                        const ColorFilter.mode(
-                                                      Color(0XFF00B894),
-                                                      BlendMode.srcIn,
-                                                    ),
-                                                  ),
-                                                )
-                                              : const SizeBox(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SizeBox(width: 5),
-                                  Text(
-                                    "Auto Renewal",
-                                    style: TextStyles.primaryMedium.copyWith(
-                                      color: const Color(0xFF636363),
-                                      fontSize: (16 / Dimensions.designWidth).w,
-                                    ),
-                                  ),
-                                  const SizeBox(width: 30),
-                                  BlocBuilder<ButtonFocussedBloc,
-                                      ButtonFocussedState>(
-                                    builder: (context, state) {
-                                      return InkWell(
-                                        onTap: () {
-                                          isAutoRenewal = false;
-                                          isAutoClosure = true;
-                                          maturityBloc.add(
-                                            ButtonFocussedEvent(
-                                                isFocussed: isAutoRenewal,
-                                                toggles: 1),
-                                          );
-                                        },
-                                        child: Container(
-                                          width:
-                                              (18 / Dimensions.designWidth).w,
-                                          height:
-                                              (18 / Dimensions.designWidth).w,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                width: 1,
-                                                color: const Color(0XFFDDDDDD)),
-                                          ),
-                                          child: isAutoClosure
-                                              ? Center(
-                                                  child: SvgPicture.asset(
-                                                    ImageConstants.dot,
-                                                    width: (10 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                    height: (10 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                    colorFilter:
-                                                        const ColorFilter.mode(
-                                                      Color(0XFF00B894),
-                                                      BlendMode.srcIn,
-                                                    ),
-                                                  ),
-                                                )
-                                              : const SizeBox(),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SizeBox(width: 5),
-                                  Text(
-                                    "Auto Closure",
-                                    style: TextStyles.primaryMedium.copyWith(
-                                      color: const Color(0xFF636363),
-                                      fontSize: (16 / Dimensions.designWidth).w,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizeBox(height: 10),
-                            ],
-                          );
-                        } else {
-                          return const SizeBox();
-                        }
-                      })
-                    ],
-                  ),
+                                } else {
+                                  return const SizeBox();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               BlocBuilder<ShowButtonBloc, ShowButtonState>(

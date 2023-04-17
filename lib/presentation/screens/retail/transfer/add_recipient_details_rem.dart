@@ -100,7 +100,7 @@ class _AddRecipientDetailsRemittanceScreenState
                           Text(
                             "First Name",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -131,7 +131,7 @@ class _AddRecipientDetailsRemittanceScreenState
                           Text(
                             "Last Name",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -162,7 +162,7 @@ class _AddRecipientDetailsRemittanceScreenState
                           Text(
                             "Address *",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -193,7 +193,7 @@ class _AddRecipientDetailsRemittanceScreenState
                           Text(
                             "IBAN / Account Number",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -225,7 +225,7 @@ class _AddRecipientDetailsRemittanceScreenState
                           Text(
                             "Account Type",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -266,7 +266,7 @@ class _AddRecipientDetailsRemittanceScreenState
                           Text(
                             "BIC / SWIFT Code",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -297,7 +297,7 @@ class _AddRecipientDetailsRemittanceScreenState
                           Text(
                             "Reason for Sending",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),

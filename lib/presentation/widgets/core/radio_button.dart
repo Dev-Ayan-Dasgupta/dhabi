@@ -54,7 +54,7 @@ class CustomRadioButton extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: const Color(0XFFD9D9D9),
+                  color: AppColors.blackD9,
                   width: 1,
                 ),
               ),
@@ -72,7 +72,7 @@ class CustomRadioButton extends StatelessWidget {
             Text(
               text,
               style: TextStyles.primary.copyWith(
-                color: const Color(0xFF1A3C40),
+                color: AppColors.primaryDark,
                 fontSize: (18 / Dimensions.designWidth).w,
               ),
             ),

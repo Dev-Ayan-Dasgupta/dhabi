@@ -64,7 +64,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                   Text(
                     "Below are the details of your Premature withdrawal",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: const Color.fromRGBO(0, 0, 0, 0.4),
+                      color: AppColors.grey40,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),

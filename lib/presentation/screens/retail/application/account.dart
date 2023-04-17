@@ -75,7 +75,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                   Text(
                     "Minimum one selection required",
                     style: TextStyles.primary.copyWith(
-                      color: const Color(0xFF636363),
+                      color: AppColors.black63,
                       fontSize: (18 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -90,7 +90,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                             Text(
                               "Current",
                               style: TextStyles.primary.copyWith(
-                                color: const Color(0xFF1A3C40),
+                                color: AppColors.primaryDark,
                                 fontSize: (18 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -125,7 +125,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                             Text(
                               "Savings",
                               style: TextStyles.primary.copyWith(
-                                color: const Color(0xFF1A3C40),
+                                color: AppColors.primaryDark,
                                 fontSize: (18 / Dimensions.designWidth).w,
                               ),
                             ),

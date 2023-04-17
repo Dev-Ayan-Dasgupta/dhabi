@@ -83,7 +83,7 @@ class _VaultScreenState extends State<VaultScreen> {
                                   Text(
                                     "**** ${cardNumber.substring(cardNumber.length - 4, cardNumber.length)}",
                                     style: TextStyles.primaryMedium.copyWith(
-                                      color: const Color.fromRGBO(0, 0, 0, 0.4),
+                                      color: AppColors.grey40,
                                       fontSize: (16 / Dimensions.designWidth).w,
                                     ),
                                   ),
@@ -194,7 +194,7 @@ class _VaultScreenState extends State<VaultScreen> {
                               "Details",
                               style: TextStyles.primaryMedium.copyWith(
                                 color: isFrozen
-                                    ? const Color.fromRGBO(0, 0, 0, 0.4)
+                                    ? AppColors.grey40
                                     : const Color(0XFF1A3C40),
                                 fontSize: (14 / Dimensions.designWidth).w,
                               ),

@@ -1,9 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-
-import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
-import 'package:dialup_mobile_app/utils/constants/textstyles.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField({
@@ -98,7 +96,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           helperStyle: TextStyles.primaryMedium.copyWith(
             color: widget.controller.text.length == widget.maxLength
-                ? const Color(0XFFC94540)
+                ? AppColors.red
                 : widget.maxLength != null
                     ? widget.controller.text.length > (widget.maxLength! - 20)
                         ? Colors.orange
@@ -109,7 +107,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
         ),
         style: TextStyles.primaryMedium.copyWith(
-          color: widget.fontColor ?? const Color(0xFF252525),
+          color: widget.fontColor ?? AppColors.black25,
           fontSize: (16 / Dimensions.designWidth).w,
         ),
         obscureText: widget.obscureText ?? false,

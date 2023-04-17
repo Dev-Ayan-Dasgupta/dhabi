@@ -196,7 +196,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             pinColor: (!state.isError)
                                 ? (state.isComplete)
                                     ? const Color(0XFFBCE5DD)
-                                    : const Color(0XFFEEEEEE)
+                                    : AppColors.blackEE
                                 : (state.errorCount >= 3)
                                     ? const Color(0XFFC0D6FF)
                                     : const Color(0XFFFFC3C0),

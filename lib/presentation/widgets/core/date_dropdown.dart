@@ -34,9 +34,7 @@ class DateDropdown extends StatelessWidget {
             Text(
               text,
               style: TextStyles.primary.copyWith(
-                color: isSelected
-                    ? const Color(0XFF252525)
-                    : const Color.fromRGBO(0, 0, 0, 0.4),
+                color: isSelected ? const Color(0XFF252525) : AppColors.grey40,
                 fontSize: (16 / Dimensions.designWidth).w,
               ),
             ),

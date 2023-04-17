@@ -57,7 +57,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     Text(
                       "This email address will be used as your User ID for your account creation",
                       style: TextStyles.primaryMedium.copyWith(
-                        color: const Color.fromRGBO(0, 0, 0, 0.4),
+                        color: AppColors.grey40,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),

@@ -75,7 +75,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                     Text(
                       "Mobile Number",
                       style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0xFF636363),
+                        color: AppColors.black63,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
@@ -95,7 +95,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                           Text(
                             "+971",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0xFF636363),
+                              color: AppColors.black63,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -142,7 +142,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                               Text(
                                 "Invalid mobile number",
                                 style: TextStyles.primaryMedium.copyWith(
-                                  color: const Color(0xFFC94540),
+                                  color: AppColors.red,
                                   fontSize: (16 / Dimensions.designWidth).w,
                                 ),
                               ),

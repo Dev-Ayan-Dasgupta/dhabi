@@ -116,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       return Text(
                         "Email ID does not exist",
                         style: TextStyles.primaryMedium.copyWith(
-                          color: const Color(0xFFC94540),
+                          color: AppColors.red,
                           fontSize: (12 / Dimensions.designWidth).w,
                         ),
                       );
@@ -189,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             "Incorrect Password",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0xFFC94540),
+                              color: AppColors.red,
                               fontSize: (12 / Dimensions.designWidth).w,
                             ),
                           ),

@@ -83,7 +83,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   Text(
                     "Please select the format in which you want to download the statement",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: const Color.fromRGBO(0, 0, 0, 0.4),
+                      color: AppColors.grey40,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -102,7 +102,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   Text(
                     "Please select the date range from the below dropdown",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: const Color.fromRGBO(0, 0, 0, 0.4),
+                      color: AppColors.grey40,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -132,7 +132,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                     child: Text(
                       "Or",
                       style: TextStyles.primaryMedium.copyWith(
-                        color: const Color.fromRGBO(0, 0, 0, 0.4),
+                        color: AppColors.grey40,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),

@@ -103,7 +103,7 @@ class _RequestScreenState extends State<RequestScreen> {
                           Text(
                             "Request Type",
                             style: TextStyles.primary.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.black63,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -141,7 +141,7 @@ class _RequestScreenState extends State<RequestScreen> {
                                     Text(
                                       "Loan Number",
                                       style: TextStyles.primary.copyWith(
-                                        color: const Color(0XFF636363),
+                                        color: AppColors.black63,
                                         fontSize:
                                             (16 / Dimensions.designWidth).w,
                                       ),
@@ -188,7 +188,7 @@ class _RequestScreenState extends State<RequestScreen> {
                                     Text(
                                       "Remarks",
                                       style: TextStyles.primary.copyWith(
-                                        color: const Color(0XFF636363),
+                                        color: AppColors.black63,
                                         fontSize:
                                             (16 / Dimensions.designWidth).w,
                                       ),

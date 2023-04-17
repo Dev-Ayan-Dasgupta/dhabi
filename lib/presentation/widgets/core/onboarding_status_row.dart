@@ -50,7 +50,7 @@ class OnboardingStatusRow extends StatelessWidget {
                           ? AppColors.primary
                           : isCurrent
                               ? const Color(0XFFF2F2F2)
-                              : const Color(0XFFD9D9D9)),
+                              : AppColors.blackD9),
                   child: Center(
                     child: SvgPicture.asset(
                       iconPath,
@@ -67,9 +67,7 @@ class OnboardingStatusRow extends StatelessWidget {
                   height: (dividerHeight / Dimensions.designWidth).w,
                   child: VerticalDivider(
                     thickness: 2,
-                    color: isCompleted
-                        ? AppColors.primary
-                        : const Color(0XFFD9D9D9),
+                    color: isCompleted ? AppColors.primary : AppColors.blackD9,
                   ),
                 ),
               ],
@@ -96,9 +94,7 @@ class OnboardingStatusRow extends StatelessWidget {
                 width: (20 / Dimensions.designWidth).w,
                 height: (20 / Dimensions.designWidth).w,
                 colorFilter: ColorFilter.mode(
-                  isCompleted
-                      ? const Color(0XFF00B894)
-                      : const Color(0XFFD9D9D9),
+                  isCompleted ? AppColors.primaryBright : AppColors.blackD9,
                   BlendMode.srcIn,
                 ),
               ),

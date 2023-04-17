@@ -145,7 +145,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               text: TextSpan(
                                 text: 'User ID ',
                                 style: TextStyles.primary.copyWith(
-                                  color: const Color(0xFF636363),
+                                  color: AppColors.black63,
                                   fontSize: (16 / Dimensions.designWidth).w,
                                 ),
                                 children: <TextSpan>[
@@ -165,14 +165,14 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               controller: _emailController,
                               enabled: false,
                               onChanged: (p0) {},
-                              color: const Color(0XFFEEEEEE),
+                              color: AppColors.blackEE,
                               fontColor: const Color.fromRGBO(37, 37, 37, 0.5),
                             ),
                             const SizeBox(height: 15),
                             Text(
                               "Password",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -248,7 +248,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             Text(
                               "Confirm Password",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -360,16 +360,16 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                 return PasswordCriteria(
                                   criteria1Color: hasMin8
                                       ? AppColors.primary
-                                      : const Color(0xFFC94540),
+                                      : AppColors.red,
                                   criteria2Color: hasNumeric
                                       ? AppColors.primary
-                                      : const Color(0xFFC94540),
+                                      : AppColors.red,
                                   criteria3Color: hasUpperLower
                                       ? AppColors.primary
-                                      : const Color(0xFFC94540),
+                                      : AppColors.red,
                                   criteria4Color: hasSpecial
                                       ? AppColors.primary
-                                      : const Color(0xFFC94540),
+                                      : AppColors.red,
                                   criteria1Widget: hasMin8
                                       ? SvgPicture.asset(
                                           ImageConstants.checkSmall)

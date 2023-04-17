@@ -98,7 +98,7 @@ class _AddRecipientDetailsUaeScreenState
                           Text(
                             "Full Name",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -127,7 +127,7 @@ class _AddRecipientDetailsUaeScreenState
                           Text(
                             "Account Type",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -166,7 +166,7 @@ class _AddRecipientDetailsUaeScreenState
                           Text(
                             "IBAN / CC Number",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -196,7 +196,7 @@ class _AddRecipientDetailsUaeScreenState
                           Text(
                             "Bank Name / Card Issuer",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -235,7 +235,7 @@ class _AddRecipientDetailsUaeScreenState
                           Text(
                             "Purpose of Payment",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF636363),
+                              color: AppColors.red,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),

@@ -130,7 +130,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                             Text(
                               "Do you hold a CRS reportable account?",
                               style: TextStyles.primary.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -238,7 +238,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                                       Text(
                                         "Select Country",
                                         style: TextStyles.primary.copyWith(
-                                          color: const Color(0xFF636363),
+                                          color: AppColors.black63,
                                           fontSize:
                                               (16 / Dimensions.designWidth).w,
                                         ),
@@ -287,7 +287,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                                           Text(
                                             "Do you have a Tax Identification Number?",
                                             style: TextStyles.primary.copyWith(
-                                              color: const Color(0XFF636363),
+                                              color: AppColors.red,
                                               fontSize:
                                                   (16 / Dimensions.designWidth)
                                                       .w,
@@ -423,7 +423,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                                       Text(
                                         "TIN",
                                         style: TextStyles.primary.copyWith(
-                                          color: const Color(0xFF636363),
+                                          color: AppColors.black63,
                                           fontSize:
                                               (16 / Dimensions.designWidth).w,
                                         ),
@@ -470,7 +470,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                                       Text(
                                         "Select a reason",
                                         style: TextStyles.primary.copyWith(
-                                          color: const Color(0xFF636363),
+                                          color: AppColors.black63,
                                           fontSize:
                                               (16 / Dimensions.designWidth).w,
                                         ),

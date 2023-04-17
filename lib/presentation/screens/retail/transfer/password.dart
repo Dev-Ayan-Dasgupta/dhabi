@@ -69,7 +69,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     Text(
                       "Enter your login password to complete the transaction",
                       style: TextStyles.primaryMedium.copyWith(
-                        color: const Color.fromRGBO(0, 0, 0, 0.4),
+                        color: AppColors.grey40,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
@@ -77,7 +77,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     Text(
                       "Password",
                       style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0XFF636363),
+                        color: AppColors.red,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),

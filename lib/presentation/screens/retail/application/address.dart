@@ -106,7 +106,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       Text(
                         "Country",
                         style: TextStyles.primary.copyWith(
-                          color: const Color(0xFF636363),
+                          color: AppColors.black63,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
                       ),
@@ -122,7 +122,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       Text(
                         "Address Line 1 *",
                         style: TextStyles.primary.copyWith(
-                          color: const Color(0xFF636363),
+                          color: AppColors.black63,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
                       ),
@@ -149,7 +149,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       Text(
                         "Address Line 2",
                         style: TextStyles.primary.copyWith(
-                          color: const Color(0xFF636363),
+                          color: AppColors.black63,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
                       ),
@@ -163,7 +163,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       Text(
                         "City *",
                         style: TextStyles.primary.copyWith(
-                          color: const Color(0xFF636363),
+                          color: AppColors.black63,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
                       ),
@@ -190,7 +190,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       Text(
                         "State",
                         style: TextStyles.primary.copyWith(
-                          color: const Color(0xFF636363),
+                          color: AppColors.black63,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
                       ),
@@ -204,7 +204,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       Text(
                         "Zip/Postal Code",
                         style: TextStyles.primary.copyWith(
-                          color: const Color(0xFF636363),
+                          color: AppColors.black63,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
                       ),
@@ -218,7 +218,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       Text(
                         "Resident Since",
                         style: TextStyles.primary.copyWith(
-                          color: const Color(0xFF636363),
+                          color: AppColors.black63,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
                       ),

@@ -50,7 +50,7 @@ class ThankYouScreen extends StatelessWidget {
                 SolidButton(
                   onTap: () {},
                   text: "Continue",
-                  color: const Color(0xFF818181),
+                  color: AppColors.black81,
                   fontColor: const Color(0xFF3B3B3B),
                 ),
                 const SizeBox(height: 32),

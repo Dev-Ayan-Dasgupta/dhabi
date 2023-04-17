@@ -182,7 +182,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                   },
                   iconPath: ImageConstants.logout,
                   text: "Logout",
-                  fontColor: const Color(0xFFC94540),
+                  fontColor: AppColors.red,
                   highlightColor: const Color.fromRGBO(201, 69, 64, 0.1),
                 ),
                 const SizeBox(height: 20),

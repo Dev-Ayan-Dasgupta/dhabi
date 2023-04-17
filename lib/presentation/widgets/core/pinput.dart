@@ -33,7 +33,7 @@ class _CustomPinputState extends State<CustomPinput> {
         width: (45 / Dimensions.designWidth).w,
         height: (45 / Dimensions.designWidth).w,
         textStyle: TextStyles.primaryMedium.copyWith(
-          color: const Color(0xFF252525),
+          color: AppColors.black25,
           fontSize: (24 / Dimensions.designWidth).w,
         ),
         decoration: BoxDecoration(

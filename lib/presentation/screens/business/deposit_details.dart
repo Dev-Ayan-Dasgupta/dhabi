@@ -63,7 +63,7 @@ class _BusinessDepositDetailsScreenState
                   Text(
                     "Please review the deposit details and click proceed to confirm",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: const Color.fromRGBO(0, 0, 0, 0.4),
+                      color: AppColors.grey40,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -73,7 +73,7 @@ class _BusinessDepositDetailsScreenState
                       length: depositDetails.length,
                       details: depositDetails,
                       coloredIndex: depositDetails.length - 1,
-                      fontColor: const Color(0XFFF39C12),
+                      fontColor: AppColors.amber,
                     ),
                   ),
                 ],

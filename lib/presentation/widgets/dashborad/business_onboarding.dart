@@ -68,7 +68,7 @@ class BusinessDashboardOnboarding extends StatelessWidget {
                       borderRadius: BorderRadius.all(
                         Radius.circular((10 / Dimensions.designWidth).w),
                       ),
-                      color: const Color(0XFFD9D9D9),
+                      color: AppColors.blackD9,
                     ),
                   ),
                   Container(

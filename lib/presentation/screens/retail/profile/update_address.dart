@@ -92,7 +92,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             Text(
                               "Country",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -108,7 +108,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             Text(
                               "Address line 1*",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -134,7 +134,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             Text(
                               "Address line 2",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -148,7 +148,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             Text(
                               "Emirates",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -178,7 +178,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             Text(
                               "P.O. Box",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0xFF636363),
+                                color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),

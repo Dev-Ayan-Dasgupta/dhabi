@@ -49,7 +49,7 @@ class ApplicationProgress extends StatelessWidget {
             Container(
               width: (90 / Dimensions.designWidth).w,
               height: (5 / Dimensions.designWidth).w,
-              color: progress > 1 ? AppColors.primary : const Color(0XFFD9D9D9),
+              color: progress > 1 ? AppColors.primary : AppColors.blackD9,
             ),
             Column(
               children: [
@@ -93,7 +93,7 @@ class ApplicationProgress extends StatelessWidget {
             Container(
               width: (90 / Dimensions.designWidth).w,
               height: (5 / Dimensions.designWidth).w,
-              color: progress > 2 ? AppColors.primary : const Color(0XFFD9D9D9),
+              color: progress > 2 ? AppColors.primary : AppColors.blackD9,
             ),
             Container(
               width: (24 / Dimensions.designWidth).w,
@@ -133,7 +133,7 @@ class ApplicationProgress extends StatelessWidget {
             Container(
               width: (90 / Dimensions.designWidth).w,
               height: (5 / Dimensions.designWidth).w,
-              color: progress > 3 ? AppColors.primary : const Color(0XFFD9D9D9),
+              color: progress > 3 ? AppColors.primary : AppColors.blackD9,
             ),
             Container(
               width: (24 / Dimensions.designWidth).w,

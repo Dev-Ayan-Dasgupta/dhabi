@@ -26,7 +26,7 @@ class LoginAttempt extends StatelessWidget {
       child: Text(
         message,
         style: TextStyles.primaryMedium.copyWith(
-          color: const Color(0xFFC94540),
+          color: AppColors.red,
           fontSize: (16 / Dimensions.designWidth).w,
         ),
       ),
