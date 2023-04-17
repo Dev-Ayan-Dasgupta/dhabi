@@ -7,6 +7,8 @@ class Routes {
   static const String notAvailable = 'not-available';
   static const String otp = 'otp';
   static const String createPassword = 'cretae-password';
+  static const String retailOnboardingStatus = 'retail-onboarding-status';
+  static const String businessOnboardingStatus = 'business-onboarding-status';
   static const String retailDashboard = 'retail-dashboard';
   static const String verifyMobile = 'verify-mobile';
   static const String businessDashboard = 'business-dashboard';

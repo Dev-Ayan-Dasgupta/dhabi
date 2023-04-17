@@ -87,8 +87,9 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         behavior: HitTestBehavior.opaque,
         child: Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: (22 / Dimensions.designWidth).w),
+          padding: EdgeInsets.symmetric(
+            horizontal: (22 / Dimensions.designWidth).w,
+          ),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -3,6 +3,7 @@ import 'package:dialup_mobile_app/presentation/screens/business/dashboard.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/deposit_details.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/explore.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/loans/details.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/loans/onboardingStatus/onboarding_status.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/loans/request.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/loans/request_success.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/thank_you.dart';
@@ -17,6 +18,7 @@ import 'package:dialup_mobile_app/presentation/screens/retail/deposits/index.dar
 import 'package:dialup_mobile_app/presentation/screens/retail/dormant/dormant.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/insights.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/notifications/notifications.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/onboardingStatus/onboarding_status.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/profile/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/transfer/index.dart';
@@ -68,6 +70,14 @@ class AppRouter {
           builder: (_) => CreatePasswordScreen(
             argument: args,
           ),
+        );
+      case Routes.retailOnboardingStatus:
+        return MaterialPageRoute(
+          builder: (_) => const RetailOnboardingStatusScreen(),
+        );
+      case Routes.businessOnboardingStatus:
+        return MaterialPageRoute(
+          builder: (_) => const BusinessOnboardingStatusScreen(),
         );
       case Routes.retailDashboard:
         return MaterialPageRoute(

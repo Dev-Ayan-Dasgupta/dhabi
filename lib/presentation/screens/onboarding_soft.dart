@@ -190,7 +190,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         const SizeBox(height: 20),
                         onboardingArgumentModel.isInitial
                             ? SolidButton(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.retailOnboardingStatus);
+                                },
                                 text: "Explore as a Guest",
                               )
                             : SolidButton(
