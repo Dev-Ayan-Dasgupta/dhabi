@@ -114,6 +114,7 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
                       builder: (context, state) {
                         return CustomTextField(
                           controller: _remarkController,
+                          hintText: "Type Your Remarks Here",
                           bottomPadding: (16 / Dimensions.designWidth).w,
                           minLines: 3,
                           maxLines: 5,

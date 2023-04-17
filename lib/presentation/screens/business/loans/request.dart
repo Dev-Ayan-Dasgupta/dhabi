@@ -2,13 +2,16 @@
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/arguments/error.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dialup_mobile_app/bloc/request/request_bloc.dart';
 import 'package:dialup_mobile_app/bloc/request/request_event.dart';
-import 'package:dialup_mobile_app/bloc/request/request_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -21,9 +24,11 @@ class RequestScreen extends StatefulWidget {
 }
 
 class _RequestScreenState extends State<RequestScreen> {
-  bool isEarlySettlement = false;
-  bool isPartialSettlement = false;
+  final TextEditingController _remarkController = TextEditingController();
+
+  bool isRequestTypeSelected = false;
   bool isLoanSelected = false;
+  bool isRemarkValid = false;
 
   int toggles = 0;
 
@@ -38,7 +43,8 @@ class _RequestScreenState extends State<RequestScreen> {
     'Item8'
   ];
 
-  String? selectedValue;
+  String? selectedRequestType;
+  String? selectedLoan;
 
   @override
   void initState() {
@@ -53,7 +59,7 @@ class _RequestScreenState extends State<RequestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final RequestBloc requestBloc = context.read<RequestBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     final DropdownSelectedBloc loanSelectedBloc =
         context.read<DropdownSelectedBloc>();
     return Scaffold(
@@ -81,7 +87,6 @@ class _RequestScreenState extends State<RequestScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
                     "Request Type",
                     style: TextStyles.primaryBold.copyWith(
@@ -89,101 +94,161 @@ class _RequestScreenState extends State<RequestScreen> {
                       fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 30),
-                  BlocBuilder<RequestBloc, RequestState>(
-                    builder: (context, state) {
-                      return CustomRadioButton(
-                        isSelected: isEarlySettlement,
-                        text: "Early Settlement",
-                        onTap: () {
-                          isEarlySettlement = true;
-                          isPartialSettlement = false;
-                          requestBloc.add(
-                            RequestEvent(
-                              isEarly: isEarlySettlement,
-                              isPartial: isPartialSettlement,
-                            ),
-                          );
-                          loanSelectedBloc.add(
-                            DropdownSelectedEvent(
-                              isDropdownSelected: isLoanSelected &&
-                                  (isPartialSettlement || isEarlySettlement),
-                              toggles: toggles,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
                   const SizeBox(height: 20),
-                  BlocBuilder<RequestBloc, RequestState>(
-                    builder: (context, state) {
-                      return CustomRadioButton(
-                        isSelected: isPartialSettlement,
-                        text: "Place Partial Payment",
-                        onTap: () {
-                          isEarlySettlement = false;
-                          isPartialSettlement = true;
-                          requestBloc.add(
-                            RequestEvent(
-                              isEarly: isEarlySettlement,
-                              isPartial: isPartialSettlement,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Request Type",
+                            style: TextStyles.primary.copyWith(
+                              color: const Color(0XFF636363),
+                              fontSize: (16 / Dimensions.designWidth).w,
                             ),
-                          );
-                          loanSelectedBloc.add(
-                            DropdownSelectedEvent(
-                              isDropdownSelected: isLoanSelected &&
-                                  (isPartialSettlement || isEarlySettlement),
-                              toggles: toggles,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  const SizeBox(height: 30),
-                  Text(
-                    "Loan Number",
-                    style: TextStyles.primary.copyWith(
-                      color: const Color(0XFF636363),
-                      fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                          const SizeBox(height: 10),
+                          BlocBuilder<DropdownSelectedBloc,
+                              DropdownSelectedState>(
+                            builder: (context, state) {
+                              return CustomDropDown(
+                                title: "Select a Request Type",
+                                items: items,
+                                value: selectedRequestType,
+                                onChanged: (value) {
+                                  toggles++;
+                                  isRequestTypeSelected = true;
+                                  selectedRequestType = value as String;
+                                  loanSelectedBloc.add(
+                                    DropdownSelectedEvent(
+                                      isDropdownSelected: isRequestTypeSelected,
+                                      toggles: toggles,
+                                    ),
+                                  );
+                                  showButtonBloc.add(ShowButtonEvent(
+                                      show: isRequestTypeSelected));
+                                },
+                              );
+                            },
+                          ),
+                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: (context, state) {
+                              if (isRequestTypeSelected) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizeBox(height: 20),
+                                    Text(
+                                      "Loan Number",
+                                      style: TextStyles.primary.copyWith(
+                                        color: const Color(0XFF636363),
+                                        fontSize:
+                                            (16 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                    const SizeBox(height: 10),
+                                    BlocBuilder<DropdownSelectedBloc,
+                                        DropdownSelectedState>(
+                                      builder: (context, state) {
+                                        return CustomDropDown(
+                                          title: "Select a Loan Account",
+                                          items: items,
+                                          value: selectedLoan,
+                                          onChanged: (value) {
+                                            toggles++;
+                                            isLoanSelected = true;
+                                            selectedLoan = value as String;
+                                            loanSelectedBloc.add(
+                                              DropdownSelectedEvent(
+                                                isDropdownSelected:
+                                                    isLoanSelected,
+                                                toggles: toggles,
+                                              ),
+                                            );
+                                            showButtonBloc.add(ShowButtonEvent(
+                                                show: isLoanSelected));
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return const SizeBox();
+                              }
+                            },
+                          ),
+                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: (context, state) {
+                              if (isLoanSelected) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizeBox(height: 20),
+                                    Text(
+                                      "Remarks",
+                                      style: TextStyles.primary.copyWith(
+                                        color: const Color(0XFF636363),
+                                        fontSize:
+                                            (16 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                    const SizeBox(height: 10),
+                                    CustomTextField(
+                                      controller: _remarkController,
+                                      hintText: "Type Your Remarks Here",
+                                      bottomPadding:
+                                          (16 / Dimensions.designWidth).w,
+                                      minLines: 3,
+                                      maxLines: 5,
+                                      maxLength: 200,
+                                      onChanged: (p0) {
+                                        if (p0.length >= 5) {
+                                          isRemarkValid = true;
+                                        } else {
+                                          isRemarkValid = false;
+                                        }
+                                        showButtonBloc.add(
+                                          ShowButtonEvent(show: isRemarkValid),
+                                        );
+                                      },
+                                    )
+                                  ],
+                                );
+                              } else {
+                                return const SizeBox();
+                              }
+                            },
+                          ),
+                          const SizeBox(height: 20),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                    builder: (context, state) {
-                      return CustomDropDown(
-                        title: "Select a Loan Account",
-                        items: items,
-                        value: selectedValue,
-                        onChanged: (value) {
-                          toggles++;
-                          isLoanSelected = true;
-                          selectedValue = value as String;
-                          loanSelectedBloc.add(
-                            DropdownSelectedEvent(
-                              isDropdownSelected: isLoanSelected &&
-                                  (isPartialSettlement || isEarlySettlement),
-                              toggles: toggles,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
+                  )
                 ],
               ),
             ),
             Column(
               children: [
-                BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: (context, state) {
-                    if (state.isDropdownSelected) {
+                    if (isRemarkValid) {
                       return GradientButton(
                         onTap: () {
-                          Navigator.pushReplacementNamed(
+                          Navigator.pushNamed(
                             context,
-                            Routes.requestSuccess,
+                            Routes.errorScreen,
+                            arguments: ErrorArgumentModel(
+                              hasSecondaryButton: false,
+                              iconPath: ImageConstants.checkCircleOutlined,
+                              title: "Request Submitted Successfully",
+                              message: "",
+                              buttonText: "Home",
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                            ).toMap(),
                           );
                         },
                         text: "Submit Request",
@@ -200,5 +265,11 @@ class _RequestScreenState extends State<RequestScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _remarkController.dispose();
+    super.dispose();
   }
 }

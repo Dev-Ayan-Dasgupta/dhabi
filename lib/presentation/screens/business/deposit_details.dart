@@ -116,6 +116,7 @@ class _BusinessDepositDetailsScreenState
                                 builder: (context, state) {
                                   return CustomTextField(
                                     controller: _reasonController,
+                                    hintText: "Type Your Remarks Here",
                                     bottomPadding:
                                         (16 / Dimensions.designWidth).w,
                                     minLines: 3,
