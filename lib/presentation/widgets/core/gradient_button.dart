@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 class GradientButton extends StatelessWidget {
-  GradientButton({
+  const GradientButton({
     Key? key,
     required this.onTap,
     this.width,
@@ -19,15 +19,15 @@ class GradientButton extends StatelessWidget {
   }) : super(key: key);
 
   final VoidCallback onTap;
-  double? width;
-  double? height;
-  double? borderRadius;
-  Gradient? gradient;
+  final double? width;
+  final double? height;
+  final double? borderRadius;
+  final Gradient? gradient;
   final String text;
-  Color? fontColor;
-  String? fontFamily;
-  double? fontSize;
-  FontWeight? fontWeight;
+  final Color? fontColor;
+  final String? fontFamily;
+  final double? fontSize;
+  final FontWeight? fontWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +54,10 @@ class GradientButton extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: TextStyles.primaryBold.copyWith(
-                fontSize: fontSize ?? (20 / Dimensions.designWidth).w),
+            style: TextStyles.primary.copyWith(
+              fontSize: fontSize ?? (20 / Dimensions.designWidth).w,
+              fontWeight: fontWeight ?? FontWeight.w700,
+            ),
           ),
         ),
       ),
