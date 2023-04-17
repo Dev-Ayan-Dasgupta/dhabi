@@ -45,7 +45,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizeBox(height: 10),
                     Text(
                       "Let's get started!",
                       style: TextStyles.primaryBold.copyWith(

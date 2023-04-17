@@ -17,6 +17,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.2
+  flutter_dotenv: ^5.0.2
+  flutter_secure_storage: ^8.0.0
   flutter_sizer: ^1.0.5
   flutter_svg: ^2.0.4
   flutter_switch: ^0.3.2
@@ -40,6 +42,10 @@ flutter:
     - assets/images/backgrounds/
     - assets/images/icons/
     - assets/images/banners/
+    - .env
+    - .env.production
+    - .env.development
+    - .env.staging
 
   fonts:
     - family: SF Pro Display

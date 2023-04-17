@@ -31,7 +31,10 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-#/assets/fonts/
+*.env
+*.env.development
+*.env.staging
+*.env.production
 
 # Symbolication related
 app.*.symbols

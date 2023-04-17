@@ -58,7 +58,6 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
                     "Select your account type",
                     style: TextStyles.primaryBold.copyWith(
@@ -178,7 +177,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                       ),
                     ),
                   ),
-                  const SizeBox(height: 10),
+                  const SizeBox(height: 20),
                 ],
               ),
             ),

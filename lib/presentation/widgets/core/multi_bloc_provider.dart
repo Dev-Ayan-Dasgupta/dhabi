@@ -20,19 +20,48 @@ import 'package:dialup_mobile_app/bloc/scrollDirection/scroll_direction_bloc.dar
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_bloc.dart';
+import 'package:dialup_mobile_app/environment/setup.dart';
 import 'package:dialup_mobile_app/presentation/routers/app_router.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class CustomMultiBlocProvider extends StatelessWidget {
+class CustomMultiBlocProvider extends StatefulWidget {
   const CustomMultiBlocProvider({
     super.key,
     required this.appRouter,
   });
 
   final AppRouter appRouter;
+
+  @override
+  State<CustomMultiBlocProvider> createState() =>
+      _CustomMultiBlocProviderState();
+}
+
+class _CustomMultiBlocProviderState extends State<CustomMultiBlocProvider> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> initEnvironment() async {
+    try {
+      // ? environment string
+      String environment = const String.fromEnvironment(
+        'ENVIRONMENT',
+        defaultValue: Environment.dev,
+      );
+
+      // ? load environment file
+      await dotenv.load(fileName: Environment.getName(environment));
+
+      // ? initialize the config
+      await Environment().initConfig(environment);
+    } catch (_) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +142,7 @@ class CustomMultiBlocProvider extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
         ),
         initialRoute: Routes.splash,
-        onGenerateRoute: appRouter.onGenerateRoute,
+        onGenerateRoute: widget.appRouter.onGenerateRoute,
       ),
     );
   }
