@@ -613,6 +613,8 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       Navigator.pushNamed(
                                           context, Routes.login);
                                     },
+                                    buttonTextSecondary: "",
+                                    onTapSecondary: () {},
                                   ).toMap(),
                                 );
                               },

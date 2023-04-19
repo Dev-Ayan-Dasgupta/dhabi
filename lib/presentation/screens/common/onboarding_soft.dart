@@ -193,6 +193,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 onTap: () {
                                   Navigator.pushNamed(
                                       context, Routes.retailOnboardingStatus);
+                                  // OAuthHelper.oAuth();
                                 },
                                 text: "Explore as a Guest",
                               )

@@ -74,7 +74,7 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
                     Text(
                       "Request Type",
                       style: TextStyles.primary.copyWith(
-                        color: AppColors.red,
+                        color: AppColors.black63,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),

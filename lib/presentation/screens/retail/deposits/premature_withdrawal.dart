@@ -52,7 +52,6 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
                     "Premature Withdrawal",
                     style: TextStyles.primaryBold.copyWith(
@@ -147,25 +146,30 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                     ),
                   ],
                 ),
-                const SizeBox(height: 20),
+                const SizeBox(height: 10),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: (context, state) {
-                    return SolidButton(
-                      onTap: () {
-                        if (isChecked) {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                        }
-                      },
-                      text: "Withdraw and close deposit",
-                      color: isChecked
-                          ? const Color(0XFFD9E4E5)
-                          : const Color(0XFF818181),
-                      fontColor: isChecked ? AppColors.primary : Colors.white,
-                    );
+                    if (isChecked) {
+                      return Column(
+                        children: [
+                          GradientButton(
+                            onTap: () {
+                              if (isChecked) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              }
+                            },
+                            text: "Withdraw and close deposit",
+                            fontColor: Colors.white,
+                          ),
+                          const SizeBox(height: 20),
+                        ],
+                      );
+                    } else {
+                      return const SizeBox();
+                    }
                   },
                 ),
-                const SizeBox(height: 20),
               ],
             )
           ],

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:dialup_mobile_app/presentation/routers/app_router.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:flutter/material.dart';
@@ -14,15 +15,14 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
+List<CameraDescription> cameras = [];
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
   HttpOverrides.global = MyHttpOverrides();
 
-  runApp(
-    MyApp(
-      appRouter: AppRouter(),
-    ),
-  );
+  runApp(MyApp(appRouter: AppRouter()));
 }
 
 class MyApp extends StatelessWidget {

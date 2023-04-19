@@ -57,4 +57,5 @@ class Routes {
   static const String explore = 'explore';
   static const String businessDepositDetails = 'business-deposit-details';
   static const String dormant = 'dormant';
+  static const String captureFace = 'capture-face';
 }

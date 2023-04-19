@@ -138,6 +138,8 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },
+                              buttonTextSecondary: "",
+                              onTapSecondary: () {},
                             ).toMap(),
                           );
                         },

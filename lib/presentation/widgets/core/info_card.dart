@@ -47,7 +47,7 @@ class InfoCard extends StatelessWidget {
                   Text(
                     "Account Name",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: const Color(0XFF818181),
+                      color: AppColors.black81,
                       fontSize: (14 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -73,7 +73,7 @@ class InfoCard extends StatelessWidget {
               Text(
                 "IBAN",
                 style: TextStyles.primaryMedium.copyWith(
-                  color: const Color(0XFF818181),
+                  color: AppColors.black81,
                   fontSize: (14 / Dimensions.designWidth).w,
                 ),
               ),
@@ -117,7 +117,7 @@ class InfoCard extends StatelessWidget {
                   Text(
                     "BIC",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: const Color(0XFF818181),
+                      color: AppColors.black81,
                       fontSize: (14 / Dimensions.designWidth).w,
                     ),
                   ),

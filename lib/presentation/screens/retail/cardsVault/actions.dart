@@ -79,6 +79,8 @@ class _ActionsScreenState extends State<ActionsScreen> {
                       Navigator.pop(context);
                       Navigator.pop(context);
                     },
+                    buttonTextSecondary: "",
+                    onTapSecondary: () {},
                   ).toMap(),
                 );
               },

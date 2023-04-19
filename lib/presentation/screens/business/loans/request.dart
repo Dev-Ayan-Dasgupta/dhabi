@@ -248,6 +248,8 @@ class _RequestScreenState extends State<RequestScreen> {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },
+                              buttonTextSecondary: "",
+                              onTapSecondary: () {},
                             ).toMap(),
                           );
                         },

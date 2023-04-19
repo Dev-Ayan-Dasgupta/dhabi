@@ -53,9 +53,7 @@ class AccountSummaryTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomCircleAvatar(
-                  imgUrl: imgUrl,
-                ),
+                CustomCircleAvatar(imgUrl: imgUrl),
                 Text(
                   accountType,
                   style: TextStyles.primary.copyWith(
@@ -84,30 +82,32 @@ class AccountSummaryTile extends StatelessWidget {
                 ],
               ),
             ),
-            (subText.isNotEmpty)
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        subText,
-                        style: TextStyles.primary.copyWith(
-                          color: const Color.fromRGBO(9, 65, 72, 0.5),
-                          fontSize: (14 / Dimensions.designWidth).w,
-                        ),
+            Ternary(
+              condition: subText.isNotEmpty,
+              truthy: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    subText,
+                    style: TextStyles.primary.copyWith(
+                      color: const Color.fromRGBO(9, 65, 72, 0.5),
+                      fontSize: (14 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  Container(
+                    width: (40 / Dimensions.designWidth).w,
+                    height: (26 / Dimensions.designWidth).w,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(subImgUrl),
+                        fit: BoxFit.fill,
                       ),
-                      Container(
-                        width: (40 / Dimensions.designWidth).w,
-                        height: (28 / Dimensions.designWidth).w,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(subImgUrl),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      )
-                    ],
+                    ),
                   )
-                : const SizeBox(),
+                ],
+              ),
+              falsy: const SizeBox(),
+            ),
           ],
         ),
       ),

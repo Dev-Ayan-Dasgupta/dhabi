@@ -1,5 +1,6 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/capture_face.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/accountDetails/download_statement.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/index.dart';
@@ -69,6 +70,10 @@ class AppRouter {
       case Routes.businessOnboardingStatus:
         return MaterialPageRoute(
           builder: (_) => const BusinessOnboardingStatusScreen(),
+        );
+      case Routes.captureFace:
+        return MaterialPageRoute(
+          builder: (_) => const CaptureFaceScreen(),
         );
       case Routes.retailDashboard:
         return MaterialPageRoute(

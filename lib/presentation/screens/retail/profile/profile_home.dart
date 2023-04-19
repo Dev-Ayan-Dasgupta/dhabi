@@ -189,7 +189,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                 Text(
                   "App Version $version",
                   style: TextStyles.primaryMedium.copyWith(
-                    color: const Color(0XFF818181),
+                    color: AppColors.black81,
                     fontSize: (16 / Dimensions.designWidth).w,
                   ),
                 ),

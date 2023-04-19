@@ -48,6 +48,10 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Please authenticate to use the app</string>
+	<string>Please authenticate to continue using Dhabi</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Dhabi would like to access your camera to enable selfie verification and photo upload</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Dhabi would like to access your microphone for selfie verification</string>
 </dict>
 </plist>

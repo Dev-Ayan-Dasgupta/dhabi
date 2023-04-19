@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +85,9 @@ class _RetailOnboardingStatusScreenState
             Column(
               children: [
                 GradientButton(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.captureFace);
+                  },
                   text: "Proceed",
                 ),
                 const SizeBox(height: 20),

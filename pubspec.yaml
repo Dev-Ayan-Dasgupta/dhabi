@@ -9,6 +9,7 @@ environment:
   sdk: ">=2.19.4 <3.0.0"
 
 dependencies:
+  camera: ^0.10.4
   cupertino_icons: ^1.0.2
   device_info_plus: ^8.2.0
   dropdown_button2: ^2.0.0
@@ -16,12 +17,14 @@ dependencies:
   flip_card: ^0.7.0
   flutter:
     sdk: flutter
+  flutter_appauth: ^4.2.1+1
   flutter_bloc: ^8.1.2
   flutter_dotenv: ^5.0.2
   flutter_secure_storage: ^8.0.0
   flutter_sizer: ^1.0.5
   flutter_svg: ^2.0.4
   flutter_switch: ^0.3.2
+  google_mlkit_face_detection: ^0.5.0
   intl: ^0.18.0
   local_auth: ^2.1.6
   package_info_plus: ^3.1.0

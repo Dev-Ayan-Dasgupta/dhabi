@@ -10,8 +10,8 @@ class ErrorArgumentModel {
   final String message;
   final String buttonText;
   final VoidCallback onTap;
-  final String? buttonTextSecondary;
-  final VoidCallback? onTapSecondary;
+  final String buttonTextSecondary;
+  final VoidCallback onTapSecondary;
   ErrorArgumentModel({
     required this.hasSecondaryButton,
     required this.iconPath,
@@ -19,8 +19,8 @@ class ErrorArgumentModel {
     required this.message,
     required this.buttonText,
     required this.onTap,
-    this.buttonTextSecondary,
-    this.onTapSecondary,
+    required this.buttonTextSecondary,
+    required this.onTapSecondary,
   });
 
   Map<String, dynamic> toMap() {
@@ -44,12 +44,14 @@ class ErrorArgumentModel {
       message: map['message'] as String,
       buttonText: map['buttonText'] as String,
       onTap: (map['onTap'] as VoidCallback),
-      buttonTextSecondary: map['buttonTextSecondary'] != null
-          ? map['buttonTextSecondary'] as String
-          : null,
-      onTapSecondary: map['onTapSecondary'] != null
-          ? (map['onTapSecondary'] as VoidCallback)
-          : null,
+      buttonTextSecondary: map['buttonTextSecondary'] as String,
+      // map['buttonTextSecondary'] != null
+      //     ? map['buttonTextSecondary'] as String
+      //     : null,
+      onTapSecondary: (map['onTapSecondary'] as VoidCallback),
+      // map['onTapSecondary'] != null
+      //     ? (map['onTapSecondary'] as VoidCallback)
+      //     : null,
     );
   }
 

@@ -86,110 +86,113 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                     const SizeBox(height: 20),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Country",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
+                        child: Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Country",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
                               ),
-                            ),
-                            const SizeBox(height: 10),
-                            CustomTextField(
-                              enabled: false,
-                              color: const Color(0xFFEEEEEE),
-                              fontColor: const Color.fromRGBO(34, 34, 34, 0.5),
-                              controller: _countryController,
-                              onChanged: (p0) {},
-                            ),
-                            const SizeBox(height: 20),
-                            Text(
-                              "Address line 1*",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
+                              const SizeBox(height: 10),
+                              CustomTextField(
+                                enabled: false,
+                                color: const Color(0xFFEEEEEE),
+                                fontColor:
+                                    const Color.fromRGBO(34, 34, 34, 0.5),
+                                controller: _countryController,
+                                onChanged: (p0) {},
                               ),
-                            ),
-                            const SizeBox(height: 10),
-                            CustomTextField(
-                              hintText: "Address",
-                              controller: _address1Controller,
-                              onChanged: (p0) {
-                                if (p0.isEmpty) {
-                                  isShowButton = false;
-                                  showButtonBloc.add(
-                                    ShowButtonEvent(show: isShowButton),
-                                  );
-                                } else {
-                                  isShowButton = true;
-                                  showButtonBloc.add(
-                                    ShowButtonEvent(show: isShowButton),
-                                  );
-                                }
-                              },
-                            ),
-                            const SizeBox(height: 20),
-                            Text(
-                              "Address line 2",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
+                              const SizeBox(height: 20),
+                              Text(
+                                "Address line 1*",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
                               ),
-                            ),
-                            const SizeBox(height: 10),
-                            CustomTextField(
-                              hintText: "Address",
-                              controller: _address2Controller,
-                              onChanged: (p0) {},
-                            ),
-                            const SizeBox(height: 20),
-                            Text(
-                              "Emirates",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            const SizeBox(height: 10),
-                            BlocBuilder<DropdownSelectedBloc,
-                                DropdownSelectedState>(
-                              builder: (context, state) {
-                                return CustomDropDown(
-                                  title: "Select from the list",
-                                  items: items,
-                                  value: selectedValue,
-                                  onChanged: (value) {
-                                    toggles++;
-                                    isEmirateSelected = true;
-                                    selectedValue = value as String;
-                                    dropdownSelectedBloc.add(
-                                      DropdownSelectedEvent(
-                                        isDropdownSelected: isEmirateSelected,
-                                        toggles: toggles,
-                                      ),
+                              const SizeBox(height: 10),
+                              CustomTextField(
+                                hintText: "Address",
+                                controller: _address1Controller,
+                                onChanged: (p0) {
+                                  if (p0.isEmpty) {
+                                    isShowButton = false;
+                                    showButtonBloc.add(
+                                      ShowButtonEvent(show: isShowButton),
                                     );
-                                  },
-                                );
-                              },
-                            ),
-                            const SizeBox(height: 20),
-                            Text(
-                              "P.O. Box",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
+                                  } else {
+                                    isShowButton = true;
+                                    showButtonBloc.add(
+                                      ShowButtonEvent(show: isShowButton),
+                                    );
+                                  }
+                                },
                               ),
-                            ),
-                            const SizeBox(height: 10),
-                            CustomTextField(
-                              hintText: "0000",
-                              controller: _address2Controller,
-                              onChanged: (p0) {},
-                            ),
-                            const SizeBox(height: 20),
-                          ],
+                              const SizeBox(height: 20),
+                              Text(
+                                "Address line 2",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const SizeBox(height: 10),
+                              CustomTextField(
+                                hintText: "Address",
+                                controller: _address2Controller,
+                                onChanged: (p0) {},
+                              ),
+                              const SizeBox(height: 20),
+                              Text(
+                                "Emirates",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const SizeBox(height: 10),
+                              BlocBuilder<DropdownSelectedBloc,
+                                  DropdownSelectedState>(
+                                builder: (context, state) {
+                                  return CustomDropDown(
+                                    title: "Select from the list",
+                                    items: items,
+                                    value: selectedValue,
+                                    onChanged: (value) {
+                                      toggles++;
+                                      isEmirateSelected = true;
+                                      selectedValue = value as String;
+                                      dropdownSelectedBloc.add(
+                                        DropdownSelectedEvent(
+                                          isDropdownSelected: isEmirateSelected,
+                                          toggles: toggles,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                              const SizeBox(height: 20),
+                              Text(
+                                "P.O. Box",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const SizeBox(height: 10),
+                              CustomTextField(
+                                hintText: "0000",
+                                controller: _address2Controller,
+                                onChanged: (p0) {},
+                              ),
+                              const SizeBox(height: 20),
+                            ],
+                          ),
                         ),
                       ),
                     ),

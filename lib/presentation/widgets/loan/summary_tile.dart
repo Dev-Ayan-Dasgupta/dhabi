@@ -37,7 +37,7 @@ class LoanSummaryTile extends StatelessWidget {
           Text(
             "Disbursed Amount",
             style: TextStyles.primary.copyWith(
-              color: const Color(0XFF818181),
+              color: AppColors.black81,
               fontSize: (14 / Dimensions.designWidth).w,
             ),
           ),
@@ -93,7 +93,7 @@ class LoanSummaryTile extends StatelessWidget {
                   Text(
                     "Repaid",
                     style: TextStyles.primary.copyWith(
-                      color: const Color(0XFF818181),
+                      color: AppColors.black81,
                       fontSize: (14 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -113,7 +113,7 @@ class LoanSummaryTile extends StatelessWidget {
                   Text(
                     "Outstanding",
                     style: TextStyles.primary.copyWith(
-                      color: const Color(0XFF818181),
+                      color: AppColors.black81,
                       fontSize: (14 / Dimensions.designWidth).w,
                     ),
                   ),

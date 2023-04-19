@@ -17,7 +17,7 @@ class VaultScreen extends StatefulWidget {
 
 class _VaultScreenState extends State<VaultScreen> {
   GlobalKey<FlipCardState> cardKey = GlobalKey<FlipCardState>();
-  bool isFrozen = true;
+  bool isFrozen = false;
   final String cardNumber = "4165 9856 9885 6936";
 
   @override
@@ -111,7 +111,7 @@ class _VaultScreenState extends State<VaultScreen> {
                                   Text(
                                     "Card Number",
                                     style: TextStyles.primaryMedium.copyWith(
-                                      color: const Color(0XFF818181),
+                                      color: AppColors.black81,
                                       fontSize: (14 / Dimensions.designWidth).w,
                                     ),
                                   ),
@@ -236,7 +236,7 @@ class _VaultScreenState extends State<VaultScreen> {
                             Text(
                               "Card Number",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0XFF818181),
+                                color: AppColors.black81,
                                 fontSize: (14 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -275,7 +275,7 @@ class _VaultScreenState extends State<VaultScreen> {
                                     Text(
                                       "Expires",
                                       style: TextStyles.primaryMedium.copyWith(
-                                        color: const Color(0XFF818181),
+                                        color: AppColors.black81,
                                         fontSize:
                                             (14 / Dimensions.designWidth).w,
                                       ),
@@ -297,7 +297,7 @@ class _VaultScreenState extends State<VaultScreen> {
                                     Text(
                                       "CVV",
                                       style: TextStyles.primaryMedium.copyWith(
-                                        color: const Color(0XFF818181),
+                                        color: AppColors.black81,
                                         fontSize:
                                             (14 / Dimensions.designWidth).w,
                                       ),

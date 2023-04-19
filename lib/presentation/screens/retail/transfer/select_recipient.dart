@@ -184,7 +184,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
               Text(
                 "MY RECIPIENTS",
                 style: TextStyles.primaryBold.copyWith(
-                  color: const Color(0XFF818181),
+                  color: AppColors.black81,
                   fontSize: (12 / Dimensions.designWidth).w,
                 ),
               ),

@@ -73,8 +73,8 @@ class _ErrorSuccessScreenState extends State<ErrorSuccessScreen> {
                   truthy: Column(
                     children: [
                       SolidButton(
-                        onTap: errorArgumentModel.onTapSecondary!,
-                        text: errorArgumentModel.buttonTextSecondary!,
+                        onTap: errorArgumentModel.onTapSecondary,
+                        text: errorArgumentModel.buttonTextSecondary,
                         color: const Color.fromRGBO(34, 97, 105, 0.17),
                         fontColor: AppColors.primary,
                       ),
