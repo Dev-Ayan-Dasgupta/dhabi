@@ -8,6 +8,7 @@ import 'package:dialup_mobile_app/bloc/otp/timer/timer_bloc.dart';
 import 'package:dialup_mobile_app/bloc/otp/timer/timer_event.dart';
 import 'package:dialup_mobile_app/bloc/otp/timer/timer_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
+import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -227,53 +228,38 @@ class _OTPScreenState extends State<OTPScreen> {
                                       );
                                     } else {
                                       if (otpArgumentModel.isBusiness) {
-                                        Navigator.pop(context);
-                                        Navigator.pushReplacementNamed(
-                                            context, Routes.thankYou);
-                                      } else {
                                         showDialog(
                                           context: context,
                                           builder: (context) {
                                             return CustomDialog(
-                                              svgAssetPath:
-                                                  ImageConstants.checkCircle,
-                                              title: "You're One Step Closer!",
+                                              svgAssetPath: ImageConstants
+                                                  .checkCircleOutlined,
+                                              title: "Verified",
                                               message:
-                                                  "Select below to continue",
+                                                  "Your phone number has been verified.\nYou will receive email on the next steps.",
                                               auxWidget: const SizeBox(),
                                               actionWidget: Column(
                                                 children: [
                                                   GradientButton(
                                                     onTap: () {},
-                                                    text: "Scan ID",
+                                                    text: "Proceed",
                                                   ),
-                                                  const SizeBox(height: 15),
-                                                  SolidButton(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                      Navigator.pushReplacementNamed(
-                                                          context,
-                                                          Routes
-                                                              .retailDashboard,
-                                                          arguments:
-                                                              RetailDashboardArgumentModel(
-                                                            imgUrl:
-                                                                "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                                            name:
-                                                                "ayan@qolarisdata.com",
-                                                          ).toMap());
-                                                    },
-                                                    text: "Skip for now",
-                                                    color: const Color.fromRGBO(
-                                                        34, 97, 105, 0.17),
-                                                    fontColor:
-                                                        AppColors.primary,
-                                                  ),
-                                                  const SizeBox(height: 22),
+                                                  const SizeBox(height: 20),
                                                 ],
                                               ),
                                             );
                                           },
+                                        );
+                                      } else {
+                                        Navigator.pushNamed(
+                                          context,
+                                          Routes.retailOnboardingStatus,
+                                          arguments:
+                                              OnboardingStatusArgumentModel(
+                                            stepsCompleted: 4,
+                                            isFatca: false,
+                                            isPassport: false,
+                                          ).toMap(),
                                         );
                                       }
                                     }

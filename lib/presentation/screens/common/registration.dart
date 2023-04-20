@@ -1,6 +1,9 @@
 import 'package:dialup_mobile_app/bloc/email/email_bloc.dart';
 import 'package:dialup_mobile_app/bloc/email/email_events.dart';
 import 'package:dialup_mobile_app/bloc/email/email_states.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -71,8 +74,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     const SizeBox(height: 9),
                     CustomTextField(
                       controller: _emailController,
-                      suffix: BlocBuilder<EmailValidationBloc,
-                          EmailValidationState>(
+                      suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
                         builder: (context, state) {
                           if (!_isEmailValid) {
                             return const SizedBox();
@@ -92,9 +94,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       onChanged: emailValidation,
                     ),
                     const SizeBox(height: 9),
-                    BlocBuilder<EmailValidationBloc, EmailValidationState>(
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
                       builder: (context, state) {
-                        if (_isEmailValid) {
+                        if (_isEmailValid ||
+                            _emailController.text.length <= 5) {
                           return const SizeBox();
                         } else {
                           return Row(
@@ -122,7 +125,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               Column(
                 children: [
-                  BlocBuilder<EmailValidationBloc, EmailValidationState>(
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
                       if (!_isEmailValid) {
                         return const SizeBox();
@@ -208,12 +211,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void emailValidation(String p0) {
-    final EmailValidationBloc emailValidationBloc =
-        context.read<EmailValidationBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     _isEmailValid = InputValidator.isEmailValid(p0);
-    _isEmailValid
-        ? emailValidationBloc.add(EmailValidatedEvent(isValid: true))
-        : emailValidationBloc.add(EmailInvalidatedEvent(isValid: false));
+    showButtonBloc.add(ShowButtonEvent(show: _isEmailValid || p0.length <= 5));
   }
 
   @override

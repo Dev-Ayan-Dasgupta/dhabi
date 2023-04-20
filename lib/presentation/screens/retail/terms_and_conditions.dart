@@ -84,7 +84,6 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizeBox(height: 10),
                       Text(
                         "Terms & Conditions",
                         style: TextStyles.primaryBold.copyWith(

@@ -1,13 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/verify_mobile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'package:dialup_mobile_app/bloc/email/email_bloc.dart';
-import 'package:dialup_mobile_app/bloc/email/email_events.dart';
-import 'package:dialup_mobile_app/bloc/email/email_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -40,8 +39,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final EmailValidationBloc emailValidationBloc =
-        context.read<EmailValidationBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -82,6 +80,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                     const SizeBox(height: 9),
                     CustomTextField(
                       controller: _phoneController,
+                      keyboardType: TextInputType.phone,
                       prefix: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -102,8 +101,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                           const SizeBox(width: 7),
                         ],
                       ),
-                      suffix: BlocBuilder<EmailValidationBloc,
-                          EmailValidationState>(
+                      suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
                         builder: (context, state) {
                           if (!_isPhoneValid) {
                             return const SizedBox();
@@ -122,17 +120,15 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                       ),
                       onChanged: (p0) {
                         _isPhoneValid = InputValidator.isPhoneValid("+971$p0");
-                        _isPhoneValid
-                            ? emailValidationBloc
-                                .add(EmailValidatedEvent(isValid: true))
-                            : emailValidationBloc
-                                .add(EmailInvalidatedEvent(isValid: false));
+                        showButtonBloc.add(ShowButtonEvent(
+                            show: _isPhoneValid || p0.length <= 9));
                       },
                     ),
                     const SizeBox(height: 9),
-                    BlocBuilder<EmailValidationBloc, EmailValidationState>(
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
                       builder: (context, state) {
-                        if (_isPhoneValid) {
+                        if (_isPhoneValid ||
+                            _phoneController.text.length <= 9) {
                           return const SizeBox();
                         } else {
                           return Row(
@@ -156,7 +152,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
               ),
               Column(
                 children: [
-                  BlocBuilder<EmailValidationBloc, EmailValidationState>(
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
                       builder: (context, state) {
                     if (!_isPhoneValid) {
                       return const SizeBox();

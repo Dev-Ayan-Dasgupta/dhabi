@@ -1,11 +1,16 @@
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+
 class BusinessOnboardingStatusScreen extends StatefulWidget {
-  const BusinessOnboardingStatusScreen({Key? key}) : super(key: key);
+  const BusinessOnboardingStatusScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<BusinessOnboardingStatusScreen> createState() =>
@@ -35,7 +40,7 @@ class _BusinessOnboardingStatusScreenState
                 children: [
                   const SizeBox(height: 20),
                   Text(
-                    "Let's get your identification documents verified",
+                    "Let us commence your onboarding journey",
                     style: TextStyles.primaryMedium.copyWith(
                       color: const Color(0XFF1A3C40),
                       fontSize: (24 / Dimensions.designWidth).w,
@@ -54,19 +59,10 @@ class _BusinessOnboardingStatusScreenState
                   const OnboardingStatusRow(
                     isCompleted: false,
                     isCurrent: true,
-                    iconPath: ImageConstants.idCard,
+                    iconPath: ImageConstants.building,
                     iconWidth: 10,
                     iconHeight: 14,
-                    text: "Verify your ID",
-                    dividerHeight: 24,
-                  ),
-                  const OnboardingStatusRow(
-                    isCompleted: false,
-                    isCurrent: false,
-                    iconPath: ImageConstants.article,
-                    iconWidth: 14,
-                    iconHeight: 14,
-                    text: "Enter your Details",
+                    text: "Basic Company Details",
                     dividerHeight: 24,
                   ),
                   const OnboardingStatusRow(
@@ -84,7 +80,9 @@ class _BusinessOnboardingStatusScreenState
             Column(
               children: [
                 GradientButton(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.basicCompanyDetails);
+                  },
                   text: "Proceed",
                 ),
                 const SizeBox(height: 20),

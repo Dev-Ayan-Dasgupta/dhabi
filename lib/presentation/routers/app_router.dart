@@ -1,4 +1,5 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/basic_company_details/basic_company_details.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/capture_face.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
@@ -14,7 +15,6 @@ import 'package:dialup_mobile_app/presentation/screens/retail/onboardingStatus/o
 import 'package:dialup_mobile_app/presentation/screens/retail/profile/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/transfer/index.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/verify_mobile.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -65,11 +65,17 @@ class AppRouter {
         );
       case Routes.retailOnboardingStatus:
         return MaterialPageRoute(
-          builder: (_) => const RetailOnboardingStatusScreen(),
+          builder: (_) => RetailOnboardingStatusScreen(
+            argument: args,
+          ),
         );
       case Routes.businessOnboardingStatus:
         return MaterialPageRoute(
           builder: (_) => const BusinessOnboardingStatusScreen(),
+        );
+      case Routes.basicCompanyDetails:
+        return MaterialPageRoute(
+          builder: (_) => const BasicCompanyDetailsScreen(),
         );
       case Routes.captureFace:
         return MaterialPageRoute(

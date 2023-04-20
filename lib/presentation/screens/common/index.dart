@@ -7,3 +7,4 @@ export './select_account_type.dart';
 export './splash.dart';
 export './create_password.dart';
 export 'error_success_screen.dart';
+export './verify_mobile.dart';

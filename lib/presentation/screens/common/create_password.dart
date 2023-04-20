@@ -15,6 +15,7 @@ import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
+import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -477,18 +478,27 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             GradientButton(
                               onTap: () {
                                 if (createAccountArgumentModel.isRetail) {
-                                  Navigator.pushReplacementNamed(
+                                  // Navigator.pushReplacementNamed(
+                                  //   context,
+                                  //   Routes.retailDashboard,
+                                  //   arguments: RetailDashboardArgumentModel(
+                                  //     imgUrl:
+                                  //         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                  //     name: createAccountArgumentModel.email,
+                                  //   ).toMap(),
+                                  // );
+                                  Navigator.pushNamed(
                                     context,
-                                    Routes.retailDashboard,
-                                    arguments: RetailDashboardArgumentModel(
-                                      imgUrl:
-                                          "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                      name: createAccountArgumentModel.email,
+                                    Routes.retailOnboardingStatus,
+                                    arguments: OnboardingStatusArgumentModel(
+                                      stepsCompleted: 1,
+                                      isFatca: false,
+                                      isPassport: false,
                                     ).toMap(),
                                   );
                                 } else {
-                                  Navigator.pushReplacementNamed(
-                                      context, Routes.businessDashboard);
+                                  Navigator.pushNamed(
+                                      context, Routes.businessOnboardingStatus);
                                 }
                               },
                               text: "Create Profile",

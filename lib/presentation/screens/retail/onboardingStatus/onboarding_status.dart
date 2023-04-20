@@ -1,12 +1,27 @@
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
+import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
+import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+
 class RetailOnboardingStatusScreen extends StatefulWidget {
-  const RetailOnboardingStatusScreen({Key? key}) : super(key: key);
+  const RetailOnboardingStatusScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<RetailOnboardingStatusScreen> createState() =>
@@ -15,6 +30,17 @@ class RetailOnboardingStatusScreen extends StatefulWidget {
 
 class _RetailOnboardingStatusScreenState
     extends State<RetailOnboardingStatusScreen> {
+  late OnboardingStatusArgumentModel onboardingStatusArgument;
+
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    onboardingStatusArgument =
+        OnboardingStatusArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +59,7 @@ class _RetailOnboardingStatusScreenState
           children: [
             Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizeBox(height: 20),
                   Text(
@@ -43,59 +70,181 @@ class _RetailOnboardingStatusScreenState
                     ),
                   ),
                   const SizeBox(height: 20),
-                  const OnboardingStatusRow(
-                    isCompleted: true,
-                    isCurrent: false,
+                  OnboardingStatusRow(
+                    isCompleted: onboardingStatusArgument.stepsCompleted >= 1,
+                    isCurrent: onboardingStatusArgument.stepsCompleted == 2,
                     iconPath: ImageConstants.envelope,
                     iconWidth: 10,
                     iconHeight: 14,
                     text: "Email Verification",
                     dividerHeight: 24,
                   ),
-                  const OnboardingStatusRow(
-                    isCompleted: false,
-                    isCurrent: true,
+                  OnboardingStatusRow(
+                    isCompleted: onboardingStatusArgument.stepsCompleted >= 2,
+                    isCurrent: onboardingStatusArgument.stepsCompleted == 3,
                     iconPath: ImageConstants.idCard,
                     iconWidth: 10,
                     iconHeight: 14,
                     text: "Verify your ID",
                     dividerHeight: 24,
                   ),
-                  const OnboardingStatusRow(
-                    isCompleted: false,
-                    isCurrent: false,
+                  OnboardingStatusRow(
+                    isCompleted: onboardingStatusArgument.stepsCompleted >= 3,
+                    isCurrent: onboardingStatusArgument.stepsCompleted == 4,
                     iconPath: ImageConstants.article,
                     iconWidth: 14,
                     iconHeight: 14,
                     text: "Enter your Details",
                     dividerHeight: 24,
                   ),
-                  const OnboardingStatusRow(
-                    isCompleted: false,
-                    isCurrent: false,
+                  OnboardingStatusRow(
+                    isCompleted: onboardingStatusArgument.stepsCompleted >= 4,
+                    isCurrent: onboardingStatusArgument.stepsCompleted >= 4,
                     iconPath: ImageConstants.mobile,
                     iconWidth: 14,
                     iconHeight: 18,
                     text: "Verify Mobile Number",
                     dividerHeight: 0,
                   ),
+                  const SizeBox(height: 30),
+                  Ternary(
+                    condition: !onboardingStatusArgument.isFatca &&
+                        !onboardingStatusArgument.isPassport &&
+                        onboardingStatusArgument.stepsCompleted == 4,
+                    truthy: Text(
+                      "You will get a free AED Vault powered by FH.",
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.black63,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                    falsy: const SizeBox(),
+                  ),
                 ],
               ),
             ),
-            Column(
-              children: [
-                GradientButton(
-                  onTap: () {
-                    Navigator.pushNamed(context, Routes.captureFace);
-                  },
-                  text: "Proceed",
-                ),
-                const SizeBox(height: 20),
-              ],
+            Ternary(
+              condition: onboardingStatusArgument.stepsCompleted == 4,
+              truthy: Column(
+                children: [
+                  Row(
+                    children: [
+                      BlocBuilder<CheckBoxBloc, CheckBoxState>(
+                        builder: (context, state) {
+                          if (isChecked) {
+                            return InkWell(
+                              onTap: () {
+                                isChecked = false;
+                                triggerCheckBoxEvent(isChecked);
+                                triggerAllTrueEvent();
+                              },
+                              child: SvgPicture.asset(
+                                ImageConstants.checkedBox,
+                                width: (14 / Dimensions.designWidth).w,
+                                height: (14 / Dimensions.designWidth).w,
+                              ),
+                            );
+                          } else {
+                            return InkWell(
+                              onTap: () {
+                                isChecked = true;
+                                triggerCheckBoxEvent(isChecked);
+                                triggerAllTrueEvent();
+                              },
+                              child: SvgPicture.asset(
+                                ImageConstants.uncheckedBox,
+                                width: (14 / Dimensions.designWidth).w,
+                                height: (14 / Dimensions.designWidth).w,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      const SizeBox(width: 10),
+                      RichText(
+                        text: TextSpan(
+                          text: 'I agree to the ',
+                          style: TextStyles.primary.copyWith(
+                            color: const Color.fromRGBO(0, 0, 0, 0.5),
+                            fontSize: (14 / Dimensions.designWidth).w,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Terms & Conditions',
+                              style: TextStyles.primary.copyWith(
+                                color: AppColors.primary,
+                                fontSize: (14 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' and ',
+                              style: TextStyles.primary.copyWith(
+                                color: const Color.fromRGBO(0, 0, 0, 0.5),
+                                fontSize: (14 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'Privacy Policy',
+                              style: TextStyles.primary.copyWith(
+                                color: AppColors.primary,
+                                fontSize: (14 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizeBox(height: 10),
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      if (isChecked) {
+                        return Column(
+                          children: [
+                            GradientButton(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, Routes.applicationAddress);
+                                // Navigator.pushNamed(context, Routes.captureFace);
+                              },
+                              text: "Create Account",
+                            ),
+                            const SizeBox(height: 20),
+                          ],
+                        );
+                      } else {
+                        return const SizeBox();
+                      }
+                    },
+                  ),
+                ],
+              ),
+              falsy: Column(
+                children: [
+                  GradientButton(
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.applicationAddress);
+                      // Navigator.pushNamed(context, Routes.captureFace);
+                    },
+                    text: "Proceed",
+                  ),
+                  const SizeBox(height: 20),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void triggerCheckBoxEvent(bool isChecked) {
+    final CheckBoxBloc checkBoxBloc = context.read<CheckBoxBloc>();
+    checkBoxBloc.add(CheckBoxEvent(isChecked: isChecked));
+  }
+
+  void triggerAllTrueEvent() {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    showButtonBloc.add(ShowButtonEvent(show: isChecked));
   }
 }

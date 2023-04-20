@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
+import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:local_auth/local_auth.dart';
@@ -188,22 +189,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                 text: "Login",
                               ),
                         const SizeBox(height: 20),
-                        onboardingArgumentModel.isInitial
-                            ? SolidButton(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.retailOnboardingStatus);
-                                  // OAuthHelper.oAuth();
-                                },
-                                text: "Explore as a Guest",
-                              )
-                            : SolidButton(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.registration);
-                                },
-                                text: "Register",
-                              ),
+                        Ternary(
+                          condition: onboardingArgumentModel.isInitial,
+                          truthy: SolidButton(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.retailOnboardingStatus,
+                                arguments: OnboardingStatusArgumentModel(
+                                  stepsCompleted: 1,
+                                  isFatca: false,
+                                  isPassport: false,
+                                ).toMap(),
+                              );
+                              // OAuthHelper.oAuth();
+                            },
+                            text: "Explore as a Guest",
+                          ),
+                          falsy: SolidButton(
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.registration);
+                            },
+                            text: "Register",
+                          ),
+                        ),
                         const SizeBox(height: 40),
                       ],
                     ),
