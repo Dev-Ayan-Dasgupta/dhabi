@@ -287,7 +287,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                                           Text(
                                             "Do you have a Tax Identification Number?",
                                             style: TextStyles.primary.copyWith(
-                                              color: AppColors.red,
+                                              color: AppColors.black63,
                                               fontSize:
                                                   (16 / Dimensions.designWidth)
                                                       .w,

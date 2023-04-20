@@ -5,21 +5,25 @@ class OnboardingStatusArgumentModel {
   final int stepsCompleted;
   final bool isFatca;
   final bool isPassport;
+  final bool isRetail;
   OnboardingStatusArgumentModel({
     required this.stepsCompleted,
     required this.isFatca,
     required this.isPassport,
+    required this.isRetail,
   });
 
   OnboardingStatusArgumentModel copyWith({
     int? stepsCompleted,
     bool? isFatca,
     bool? isPassport,
+    bool? isRetail,
   }) {
     return OnboardingStatusArgumentModel(
       stepsCompleted: stepsCompleted ?? this.stepsCompleted,
       isFatca: isFatca ?? this.isFatca,
       isPassport: isPassport ?? this.isPassport,
+      isRetail: isRetail ?? this.isRetail,
     );
   }
 
@@ -28,6 +32,7 @@ class OnboardingStatusArgumentModel {
       'stepsCompleted': stepsCompleted,
       'isFatca': isFatca,
       'isPassport': isPassport,
+      'isRetail': isRetail,
     };
   }
 
@@ -36,6 +41,7 @@ class OnboardingStatusArgumentModel {
       stepsCompleted: map['stepsCompleted'] as int,
       isFatca: map['isFatca'] as bool,
       isPassport: map['isPassport'] as bool,
+      isRetail: map['isRetail'] as bool,
     );
   }
 
@@ -46,8 +52,9 @@ class OnboardingStatusArgumentModel {
           json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      'OnboardingStatusArgumentModel(stepsCompleted: $stepsCompleted, isFatca: $isFatca, isPassport: $isPassport)';
+  String toString() {
+    return 'OnboardingStatusArgumentModel(stepsCompleted: $stepsCompleted, isFatca: $isFatca, isPassport: $isPassport, isRetail: $isRetail)';
+  }
 
   @override
   bool operator ==(covariant OnboardingStatusArgumentModel other) {
@@ -55,10 +62,15 @@ class OnboardingStatusArgumentModel {
 
     return other.stepsCompleted == stepsCompleted &&
         other.isFatca == isFatca &&
-        other.isPassport == isPassport;
+        other.isPassport == isPassport &&
+        other.isRetail == isRetail;
   }
 
   @override
-  int get hashCode =>
-      stepsCompleted.hashCode ^ isFatca.hashCode ^ isPassport.hashCode;
+  int get hashCode {
+    return stepsCompleted.hashCode ^
+        isFatca.hashCode ^
+        isPassport.hashCode ^
+        isRetail.hashCode;
+  }
 }

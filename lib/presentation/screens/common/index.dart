@@ -8,3 +8,4 @@ export './splash.dart';
 export './create_password.dart';
 export 'error_success_screen.dart';
 export './verify_mobile.dart';
+export './dashboard.dart';

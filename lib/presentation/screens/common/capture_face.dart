@@ -173,6 +173,7 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
             stepsCompleted: 1,
             isFatca: false,
             isPassport: false,
+            isRetail: true,
           ).toMap(),
         );
       }

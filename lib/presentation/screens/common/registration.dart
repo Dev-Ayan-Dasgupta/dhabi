@@ -1,6 +1,3 @@
-import 'package:dialup_mobile_app/bloc/email/email_bloc.dart';
-import 'package:dialup_mobile_app/bloc/email/email_events.dart';
-import 'package:dialup_mobile_app/bloc/email/email_states.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';

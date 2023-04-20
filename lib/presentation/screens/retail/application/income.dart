@@ -85,7 +85,6 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
                   const SizeBox(height: 9),
                   BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
                     builder: (context, state) {
-                      // TODO: Implement Local Storage
                       return CustomDropDown(
                         title: "Select",
                         items: items,
@@ -109,7 +108,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
             ),
             BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
               builder: (context, state) {
-                if (state.isDropdownSelected) {
+                if (isIncomeSourceSelected) {
                   return Column(
                     children: [
                       GradientButton(

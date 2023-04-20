@@ -211,12 +211,13 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       const SizeBox(height: 9),
                       CustomTextField(
                         controller: _zipController,
+                        keyboardType: TextInputType.number,
                         onChanged: (p0) {},
                         hintText: "0000",
                       ),
                       const SizeBox(height: 20),
                       Text(
-                        "Resident Since",
+                        "Resident Since *",
                         style: TextStyles.primary.copyWith(
                           color: AppColors.black63,
                           fontSize: (16 / Dimensions.designWidth).w,

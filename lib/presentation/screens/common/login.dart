@@ -279,7 +279,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void emailValidation(String p0) {
     final EmailExistsBloc emailExistsBloc = context.read<EmailExistsBloc>();
     if (InputValidator.isEmailValid(p0)) {
-      if (p0 != "ayan@qolarisdata.com") {
+      if (p0 != "ADasgupta@aspire-infotech.net") {
         emailExistsBloc.add(EmailExistsEvent(emailExists: false));
       } else {
         emailExistsBloc.add(EmailExistsEvent(emailExists: true));

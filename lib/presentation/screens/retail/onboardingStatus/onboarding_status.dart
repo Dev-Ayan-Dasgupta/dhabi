@@ -5,7 +5,7 @@ import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
-import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -204,7 +204,22 @@ class _RetailOnboardingStatusScreenState
                             GradientButton(
                               onTap: () {
                                 Navigator.pushNamed(
-                                    context, Routes.applicationAddress);
+                                  context,
+                                  Routes.termsAndConditions,
+                                  arguments: CreateAccountArgumentModel(
+                                    email: "ADasgupta@aspire-infotech.net",
+                                    isRetail: true,
+                                  ).toMap(),
+                                );
+                                // Navigator.pushNamed(
+                                //   context,
+                                //   Routes.retailDashboard,
+                                //   arguments: RetailDashboardArgumentModel(
+                                //     imgUrl:
+                                //         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                //     name: "ayan@qolarisdata.com",
+                                //   ).toMap(),
+                                // );
                                 // Navigator.pushNamed(context, Routes.captureFace);
                               },
                               text: "Create Account",

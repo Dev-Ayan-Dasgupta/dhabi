@@ -16,7 +16,6 @@ import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
-import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
@@ -494,6 +493,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                       stepsCompleted: 1,
                                       isFatca: false,
                                       isPassport: false,
+                                      isRetail:
+                                          createAccountArgumentModel.isRetail,
                                     ).toMap(),
                                   );
                                 } else {

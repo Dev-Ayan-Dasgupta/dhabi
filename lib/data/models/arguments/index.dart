@@ -4,3 +4,5 @@ export './onboarding_soft.dart';
 export './otp.dart';
 export './retail_dashboard.dart';
 export './verify_mobile.dart';
+export './onboarding_status.dart';
+export './error.dart';

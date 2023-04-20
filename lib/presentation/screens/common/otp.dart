@@ -10,7 +10,6 @@ import 'package:dialup_mobile_app/bloc/otp/timer/timer_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
-import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -259,6 +258,8 @@ class _OTPScreenState extends State<OTPScreen> {
                                             stepsCompleted: 4,
                                             isFatca: false,
                                             isPassport: false,
+                                            isRetail:
+                                                !otpArgumentModel.isBusiness,
                                           ).toMap(),
                                         );
                                       }

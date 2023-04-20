@@ -1,4 +1,3 @@
-import 'package:dialup_mobile_app/data/models/arguments/error.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';

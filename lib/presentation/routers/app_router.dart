@@ -31,6 +31,10 @@ class AppRouter {
             argument: args,
           ),
         );
+      case Routes.exploreDashboard:
+        return MaterialPageRoute(
+          builder: (_) => const ExploreDashboardScreen(),
+        );
       case Routes.registration:
         return MaterialPageRoute(
           builder: (_) => const RegistrationScreen(),

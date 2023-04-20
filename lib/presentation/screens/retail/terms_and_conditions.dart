@@ -179,15 +179,11 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                             text: "I Agree",
                           );
                         } else {
-                          return SolidButton(
-                            onTap: () {},
-                            text: "I Agree",
-                            color: Colors.black12,
-                          );
+                          return const SizeBox();
                         }
                       },
                     ),
-                    const SizeBox(height: 20),
+                    const SizeBox(height: 10),
                   ],
                 ),
               ],
