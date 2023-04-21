@@ -56,7 +56,6 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
                     "Application Details",
                     style: TextStyles.primaryBold.copyWith(

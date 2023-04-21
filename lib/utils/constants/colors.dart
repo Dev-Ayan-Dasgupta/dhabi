@@ -15,6 +15,7 @@ class AppColors {
   static const blackEE = Color(0XFFEEEEEE);
 
   static const grey40 = Color.fromRGBO(0, 0, 0, 0.4);
+  static const primaryBright17 = Color.fromRGBO(34, 97, 105, 0.17);
 
   static const primarySwatch = MaterialColor(
     0XFF226169,

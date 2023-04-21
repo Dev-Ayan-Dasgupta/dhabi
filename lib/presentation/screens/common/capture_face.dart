@@ -148,6 +148,7 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
           await Future.delayed(const Duration(milliseconds: 250));
           if (_controller != null) {
             if (_controller!.value.isInitialized) {
+              await _controller?.stopImageStream();
               if (!_controller!.value.isTakingPicture) {
                 capturedImage = await _controller!.takePicture();
               }

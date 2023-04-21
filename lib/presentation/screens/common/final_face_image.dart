@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
@@ -45,12 +46,22 @@ class _FinalFaceImageScreenState extends State<FinalFaceImageScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          SizedBox(
-            width: 100.w,
-            height: 100.h,
-            child: Image.file(
-              File(faceImageArgument.capturedImage.path),
-              fit: BoxFit.fill,
+          Positioned(
+            top: -90,
+            child: Transform.scale(
+              scale: 1,
+              child: SizedBox(
+                width: 100.w,
+                height: 100.h,
+                child: Transform.scale(
+                  scaleX: 0.7,
+                  scaleY: 0.625,
+                  child: Image.file(
+                    File(faceImageArgument.capturedImage.path),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
             ),
           ),
           ColorFiltered(
@@ -67,18 +78,21 @@ class _FinalFaceImageScreenState extends State<FinalFaceImageScreen> {
                     backgroundBlendMode: BlendMode.dstOut,
                   ),
                 ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    margin:
-                        EdgeInsets.only(top: (50 / Dimensions.designWidth).w),
-                    height: (500 / Dimensions.designWidth).w,
-                    width: (350 / Dimensions.designWidth).w,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.all(
-                        Radius.elliptical((200 / Dimensions.designWidth).w,
-                            (300 / Dimensions.designWidth).w),
+                Transform.scale(
+                  scale: 0.8,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      margin:
+                          EdgeInsets.only(top: (0 / Dimensions.designWidth).w),
+                      height: (500 / Dimensions.designWidth).w,
+                      width: (350 / Dimensions.designWidth).w,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.all(
+                          Radius.elliptical((200 / Dimensions.designWidth).w,
+                              (270 / Dimensions.designWidth).w),
+                        ),
                       ),
                     ),
                   ),
@@ -88,25 +102,64 @@ class _FinalFaceImageScreenState extends State<FinalFaceImageScreen> {
           ),
           Column(
             children: [
-              const SizeBox(height: 600),
-              Text(
-                "Move Closer",
-                style: TextStyles.primary.copyWith(
-                  color: AppColors.black25,
-                  fontSize: (24 / Dimensions.designWidth).w,
-                  fontWeight: FontWeight.w600,
+              Expanded(
+                child: Column(
+                  children: [
+                    const SizeBox(height: 510),
+                    Text(
+                      "You look great!",
+                      style: TextStyles.primary.copyWith(
+                        color: AppColors.black25,
+                        fontSize: (24 / Dimensions.designWidth).w,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizeBox(height: 7),
+                    SizedBox(
+                      width: (300 / Dimensions.designWidth).w,
+                      child: Text(
+                        "You can always retake the picture.",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.black63,
+                          fontSize: (18 / Dimensions.designWidth).w,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizeBox(height: 7),
-              SizedBox(
-                width: (300 / Dimensions.designWidth).w,
-                child: Text(
-                  "Keep your face positioned in the\ncenter of the screen",
-                  style: TextStyles.primaryMedium.copyWith(
-                    color: AppColors.black63,
-                    fontSize: (18 / Dimensions.designWidth).w,
-                  ),
-                  textAlign: TextAlign.center,
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: (22 / Dimensions.designWidth).w),
+                child: Column(
+                  children: [
+                    GradientButton(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.retailOnboardingStatus,
+                          arguments: OnboardingStatusArgumentModel(
+                            stepsCompleted: 2,
+                            isFatca: false,
+                            isPassport: false,
+                            isRetail: true,
+                          ).toMap(),
+                        );
+                      },
+                      text: "Submit",
+                    ),
+                    const SizeBox(height: 10),
+                    SolidButton(
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.captureFace);
+                      },
+                      text: "Retake Selfie",
+                      color: AppColors.primaryBright17,
+                      fontColor: AppColors.primary,
+                    ),
+                    const SizeBox(height: 20),
+                  ],
                 ),
               ),
             ],
