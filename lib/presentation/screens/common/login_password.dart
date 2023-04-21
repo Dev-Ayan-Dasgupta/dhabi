@@ -67,102 +67,15 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               ),
               const SizeBox(height: 10),
               BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                builder: (context, state) {
-                  if (showPassword) {
-                    return CustomTextField(
-                      controller: _passwordController,
-                      minLines: 1,
-                      maxLines: 1,
-                      suffix: Padding(
-                        padding: EdgeInsets.only(
-                            left: (10 / Dimensions.designWidth).w),
-                        child: InkWell(
-                          onTap: hidePassword,
-                          child: Icon(
-                            Icons.visibility_off_outlined,
-                            color: const Color.fromRGBO(34, 97, 105, 0.5),
-                            size: (20 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                      ),
-                      onChanged: onChanged,
-                      obscureText: !showPassword,
-                    );
-                  } else {
-                    return CustomTextField(
-                      controller: _passwordController,
-                      minLines: 1,
-                      maxLines: 1,
-                      suffix: Padding(
-                        padding: EdgeInsets.only(
-                            left: (10 / Dimensions.designWidth).w),
-                        child: InkWell(
-                          onTap: showsPassword,
-                          child: Icon(
-                            Icons.visibility_outlined,
-                            color: AppColors.primaryBright50,
-                            size: (20 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                      ),
-                      onChanged: onChanged,
-                      obscureText: !showPassword,
-                    );
-                  }
-                },
+                builder: buildShowHidePassword,
               ),
               const SizeBox(height: 7),
               BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-                builder: (context, state) {
-                  if (isMatch == false) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Incorrect Password",
-                          style: TextStyles.primaryMedium.copyWith(
-                            color: AppColors.red,
-                            fontSize: (12 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                        const SizeBox(height: 22),
-                        Ternary(
-                          condition: matchPasswordErrorCount < 3 &&
-                              matchPasswordErrorCount > 0,
-                          truthy: Center(
-                            child: LoginAttempt(
-                              message:
-                                  "Incorrect password - ${3 - matchPasswordErrorCount} attempts left",
-                            ),
-                          ),
-                          falsy: Ternary(
-                            condition: matchPasswordErrorCount == 0,
-                            truthy: const SizeBox(),
-                            falsy: const LoginAttempt(
-                              message:
-                                  "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials",
-                            ),
-                          ),
-                        )
-                      ],
-                    );
-                  } else {
-                    return const SizeBox();
-                  }
-                },
+                builder: buildErrorMessage,
               ),
               const SizeBox(height: 15),
               BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-                builder: (context, state) {
-                  if (matchPasswordErrorCount < 3) {
-                    return GradientButton(
-                      onTap: onSubmit,
-                      text: "Login",
-                    );
-                  } else {
-                    return const SizeBox();
-                  }
-                },
+                builder: buildLoginButton,
               ),
               const SizeBox(height: 10),
               Align(
@@ -183,6 +96,48 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         ),
       ),
     );
+  }
+
+  Widget buildShowHidePassword(BuildContext context, ShowPasswordState state) {
+    if (showPassword) {
+      return CustomTextField(
+        controller: _passwordController,
+        minLines: 1,
+        maxLines: 1,
+        suffix: Padding(
+          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+          child: InkWell(
+            onTap: hidePassword,
+            child: Icon(
+              Icons.visibility_off_outlined,
+              color: const Color.fromRGBO(34, 97, 105, 0.5),
+              size: (20 / Dimensions.designWidth).w,
+            ),
+          ),
+        ),
+        onChanged: onChanged,
+        obscureText: !showPassword,
+      );
+    } else {
+      return CustomTextField(
+        controller: _passwordController,
+        minLines: 1,
+        maxLines: 1,
+        suffix: Padding(
+          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+          child: InkWell(
+            onTap: showsPassword,
+            child: Icon(
+              Icons.visibility_outlined,
+              color: AppColors.primaryBright50,
+              size: (20 / Dimensions.designWidth).w,
+            ),
+          ),
+        ),
+        onChanged: onChanged,
+        obscureText: !showPassword,
+      );
+    }
   }
 
   void hidePassword() {
@@ -233,6 +188,55 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           name: "ADasgupta@aspire-infotech.net",
         ).toMap(),
       );
+    }
+  }
+
+  Widget buildErrorMessage(BuildContext context, MatchPasswordState state) {
+    if (isMatch == false) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Incorrect Password",
+            style: TextStyles.primaryMedium.copyWith(
+              color: AppColors.red,
+              fontSize: (12 / Dimensions.designWidth).w,
+            ),
+          ),
+          const SizeBox(height: 22),
+          Ternary(
+            condition:
+                matchPasswordErrorCount < 3 && matchPasswordErrorCount > 0,
+            truthy: Center(
+              child: LoginAttempt(
+                message:
+                    "Incorrect password - ${3 - matchPasswordErrorCount} attempts left",
+              ),
+            ),
+            falsy: Ternary(
+              condition: matchPasswordErrorCount == 0,
+              truthy: const SizeBox(),
+              falsy: const LoginAttempt(
+                message:
+                    "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials",
+              ),
+            ),
+          )
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
+  }
+
+  Widget buildLoginButton(BuildContext context, MatchPasswordState state) {
+    if (matchPasswordErrorCount < 3) {
+      return GradientButton(
+        onTap: onSubmit,
+        text: "Login",
+      );
+    } else {
+      return const SizeBox();
     }
   }
 

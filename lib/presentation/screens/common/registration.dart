@@ -72,50 +72,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     CustomTextField(
                       controller: _emailController,
                       suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                        builder: (context, state) {
-                          if (!_isEmailValid) {
-                            return const SizedBox();
-                          } else {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                  left: (10 / Dimensions.designWidth).w),
-                              child: SvgPicture.asset(
-                                ImageConstants.checkCircle,
-                                width: (20 / Dimensions.designWidth).w,
-                                height: (20 / Dimensions.designWidth).w,
-                              ),
-                            );
-                          }
-                        },
+                        builder: buildCheckCircle,
                       ),
                       onChanged: emailValidation,
                     ),
                     const SizeBox(height: 9),
                     BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                      builder: (context, state) {
-                        if (_isEmailValid ||
-                            _emailController.text.length <= 5) {
-                          return const SizeBox();
-                        } else {
-                          return Row(
-                            children: [
-                              SvgPicture.asset(
-                                ImageConstants.errorSolid,
-                                width: (14 / Dimensions.designWidth).w,
-                                height: (14 / Dimensions.designWidth).w,
-                              ),
-                              const SizeBox(width: 5),
-                              Text(
-                                "Invalid email",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: const Color(0xFFC94540),
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                      },
+                      builder: buildErrorMessage,
                     ),
                   ],
                 ),
@@ -123,27 +86,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               Column(
                 children: [
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      if (!_isEmailValid) {
-                        return const SizeBox();
-                      } else {
-                        return GradientButton(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              Routes.otp,
-                              arguments: OTPArgumentModel(
-                                code: "123456",
-                                emailOrPhone: _emailController.text,
-                                isEmail: true,
-                                isBusiness: false,
-                              ).toMap(),
-                            );
-                          },
-                          text: "Proceed",
-                        );
-                      }
-                    },
+                    builder: buildSubmitButton,
                   ),
                   const SizeBox(height: 10),
                   InkWell(
@@ -208,10 +151,71 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
+  Widget buildCheckCircle(BuildContext context, ShowButtonState state) {
+    if (!_isEmailValid) {
+      return const SizedBox();
+    } else {
+      return Padding(
+        padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+        child: SvgPicture.asset(
+          ImageConstants.checkCircle,
+          width: (20 / Dimensions.designWidth).w,
+          height: (20 / Dimensions.designWidth).w,
+        ),
+      );
+    }
+  }
+
   void emailValidation(String p0) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     _isEmailValid = InputValidator.isEmailValid(p0);
     showButtonBloc.add(ShowButtonEvent(show: _isEmailValid || p0.length <= 5));
+  }
+
+  Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
+    if (_isEmailValid || _emailController.text.length <= 5) {
+      return const SizeBox();
+    } else {
+      return Row(
+        children: [
+          SvgPicture.asset(
+            ImageConstants.errorSolid,
+            width: (14 / Dimensions.designWidth).w,
+            height: (14 / Dimensions.designWidth).w,
+          ),
+          const SizeBox(width: 5),
+          Text(
+            "Invalid email",
+            style: TextStyles.primaryMedium.copyWith(
+              color: const Color(0xFFC94540),
+              fontSize: (16 / Dimensions.designWidth).w,
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (!_isEmailValid) {
+      return const SizeBox();
+    } else {
+      return GradientButton(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            Routes.otp,
+            arguments: OTPArgumentModel(
+              code: "123456",
+              emailOrPhone: _emailController.text,
+              isEmail: true,
+              isBusiness: false,
+            ).toMap(),
+          );
+        },
+        text: "Proceed",
+      );
+    }
   }
 
   @override

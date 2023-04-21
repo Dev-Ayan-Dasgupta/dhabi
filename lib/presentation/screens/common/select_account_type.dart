@@ -75,55 +75,11 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                   ),
                   const SizeBox(height: 30),
                   BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
-                    builder: (context, state) {
-                      return SolidButton(
-                        onTap: () {
-                          onButtonTap(true, false);
-                        },
-                        color: Colors.white,
-                        borderColor: isPersonalFocussed
-                            ? const Color.fromRGBO(0, 184, 148, 0.21)
-                            : Colors.transparent,
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromRGBO(0, 0, 0, 0.1),
-                            offset: Offset(
-                              (3 / Dimensions.designWidth).w,
-                              (4 / Dimensions.designHeight).h,
-                            ),
-                            blurRadius: (3 / Dimensions.designWidth).w,
-                          ),
-                        ],
-                        fontColor: AppColors.primary,
-                        text: "Personal",
-                      );
-                    },
+                    builder: buildPersonalButton,
                   ),
                   const SizeBox(height: 30),
                   BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
-                    builder: (context, state) {
-                      return SolidButton(
-                        onTap: () {
-                          onButtonTap(false, true);
-                        },
-                        color: Colors.white,
-                        borderColor: isBusinessFocussed
-                            ? const Color.fromRGBO(0, 184, 148, 0.21)
-                            : Colors.transparent,
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromRGBO(0, 0, 0, 0.1),
-                            offset: Offset(
-                              (3 / Dimensions.designWidth).w,
-                              (4 / Dimensions.designHeight).h,
-                            ),
-                            blurRadius: (3 / Dimensions.designWidth).w,
-                          ),
-                        ],
-                        fontColor: AppColors.primary,
-                        text: "Business",
-                      );
-                    },
+                    builder: buildBusinessButton,
                   ),
                 ],
               ),
@@ -132,25 +88,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
               child: Column(
                 children: [
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      if (isPersonalFocussed || isBusinessFocussed) {
-                        return GradientButton(
-                          onTap: () {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              Routes.createPassword,
-                              arguments: CreateAccountArgumentModel(
-                                email: createAccountArgumentModel.email,
-                                isRetail: isPersonalFocussed ? true : false,
-                              ).toMap(),
-                            );
-                          },
-                          text: "Proceed",
-                        );
-                      } else {
-                        return const SizeBox();
-                      }
-                    },
+                    builder: buildSubmitButton,
                   ),
                   const SizeBox(height: 10),
                   InkWell(
@@ -189,6 +127,54 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
     );
   }
 
+  Widget buildPersonalButton(BuildContext context, ButtonFocussedState state) {
+    return SolidButton(
+      onTap: () {
+        onButtonTap(true, false);
+      },
+      color: Colors.white,
+      borderColor: isPersonalFocussed
+          ? const Color.fromRGBO(0, 184, 148, 0.21)
+          : Colors.transparent,
+      boxShadow: [
+        BoxShadow(
+          color: const Color.fromRGBO(0, 0, 0, 0.1),
+          offset: Offset(
+            (3 / Dimensions.designWidth).w,
+            (4 / Dimensions.designHeight).h,
+          ),
+          blurRadius: (3 / Dimensions.designWidth).w,
+        ),
+      ],
+      fontColor: AppColors.primary,
+      text: "Personal",
+    );
+  }
+
+  Widget buildBusinessButton(BuildContext context, ButtonFocussedState state) {
+    return SolidButton(
+      onTap: () {
+        onButtonTap(false, true);
+      },
+      color: Colors.white,
+      borderColor: isBusinessFocussed
+          ? const Color.fromRGBO(0, 184, 148, 0.21)
+          : Colors.transparent,
+      boxShadow: [
+        BoxShadow(
+          color: const Color.fromRGBO(0, 0, 0, 0.1),
+          offset: Offset(
+            (3 / Dimensions.designWidth).w,
+            (4 / Dimensions.designHeight).h,
+          ),
+          blurRadius: (3 / Dimensions.designWidth).w,
+        ),
+      ],
+      fontColor: AppColors.primary,
+      text: "Business",
+    );
+  }
+
   void onButtonTap(bool isPersonal, bool isBusiness) {
     final ButtonFocussedBloc buttonFocussedBloc =
         context.read<ButtonFocussedBloc>();
@@ -206,5 +192,25 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
       ShowButtonEvent(
           show: isPersonal ? isPersonalFocussed : isBusinessFocussed),
     );
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (isPersonalFocussed || isBusinessFocussed) {
+      return GradientButton(
+        onTap: () {
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.createPassword,
+            arguments: CreateAccountArgumentModel(
+              email: createAccountArgumentModel.email,
+              isRetail: isPersonalFocussed ? true : false,
+            ).toMap(),
+          );
+        },
+        text: "Proceed",
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 }

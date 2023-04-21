@@ -101,10 +101,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShowPasswordBloc passwordBloc = context.read<ShowPasswordBloc>();
-    final ShowPasswordBloc confirmPasswordBloc =
-        context.read<ShowPasswordBloc>();
-
     return Scaffold(
       appBar: AppBar(
         leading: AppBarLeading(
@@ -178,71 +174,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             ),
                             const SizeBox(height: 9),
                             BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                              builder: (context, state) {
-                                if (showPassword) {
-                                  return CustomTextField(
-                                    controller: _passwordController,
-                                    minLines: 1,
-                                    maxLines: 1,
-                                    suffix: Padding(
-                                      padding: EdgeInsets.only(
-                                          left:
-                                              (10 / Dimensions.designWidth).w),
-                                      child: InkWell(
-                                        onTap: () {
-                                          passwordBloc.add(HidePasswordEvent(
-                                              showPassword: false,
-                                              toggle: ++toggle));
-                                          showPassword = !showPassword;
-                                        },
-                                        child: Icon(
-                                          Icons.visibility_off_outlined,
-                                          color: const Color.fromRGBO(
-                                              34, 97, 105, 0.5),
-                                          size: (20 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ),
-                                    onChanged: (p0) {
-                                      triggerCriteriaEvent(p0);
-                                      triggerPasswordMatchEvent();
-                                      triggerAllTrueEvent();
-                                    },
-                                    obscureText: !showPassword,
-                                  );
-                                } else {
-                                  return CustomTextField(
-                                    controller: _passwordController,
-                                    minLines: 1,
-                                    maxLines: 1,
-                                    suffix: Padding(
-                                      padding: EdgeInsets.only(
-                                          left:
-                                              (10 / Dimensions.designWidth).w),
-                                      child: InkWell(
-                                        onTap: () {
-                                          passwordBloc.add(DisplayPasswordEvent(
-                                              showPassword: true,
-                                              toggle: ++toggle));
-                                          showPassword = !showPassword;
-                                        },
-                                        child: Icon(
-                                          Icons.visibility_outlined,
-                                          color: const Color.fromRGBO(
-                                              34, 97, 105, 0.5),
-                                          size: (20 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ),
-                                    onChanged: (p0) {
-                                      triggerCriteriaEvent(p0);
-                                      triggerPasswordMatchEvent();
-                                      triggerAllTrueEvent();
-                                    },
-                                    obscureText: !showPassword,
-                                  );
-                                }
-                              },
+                              builder: buildShowPassword,
                             ),
                             const SizeBox(height: 15),
                             Text(
@@ -258,136 +190,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               children: [
                                 BlocBuilder<ShowPasswordBloc,
                                     ShowPasswordState>(
-                                  builder: (context, state) {
-                                    if (showConfirmPassword) {
-                                      return CustomTextField(
-                                        width: 83.w,
-                                        controller: _confirmPasswordController,
-                                        minLines: 1,
-                                        maxLines: 1,
-                                        suffix: Padding(
-                                          padding: EdgeInsets.only(
-                                              left:
-                                                  (10 / Dimensions.designWidth)
-                                                      .w),
-                                          child: InkWell(
-                                            onTap: () {
-                                              confirmPasswordBloc.add(
-                                                  HidePasswordEvent(
-                                                      showPassword: false,
-                                                      toggle: ++toggle));
-                                              showConfirmPassword =
-                                                  !showConfirmPassword;
-                                            },
-                                            child: Icon(
-                                              Icons.visibility_off_outlined,
-                                              color: const Color.fromRGBO(
-                                                  34, 97, 105, 0.5),
-                                              size:
-                                                  (20 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          ),
-                                        ),
-                                        onChanged: (p0) {
-                                          triggerPasswordMatchEvent();
-                                          triggerAllTrueEvent();
-                                        },
-                                        obscureText: !showConfirmPassword,
-                                      );
-                                    } else {
-                                      return CustomTextField(
-                                        width: 83.w,
-                                        controller: _confirmPasswordController,
-                                        minLines: 1,
-                                        maxLines: 1,
-                                        suffix: Padding(
-                                          padding: EdgeInsets.only(
-                                              left:
-                                                  (10 / Dimensions.designWidth)
-                                                      .w),
-                                          child: InkWell(
-                                            onTap: () {
-                                              confirmPasswordBloc.add(
-                                                  DisplayPasswordEvent(
-                                                      showPassword: true,
-                                                      toggle: ++toggle));
-                                              showConfirmPassword =
-                                                  !showConfirmPassword;
-                                            },
-                                            child: Icon(
-                                              Icons.visibility_outlined,
-                                              color: const Color.fromRGBO(
-                                                  34, 97, 105, 0.5),
-                                              size:
-                                                  (20 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          ),
-                                        ),
-                                        onChanged: (p0) {
-                                          triggerPasswordMatchEvent();
-                                          triggerAllTrueEvent();
-                                        },
-                                        obscureText: !showConfirmPassword,
-                                      );
-                                    }
-                                  },
+                                  builder: buildShowConfirmPassword,
                                 ),
                                 BlocBuilder<MatchPasswordBloc,
                                     MatchPasswordState>(
-                                  builder: (context, state) {
-                                    if (isMatch) {
-                                      return SvgPicture.asset(
-                                        ImageConstants.checkCircle,
-                                        width: (20 / Dimensions.designWidth).w,
-                                        height: (20 / Dimensions.designWidth).w,
-                                      );
-                                    } else {
-                                      return SvgPicture.asset(
-                                        ImageConstants.warningSmall,
-                                        width: (20 / Dimensions.designWidth).w,
-                                        height: (20 / Dimensions.designWidth).w,
-                                      );
-                                    }
-                                  },
+                                  builder: buildCheckCircle,
                                 )
                               ],
                             ),
                             const SizeBox(height: 15),
                             BlocBuilder<CriteriaBloc, CriteriaState>(
-                              builder: (context, state) {
-                                return PasswordCriteria(
-                                  criteria1Color: hasMin8
-                                      ? AppColors.primary
-                                      : AppColors.red,
-                                  criteria2Color: hasNumeric
-                                      ? AppColors.primary
-                                      : AppColors.red,
-                                  criteria3Color: hasUpperLower
-                                      ? AppColors.primary
-                                      : AppColors.red,
-                                  criteria4Color: hasSpecial
-                                      ? AppColors.primary
-                                      : AppColors.red,
-                                  criteria1Widget: hasMin8
-                                      ? SvgPicture.asset(
-                                          ImageConstants.checkSmall)
-                                      : const SizeBox(),
-                                  criteria2Widget: hasNumeric
-                                      ? SvgPicture.asset(
-                                          ImageConstants.checkSmall)
-                                      : const SizeBox(),
-                                  criteria3Widget: hasUpperLower
-                                      ? SvgPicture.asset(
-                                          ImageConstants.checkSmall)
-                                      : const SizeBox(),
-                                  criteria4Widget: hasSpecial
-                                      ? SvgPicture.asset(
-                                          ImageConstants.checkSmall)
-                                      : const SizeBox(),
-                                );
-                              },
+                              builder: buildCriteriaSection,
                             ),
                             const SizeBox(height: 15),
                           ],
@@ -403,35 +216,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   Row(
                     children: [
                       BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                        builder: (context, state) {
-                          if (isChecked) {
-                            return InkWell(
-                              onTap: () {
-                                isChecked = false;
-                                triggerCheckBoxEvent(isChecked);
-                                triggerAllTrueEvent();
-                              },
-                              child: SvgPicture.asset(
-                                ImageConstants.checkedBox,
-                                width: (14 / Dimensions.designWidth).w,
-                                height: (14 / Dimensions.designWidth).w,
-                              ),
-                            );
-                          } else {
-                            return InkWell(
-                              onTap: () {
-                                isChecked = true;
-                                triggerCheckBoxEvent(isChecked);
-                                triggerAllTrueEvent();
-                              },
-                              child: SvgPicture.asset(
-                                ImageConstants.uncheckedBox,
-                                width: (14 / Dimensions.designWidth).w,
-                                height: (14 / Dimensions.designWidth).w,
-                              ),
-                            );
-                          }
-                        },
+                        builder: buildCheckBox,
                       ),
                       const SizeBox(width: 10),
                       RichText(
@@ -469,47 +254,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     ],
                   ),
                   BlocBuilder<CreatePasswordBloc, CreatePasswordState>(
-                    builder: (context, state) {
-                      if (allTrue) {
-                        return Column(
-                          children: [
-                            const SizeBox(height: 10),
-                            GradientButton(
-                              onTap: () {
-                                if (createAccountArgumentModel.isRetail) {
-                                  // Navigator.pushReplacementNamed(
-                                  //   context,
-                                  //   Routes.retailDashboard,
-                                  //   arguments: RetailDashboardArgumentModel(
-                                  //     imgUrl:
-                                  //         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                  //     name: createAccountArgumentModel.email,
-                                  //   ).toMap(),
-                                  // );
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.retailOnboardingStatus,
-                                    arguments: OnboardingStatusArgumentModel(
-                                      stepsCompleted: 1,
-                                      isFatca: false,
-                                      isPassport: false,
-                                      isRetail:
-                                          createAccountArgumentModel.isRetail,
-                                    ).toMap(),
-                                  );
-                                } else {
-                                  Navigator.pushNamed(
-                                      context, Routes.businessOnboardingStatus);
-                                }
-                              },
-                              text: "Create Profile",
-                            ),
-                          ],
-                        );
-                      } else {
-                        return const SizeBox();
-                      }
-                    },
+                    builder: buildSubmitButton,
                   ),
                   const SizeBox(height: 20),
                 ],
@@ -546,6 +291,233 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         );
       },
     );
+  }
+
+  Widget buildShowPassword(BuildContext context, ShowPasswordState state) {
+    final ShowPasswordBloc passwordBloc = context.read<ShowPasswordBloc>();
+    if (showPassword) {
+      return CustomTextField(
+        controller: _passwordController,
+        minLines: 1,
+        maxLines: 1,
+        suffix: Padding(
+          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+          child: InkWell(
+            onTap: () {
+              passwordBloc.add(
+                  HidePasswordEvent(showPassword: false, toggle: ++toggle));
+              showPassword = !showPassword;
+            },
+            child: Icon(
+              Icons.visibility_off_outlined,
+              color: const Color.fromRGBO(34, 97, 105, 0.5),
+              size: (20 / Dimensions.designWidth).w,
+            ),
+          ),
+        ),
+        onChanged: (p0) {
+          triggerCriteriaEvent(p0);
+          triggerPasswordMatchEvent();
+          triggerAllTrueEvent();
+        },
+        obscureText: !showPassword,
+      );
+    } else {
+      return CustomTextField(
+        controller: _passwordController,
+        minLines: 1,
+        maxLines: 1,
+        suffix: Padding(
+          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+          child: InkWell(
+            onTap: () {
+              passwordBloc.add(
+                  DisplayPasswordEvent(showPassword: true, toggle: ++toggle));
+              showPassword = !showPassword;
+            },
+            child: Icon(
+              Icons.visibility_outlined,
+              color: const Color.fromRGBO(34, 97, 105, 0.5),
+              size: (20 / Dimensions.designWidth).w,
+            ),
+          ),
+        ),
+        onChanged: (p0) {
+          triggerCriteriaEvent(p0);
+          triggerPasswordMatchEvent();
+          triggerAllTrueEvent();
+        },
+        obscureText: !showPassword,
+      );
+    }
+  }
+
+  Widget buildShowConfirmPassword(
+      BuildContext context, ShowPasswordState state) {
+    final ShowPasswordBloc confirmPasswordBloc =
+        context.read<ShowPasswordBloc>();
+    if (showConfirmPassword) {
+      return CustomTextField(
+        width: 83.w,
+        controller: _confirmPasswordController,
+        minLines: 1,
+        maxLines: 1,
+        suffix: Padding(
+          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+          child: InkWell(
+            onTap: () {
+              confirmPasswordBloc.add(
+                  HidePasswordEvent(showPassword: false, toggle: ++toggle));
+              showConfirmPassword = !showConfirmPassword;
+            },
+            child: Icon(
+              Icons.visibility_off_outlined,
+              color: const Color.fromRGBO(34, 97, 105, 0.5),
+              size: (20 / Dimensions.designWidth).w,
+            ),
+          ),
+        ),
+        onChanged: (p0) {
+          triggerPasswordMatchEvent();
+          triggerAllTrueEvent();
+        },
+        obscureText: !showConfirmPassword,
+      );
+    } else {
+      return CustomTextField(
+        width: 83.w,
+        controller: _confirmPasswordController,
+        minLines: 1,
+        maxLines: 1,
+        suffix: Padding(
+          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+          child: InkWell(
+            onTap: () {
+              confirmPasswordBloc.add(
+                  DisplayPasswordEvent(showPassword: true, toggle: ++toggle));
+              showConfirmPassword = !showConfirmPassword;
+            },
+            child: Icon(
+              Icons.visibility_outlined,
+              color: const Color.fromRGBO(34, 97, 105, 0.5),
+              size: (20 / Dimensions.designWidth).w,
+            ),
+          ),
+        ),
+        onChanged: (p0) {
+          triggerPasswordMatchEvent();
+          triggerAllTrueEvent();
+        },
+        obscureText: !showConfirmPassword,
+      );
+    }
+  }
+
+  Widget buildCheckCircle(BuildContext context, MatchPasswordState state) {
+    if (isMatch) {
+      return SvgPicture.asset(
+        ImageConstants.checkCircle,
+        width: (20 / Dimensions.designWidth).w,
+        height: (20 / Dimensions.designWidth).w,
+      );
+    } else {
+      return SvgPicture.asset(
+        ImageConstants.warningSmall,
+        width: (20 / Dimensions.designWidth).w,
+        height: (20 / Dimensions.designWidth).w,
+      );
+    }
+  }
+
+  Widget buildCriteriaSection(BuildContext context, CriteriaState state) {
+    return PasswordCriteria(
+      criteria1Color: hasMin8 ? AppColors.primary : AppColors.red,
+      criteria2Color: hasNumeric ? AppColors.primary : AppColors.red,
+      criteria3Color: hasUpperLower ? AppColors.primary : AppColors.red,
+      criteria4Color: hasSpecial ? AppColors.primary : AppColors.red,
+      criteria1Widget: hasMin8
+          ? SvgPicture.asset(ImageConstants.checkSmall)
+          : const SizeBox(),
+      criteria2Widget: hasNumeric
+          ? SvgPicture.asset(ImageConstants.checkSmall)
+          : const SizeBox(),
+      criteria3Widget: hasUpperLower
+          ? SvgPicture.asset(ImageConstants.checkSmall)
+          : const SizeBox(),
+      criteria4Widget: hasSpecial
+          ? SvgPicture.asset(ImageConstants.checkSmall)
+          : const SizeBox(),
+    );
+  }
+
+  Widget buildCheckBox(BuildContext context, CheckBoxState state) {
+    if (isChecked) {
+      return InkWell(
+        onTap: () {
+          isChecked = false;
+          triggerCheckBoxEvent(isChecked);
+          triggerAllTrueEvent();
+        },
+        child: SvgPicture.asset(
+          ImageConstants.checkedBox,
+          width: (14 / Dimensions.designWidth).w,
+          height: (14 / Dimensions.designWidth).w,
+        ),
+      );
+    } else {
+      return InkWell(
+        onTap: () {
+          isChecked = true;
+          triggerCheckBoxEvent(isChecked);
+          triggerAllTrueEvent();
+        },
+        child: SvgPicture.asset(
+          ImageConstants.uncheckedBox,
+          width: (14 / Dimensions.designWidth).w,
+          height: (14 / Dimensions.designWidth).w,
+        ),
+      );
+    }
+  }
+
+  Widget buildSubmitButton(BuildContext context, CreatePasswordState state) {
+    if (allTrue) {
+      return Column(
+        children: [
+          const SizeBox(height: 10),
+          GradientButton(
+            onTap: () {
+              if (createAccountArgumentModel.isRetail) {
+                // Navigator.pushReplacementNamed(
+                //   context,
+                //   Routes.retailDashboard,
+                //   arguments: RetailDashboardArgumentModel(
+                //     imgUrl:
+                //         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                //     name: createAccountArgumentModel.email,
+                //   ).toMap(),
+                // );
+                Navigator.pushNamed(
+                  context,
+                  Routes.retailOnboardingStatus,
+                  arguments: OnboardingStatusArgumentModel(
+                    stepsCompleted: 1,
+                    isFatca: false,
+                    isPassport: false,
+                    isRetail: createAccountArgumentModel.isRetail,
+                  ).toMap(),
+                );
+              } else {
+                Navigator.pushNamed(context, Routes.businessOnboardingStatus);
+              }
+            },
+            text: "Create Profile",
+          ),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 
   void triggerCriteriaEvent(String p0) {

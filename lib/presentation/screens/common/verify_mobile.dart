@@ -101,46 +101,13 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                         ],
                       ),
                       suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                        builder: (context, state) {
-                          if (!_isPhoneValid) {
-                            return const SizedBox();
-                          } else {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                  left: (10 / Dimensions.designWidth).w),
-                              child: SvgPicture.asset(
-                                ImageConstants.checkCircle,
-                                width: (20 / Dimensions.designWidth).w,
-                                height: (20 / Dimensions.designWidth).w,
-                              ),
-                            );
-                          }
-                        },
+                        builder: buildCheckCircle,
                       ),
                       onChanged: checkPhoneNumber,
                     ),
                     const SizeBox(height: 9),
                     BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                      builder: (context, state) {
-                        if (_isPhoneValid ||
-                            _phoneController.text.length <= 9) {
-                          return const SizeBox();
-                        } else {
-                          return Row(
-                            children: [
-                              SvgPicture.asset(ImageConstants.errorSolid),
-                              const SizeBox(width: 5),
-                              Text(
-                                "Invalid mobile number",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.red,
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                      },
+                      builder: buildErrorMessage,
                     ),
                   ],
                 ),
@@ -148,28 +115,9 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
               Column(
                 children: [
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                      builder: (context, state) {
-                    if (!_isPhoneValid) {
-                      return const SizeBox();
-                    } else {
-                      return GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.otp,
-                            arguments: OTPArgumentModel(
-                              code: "123456",
-                              emailOrPhone: _phoneController.text,
-                              isEmail: false,
-                              isBusiness: verifyMobileArgumentModel.isBusiness,
-                            ).toMap(),
-                          );
-                        },
-                        text: "Proceed",
-                      );
-                    }
-                  }),
-                  const SizeBox(height: 32),
+                    builder: buildSubmitButton,
+                  ),
+                  const SizeBox(height: 20),
                 ],
               )
             ],
@@ -179,10 +127,67 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
     );
   }
 
+  Widget buildCheckCircle(BuildContext context, ShowButtonState state) {
+    if (!_isPhoneValid) {
+      return const SizedBox();
+    } else {
+      return Padding(
+        padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+        child: SvgPicture.asset(
+          ImageConstants.checkCircle,
+          width: (20 / Dimensions.designWidth).w,
+          height: (20 / Dimensions.designWidth).w,
+        ),
+      );
+    }
+  }
+
   void checkPhoneNumber(String p0) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     _isPhoneValid = InputValidator.isPhoneValid("+971$p0");
     showButtonBloc.add(ShowButtonEvent(show: _isPhoneValid || p0.length <= 9));
+  }
+
+  Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
+    if (_isPhoneValid || _phoneController.text.length <= 9) {
+      return const SizeBox();
+    } else {
+      return Row(
+        children: [
+          SvgPicture.asset(ImageConstants.errorSolid),
+          const SizeBox(width: 5),
+          Text(
+            "Invalid mobile number",
+            style: TextStyles.primaryMedium.copyWith(
+              color: AppColors.red,
+              fontSize: (16 / Dimensions.designWidth).w,
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (!_isPhoneValid) {
+      return const SizeBox();
+    } else {
+      return GradientButton(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            Routes.otp,
+            arguments: OTPArgumentModel(
+              code: "123456",
+              emailOrPhone: _phoneController.text,
+              isEmail: false,
+              isBusiness: verifyMobileArgumentModel.isBusiness,
+            ).toMap(),
+          );
+        },
+        text: "Proceed",
+      );
+    }
   }
 
   @override

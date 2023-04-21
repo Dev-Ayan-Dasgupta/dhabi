@@ -93,39 +93,11 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
               ),
 
               BlocBuilder<EmailExistsBloc, EmailExistsState>(
-                builder: (context, state) {
-                  if (state.emailExists == false) {
-                    return Column(
-                      children: [
-                        const SizeBox(height: 7),
-                        Text(
-                          "Email ID does not exist",
-                          style: TextStyles.primaryMedium.copyWith(
-                            color: AppColors.red,
-                            fontSize: (12 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return const SizeBox();
-                  }
-                },
+                builder: buildErrorMessage,
               ),
               const SizeBox(height: 15),
               BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                builder: (context, state) {
-                  if (emailExists && isEmailValid) {
-                    return GradientButton(
-                      onTap: () {
-                        Navigator.pushNamed(context, Routes.loginPassword);
-                      },
-                      text: "Proceed",
-                    );
-                  } else {
-                    return const SizeBox();
-                  }
-                },
+                builder: buildProceedButton,
               ),
               // const SizeBox(height: 10),
               // Align(
@@ -195,6 +167,38 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
       isEmailValid = false;
       emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
       showButtonBloc.add(ShowButtonEvent(show: emailExists && isEmailValid));
+    }
+  }
+
+  Widget buildErrorMessage(BuildContext context, EmailExistsState state) {
+    if (state.emailExists == false) {
+      return Column(
+        children: [
+          const SizeBox(height: 7),
+          Text(
+            "Email ID does not exist",
+            style: TextStyles.primaryMedium.copyWith(
+              color: AppColors.red,
+              fontSize: (12 / Dimensions.designWidth).w,
+            ),
+          ),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
+  }
+
+  Widget buildProceedButton(BuildContext context, ShowButtonState state) {
+    if (emailExists && isEmailValid) {
+      return GradientButton(
+        onTap: () {
+          Navigator.pushNamed(context, Routes.loginPassword);
+        },
+        text: "Proceed",
+      );
+    } else {
+      return const SizeBox();
     }
   }
 
