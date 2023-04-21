@@ -12,6 +12,7 @@ import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
 import 'package:dialup_mobile_app/utils/lists/onboarding_soft.dart';
+import 'package:open_settings/open_settings.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({
@@ -228,29 +229,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void biometricPrompt() async {
     bool isBiometricSupported = await LocalAuthentication().isDeviceSupported();
+    print("isBiometricSupported -> $isBiometricSupported");
     if (!isBiometricSupported) {
       if (context.mounted) {
-        Navigator.pushNamed(context, Routes.login);
+        Navigator.pushNamed(context, Routes.loginUserId);
       }
     } else {
       bool isAuthenticated = await BiometricHelper.authenticateUser();
+      print("isAuthenticated -> $isAuthenticated");
       if (isAuthenticated) {
         if (context.mounted) {
-          Navigator.pushNamed(context, Routes.login);
+          Navigator.pushNamed(context, Routes.loginPassword);
         }
       } else {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Biometric Authentication failed.',
-                style: TextStyles.primary.copyWith(
-                  fontSize: (12 / Dimensions.designWidth).w,
-                ),
-              ),
-            ),
-          );
-        }
+        // TODO: Verify from client if they want a dialog box to enable biometric
+        OpenSettings.openBiometricEnrollSetting();
       }
     }
   }

@@ -148,7 +148,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   const SizeBox(height: 10),
                   InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, Routes.login);
+                      // TODO: Add biometricPrompt
+                      Navigator.pushNamed(context, Routes.loginUserId);
                     },
                     child: RichText(
                       text: TextSpan(

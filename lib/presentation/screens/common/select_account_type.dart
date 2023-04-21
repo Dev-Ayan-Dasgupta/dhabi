@@ -155,7 +155,9 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                   const SizeBox(height: 10),
                   InkWell(
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, Routes.login);
+                      // TODO: Add biometricPrompt
+                      Navigator.pushReplacementNamed(
+                          context, Routes.loginUserId);
                     },
                     child: RichText(
                       text: TextSpan(

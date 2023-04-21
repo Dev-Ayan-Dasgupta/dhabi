@@ -39,7 +39,6 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -118,11 +117,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                           }
                         },
                       ),
-                      onChanged: (p0) {
-                        _isPhoneValid = InputValidator.isPhoneValid("+971$p0");
-                        showButtonBloc.add(ShowButtonEvent(
-                            show: _isPhoneValid || p0.length <= 9));
-                      },
+                      onChanged: checkPhoneNumber,
                     ),
                     const SizeBox(height: 9),
                     BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -182,6 +177,12 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
         ),
       ),
     );
+  }
+
+  void checkPhoneNumber(String p0) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    _isPhoneValid = InputValidator.isPhoneValid("+971$p0");
+    showButtonBloc.add(ShowButtonEvent(show: _isPhoneValid || p0.length <= 9));
   }
 
   @override

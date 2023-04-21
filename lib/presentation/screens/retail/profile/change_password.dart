@@ -611,7 +611,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                                       Navigator.pop(context);
                                       Navigator.pop(context);
                                       Navigator.pushNamed(
-                                          context, Routes.login);
+                                          context, Routes.loginUserId);
                                     },
                                     buttonTextSecondary: "",
                                     onTapSecondary: () {},

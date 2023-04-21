@@ -6,6 +6,7 @@ import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:open_settings/open_settings.dart';
 
 class TransferConfirmationScreen extends StatefulWidget {
   const TransferConfirmationScreen({Key? key}) : super(key: key);
@@ -104,12 +105,14 @@ class _TransferConfirmationScreenState
 
   void biometricPrompt() async {
     bool isBiometricSupported = await LocalAuthentication().isDeviceSupported();
+    print("isBiometricSupported -> $isBiometricSupported");
     if (!isBiometricSupported) {
       if (context.mounted) {
         Navigator.pushNamed(context, Routes.password);
       }
     } else {
       bool isAuthenticated = await BiometricHelper.authenticateUser();
+      print("isAuthenticated -> $isAuthenticated");
       if (isAuthenticated) {
         if (context.mounted) {
           Navigator.pushNamed(
@@ -142,18 +145,21 @@ class _TransferConfirmationScreenState
           );
         }
       } else {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Biometric Authentication failed.',
-                style: TextStyles.primary.copyWith(
-                  fontSize: (12 / Dimensions.designWidth).w,
-                ),
-              ),
-            ),
-          );
-        }
+        // TODO: Verify from client if they want a dialog box to enable biometric
+
+        OpenSettings.openBiometricEnrollSetting();
+        // if (context.mounted) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(
+        //       content: Text(
+        //         'Biometric Authentication failed.',
+        //         style: TextStyles.primary.copyWith(
+        //           fontSize: (12 / Dimensions.designWidth).w,
+        //         ),
+        //       ),
+        //     ),
+        //   );
+        // }
       }
     }
   }

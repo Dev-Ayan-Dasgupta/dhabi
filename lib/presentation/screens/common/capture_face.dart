@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:dialup_mobile_app/data/models/arguments/index.dart';
-import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -132,15 +131,18 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
     try {
       // process the input image
       final List<Face> faces = await faceDetector.processImage(inputImage);
-      print("No. of faces detected -> ${faces.length}");
+      debugPrint("No. of faces detected -> ${faces.length}");
 
-      print("Head turned up or down -> ${faces[0].headEulerAngleX} degrees");
-      print("Head turned left or right -> ${faces[0].headEulerAngleY} degrees");
-      print(
+      debugPrint(
+          "Head turned up or down -> ${faces[0].headEulerAngleX} degrees");
+      debugPrint(
+          "Head turned left or right -> ${faces[0].headEulerAngleY} degrees");
+      debugPrint(
           "Head turned clockwise or counter-clockwise -> ${faces[0].headEulerAngleZ} degrees");
-      print("Smiling probability -> ${faces[0].smilingProbability}");
-      print("Left eye open probability -> ${faces[0].leftEyeOpenProbability}");
-      print(
+      debugPrint("Smiling probability -> ${faces[0].smilingProbability}");
+      debugPrint(
+          "Left eye open probability -> ${faces[0].leftEyeOpenProbability}");
+      debugPrint(
           "Right eye open probability -> ${faces[0].rightEyeOpenProbability}");
 
       if (faces[0].smilingProbability != null) {
@@ -165,22 +167,10 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
               );
             }
           }
-          // if (context.mounted) {
-          //   Navigator.pushNamed(
-          //     context,
-          //     Routes.retailOnboardingStatus,
-          //     arguments: OnboardingStatusArgumentModel(
-          //       stepsCompleted: 1,
-          //       isFatca: false,
-          //       isPassport: false,
-          //       isRetail: true,
-          //     ).toMap(),
-          //   );
-          // }
         }
       }
     } catch (e) {
-      print("Face Detector Exception -> $e");
+      debugPrint("Face Detector Exception -> $e");
     }
 
     // for (Face face in faces) {

@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
 
   final AppRouter appRouter;
 
-  // This widget is the root of your application.
+  // This widget is the root of our application.
   @override
   Widget build(BuildContext context) {
     return FlutterSizer(

@@ -1,7 +1,6 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/basic_company_details/basic_company_details.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/capture_face.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/accountDetails/download_statement.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/index.dart';
@@ -42,6 +41,14 @@ class AppRouter {
       case Routes.login:
         return MaterialPageRoute(
           builder: (_) => const LoginScreen(),
+        );
+      case Routes.loginUserId:
+        return MaterialPageRoute(
+          builder: (_) => const LoginUserIdScreen(),
+        );
+      case Routes.loginPassword:
+        return MaterialPageRoute(
+          builder: (_) => const LoginPasswordScreen(),
         );
       case Routes.selectAccountType:
         return MaterialPageRoute(
