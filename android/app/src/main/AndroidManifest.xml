@@ -5,7 +5,9 @@
    <application
         android:label="dialup_mobile_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"

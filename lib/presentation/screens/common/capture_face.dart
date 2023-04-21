@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:dialup_mobile_app/data/models/arguments/index.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -17,21 +18,30 @@ class CaptureFaceScreen extends StatefulWidget {
 }
 
 class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
-  int faceDetectedCount = 0;
-
   CameraController? _controller;
 
-  // ? Declaration of InputImage goes here
-
-  // declare instance of camera
-
-  // final camera = const CameraDescription(
-  //   name: "Selfie Camera",
-  //   lensDirection: CameraLensDirection.front,
-  //   sensorOrientation: 0,
-  // );
-
   int _cameraIndex = 0;
+
+  XFile? capturedImage;
+
+  // ? Create face detector object
+  final FaceDetector faceDetector = FaceDetector(
+    options: FaceDetectorOptions(
+      enableContours: true,
+      enableClassification: true,
+      enableLandmarks: true,
+      enableTracking: true,
+      minFaceSize: 0.1,
+      performanceMode: FaceDetectorMode.accurate,
+    ),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    initCameraLens();
+    startLive();
+  }
 
   void initCameraLens() {
     if (cameras.any(
@@ -119,70 +129,80 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
       inputImageData: inputImageData,
     );
 
-    // ? Create face detector object
-    final FaceDetector faceDetector = FaceDetector(
-      options: FaceDetectorOptions(
-        enableContours: true,
-        enableClassification: true,
-        enableLandmarks: true,
-        enableTracking: true,
-        minFaceSize: 0.1,
-        performanceMode: FaceDetectorMode.accurate,
-      ),
-    );
+    try {
+      // process the input image
+      final List<Face> faces = await faceDetector.processImage(inputImage);
+      print("No. of faces detected -> ${faces.length}");
 
-    // process the input image
-    final List<Face> faces = await faceDetector.processImage(inputImage);
-    print("No. of faces detected -> ${faces.length}");
+      print("Head turned up or down -> ${faces[0].headEulerAngleX} degrees");
+      print("Head turned left or right -> ${faces[0].headEulerAngleY} degrees");
+      print(
+          "Head turned clockwise or counter-clockwise -> ${faces[0].headEulerAngleZ} degrees");
+      print("Smiling probability -> ${faces[0].smilingProbability}");
+      print("Left eye open probability -> ${faces[0].leftEyeOpenProbability}");
+      print(
+          "Right eye open probability -> ${faces[0].rightEyeOpenProbability}");
 
-    for (Face face in faces) {
-      // face.landmarks[FaceLandmarkType.bottomMouth].position
-    }
-
-    print("Head turned up or down -> ${faces[0].headEulerAngleX} degrees");
-    print("Head turned left or right -> ${faces[0].headEulerAngleY} degrees");
-    print(
-        "Head turned clockwise or counter-clockwise -> ${faces[0].headEulerAngleZ} degrees");
-    print("Smiling probability -> ${faces[0].smilingProbability}");
-    print("Left eye open probability -> ${faces[0].leftEyeOpenProbability}");
-    print("Right eye open probability -> ${faces[0].rightEyeOpenProbability}");
-
-    if (faces[0].landmarks[FaceLandmarkType.bottomMouth] != null) {
-      final bottomMouthPos =
-          faces[0].landmarks[FaceLandmarkType.bottomMouth]?.position;
-      print("bottomMouthPos -> $bottomMouthPos");
-    }
-    if (faces[0].landmarks[FaceLandmarkType.leftMouth] != null) {
-      final leftMouthPos =
-          faces[0].landmarks[FaceLandmarkType.leftMouth]?.position;
-      print("leftMouthPos -> $leftMouthPos");
-    }
-    if (faces[0].landmarks[FaceLandmarkType.rightCheek] != null) {
-      final rightCheekPos =
-          faces[0].landmarks[FaceLandmarkType.rightCheek]?.position;
-      print("rightCheekPos -> $rightCheekPos");
-    }
-
-    if (faces[0].smilingProbability == 0.80) {
-      await Future.delayed(const Duration(milliseconds: 500));
-      if (context.mounted) {
-        Navigator.pushNamed(
-          context,
-          Routes.retailOnboardingStatus,
-          arguments: OnboardingStatusArgumentModel(
-            stepsCompleted: 1,
-            isFatca: false,
-            isPassport: false,
-            isRetail: true,
-          ).toMap(),
-        );
+      if (faces[0].smilingProbability != null) {
+        if (faces[0].smilingProbability! >= 0.80) {
+          await Future.delayed(const Duration(milliseconds: 250));
+          if (_controller != null) {
+            if (_controller!.value.isInitialized) {
+              if (!_controller!.value.isTakingPicture) {
+                capturedImage = await _controller!.takePicture();
+              }
+            }
+          }
+          if (capturedImage != null) {
+            if (context.mounted) {
+              Navigator.pushNamed(
+                context,
+                Routes.finalImage,
+                arguments: FaceImageArgumentModel(
+                  capturedImage: capturedImage!,
+                ).toMap(),
+              );
+            }
+          }
+          // if (context.mounted) {
+          //   Navigator.pushNamed(
+          //     context,
+          //     Routes.retailOnboardingStatus,
+          //     arguments: OnboardingStatusArgumentModel(
+          //       stepsCompleted: 1,
+          //       isFatca: false,
+          //       isPassport: false,
+          //       isRetail: true,
+          //     ).toMap(),
+          //   );
+          // }
+        }
       }
+    } catch (e) {
+      print("Face Detector Exception -> $e");
     }
-  }
 
-  @override
-  void initState() {
-    super.initState();
+    // for (Face face in faces) {
+    //   // face.landmarks[FaceLandmarkType.bottomMouth].position
+    // }
+
+    // if (faces[0].landmarks[FaceLandmarkType.bottomMouth] != null) {
+    //   final bottomMouthPos =
+    //       faces[0].landmarks[FaceLandmarkType.bottomMouth]?.position;
+    //   print("bottomMouthPos -> $bottomMouthPos");
+    // }
+    // if (faces[0].landmarks[FaceLandmarkType.leftMouth] != null) {
+    //   final leftMouthPos =
+    //       faces[0].landmarks[FaceLandmarkType.leftMouth]?.position;
+    //   print("leftMouthPos -> $leftMouthPos");
+    // }
+    // if (faces[0].landmarks[FaceLandmarkType.rightCheek] != null) {
+    //   final rightCheekPos =
+    //       faces[0].landmarks[FaceLandmarkType.rightCheek]?.position;
+    //   print("rightCheekPos -> $rightCheekPos");
+    // }
+
+    // // ? check for smiling probability greater than or equal to 80%
   }
 
   @override
@@ -196,6 +216,15 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
+          Ternary(
+            condition: _controller != null,
+            truthy: CameraPreview(_controller!),
+            falsy: Container(
+              width: 100.w,
+              height: 100.h,
+              color: Colors.black,
+            ),
+          ),
           ColorFiltered(
             colorFilter: const ColorFilter.mode(
               Colors.white,
@@ -286,9 +315,16 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
     );
   }
 
+  Future<void> stopLive() async {
+    await _controller?.stopImageStream();
+    await _controller?.dispose();
+    _controller = null;
+    faceDetector.close();
+  }
+
   @override
   void dispose() {
-    _controller?.dispose();
+    stopLive();
     super.dispose();
   }
 }

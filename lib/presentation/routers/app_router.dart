@@ -85,6 +85,12 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const CaptureFaceScreen(),
         );
+      case Routes.finalImage:
+        return MaterialPageRoute(
+          builder: (_) => FinalFaceImageScreen(
+            argument: args,
+          ),
+        );
       case Routes.retailDashboard:
         return MaterialPageRoute(
           builder: (_) => RetailDashboardScreen(

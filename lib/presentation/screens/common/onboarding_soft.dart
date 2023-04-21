@@ -112,31 +112,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            onboardingArgumentModel.isInitial
-                                ? InkWell(
-                                    onTap: () {
-                                      biometricPrompt();
-                                    },
-                                    child: Text(
-                                      "Login",
-                                      style: TextStyles.primaryBold.copyWith(
-                                        fontSize:
-                                            (20 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                  )
-                                : InkWell(
-                                    onTap: () {
-                                      // TODO: Navigate to explore dashboard
-                                    },
-                                    child: Text(
-                                      "Explore",
-                                      style: TextStyles.primaryBold.copyWith(
-                                        fontSize:
-                                            (20 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
+                            Ternary(
+                              condition: onboardingArgumentModel.isInitial,
+                              truthy: InkWell(
+                                onTap: biometricPrompt,
+                                child: Text(
+                                  "Login",
+                                  style: TextStyles.primaryBold.copyWith(
+                                    fontSize: (20 / Dimensions.designWidth).w,
                                   ),
+                                ),
+                              ),
+                              falsy: InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.exploreDashboard);
+                                },
+                                child: Text(
+                                  "Explore",
+                                  style: TextStyles.primaryBold.copyWith(
+                                    fontSize: (20 / Dimensions.designWidth).w,
+                                  ),
+                                ),
+                              ),
+                            ),
                             const SizeBox(width: 10),
                           ],
                         ),
@@ -173,27 +172,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         horizontal: (28 / Dimensions.designWidth).w),
                     child: Column(
                       children: [
-                        onboardingArgumentModel.isInitial
-                            ? GradientButton(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.registration);
-                                },
-                                text: "Get Started",
-                              )
-                            : GradientButton(
-                                onTap: () {
-                                  biometricPrompt();
-                                },
-                                text: "Login",
-                              ),
+                        Ternary(
+                          condition: onboardingArgumentModel.isInitial,
+                          truthy: GradientButton(
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.registration);
+                            },
+                            text: "Get Started",
+                          ),
+                          falsy: GradientButton(
+                            onTap: biometricPrompt,
+                            text: "Login",
+                          ),
+                        ),
                         const SizeBox(height: 20),
                         Ternary(
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
                             onTap: () {
-                              Navigator.pushNamed(
-                                  context, Routes.exploreDashboard);
+                              Navigator.pushNamed(context, Routes.captureFace);
+                              // Navigator.pushNamed(
+                              //     context, Routes.exploreDashboard);
                               // Navigator.pushNamed(
                               //   context,
                               //   Routes.retailOnboardingStatus,

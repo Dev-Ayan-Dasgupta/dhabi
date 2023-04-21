@@ -60,4 +60,5 @@ class Routes {
   static const String businessDepositDetails = 'business-deposit-details';
   static const String dormant = 'dormant';
   static const String captureFace = 'capture-face';
+  static const String finalImage = 'final-image';
 }

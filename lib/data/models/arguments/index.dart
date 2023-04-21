@@ -6,3 +6,4 @@ export './retail_dashboard.dart';
 export './verify_mobile.dart';
 export './onboarding_status.dart';
 export './error.dart';
+export './face_image.dart';
