@@ -18,7 +18,9 @@ class CaptureFaceScreen extends StatefulWidget {
 }
 
 class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
-  CameraController _controller = CameraController(
+  ResolutionPreset resolutionPreset = ResolutionPreset.high;
+
+  CameraController? _controller = CameraController(
     const CameraDescription(
       name: "",
       lensDirection: CameraLensDirection.front,
@@ -65,6 +67,11 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
 
   Future<void> getDeviceMemory() async {
     deviceMemory = await SystemInfoPlus.physicalMemory; // returns in MB
+    resolutionPreset = deviceMemory != null
+        ? deviceMemory! <= 3072
+            ? ResolutionPreset.low
+            : ResolutionPreset.high
+        : ResolutionPreset.high;
   }
 
   void initCameraLens() {
@@ -93,22 +100,18 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
     // setup camera controller
     _controller = CameraController(
       camera,
-      deviceMemory != null
-          ? deviceMemory! <= 3072
-              ? ResolutionPreset.low
-              : ResolutionPreset.high
-          : ResolutionPreset.high,
+      resolutionPreset,
       enableAudio: false,
     );
 
     // start streaming using camera
-    _controller.initialize().then((_) {
+    _controller?.initialize().then((_) {
       if (!mounted) {
         return;
       }
 
       // process camera image to get an instance of input image
-      _controller.startImageStream(_processCameraImage);
+      _controller?.startImageStream(_processCameraImage);
 
       setState(() {});
     });
@@ -192,10 +195,10 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
             hasBlinked = true;
             await Future.delayed(const Duration(milliseconds: 250));
 
-            if (_controller.value.isInitialized) {
-              await _controller.stopImageStream();
-              if (!_controller.value.isTakingPicture) {
-                capturedImage = await _controller.takePicture();
+            if (_controller!.value.isInitialized) {
+              await _controller?.stopImageStream();
+              if (!_controller!.value.isTakingPicture) {
+                capturedImage = await _controller?.takePicture();
               }
             }
 
@@ -206,6 +209,7 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
                   Routes.finalImage,
                   arguments: FaceImageArgumentModel(
                     capturedImage: capturedImage!,
+                    resolutionPreset: resolutionPreset,
                   ).toMap(),
                 );
               }
@@ -229,7 +233,7 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          CameraPreview(_controller),
+          CameraPreview(_controller!),
           // Ternary(
           //   condition: _controller != null,
           //   truthy:
@@ -365,9 +369,9 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
   }
 
   Future<void> stopLive() async {
-    await _controller.stopImageStream();
-    await _controller.dispose();
-    // _controller = null;
+    await _controller?.stopImageStream();
+    await _controller?.dispose();
+    _controller = null;
     faceDetector.close();
   }
 

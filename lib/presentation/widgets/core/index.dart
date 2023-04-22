@@ -20,3 +20,4 @@ export './expansion_tile.dart';
 export './onboarding_status_row.dart';
 export './shimmer.dart';
 export './ternary.dart';
+export './tooltip.dart';

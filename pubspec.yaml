@@ -32,6 +32,7 @@ dependencies:
   pinput: ^2.2.31
   platform_device_id: ^1.0.1
   shimmer: ^2.0.0
+  simple_tooltip: ^1.2.0
   system_info_plus: ^0.0.5
 
 dev_dependencies:

@@ -41,6 +41,8 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
 
   int toggles = 0;
 
+  bool isShowTCCHelp = false;
+
   final TextEditingController _tinssnController = TextEditingController();
 
   @override
@@ -89,88 +91,117 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                           Row(
                             children: [
                               Text(
-                                "FATCA",
+                                "Tax Compliance Confirmation",
                                 style: TextStyles.primary.copyWith(
                                   color: AppColors.primary,
                                   fontSize: (24 / Dimensions.designWidth).w,
                                 ),
                               ),
                               const SizeBox(width: 10),
-                              HelpSnippet(onTap: () {}),
+                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                builder: (context, state) {
+                                  return CustomTooltip(
+                                    tooltiptap: () {
+                                      isShowTCCHelp = false;
+                                      showButtonBloc.add(
+                                          ShowButtonEvent(show: isShowTCCHelp));
+                                    },
+                                    content: "Tax Compliance Confirmation",
+                                    show: isShowTCCHelp,
+                                    onTap: () {
+                                      isShowTCCHelp = !isShowTCCHelp;
+                                      showButtonBloc.add(
+                                          ShowButtonEvent(show: isShowTCCHelp));
+                                    },
+                                  );
+                                },
+                              ),
                             ],
                           ),
-                          const SizeBox(height: 30),
+                          const SizeBox(height: 20),
                           BlocBuilder<ApplicationTaxBloc, ApplicationTaxState>(
                             builder: (context, state) {
-                              if (isUSCitizen) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "You are a U.S. Citizen",
-                                      style: TextStyles.primary.copyWith(
-                                        color: AppColors.black63,
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Are you a U.S. citizen or resident for tax purposes?",
+                                    style: TextStyles.primary.copyWith(
+                                      color: AppColors.black63,
+                                      fontSize: (16 / Dimensions.designWidth).w,
                                     ),
-                                  ],
-                                );
-                              } else {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                        text: 'Press ',
-                                        style: TextStyles.primary.copyWith(
-                                          color: AppColors.black63,
-                                          fontSize:
-                                              (15 / Dimensions.designWidth).w,
-                                        ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: 'Yes',
-                                            style:
-                                                TextStyles.primaryBold.copyWith(
-                                              color: AppColors.black63,
-                                              fontSize:
-                                                  (15 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: ' if:',
-                                            style: TextStyles.primary.copyWith(
-                                              color: AppColors.black63,
-                                              fontSize:
-                                                  (15 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizeBox(height: 10),
-                                    Text(
-                                      "You are a U.S. Citizen or Resident?",
-                                      style: TextStyles.primary.copyWith(
-                                        color: AppColors.black63,
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }
+                                  ),
+                                ],
+                              );
+                              // if (isUSCitizen) {
+                              //   return Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       Text(
+                              //         "Are you a U.S. citizen or resident for tax purposes?",
+                              //         style: TextStyles.primary.copyWith(
+                              //           color: AppColors.black63,
+                              //           fontSize:
+                              //               (16 / Dimensions.designWidth).w,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   );
+                              // } else {
+                              //   return Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       RichText(
+                              //         text: TextSpan(
+                              //           text: 'Press ',
+                              //           style: TextStyles.primary.copyWith(
+                              //             color: AppColors.black63,
+                              //             fontSize:
+                              //                 (15 / Dimensions.designWidth).w,
+                              //           ),
+                              //           children: <TextSpan>[
+                              //             TextSpan(
+                              //               text: 'Yes',
+                              //               style:
+                              //                   TextStyles.primaryBold.copyWith(
+                              //                 color: AppColors.black63,
+                              //                 fontSize:
+                              //                     (15 / Dimensions.designWidth)
+                              //                         .w,
+                              //               ),
+                              //             ),
+                              //             TextSpan(
+                              //               text: ' if:',
+                              //               style: TextStyles.primary.copyWith(
+                              //                 color: AppColors.black63,
+                              //                 fontSize:
+                              //                     (15 / Dimensions.designWidth)
+                              //                         .w,
+                              //               ),
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       ),
+                              //       const SizeBox(height: 10),
+                              //       Text(
+                              //         "You are a U.S. Citizen or Resident?",
+                              //         style: TextStyles.primary.copyWith(
+                              //           color: AppColors.black63,
+                              //           fontSize:
+                              //               (16 / Dimensions.designWidth).w,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   );
+                              // }
                             },
                           ),
                           BlocBuilder<ApplicationTaxBloc, ApplicationTaxState>(
                             builder: (context, state) {
                               if (isUSCitizen) {
-                                return const SizeBox(height: 20);
+                                return const SizeBox(height: 10);
                               } else {
-                                return const SizeBox(height: 30);
+                                return const SizeBox(height: 10);
                               }
                             },
                           ),
@@ -287,7 +318,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                               if (isUSCitizen) {
                                 return const SizeBox(height: 0);
                               } else {
-                                return const SizeBox(height: 30);
+                                return const SizeBox(height: 20);
                               }
                             },
                           ),
@@ -298,7 +329,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "US TIN or SSN Number",
+                                      "Please provide your U.S. Tax Identification Number",
                                       style: TextStyles.primary.copyWith(
                                         color: AppColors.black63,
                                         fontSize:
@@ -343,7 +374,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                       },
                                       hintText: "000000000",
                                     ),
-                                    const SizeBox(height: 5),
+                                    const SizeBox(height: 7),
                                     isTINvalid
                                         ? const SizeBox()
                                         : Text(
@@ -387,7 +418,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                         },
                         text: "Continue",
                       ),
-                      const SizeBox(height: 32),
+                      const SizeBox(height: 20),
                     ],
                   );
                 } else {

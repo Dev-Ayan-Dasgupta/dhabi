@@ -110,7 +110,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                           Row(
                             children: [
                               Text(
-                                "CRS",
+                                "International Tax Reporting Confirmation",
                                 style: TextStyles.primary.copyWith(
                                   color: AppColors.primary,
                                   fontSize: (24 / Dimensions.designWidth).w,
@@ -120,7 +120,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                               HelpSnippet(onTap: () {}),
                             ],
                           ),
-                          const SizeBox(height: 30),
+                          const SizeBox(height: 20),
                           Text(
                             "Do you hold a CRS reportable account?",
                             style: TextStyles.primary.copyWith(
@@ -128,7 +128,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
-                          const SizeBox(height: 20),
+                          const SizeBox(height: 10),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -233,7 +233,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                                             (16 / Dimensions.designWidth).w,
                                       ),
                                     ),
-                                    const SizeBox(height: 9),
+                                    const SizeBox(height: 10),
                                     CustomDropDown(
                                       title: "Country",
                                       items: items,
@@ -283,7 +283,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                                         HelpSnippet(onTap: () {}),
                                       ],
                                     ),
-                                    const SizeBox(height: 20),
+                                    const SizeBox(height: 10),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,

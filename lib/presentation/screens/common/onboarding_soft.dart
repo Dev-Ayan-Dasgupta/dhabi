@@ -229,14 +229,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void biometricPrompt() async {
     bool isBiometricSupported = await LocalAuthentication().isDeviceSupported();
-    print("isBiometricSupported -> $isBiometricSupported");
+
     if (!isBiometricSupported) {
       if (context.mounted) {
         Navigator.pushNamed(context, Routes.loginUserId);
       }
     } else {
       bool isAuthenticated = await BiometricHelper.authenticateUser();
-      print("isAuthenticated -> $isAuthenticated");
+
       if (isAuthenticated) {
         if (context.mounted) {
           Navigator.pushNamed(context, Routes.loginPassword);
