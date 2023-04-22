@@ -94,136 +94,130 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //  const SizeBox(height: 10),
-              Text(
-                "Select Recipient",
-                style: TextStyles.primaryBold.copyWith(
-                  color: AppColors.primary,
-                  fontSize: (28 / Dimensions.designWidth).w,
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //  const SizeBox(height: 10),
+            Text(
+              "Select Recipient",
+              style: TextStyles.primaryBold.copyWith(
+                color: AppColors.primary,
+                fontSize: (28 / Dimensions.designWidth).w,
+              ),
+            ),
+            const SizeBox(height: 10),
+            Text(
+              "Select a recipient you sent to previously or enter new reciepient details",
+              style: TextStyles.primaryMedium.copyWith(
+                color: const Color.fromRGBO(129, 129, 129, 0.7),
+                fontSize: (16 / Dimensions.designWidth).w,
+              ),
+            ),
+            const SizeBox(height: 10),
+            CustomSearchBox(
+              hintText: "Search",
+              controller: _searchController,
+              onChanged: (p0) {
+                searchRecipient(recipients, p0);
+                if (p0.isEmpty) {
+                  isShowAll = true;
+                } else {
+                  isShowAll = false;
+                }
+                recipientListBloc.add(ShowButtonEvent(show: isShowAll));
+              },
+            ),
+            const SizeBox(height: 10),
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, Routes.recipientDetails);
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: (22 / Dimensions.designWidth).w,
+                  vertical: (18 / Dimensions.designWidth).w,
                 ),
-              ),
-              const SizeBox(height: 10),
-              Text(
-                "Select a recipient you sent to previously or enter new reciepient details",
-                style: TextStyles.primaryMedium.copyWith(
-                  color: const Color.fromRGBO(129, 129, 129, 0.7),
-                  fontSize: (16 / Dimensions.designWidth).w,
-                ),
-              ),
-              const SizeBox(height: 10),
-              CustomSearchBox(
-                hintText: "Search",
-                controller: _searchController,
-                onChanged: (p0) {
-                  searchRecipient(recipients, p0);
-                  if (p0.isEmpty) {
-                    isShowAll = true;
-                  } else {
-                    isShowAll = false;
-                  }
-                  recipientListBloc.add(ShowButtonEvent(show: isShowAll));
-                },
-              ),
-              const SizeBox(height: 10),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.recipientDetails);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: (22 / Dimensions.designWidth).w,
-                    vertical: (18 / Dimensions.designWidth).w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(
+                      (10 / Dimensions.designWidth).w,
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        (10 / Dimensions.designWidth).w,
+                  boxShadow: [BoxShadows.primary],
+                  color: Colors.white,
+                ),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      ImageConstants.addCircle,
+                      width: (20 / Dimensions.designWidth).w,
+                      height: (20 / Dimensions.designWidth).w,
+                    ),
+                    const SizeBox(width: 15),
+                    Text(
+                      "New Recipients",
+                      style: TextStyles.primary.copyWith(
+                        color: const Color(0XFF252525),
+                        fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
-                    boxShadow: [BoxShadows.primary],
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        ImageConstants.addCircle,
-                        width: (20 / Dimensions.designWidth).w,
-                        height: (20 / Dimensions.designWidth).w,
-                      ),
-                      const SizeBox(width: 15),
-                      Text(
-                        "New Recipients",
-                        style: TextStyles.primary.copyWith(
-                          color: const Color(0XFF252525),
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const Spacer(),
-                      SvgPicture.asset(
-                        ImageConstants.arrowForwardIos,
-                        width: (9.81 / Dimensions.designWidth).w,
-                        height: (16.67 / Dimensions.designWidth).w,
-                      )
-                    ],
-                  ),
+                    const Spacer(),
+                    SvgPicture.asset(
+                      ImageConstants.arrowForwardIos,
+                      width: (9.81 / Dimensions.designWidth).w,
+                      height: (16.67 / Dimensions.designWidth).w,
+                    )
+                  ],
                 ),
               ),
-              const SizeBox(height: 30),
-              Text(
-                "MY RECIPIENTS",
-                style: TextStyles.primaryBold.copyWith(
-                  color: AppColors.black81,
-                  fontSize: (12 / Dimensions.designWidth).w,
-                ),
+            ),
+            const SizeBox(height: 30),
+            Text(
+              "MY RECIPIENTS",
+              style: TextStyles.primaryBold.copyWith(
+                color: AppColors.black81,
+                fontSize: (12 / Dimensions.designWidth).w,
               ),
-              const SizeBox(height: 10),
-              BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                builder: (context, state) {
-                  return Expanded(
-                    child: ListView.separated(
-                      itemBuilder: (context, index) {
-                        RecipientModel item = isShowAll
-                            ? recipients[index]
-                            : filteredRecipients[index];
-                        return RecipientsTile(
-                          isWithinDhabi: item.isWithinDhabi,
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.transferAmount);
-                          },
-                          flagImgUrl: item.flagImgUrl,
-                          name: item.name,
-                          accountNumber: item.accountNumber,
-                          currency: item.currency,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          color: Color(0XFFDDDDDD),
-                          height: 1,
-                        );
-                      },
-                      itemCount: isShowAll
-                          ? recipients.length
-                          : filteredRecipients.length,
-                    ),
-                  );
-                },
-              ),
-              const SizeBox(height: 20),
-            ],
-          ),
+            ),
+            const SizeBox(height: 10),
+            BlocBuilder<ShowButtonBloc, ShowButtonState>(
+              builder: (context, state) {
+                return Expanded(
+                  child: ListView.separated(
+                    itemBuilder: (context, index) {
+                      RecipientModel item = isShowAll
+                          ? recipients[index]
+                          : filteredRecipients[index];
+                      return RecipientsTile(
+                        isWithinDhabi: item.isWithinDhabi,
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.transferAmount);
+                        },
+                        flagImgUrl: item.flagImgUrl,
+                        name: item.name,
+                        accountNumber: item.accountNumber,
+                        currency: item.currency,
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return const Divider(
+                        color: Color(0XFFDDDDDD),
+                        height: 1,
+                      );
+                    },
+                    itemCount: isShowAll
+                        ? recipients.length
+                        : filteredRecipients.length,
+                  ),
+                );
+              },
+            ),
+            const SizeBox(height: 20),
+          ],
         ),
       ),
     );

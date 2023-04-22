@@ -73,565 +73,541 @@ class _ChangePasswordState extends State<ChangePassword> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Change Password",
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Change Password",
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 30),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Current Password",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              Text(
+                                "Forgot Password?",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: const Color.fromRGBO(34, 97, 105, 0.5),
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizeBox(height: 9),
+                          BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                            builder: (context, state) {
+                              if (showCurrentPassword) {
+                                return CustomTextField(
+                                  controller: _currentPasswordController,
+                                  minLines: 1,
+                                  maxLines: 1,
+                                  suffix: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: (10 / Dimensions.designWidth).w),
+                                    child: InkWell(
+                                      onTap: () {
+                                        passwordBloc.add(HidePasswordEvent(
+                                            showPassword: false,
+                                            toggle: ++toggle));
+                                        showCurrentPassword =
+                                            !showCurrentPassword;
+                                      },
+                                      child: Icon(
+                                        Icons.visibility_off_outlined,
+                                        color: const Color.fromRGBO(
+                                            34, 97, 105, 0.5),
+                                        size: (20 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ),
+                                  onChanged: (p0) {
+                                    triggerValidityEvent(p0, currentPassword);
+                                    // triggerCriteriaEvent(p0);
+                                    // triggerPasswordMatchEvent();
+                                    triggerAllTrueEvent();
+                                  },
+                                  obscureText: !showCurrentPassword,
+                                );
+                              } else {
+                                return CustomTextField(
+                                  controller: _currentPasswordController,
+                                  minLines: 1,
+                                  maxLines: 1,
+                                  suffix: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: (10 / Dimensions.designWidth).w),
+                                    child: InkWell(
+                                      onTap: () {
+                                        passwordBloc.add(DisplayPasswordEvent(
+                                            showPassword: true,
+                                            toggle: ++toggle));
+                                        showCurrentPassword =
+                                            !showCurrentPassword;
+                                      },
+                                      child: Icon(
+                                        Icons.visibility_outlined,
+                                        color: const Color.fromRGBO(
+                                            34, 97, 105, 0.5),
+                                        size: (20 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ),
+                                  onChanged: (p0) {
+                                    triggerValidityEvent(p0, currentPassword);
+                                    // triggerCriteriaEvent(p0);
+                                    // triggerPasswordMatchEvent();
+                                    triggerAllTrueEvent();
+                                  },
+                                  obscureText: !showCurrentPassword,
+                                );
+                              }
+                            },
+                          ),
+                          const SizeBox(height: 9),
+                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: (context, state) {
+                              if (!isCorrect &&
+                                  _currentPasswordController.text.length >= 8) {
+                                return Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      ImageConstants.errorSolid,
+                                      width: (14 / Dimensions.designWidth).w,
+                                      height: (14 / Dimensions.designWidth).w,
+                                    ),
+                                    const SizeBox(width: 5),
+                                    Text(
+                                      "Password incorrect",
+                                      style: TextStyles.primaryMedium.copyWith(
+                                        color: AppColors.red,
+                                        fontSize:
+                                            (16 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return const SizeBox();
+                              }
+                            },
+                          ),
+                          const SizeBox(height: 15),
+                          Text(
+                            "New Password",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.black63,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          const SizeBox(height: 9),
+                          BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                            builder: (context, state) {
+                              if (showNewPassword) {
+                                return CustomTextField(
+                                  controller: _newPasswordController,
+                                  minLines: 1,
+                                  maxLines: 1,
+                                  suffix: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: (10 / Dimensions.designWidth).w),
+                                    child: InkWell(
+                                      onTap: () {
+                                        passwordBloc.add(HidePasswordEvent(
+                                            showPassword: false,
+                                            toggle: ++toggle));
+                                        showNewPassword = !showNewPassword;
+                                      },
+                                      child: Icon(
+                                        Icons.visibility_off_outlined,
+                                        color: const Color.fromRGBO(
+                                            34, 97, 105, 0.5),
+                                        size: (20 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ),
+                                  onChanged: (p0) {
+                                    triggerCriteriaEvent(p0);
+                                    triggerPasswordMatchEvent();
+                                    triggerAllTrueEvent();
+                                  },
+                                  obscureText: !showNewPassword,
+                                );
+                              } else {
+                                return CustomTextField(
+                                  controller: _newPasswordController,
+                                  minLines: 1,
+                                  maxLines: 1,
+                                  suffix: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: (10 / Dimensions.designWidth).w),
+                                    child: InkWell(
+                                      onTap: () {
+                                        passwordBloc.add(DisplayPasswordEvent(
+                                            showPassword: true,
+                                            toggle: ++toggle));
+                                        showNewPassword = !showNewPassword;
+                                      },
+                                      child: Icon(
+                                        Icons.visibility_outlined,
+                                        color: const Color.fromRGBO(
+                                            34, 97, 105, 0.5),
+                                        size: (20 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ),
+                                  onChanged: (p0) {
+                                    triggerCriteriaEvent(p0);
+                                    triggerPasswordMatchEvent();
+                                    triggerAllTrueEvent();
+                                  },
+                                  obscureText: !showNewPassword,
+                                );
+                              }
+                            },
+                          ),
+                          const SizeBox(height: 9),
+                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: (context, state) {
+                              if (!(hasMin8 &&
+                                      hasUpperLower &&
+                                      hasNumeric &&
+                                      hasSpecial) &&
+                                  _newPasswordController.text.isNotEmpty) {
+                                return Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      ImageConstants.errorSolid,
+                                      width: (14 / Dimensions.designWidth).w,
+                                      height: (14 / Dimensions.designWidth).w,
+                                    ),
+                                    const SizeBox(width: 5),
+                                    Text(
+                                      "Password does not meet the criteria",
+                                      style: TextStyles.primaryMedium.copyWith(
+                                        color: AppColors.red,
+                                        fontSize:
+                                            (16 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return const SizeBox();
+                              }
+                            },
+                          ),
+                          const SizeBox(height: 15),
+                          Text(
+                            "Confirm New Password",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.black63,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          const SizeBox(height: 9),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                                builder: (context, state) {
+                                  if (showConfirmNewPassword) {
+                                    return CustomTextField(
+                                      width: 83.w,
+                                      controller: _confirmNewPasswordController,
+                                      minLines: 1,
+                                      maxLines: 1,
+                                      suffix: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: (10 / Dimensions.designWidth)
+                                                .w),
+                                        child: InkWell(
+                                          onTap: () {
+                                            confirmPasswordBloc.add(
+                                                HidePasswordEvent(
+                                                    showPassword: false,
+                                                    toggle: ++toggle));
+                                            showConfirmNewPassword =
+                                                !showConfirmNewPassword;
+                                          },
+                                          child: Icon(
+                                            Icons.visibility_off_outlined,
+                                            color: const Color.fromRGBO(
+                                                34, 97, 105, 0.5),
+                                            size:
+                                                (20 / Dimensions.designWidth).w,
+                                          ),
+                                        ),
+                                      ),
+                                      onChanged: (p0) {
+                                        triggerPasswordMatchEvent();
+                                        triggerAllTrueEvent();
+                                      },
+                                      obscureText: !showConfirmNewPassword,
+                                    );
+                                  } else {
+                                    return CustomTextField(
+                                      width: 83.w,
+                                      controller: _confirmNewPasswordController,
+                                      minLines: 1,
+                                      maxLines: 1,
+                                      suffix: Padding(
+                                        padding: EdgeInsets.only(
+                                            left: (10 / Dimensions.designWidth)
+                                                .w),
+                                        child: InkWell(
+                                          onTap: () {
+                                            confirmPasswordBloc.add(
+                                                DisplayPasswordEvent(
+                                                    showPassword: true,
+                                                    toggle: ++toggle));
+                                            showConfirmNewPassword =
+                                                !showConfirmNewPassword;
+                                          },
+                                          child: Icon(
+                                            Icons.visibility_outlined,
+                                            color: const Color.fromRGBO(
+                                                34, 97, 105, 0.5),
+                                            size:
+                                                (20 / Dimensions.designWidth).w,
+                                          ),
+                                        ),
+                                      ),
+                                      onChanged: (p0) {
+                                        triggerPasswordMatchEvent();
+                                        triggerAllTrueEvent();
+                                      },
+                                      obscureText: !showConfirmNewPassword,
+                                    );
+                                  }
+                                },
+                              ),
+                              BlocBuilder<MatchPasswordBloc,
+                                  MatchPasswordState>(
+                                builder: (context, state) {
+                                  if (isMatch) {
+                                    return SvgPicture.asset(
+                                      ImageConstants.checkCircle,
+                                      width: (20 / Dimensions.designWidth).w,
+                                      height: (20 / Dimensions.designWidth).w,
+                                    );
+                                  } else {
+                                    return SvgPicture.asset(
+                                      ImageConstants.warningSmall,
+                                      width: (20 / Dimensions.designWidth).w,
+                                      height: (20 / Dimensions.designWidth).w,
+                                    );
+                                  }
+                                },
+                              )
+                            ],
+                          ),
+                          const SizeBox(height: 9),
+                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: (context, state) {
+                              if (!isMatch &&
+                                  _confirmNewPasswordController
+                                      .text.isNotEmpty) {
+                                return Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      ImageConstants.warningSmall,
+                                      width: (14 / Dimensions.designWidth).w,
+                                      height: (14 / Dimensions.designWidth).w,
+                                    ),
+                                    const SizeBox(width: 5),
+                                    Text(
+                                      "New passwords do not match",
+                                      style: TextStyles.primaryMedium.copyWith(
+                                        color: const Color(0xFFF39C12),
+                                        fontSize:
+                                            (16 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return const SizeBox();
+                              }
+                            },
+                          ),
+                          const SizeBox(height: 15),
+                          BlocBuilder<CriteriaBloc, CriteriaState>(
+                            builder: (context, state) {
+                              return PasswordCriteria(
+                                criteria1Color:
+                                    hasMin8 ? AppColors.primary : AppColors.red,
+                                criteria2Color: hasNumeric
+                                    ? AppColors.primary
+                                    : AppColors.red,
+                                criteria3Color: hasUpperLower
+                                    ? AppColors.primary
+                                    : AppColors.red,
+                                criteria4Color: hasSpecial
+                                    ? AppColors.primary
+                                    : AppColors.red,
+                                criteria1Widget: hasMin8
+                                    ? SvgPicture.asset(
+                                        ImageConstants.checkSmall)
+                                    : const SizeBox(),
+                                criteria2Widget: hasNumeric
+                                    ? SvgPicture.asset(
+                                        ImageConstants.checkSmall)
+                                    : const SizeBox(),
+                                criteria3Widget: hasUpperLower
+                                    ? SvgPicture.asset(
+                                        ImageConstants.checkSmall)
+                                    : const SizeBox(),
+                                criteria4Widget: hasSpecial
+                                    ? SvgPicture.asset(
+                                        ImageConstants.checkSmall)
+                                    : const SizeBox(),
+                              );
+                            },
+                          ),
+                          const SizeBox(height: 15),
+                        ],
                       ),
                     ),
-                    const SizeBox(height: 30),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "Current Password",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: AppColors.black63,
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                                Text(
-                                  "Forgot Password?",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color:
-                                        const Color.fromRGBO(34, 97, 105, 0.5),
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                )
-                              ],
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                const SizeBox(height: 20),
+                Row(
+                  children: [
+                    BlocBuilder<CheckBoxBloc, CheckBoxState>(
+                      builder: (context, state) {
+                        if (isChecked) {
+                          return InkWell(
+                            onTap: () {
+                              isChecked = false;
+                              triggerCheckBoxEvent(isChecked);
+                              triggerAllTrueEvent();
+                            },
+                            child: SvgPicture.asset(
+                              ImageConstants.checkedBox,
+                              width: (14 / Dimensions.designWidth).w,
+                              height: (14 / Dimensions.designWidth).w,
                             ),
-                            const SizeBox(height: 9),
-                            BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                              builder: (context, state) {
-                                if (showCurrentPassword) {
-                                  return CustomTextField(
-                                    controller: _currentPasswordController,
-                                    minLines: 1,
-                                    maxLines: 1,
-                                    suffix: Padding(
-                                      padding: EdgeInsets.only(
-                                          left:
-                                              (10 / Dimensions.designWidth).w),
-                                      child: InkWell(
-                                        onTap: () {
-                                          passwordBloc.add(HidePasswordEvent(
-                                              showPassword: false,
-                                              toggle: ++toggle));
-                                          showCurrentPassword =
-                                              !showCurrentPassword;
-                                        },
-                                        child: Icon(
-                                          Icons.visibility_off_outlined,
-                                          color: const Color.fromRGBO(
-                                              34, 97, 105, 0.5),
-                                          size: (20 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ),
-                                    onChanged: (p0) {
-                                      triggerValidityEvent(p0, currentPassword);
-                                      // triggerCriteriaEvent(p0);
-                                      // triggerPasswordMatchEvent();
-                                      triggerAllTrueEvent();
-                                    },
-                                    obscureText: !showCurrentPassword,
-                                  );
-                                } else {
-                                  return CustomTextField(
-                                    controller: _currentPasswordController,
-                                    minLines: 1,
-                                    maxLines: 1,
-                                    suffix: Padding(
-                                      padding: EdgeInsets.only(
-                                          left:
-                                              (10 / Dimensions.designWidth).w),
-                                      child: InkWell(
-                                        onTap: () {
-                                          passwordBloc.add(DisplayPasswordEvent(
-                                              showPassword: true,
-                                              toggle: ++toggle));
-                                          showCurrentPassword =
-                                              !showCurrentPassword;
-                                        },
-                                        child: Icon(
-                                          Icons.visibility_outlined,
-                                          color: const Color.fromRGBO(
-                                              34, 97, 105, 0.5),
-                                          size: (20 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ),
-                                    onChanged: (p0) {
-                                      triggerValidityEvent(p0, currentPassword);
-                                      // triggerCriteriaEvent(p0);
-                                      // triggerPasswordMatchEvent();
-                                      triggerAllTrueEvent();
-                                    },
-                                    obscureText: !showCurrentPassword,
-                                  );
-                                }
-                              },
+                          );
+                        } else {
+                          return InkWell(
+                            onTap: () {
+                              isChecked = true;
+                              triggerCheckBoxEvent(isChecked);
+                              triggerAllTrueEvent();
+                            },
+                            child: SvgPicture.asset(
+                              ImageConstants.uncheckedBox,
+                              width: (14 / Dimensions.designWidth).w,
+                              height: (14 / Dimensions.designWidth).w,
                             ),
-                            const SizeBox(height: 9),
-                            BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                              builder: (context, state) {
-                                if (!isCorrect &&
-                                    _currentPasswordController.text.length >=
-                                        8) {
-                                  return Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        ImageConstants.errorSolid,
-                                        width: (14 / Dimensions.designWidth).w,
-                                        height: (14 / Dimensions.designWidth).w,
-                                      ),
-                                      const SizeBox(width: 5),
-                                      Text(
-                                        "Password incorrect",
-                                        style:
-                                            TextStyles.primaryMedium.copyWith(
-                                          color: AppColors.red,
-                                          fontSize:
-                                              (16 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return const SizeBox();
-                                }
-                              },
-                            ),
-                            const SizeBox(height: 15),
-                            Text(
-                              "New Password",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            const SizeBox(height: 9),
-                            BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                              builder: (context, state) {
-                                if (showNewPassword) {
-                                  return CustomTextField(
-                                    controller: _newPasswordController,
-                                    minLines: 1,
-                                    maxLines: 1,
-                                    suffix: Padding(
-                                      padding: EdgeInsets.only(
-                                          left:
-                                              (10 / Dimensions.designWidth).w),
-                                      child: InkWell(
-                                        onTap: () {
-                                          passwordBloc.add(HidePasswordEvent(
-                                              showPassword: false,
-                                              toggle: ++toggle));
-                                          showNewPassword = !showNewPassword;
-                                        },
-                                        child: Icon(
-                                          Icons.visibility_off_outlined,
-                                          color: const Color.fromRGBO(
-                                              34, 97, 105, 0.5),
-                                          size: (20 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ),
-                                    onChanged: (p0) {
-                                      triggerCriteriaEvent(p0);
-                                      triggerPasswordMatchEvent();
-                                      triggerAllTrueEvent();
-                                    },
-                                    obscureText: !showNewPassword,
-                                  );
-                                } else {
-                                  return CustomTextField(
-                                    controller: _newPasswordController,
-                                    minLines: 1,
-                                    maxLines: 1,
-                                    suffix: Padding(
-                                      padding: EdgeInsets.only(
-                                          left:
-                                              (10 / Dimensions.designWidth).w),
-                                      child: InkWell(
-                                        onTap: () {
-                                          passwordBloc.add(DisplayPasswordEvent(
-                                              showPassword: true,
-                                              toggle: ++toggle));
-                                          showNewPassword = !showNewPassword;
-                                        },
-                                        child: Icon(
-                                          Icons.visibility_outlined,
-                                          color: const Color.fromRGBO(
-                                              34, 97, 105, 0.5),
-                                          size: (20 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ),
-                                    onChanged: (p0) {
-                                      triggerCriteriaEvent(p0);
-                                      triggerPasswordMatchEvent();
-                                      triggerAllTrueEvent();
-                                    },
-                                    obscureText: !showNewPassword,
-                                  );
-                                }
-                              },
-                            ),
-                            const SizeBox(height: 9),
-                            BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                              builder: (context, state) {
-                                if (!(hasMin8 &&
-                                        hasUpperLower &&
-                                        hasNumeric &&
-                                        hasSpecial) &&
-                                    _newPasswordController.text.isNotEmpty) {
-                                  return Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        ImageConstants.errorSolid,
-                                        width: (14 / Dimensions.designWidth).w,
-                                        height: (14 / Dimensions.designWidth).w,
-                                      ),
-                                      const SizeBox(width: 5),
-                                      Text(
-                                        "Password does not meet the criteria",
-                                        style:
-                                            TextStyles.primaryMedium.copyWith(
-                                          color: AppColors.red,
-                                          fontSize:
-                                              (16 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return const SizeBox();
-                                }
-                              },
-                            ),
-                            const SizeBox(height: 15),
-                            Text(
-                              "Confirm New Password",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            const SizeBox(height: 9),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                BlocBuilder<ShowPasswordBloc,
-                                    ShowPasswordState>(
-                                  builder: (context, state) {
-                                    if (showConfirmNewPassword) {
-                                      return CustomTextField(
-                                        width: 83.w,
-                                        controller:
-                                            _confirmNewPasswordController,
-                                        minLines: 1,
-                                        maxLines: 1,
-                                        suffix: Padding(
-                                          padding: EdgeInsets.only(
-                                              left:
-                                                  (10 / Dimensions.designWidth)
-                                                      .w),
-                                          child: InkWell(
-                                            onTap: () {
-                                              confirmPasswordBloc.add(
-                                                  HidePasswordEvent(
-                                                      showPassword: false,
-                                                      toggle: ++toggle));
-                                              showConfirmNewPassword =
-                                                  !showConfirmNewPassword;
-                                            },
-                                            child: Icon(
-                                              Icons.visibility_off_outlined,
-                                              color: const Color.fromRGBO(
-                                                  34, 97, 105, 0.5),
-                                              size:
-                                                  (20 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          ),
-                                        ),
-                                        onChanged: (p0) {
-                                          triggerPasswordMatchEvent();
-                                          triggerAllTrueEvent();
-                                        },
-                                        obscureText: !showConfirmNewPassword,
-                                      );
-                                    } else {
-                                      return CustomTextField(
-                                        width: 83.w,
-                                        controller:
-                                            _confirmNewPasswordController,
-                                        minLines: 1,
-                                        maxLines: 1,
-                                        suffix: Padding(
-                                          padding: EdgeInsets.only(
-                                              left:
-                                                  (10 / Dimensions.designWidth)
-                                                      .w),
-                                          child: InkWell(
-                                            onTap: () {
-                                              confirmPasswordBloc.add(
-                                                  DisplayPasswordEvent(
-                                                      showPassword: true,
-                                                      toggle: ++toggle));
-                                              showConfirmNewPassword =
-                                                  !showConfirmNewPassword;
-                                            },
-                                            child: Icon(
-                                              Icons.visibility_outlined,
-                                              color: const Color.fromRGBO(
-                                                  34, 97, 105, 0.5),
-                                              size:
-                                                  (20 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          ),
-                                        ),
-                                        onChanged: (p0) {
-                                          triggerPasswordMatchEvent();
-                                          triggerAllTrueEvent();
-                                        },
-                                        obscureText: !showConfirmNewPassword,
-                                      );
-                                    }
-                                  },
-                                ),
-                                BlocBuilder<MatchPasswordBloc,
-                                    MatchPasswordState>(
-                                  builder: (context, state) {
-                                    if (isMatch) {
-                                      return SvgPicture.asset(
-                                        ImageConstants.checkCircle,
-                                        width: (20 / Dimensions.designWidth).w,
-                                        height: (20 / Dimensions.designWidth).w,
-                                      );
-                                    } else {
-                                      return SvgPicture.asset(
-                                        ImageConstants.warningSmall,
-                                        width: (20 / Dimensions.designWidth).w,
-                                        height: (20 / Dimensions.designWidth).w,
-                                      );
-                                    }
-                                  },
-                                )
-                              ],
-                            ),
-                            const SizeBox(height: 9),
-                            BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                              builder: (context, state) {
-                                if (!isMatch &&
-                                    _confirmNewPasswordController
-                                        .text.isNotEmpty) {
-                                  return Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        ImageConstants.warningSmall,
-                                        width: (14 / Dimensions.designWidth).w,
-                                        height: (14 / Dimensions.designWidth).w,
-                                      ),
-                                      const SizeBox(width: 5),
-                                      Text(
-                                        "New passwords do not match",
-                                        style:
-                                            TextStyles.primaryMedium.copyWith(
-                                          color: const Color(0xFFF39C12),
-                                          fontSize:
-                                              (16 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                } else {
-                                  return const SizeBox();
-                                }
-                              },
-                            ),
-                            const SizeBox(height: 15),
-                            BlocBuilder<CriteriaBloc, CriteriaState>(
-                              builder: (context, state) {
-                                return PasswordCriteria(
-                                  criteria1Color: hasMin8
-                                      ? AppColors.primary
-                                      : AppColors.red,
-                                  criteria2Color: hasNumeric
-                                      ? AppColors.primary
-                                      : AppColors.red,
-                                  criteria3Color: hasUpperLower
-                                      ? AppColors.primary
-                                      : AppColors.red,
-                                  criteria4Color: hasSpecial
-                                      ? AppColors.primary
-                                      : AppColors.red,
-                                  criteria1Widget: hasMin8
-                                      ? SvgPicture.asset(
-                                          ImageConstants.checkSmall)
-                                      : const SizeBox(),
-                                  criteria2Widget: hasNumeric
-                                      ? SvgPicture.asset(
-                                          ImageConstants.checkSmall)
-                                      : const SizeBox(),
-                                  criteria3Widget: hasUpperLower
-                                      ? SvgPicture.asset(
-                                          ImageConstants.checkSmall)
-                                      : const SizeBox(),
-                                  criteria4Widget: hasSpecial
-                                      ? SvgPicture.asset(
-                                          ImageConstants.checkSmall)
-                                      : const SizeBox(),
-                                );
-                              },
-                            ),
-                            const SizeBox(height: 15),
-                          ],
+                          );
+                        }
+                      },
+                    ),
+                    const SizeBox(width: 10),
+                    RichText(
+                      text: TextSpan(
+                        text: 'I agree to the ',
+                        style: TextStyles.primary.copyWith(
+                          color: const Color.fromRGBO(0, 0, 0, 0.5),
+                          fontSize: (14 / Dimensions.designWidth).w,
                         ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Terms & Conditions',
+                            style: TextStyles.primary.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (14 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' and ',
+                            style: TextStyles.primary.copyWith(
+                              color: const Color.fromRGBO(0, 0, 0, 0.5),
+                              fontSize: (14 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'Privacy Policy',
+                            style: TextStyles.primary.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (14 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-              Column(
-                children: [
-                  const SizeBox(height: 20),
-                  Row(
-                    children: [
-                      BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                        builder: (context, state) {
-                          if (isChecked) {
-                            return InkWell(
-                              onTap: () {
-                                isChecked = false;
-                                triggerCheckBoxEvent(isChecked);
-                                triggerAllTrueEvent();
-                              },
-                              child: SvgPicture.asset(
-                                ImageConstants.checkedBox,
-                                width: (14 / Dimensions.designWidth).w,
-                                height: (14 / Dimensions.designWidth).w,
-                              ),
-                            );
-                          } else {
-                            return InkWell(
-                              onTap: () {
-                                isChecked = true;
-                                triggerCheckBoxEvent(isChecked);
-                                triggerAllTrueEvent();
-                              },
-                              child: SvgPicture.asset(
-                                ImageConstants.uncheckedBox,
-                                width: (14 / Dimensions.designWidth).w,
-                                height: (14 / Dimensions.designWidth).w,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                      const SizeBox(width: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: 'I agree to the ',
-                          style: TextStyles.primary.copyWith(
-                            color: const Color.fromRGBO(0, 0, 0, 0.5),
-                            fontSize: (14 / Dimensions.designWidth).w,
+                BlocBuilder<CreatePasswordBloc, CreatePasswordState>(
+                  builder: (context, state) {
+                    if (allTrue) {
+                      return Column(
+                        children: [
+                          const SizeBox(height: 10),
+                          GradientButton(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.errorSuccessScreen,
+                                arguments: ErrorArgumentModel(
+                                  hasSecondaryButton: false,
+                                  iconPath: ImageConstants.checkCircleOutlined,
+                                  title: "Password Changed!",
+                                  message:
+                                      "Your password updated successfully.\nPlease log in again with your new password.",
+                                  buttonText: "Login",
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pushNamed(
+                                        context, Routes.loginUserId);
+                                  },
+                                  buttonTextSecondary: "",
+                                  onTapSecondary: () {},
+                                ).toMap(),
+                              );
+                            },
+                            text: "Update",
                           ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Terms & Conditions',
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            TextSpan(
-                              text: ' and ',
-                              style: TextStyles.primary.copyWith(
-                                color: const Color.fromRGBO(0, 0, 0, 0.5),
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            TextSpan(
-                              text: 'Privacy Policy',
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  BlocBuilder<CreatePasswordBloc, CreatePasswordState>(
-                    builder: (context, state) {
-                      if (allTrue) {
-                        return Column(
-                          children: [
-                            const SizeBox(height: 10),
-                            GradientButton(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  Routes.errorSuccessScreen,
-                                  arguments: ErrorArgumentModel(
-                                    hasSecondaryButton: false,
-                                    iconPath:
-                                        ImageConstants.checkCircleOutlined,
-                                    title: "Password Changed!",
-                                    message:
-                                        "Your password updated successfully.\nPlease log in again with your new password.",
-                                    buttonText: "Login",
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                      Navigator.pop(context);
-                                      Navigator.pushNamed(
-                                          context, Routes.loginUserId);
-                                    },
-                                    buttonTextSecondary: "",
-                                    onTapSecondary: () {},
-                                  ).toMap(),
-                                );
-                              },
-                              text: "Update",
-                            ),
-                          ],
-                        );
-                      } else {
-                        return const SizeBox();
-                      }
-                    },
-                  ),
-                  const SizeBox(height: 20),
-                ],
-              ),
-            ],
-          ),
+                        ],
+                      );
+                    } else {
+                      return const SizeBox();
+                    }
+                  },
+                ),
+                const SizeBox(height: 20),
+              ],
+            ),
+          ],
         ),
       ),
     );

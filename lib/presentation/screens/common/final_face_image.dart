@@ -47,7 +47,7 @@ class _FinalFaceImageScreenState extends State<FinalFaceImageScreen> {
         fit: StackFit.expand,
         children: [
           Positioned(
-            top: -90,
+            top: -((170 / Dimensions.designWidth).w),
             child: Transform.scale(
               scale: 1,
               child: SizedBox(
@@ -55,7 +55,7 @@ class _FinalFaceImageScreenState extends State<FinalFaceImageScreen> {
                 height: 100.h,
                 child: Transform.scale(
                   scaleX: 0.7,
-                  scaleY: 0.625,
+                  scaleY: 0.45,
                   child: Image.file(
                     File(faceImageArgument.capturedImage.path),
                     fit: BoxFit.fill,

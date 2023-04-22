@@ -38,61 +38,55 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Log in",
-                style: TextStyles.primaryBold.copyWith(
-                  color: AppColors.primary,
-                  fontSize: (28 / Dimensions.designWidth).w,
-                ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Log in",
+              style: TextStyles.primaryBold.copyWith(
+                color: AppColors.primary,
+                fontSize: (28 / Dimensions.designWidth).w,
               ),
-              const SizeBox(height: 20),
-              Text(
-                "Enter Password",
-                style: TextStyles.primaryMedium.copyWith(
-                  color: AppColors.black63,
-                  fontSize: (16 / Dimensions.designWidth).w,
-                ),
+            ),
+            const SizeBox(height: 20),
+            Text(
+              "Enter Password",
+              style: TextStyles.primaryMedium.copyWith(
+                color: AppColors.black63,
+                fontSize: (16 / Dimensions.designWidth).w,
               ),
-              const SizeBox(height: 10),
-              BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                builder: buildShowHidePassword,
-              ),
-              const SizeBox(height: 7),
-              BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-                builder: buildErrorMessage,
-              ),
-              const SizeBox(height: 15),
-              BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-                builder: buildLoginButton,
-              ),
-              const SizeBox(height: 10),
-              Align(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                  onTap: onForgotEmailPwd,
-                  child: Text(
-                    "Forgot password?",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.primaryBright50,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+            ),
+            const SizeBox(height: 10),
+            BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+              builder: buildShowHidePassword,
+            ),
+            const SizeBox(height: 7),
+            BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
+              builder: buildErrorMessage,
+            ),
+            const SizeBox(height: 15),
+            BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
+              builder: buildLoginButton,
+            ),
+            const SizeBox(height: 10),
+            Align(
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: onForgotEmailPwd,
+                child: Text(
+                  "Forgot password?",
+                  style: TextStyles.primaryMedium.copyWith(
+                    color: AppColors.primaryBright50,
+                    fontSize: (16 / Dimensions.designWidth).w,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

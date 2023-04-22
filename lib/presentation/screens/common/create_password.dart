@@ -109,158 +109,151 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Password",
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
-                      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Password",
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
-                    const SizeBox(height: 30),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                text: 'User ID ',
-                                style: TextStyles.primary.copyWith(
-                                  color: AppColors.black63,
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '(Email address)',
-                                    style: TextStyles.primary.copyWith(
-                                      color:
-                                          const Color.fromRGBO(99, 99, 99, 0.5),
-                                      fontSize: (16 / Dimensions.designWidth).w,
-                                    ),
+                  ),
+                  const SizeBox(height: 30),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: 'User ID ',
+                              style: TextStyles.primary.copyWith(
+                                color: AppColors.black63,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: '(Email address)',
+                                  style: TextStyles.primary.copyWith(
+                                    color:
+                                        const Color.fromRGBO(99, 99, 99, 0.5),
+                                    fontSize: (16 / Dimensions.designWidth).w,
                                   ),
-                                ],
-                              ),
-                            ),
-                            const SizeBox(height: 9),
-                            CustomTextField(
-                              controller: _emailController,
-                              enabled: false,
-                              onChanged: (p0) {},
-                              color: AppColors.blackEE,
-                              fontColor: const Color.fromRGBO(37, 37, 37, 0.5),
-                            ),
-                            const SizeBox(height: 15),
-                            Text(
-                              "Password",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            const SizeBox(height: 9),
-                            BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                              builder: buildShowPassword,
-                            ),
-                            const SizeBox(height: 15),
-                            Text(
-                              "Confirm Password",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            const SizeBox(height: 9),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                BlocBuilder<ShowPasswordBloc,
-                                    ShowPasswordState>(
-                                  builder: buildShowConfirmPassword,
                                 ),
-                                BlocBuilder<MatchPasswordBloc,
-                                    MatchPasswordState>(
-                                  builder: buildCheckCircle,
-                                )
                               ],
                             ),
-                            const SizeBox(height: 15),
-                            BlocBuilder<CriteriaBloc, CriteriaState>(
-                              builder: buildCriteriaSection,
+                          ),
+                          const SizeBox(height: 9),
+                          CustomTextField(
+                            controller: _emailController,
+                            enabled: false,
+                            onChanged: (p0) {},
+                            color: AppColors.blackEE,
+                            fontColor: const Color.fromRGBO(37, 37, 37, 0.5),
+                          ),
+                          const SizeBox(height: 15),
+                          Text(
+                            "Password",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.black63,
+                              fontSize: (16 / Dimensions.designWidth).w,
                             ),
-                            const SizeBox(height: 15),
-                          ],
+                          ),
+                          const SizeBox(height: 9),
+                          BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                            builder: buildShowPassword,
+                          ),
+                          const SizeBox(height: 15),
+                          Text(
+                            "Confirm Password",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.black63,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          const SizeBox(height: 9),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                                builder: buildShowConfirmPassword,
+                              ),
+                              BlocBuilder<MatchPasswordBloc,
+                                  MatchPasswordState>(
+                                builder: buildCheckCircle,
+                              )
+                            ],
+                          ),
+                          const SizeBox(height: 15),
+                          BlocBuilder<CriteriaBloc, CriteriaState>(
+                            builder: buildCriteriaSection,
+                          ),
+                          const SizeBox(height: 15),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              children: [
+                const SizeBox(height: 20),
+                Row(
+                  children: [
+                    BlocBuilder<CheckBoxBloc, CheckBoxState>(
+                      builder: buildCheckBox,
+                    ),
+                    const SizeBox(width: 10),
+                    RichText(
+                      text: TextSpan(
+                        text: 'I agree to the ',
+                        style: TextStyles.primary.copyWith(
+                          color: const Color.fromRGBO(0, 0, 0, 0.5),
+                          fontSize: (14 / Dimensions.designWidth).w,
                         ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Terms & Conditions',
+                            style: TextStyles.primary.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (14 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' and ',
+                            style: TextStyles.primary.copyWith(
+                              color: const Color.fromRGBO(0, 0, 0, 0.5),
+                              fontSize: (14 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'Privacy Policy',
+                            style: TextStyles.primary.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (14 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ),
-              Column(
-                children: [
-                  const SizeBox(height: 20),
-                  Row(
-                    children: [
-                      BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                        builder: buildCheckBox,
-                      ),
-                      const SizeBox(width: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: 'I agree to the ',
-                          style: TextStyles.primary.copyWith(
-                            color: const Color.fromRGBO(0, 0, 0, 0.5),
-                            fontSize: (14 / Dimensions.designWidth).w,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Terms & Conditions',
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            TextSpan(
-                              text: ' and ',
-                              style: TextStyles.primary.copyWith(
-                                color: const Color.fromRGBO(0, 0, 0, 0.5),
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            TextSpan(
-                              text: 'Privacy Policy',
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  BlocBuilder<CreatePasswordBloc, CreatePasswordState>(
-                    builder: buildSubmitButton,
-                  ),
-                  const SizeBox(height: 20),
-                ],
-              ),
-            ],
-          ),
+                BlocBuilder<CreatePasswordBloc, CreatePasswordState>(
+                  builder: buildSubmitButton,
+                ),
+                const SizeBox(height: 20),
+              ],
+            ),
+          ],
         ),
       ),
     );

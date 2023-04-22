@@ -72,7 +72,7 @@ class _RetailOnboardingStatusScreenState
                   const SizeBox(height: 20),
                   OnboardingStatusRow(
                     isCompleted: onboardingStatusArgument.stepsCompleted >= 1,
-                    isCurrent: onboardingStatusArgument.stepsCompleted == 2,
+                    isCurrent: onboardingStatusArgument.stepsCompleted == 0,
                     iconPath: ImageConstants.envelope,
                     iconWidth: 10,
                     iconHeight: 14,
@@ -81,7 +81,7 @@ class _RetailOnboardingStatusScreenState
                   ),
                   OnboardingStatusRow(
                     isCompleted: onboardingStatusArgument.stepsCompleted >= 2,
-                    isCurrent: onboardingStatusArgument.stepsCompleted == 3,
+                    isCurrent: onboardingStatusArgument.stepsCompleted == 1,
                     iconPath: ImageConstants.idCard,
                     iconWidth: 10,
                     iconHeight: 14,
@@ -90,7 +90,7 @@ class _RetailOnboardingStatusScreenState
                   ),
                   OnboardingStatusRow(
                     isCompleted: onboardingStatusArgument.stepsCompleted >= 3,
-                    isCurrent: onboardingStatusArgument.stepsCompleted == 4,
+                    isCurrent: onboardingStatusArgument.stepsCompleted == 2,
                     iconPath: ImageConstants.article,
                     iconWidth: 14,
                     iconHeight: 14,
@@ -99,7 +99,7 @@ class _RetailOnboardingStatusScreenState
                   ),
                   OnboardingStatusRow(
                     isCompleted: onboardingStatusArgument.stepsCompleted >= 4,
-                    isCurrent: onboardingStatusArgument.stepsCompleted >= 4,
+                    isCurrent: onboardingStatusArgument.stepsCompleted == 3,
                     iconPath: ImageConstants.mobile,
                     iconWidth: 14,
                     iconHeight: 18,

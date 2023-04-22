@@ -45,83 +45,77 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizeBox(height: 10),
-                    Text(
-                      "Verify Mobile Number",
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 22),
-                    Text(
-                      "Mobile Number",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.black63,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 9),
-                    CustomTextField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      prefix: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CustomCircleAvatar(
-                            width: (25 / Dimensions.designWidth).w,
-                            height: (25 / Dimensions.designWidth).w,
-                            imgUrl:
-                                "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                          ),
-                          const SizeBox(width: 7),
-                          Text(
-                            "+971",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.black63,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          const SizeBox(width: 7),
-                        ],
-                      ),
-                      suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                        builder: buildCheckCircle,
-                      ),
-                      onChanged: checkPhoneNumber,
-                    ),
-                    const SizeBox(height: 9),
-                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                      builder: buildErrorMessage,
-                    ),
-                  ],
-                ),
-              ),
-              Column(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: buildSubmitButton,
+                  const SizeBox(height: 10),
+                  Text(
+                    "Verify Mobile Number",
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
+                    ),
                   ),
-                  const SizeBox(height: 20),
+                  const SizeBox(height: 22),
+                  Text(
+                    "Mobile Number",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.black63,
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 9),
+                  CustomTextField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    prefix: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CustomCircleAvatar(
+                          width: (25 / Dimensions.designWidth).w,
+                          height: (25 / Dimensions.designWidth).w,
+                          imgUrl:
+                              "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
+                        ),
+                        const SizeBox(width: 7),
+                        Text(
+                          "+971",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.black63,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const SizeBox(width: 7),
+                      ],
+                    ),
+                    suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: buildCheckCircle,
+                    ),
+                    onChanged: checkPhoneNumber,
+                  ),
+                  const SizeBox(height: 9),
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: buildErrorMessage,
+                  ),
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+            Column(
+              children: [
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: buildSubmitButton,
+                ),
+                const SizeBox(height: 20),
+              ],
+            )
+          ],
         ),
       ),
     );

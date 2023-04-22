@@ -91,46 +91,40 @@ class _OTPScreenState extends State<OTPScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Center(
-                  child: Column(
-                    children: [
-                      const SizeBox(height: 30),
-                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                        builder: buildIcon,
-                      ),
-                      const SizeBox(height: 20),
-                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                        builder: buildTitle,
-                      ),
-                      const SizeBox(height: 15),
-                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                        builder: buildDescription,
-                      ),
-                      const SizeBox(height: 25),
-                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                        builder: buildPinput,
-                      ),
-                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                        builder: buildTimer,
-                      ),
-                    ],
-                  ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: Column(
+                  children: [
+                    const SizeBox(height: 30),
+                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                      builder: buildIcon,
+                    ),
+                    const SizeBox(height: 20),
+                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                      builder: buildTitle,
+                    ),
+                    const SizeBox(height: 15),
+                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                      builder: buildDescription,
+                    ),
+                    const SizeBox(height: 25),
+                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                      builder: buildPinput,
+                    ),
+                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                      builder: buildTimer,
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

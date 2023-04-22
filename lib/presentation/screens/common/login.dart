@@ -50,199 +50,193 @@ class _LoginScreenState extends State<LoginScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizeBox(height: 10),
-                Text(
-                  "Login",
-                  style: TextStyles.primaryBold.copyWith(
-                    color: AppColors.primary,
-                    fontSize: (28 / Dimensions.designWidth).w,
-                  ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizeBox(height: 10),
+              Text(
+                "Login",
+                style: TextStyles.primaryBold.copyWith(
+                  color: AppColors.primary,
+                  fontSize: (28 / Dimensions.designWidth).w,
                 ),
-                const SizeBox(height: 30),
-                RichText(
-                  text: TextSpan(
-                    text: 'User ID ',
-                    style: TextStyles.primary.copyWith(
-                      color: const Color(0xFF636363),
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '(Email address)',
-                        style: TextStyles.primary.copyWith(
-                          color: const Color.fromRGBO(99, 99, 99, 0.5),
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizeBox(height: 9),
-                CustomTextField(
-                  controller: _emailController,
-                  suffix: Padding(
-                    padding:
-                        EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-                    child: InkWell(
-                      onTap: () {
-                        _emailController.clear();
-                      },
-                      child: SvgPicture.asset(
-                        ImageConstants.deleteText,
-                        width: (17.5 / Dimensions.designWidth).w,
-                        height: (17.5 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                  ),
-                  onChanged: emailValidation,
-                ),
-                const SizeBox(height: 7),
-                BlocBuilder<EmailExistsBloc, EmailExistsState>(
-                  builder: (context, state) {
-                    if (state.emailExists == false) {
-                      return Text(
-                        "Email ID does not exist",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.red,
-                          fontSize: (12 / Dimensions.designWidth).w,
-                        ),
-                      );
-                    } else {
-                      return const SizeBox();
-                    }
-                  },
-                ),
-                const SizeBox(height: 15),
-                Text(
-                  "Password",
-                  style: TextStyles.primaryMedium.copyWith(
+              ),
+              const SizeBox(height: 30),
+              RichText(
+                text: TextSpan(
+                  text: 'User ID ',
+                  style: TextStyles.primary.copyWith(
                     color: const Color(0xFF636363),
                     fontSize: (16 / Dimensions.designWidth).w,
                   ),
-                ),
-                const SizeBox(height: 9),
-                BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                  builder: (context, state) {
-                    if (showPassword) {
-                      return CustomTextField(
-                        controller: _passwordController,
-                        minLines: 1,
-                        maxLines: 1,
-                        suffix: Padding(
-                          padding: EdgeInsets.only(
-                              left: (10 / Dimensions.designWidth).w),
-                          child: InkWell(
-                            onTap: hidePassword,
-                            child: Icon(
-                              Icons.visibility_off_outlined,
-                              color: const Color.fromRGBO(34, 97, 105, 0.5),
-                              size: (20 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                        ),
-                        onChanged: (p0) {},
-                        obscureText: !showPassword,
-                      );
-                    } else {
-                      return CustomTextField(
-                        controller: _passwordController,
-                        minLines: 1,
-                        maxLines: 1,
-                        suffix: Padding(
-                          padding: EdgeInsets.only(
-                              left: (10 / Dimensions.designWidth).w),
-                          child: InkWell(
-                            onTap: showsPassword,
-                            child: Icon(
-                              Icons.visibility_outlined,
-                              color: const Color.fromRGBO(34, 97, 105, 0.5),
-                              size: (20 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                        ),
-                        onChanged: (p0) {},
-                        obscureText: !showPassword,
-                      );
-                    }
-                  },
-                ),
-                const SizeBox(height: 7),
-                BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-                  builder: (context, state) {
-                    if (state.isMatch == false) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Incorrect Password",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.red,
-                              fontSize: (12 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          const SizeBox(height: 22),
-                          Ternary(
-                            condition: state.count < 3,
-                            truthy: Center(
-                              child: LoginAttempt(
-                                message:
-                                    "Incorrect password - ${3 - state.count} attempts left",
-                              ),
-                            ),
-                            falsy: const LoginAttempt(
-                              message:
-                                  "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials",
-                            ),
-                          )
-                        ],
-                      );
-                    } else {
-                      return const SizeBox();
-                    }
-                  },
-                ),
-                const SizeBox(height: 30),
-                BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-                  builder: (context, state) {
-                    if (state.count < 3) {
-                      return GradientButton(
-                        onTap: onSubmit,
-                        text: "Login",
-                      );
-                    } else {
-                      return const SizeBox();
-                    }
-                  },
-                ),
-                const SizeBox(height: 15),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: InkWell(
-                    onTap: onForgotEmailPwd,
-                    child: Text(
-                      "Forgot your email ID or password?",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: const Color.fromRGBO(34, 97, 105, 0.5),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '(Email address)',
+                      style: TextStyles.primary.copyWith(
+                        color: const Color.fromRGBO(99, 99, 99, 0.5),
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
+                  ],
+                ),
+              ),
+              const SizeBox(height: 9),
+              CustomTextField(
+                controller: _emailController,
+                suffix: Padding(
+                  padding:
+                      EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+                  child: InkWell(
+                    onTap: () {
+                      _emailController.clear();
+                    },
+                    child: SvgPicture.asset(
+                      ImageConstants.deleteText,
+                      width: (17.5 / Dimensions.designWidth).w,
+                      height: (17.5 / Dimensions.designWidth).w,
+                    ),
                   ),
                 ),
-              ],
-            ),
+                onChanged: emailValidation,
+              ),
+              const SizeBox(height: 7),
+              BlocBuilder<EmailExistsBloc, EmailExistsState>(
+                builder: (context, state) {
+                  if (state.emailExists == false) {
+                    return Text(
+                      "Email ID does not exist",
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.red,
+                        fontSize: (12 / Dimensions.designWidth).w,
+                      ),
+                    );
+                  } else {
+                    return const SizeBox();
+                  }
+                },
+              ),
+              const SizeBox(height: 15),
+              Text(
+                "Password",
+                style: TextStyles.primaryMedium.copyWith(
+                  color: const Color(0xFF636363),
+                  fontSize: (16 / Dimensions.designWidth).w,
+                ),
+              ),
+              const SizeBox(height: 9),
+              BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                builder: (context, state) {
+                  if (showPassword) {
+                    return CustomTextField(
+                      controller: _passwordController,
+                      minLines: 1,
+                      maxLines: 1,
+                      suffix: Padding(
+                        padding: EdgeInsets.only(
+                            left: (10 / Dimensions.designWidth).w),
+                        child: InkWell(
+                          onTap: hidePassword,
+                          child: Icon(
+                            Icons.visibility_off_outlined,
+                            color: const Color.fromRGBO(34, 97, 105, 0.5),
+                            size: (20 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                      ),
+                      onChanged: (p0) {},
+                      obscureText: !showPassword,
+                    );
+                  } else {
+                    return CustomTextField(
+                      controller: _passwordController,
+                      minLines: 1,
+                      maxLines: 1,
+                      suffix: Padding(
+                        padding: EdgeInsets.only(
+                            left: (10 / Dimensions.designWidth).w),
+                        child: InkWell(
+                          onTap: showsPassword,
+                          child: Icon(
+                            Icons.visibility_outlined,
+                            color: const Color.fromRGBO(34, 97, 105, 0.5),
+                            size: (20 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                      ),
+                      onChanged: (p0) {},
+                      obscureText: !showPassword,
+                    );
+                  }
+                },
+              ),
+              const SizeBox(height: 7),
+              BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
+                builder: (context, state) {
+                  if (state.isMatch == false) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Incorrect Password",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.red,
+                            fontSize: (12 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const SizeBox(height: 22),
+                        Ternary(
+                          condition: state.count < 3,
+                          truthy: Center(
+                            child: LoginAttempt(
+                              message:
+                                  "Incorrect password - ${3 - state.count} attempts left",
+                            ),
+                          ),
+                          falsy: const LoginAttempt(
+                            message:
+                                "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials",
+                          ),
+                        )
+                      ],
+                    );
+                  } else {
+                    return const SizeBox();
+                  }
+                },
+              ),
+              const SizeBox(height: 30),
+              BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
+                builder: (context, state) {
+                  if (state.count < 3) {
+                    return GradientButton(
+                      onTap: onSubmit,
+                      text: "Login",
+                    );
+                  } else {
+                    return const SizeBox();
+                  }
+                },
+              ),
+              const SizeBox(height: 15),
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: onForgotEmailPwd,
+                  child: Text(
+                    "Forgot your email ID or password?",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: const Color.fromRGBO(34, 97, 105, 0.5),
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

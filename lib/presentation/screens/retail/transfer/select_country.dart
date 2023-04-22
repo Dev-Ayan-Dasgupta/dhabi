@@ -106,68 +106,61 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Where would you like to send money?",
-                style: TextStyles.primaryBold.copyWith(
-                  color: AppColors.primary,
-                  fontSize: (28 / Dimensions.designWidth).w,
-                ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Where would you like to send money?",
+              style: TextStyles.primaryBold.copyWith(
+                color: AppColors.primary,
+                fontSize: (28 / Dimensions.designWidth).w,
               ),
-              const SizeBox(height: 20),
-              CustomSearchBox(
-                hintText: "Search",
-                controller: _searchController,
-                onChanged: (p0) {
-                  searchCountry(countries, p0);
-                  if (p0.isEmpty) {
-                    isShowAll = true;
-                  } else {
-                    isShowAll = false;
-                  }
-                  countryListBloc.add(ShowButtonEvent(show: isShowAll));
-                },
-              ),
-              const SizeBox(height: 20),
-              BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                builder: (context, state) {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        CountryTileModel item = isShowAll
-                            ? countries[index]
-                            : filteredCountries[index];
-                        return CountryTile(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.recipientReceiveMode);
-                          },
-                          flagImgUrl: item.flagImgUrl,
-                          country: item.country,
-                          currencies: item.currencies,
-                        );
-                      },
-                      itemCount: isShowAll
-                          ? countries.length
-                          : filteredCountries.length,
-                    ),
-                  );
-                },
-              ),
-              const SizeBox(height: 20),
-            ],
-          ),
+            ),
+            const SizeBox(height: 20),
+            CustomSearchBox(
+              hintText: "Search",
+              controller: _searchController,
+              onChanged: (p0) {
+                searchCountry(countries, p0);
+                if (p0.isEmpty) {
+                  isShowAll = true;
+                } else {
+                  isShowAll = false;
+                }
+                countryListBloc.add(ShowButtonEvent(show: isShowAll));
+              },
+            ),
+            const SizeBox(height: 20),
+            BlocBuilder<ShowButtonBloc, ShowButtonState>(
+              builder: (context, state) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      CountryTileModel item = isShowAll
+                          ? countries[index]
+                          : filteredCountries[index];
+                      return CountryTile(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, Routes.recipientReceiveMode);
+                        },
+                        flagImgUrl: item.flagImgUrl,
+                        country: item.country,
+                        currencies: item.currencies,
+                      );
+                    },
+                    itemCount:
+                        isShowAll ? countries.length : filteredCountries.length,
+                  ),
+                );
+              },
+            ),
+            const SizeBox(height: 20),
+          ],
         ),
       ),
     );

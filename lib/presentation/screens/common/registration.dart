@@ -30,95 +30,89 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Let's get started!",
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 22),
-                    Text(
-                      "This email address will be used as your User ID for your account creation",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.grey40,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 30),
-                    Text(
-                      "Email",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0xFF636363),
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 9),
-                    CustomTextField(
-                      controller: _emailController,
-                      suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                        builder: buildCheckCircle,
-                      ),
-                      onChanged: emailValidation,
-                    ),
-                    const SizeBox(height: 9),
-                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                      builder: buildErrorMessage,
-                    ),
-                  ],
-                ),
-              ),
-              Column(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: buildSubmitButton,
-                  ),
-                  const SizeBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      // TODO: Add biometricPrompt
-                      Navigator.pushNamed(context, Routes.loginUserId);
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Already have an Account? ',
-                        style: TextStyles.primary.copyWith(
-                          color: AppColors.primary,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Log in',
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ],
-                      ),
+                  Text(
+                    "Let's get started!",
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 20),
+                  const SizeBox(height: 22),
+                  Text(
+                    "This email address will be used as your User ID for your account creation",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.grey40,
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 30),
+                  Text(
+                    "Email",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: const Color(0xFF636363),
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 9),
+                  CustomTextField(
+                    controller: _emailController,
+                    suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: buildCheckCircle,
+                    ),
+                    onChanged: emailValidation,
+                  ),
+                  const SizeBox(height: 9),
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: buildErrorMessage,
+                  ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Column(
+              children: [
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: buildSubmitButton,
+                ),
+                const SizeBox(height: 10),
+                InkWell(
+                  onTap: () {
+                    // TODO: Add biometricPrompt
+                    Navigator.pushNamed(context, Routes.loginUserId);
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Already have an Account? ',
+                      style: TextStyles.primary.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'Log in',
+                          style: TextStyles.primaryBold.copyWith(
+                            color: AppColors.primary,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizeBox(height: 20),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+import 'package:system_info_plus/system_info_plus.dart';
 
 class CaptureFaceScreen extends StatefulWidget {
   const CaptureFaceScreen({Key? key}) : super(key: key);
@@ -17,11 +18,28 @@ class CaptureFaceScreen extends StatefulWidget {
 }
 
 class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
-  CameraController? _controller;
+  CameraController _controller = CameraController(
+    const CameraDescription(
+      name: "",
+      lensDirection: CameraLensDirection.front,
+      sensorOrientation: 90,
+    ),
+    ResolutionPreset.high,
+    enableAudio: false,
+  );
+
+  int? deviceMemory;
 
   int _cameraIndex = 0;
 
   XFile? capturedImage;
+
+  bool hasSmiled = false;
+  bool hasBlinked = false;
+
+  String title = "Smile";
+  String message =
+      "Please place your face inside the oval and smile for us to detect your liveliness.";
 
   // ? Create face detector object
   final FaceDetector faceDetector = FaceDetector(
@@ -38,8 +56,15 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
   @override
   void initState() {
     super.initState();
-    initCameraLens();
-    startLive();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await getDeviceMemory();
+      initCameraLens();
+      await startLive();
+    });
+  }
+
+  Future<void> getDeviceMemory() async {
+    deviceMemory = await SystemInfoPlus.physicalMemory; // returns in MB
   }
 
   void initCameraLens() {
@@ -64,21 +89,26 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
 
   Future<void> startLive() async {
     final camera = cameras[_cameraIndex];
+
     // setup camera controller
     _controller = CameraController(
       camera,
-      ResolutionPreset.high,
+      deviceMemory != null
+          ? deviceMemory! <= 3072
+              ? ResolutionPreset.low
+              : ResolutionPreset.high
+          : ResolutionPreset.high,
       enableAudio: false,
     );
 
     // start streaming using camera
-    _controller?.initialize().then((_) {
+    _controller.initialize().then((_) {
       if (!mounted) {
         return;
       }
 
       // process camera image to get an instance of input image
-      _controller?.startImageStream(_processCameraImage);
+      _controller.startImageStream(_processCameraImage);
 
       setState(() {});
     });
@@ -145,26 +175,40 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
       debugPrint(
           "Right eye open probability -> ${faces[0].rightEyeOpenProbability}");
 
-      if (faces[0].smilingProbability != null) {
-        if (faces[0].smilingProbability! >= 0.80) {
-          await Future.delayed(const Duration(milliseconds: 250));
-          if (_controller != null) {
-            if (_controller!.value.isInitialized) {
-              await _controller?.stopImageStream();
-              if (!_controller!.value.isTakingPicture) {
-                capturedImage = await _controller!.takePicture();
+      if (!hasSmiled) {
+        if (faces[0].smilingProbability != null) {
+          if (faces[0].smilingProbability! >= 0.80) {
+            hasSmiled = true;
+            title = "Blink";
+            message = "Please blink your eyes for us to detect liveliness";
+            setState(() {});
+          }
+        }
+      } else {
+        if ((faces[0].leftEyeOpenProbability != null) &&
+            (faces[0].rightEyeOpenProbability != null)) {
+          if ((faces[0].leftEyeOpenProbability! <= 0.20) ||
+              (faces[0].rightEyeOpenProbability! <= 0.20)) {
+            hasBlinked = true;
+            await Future.delayed(const Duration(milliseconds: 250));
+
+            if (_controller.value.isInitialized) {
+              await _controller.stopImageStream();
+              if (!_controller.value.isTakingPicture) {
+                capturedImage = await _controller.takePicture();
               }
             }
-          }
-          if (capturedImage != null) {
-            if (context.mounted) {
-              Navigator.pushNamed(
-                context,
-                Routes.finalImage,
-                arguments: FaceImageArgumentModel(
-                  capturedImage: capturedImage!,
-                ).toMap(),
-              );
+
+            if (capturedImage != null) {
+              if (context.mounted) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.finalImage,
+                  arguments: FaceImageArgumentModel(
+                    capturedImage: capturedImage!,
+                  ).toMap(),
+                );
+              }
             }
           }
         }
@@ -172,28 +216,6 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
     } catch (e) {
       debugPrint("Face Detector Exception -> $e");
     }
-
-    // for (Face face in faces) {
-    //   // face.landmarks[FaceLandmarkType.bottomMouth].position
-    // }
-
-    // if (faces[0].landmarks[FaceLandmarkType.bottomMouth] != null) {
-    //   final bottomMouthPos =
-    //       faces[0].landmarks[FaceLandmarkType.bottomMouth]?.position;
-    //   print("bottomMouthPos -> $bottomMouthPos");
-    // }
-    // if (faces[0].landmarks[FaceLandmarkType.leftMouth] != null) {
-    //   final leftMouthPos =
-    //       faces[0].landmarks[FaceLandmarkType.leftMouth]?.position;
-    //   print("leftMouthPos -> $leftMouthPos");
-    // }
-    // if (faces[0].landmarks[FaceLandmarkType.rightCheek] != null) {
-    //   final rightCheekPos =
-    //       faces[0].landmarks[FaceLandmarkType.rightCheek]?.position;
-    //   print("rightCheekPos -> $rightCheekPos");
-    // }
-
-    // // ? check for smiling probability greater than or equal to 80%
   }
 
   @override
@@ -207,15 +229,16 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Ternary(
-            condition: _controller != null,
-            truthy: CameraPreview(_controller!),
-            falsy: Container(
-              width: 100.w,
-              height: 100.h,
-              color: Colors.black,
-            ),
-          ),
+          CameraPreview(_controller),
+          // Ternary(
+          //   condition: _controller != null,
+          //   truthy:
+          //   falsy: Container(
+          //     width: 100.w,
+          //     height: 100.h,
+          //     color: Colors.black,
+          //   ),
+          // ),
           ColorFiltered(
             colorFilter: const ColorFilter.mode(
               Colors.white,
@@ -253,7 +276,7 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
             children: [
               const SizeBox(height: 600),
               Text(
-                "Move Closer",
+                title,
                 style: TextStyles.primary.copyWith(
                   color: AppColors.black25,
                   fontSize: (24 / Dimensions.designWidth).w,
@@ -264,7 +287,7 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
               SizedBox(
                 width: (300 / Dimensions.designWidth).w,
                 child: Text(
-                  "Keep your face positioned in the\ncenter of the screen",
+                  message,
                   style: TextStyles.primaryMedium.copyWith(
                     color: AppColors.black63,
                     fontSize: (18 / Dimensions.designWidth).w,
@@ -272,6 +295,41 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
                   textAlign: TextAlign.center,
                 ),
               ),
+              const SizeBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: ((330 / Dimensions.designWidth).w -
+                            (2 - 1) * (5 / Dimensions.designWidth).w) /
+                        2,
+                    height: (3 / Dimensions.designWidth).w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular((5 / Dimensions.designWidth).w),
+                      ),
+                      color:
+                          (hasSmiled) ? AppColors.primary : AppColors.blackD9,
+                    ),
+                  ),
+                  const SizeBox(
+                    width: 5,
+                  ),
+                  Container(
+                    width: ((330 / Dimensions.designWidth).w -
+                            (2 - 1) * (5 / Dimensions.designWidth).w) /
+                        2,
+                    height: (3 / Dimensions.designWidth).w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular((5 / Dimensions.designWidth).w),
+                      ),
+                      color:
+                          (hasBlinked) ? AppColors.primary : AppColors.blackD9,
+                    ),
+                  )
+                ],
+              )
             ],
           ),
         ],
@@ -307,9 +365,9 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
   }
 
   Future<void> stopLive() async {
-    await _controller?.stopImageStream();
-    await _controller?.dispose();
-    _controller = null;
+    await _controller.stopImageStream();
+    await _controller.dispose();
+    // _controller = null;
     faceDetector.close();
   }
 

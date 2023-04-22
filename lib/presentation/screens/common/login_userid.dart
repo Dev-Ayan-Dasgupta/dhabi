@@ -34,87 +34,80 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Log in",
-                style: TextStyles.primaryBold.copyWith(
-                  color: AppColors.primary,
-                  fontSize: (28 / Dimensions.designWidth).w,
-                ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Log in",
+              style: TextStyles.primaryBold.copyWith(
+                color: AppColors.primary,
+                fontSize: (28 / Dimensions.designWidth).w,
               ),
-              const SizeBox(height: 20),
-              RichText(
-                text: TextSpan(
-                  text: 'User ID ',
-                  style: TextStyles.primary.copyWith(
-                    color: const Color(0xFF636363),
-                    fontSize: (16 / Dimensions.designWidth).w,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: '(Email address)',
-                      style: TextStyles.primary.copyWith(
-                        color: const Color.fromRGBO(99, 99, 99, 0.5),
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                  ],
+            ),
+            const SizeBox(height: 20),
+            RichText(
+              text: TextSpan(
+                text: 'User ID ',
+                style: TextStyles.primary.copyWith(
+                  color: const Color(0xFF636363),
+                  fontSize: (16 / Dimensions.designWidth).w,
                 ),
-              ),
-              const SizeBox(height: 10),
-              CustomTextField(
-                controller: _emailController,
-                suffix: Padding(
-                  padding:
-                      EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-                  child: InkWell(
-                    onTap: () {
-                      _emailController.clear();
-                    },
-                    child: SvgPicture.asset(
-                      ImageConstants.deleteText,
-                      width: (17.5 / Dimensions.designWidth).w,
-                      height: (17.5 / Dimensions.designWidth).w,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: '(Email address)',
+                    style: TextStyles.primary.copyWith(
+                      color: const Color.fromRGBO(99, 99, 99, 0.5),
+                      fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                ),
-                onChanged: emailValidation,
+                ],
               ),
+            ),
+            const SizeBox(height: 10),
+            CustomTextField(
+              controller: _emailController,
+              suffix: Padding(
+                padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+                child: InkWell(
+                  onTap: () {
+                    _emailController.clear();
+                  },
+                  child: SvgPicture.asset(
+                    ImageConstants.deleteText,
+                    width: (17.5 / Dimensions.designWidth).w,
+                    height: (17.5 / Dimensions.designWidth).w,
+                  ),
+                ),
+              ),
+              onChanged: emailValidation,
+            ),
 
-              BlocBuilder<EmailExistsBloc, EmailExistsState>(
-                builder: buildErrorMessage,
-              ),
-              const SizeBox(height: 15),
-              BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                builder: buildProceedButton,
-              ),
-              // const SizeBox(height: 10),
-              // Align(
-              //   alignment: Alignment.centerRight,
-              //   child: InkWell(
-              //     onTap: onForgotEmailPwd,
-              //     child: Text(
-              //       "Forgot your email ID or password?",
-              //       style: TextStyles.primaryMedium.copyWith(
-              //         color: const Color.fromRGBO(34, 97, 105, 0.5),
-              //         fontSize: (16 / Dimensions.designWidth).w,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
+            BlocBuilder<EmailExistsBloc, EmailExistsState>(
+              builder: buildErrorMessage,
+            ),
+            const SizeBox(height: 15),
+            BlocBuilder<ShowButtonBloc, ShowButtonState>(
+              builder: buildProceedButton,
+            ),
+            // const SizeBox(height: 10),
+            // Align(
+            //   alignment: Alignment.centerRight,
+            //   child: InkWell(
+            //     onTap: onForgotEmailPwd,
+            //     child: Text(
+            //       "Forgot your email ID or password?",
+            //       style: TextStyles.primaryMedium.copyWith(
+            //         color: const Color.fromRGBO(34, 97, 105, 0.5),
+            //         fontSize: (16 / Dimensions.designWidth).w,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+          ],
         ),
       ),
     );

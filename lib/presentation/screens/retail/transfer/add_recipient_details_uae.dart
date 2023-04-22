@@ -67,283 +67,277 @@ class _AddRecipientDetailsUaeScreenState
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Add Recipient Details",
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
-                      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Add Recipient Details",
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
-                    const SizeBox(height: 20),
-                    Expanded(
-                        child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Full Name",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.red,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          const SizeBox(height: 7),
-                          CustomTextField(
-                            hintText: "e.g., Muhammad Al Mansour",
-                            controller: _nameController,
-                            onChanged: (p0) {
-                              if (p0.isEmpty) {
-                                isName = false;
-                              } else {
-                                isName = true;
-                              }
-                              showButtonBloc.add(
-                                ShowButtonEvent(
-                                  show: isName &&
-                                      isIban &&
-                                      isAccountTypeSelected &&
-                                      isBankNameSelected &&
-                                      isReasonSelected,
-                                ),
-                              );
-                            },
-                          ),
-                          const SizeBox(height: 15),
-                          Text(
-                            "Account Type",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.red,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          const SizeBox(height: 7),
-                          BlocBuilder<DropdownSelectedBloc,
-                              DropdownSelectedState>(
-                            builder: (context, state) {
-                              return CustomDropDown(
-                                title: "e.g., Savings",
-                                items: items,
-                                value: selectedAccType,
-                                onChanged: (value) {
-                                  toggles++;
-                                  isAccountTypeSelected = true;
-                                  selectedAccType = value as String;
-                                  accountTypeBloc.add(
-                                    DropdownSelectedEvent(
-                                      isDropdownSelected: isAccountTypeSelected,
-                                      toggles: toggles,
-                                    ),
-                                  );
-                                  showButtonBloc.add(
-                                    ShowButtonEvent(
-                                      show: isName &&
-                                          isIban &&
-                                          isAccountTypeSelected &&
-                                          isBankNameSelected &&
-                                          isReasonSelected,
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                          const SizeBox(height: 15),
-                          Text(
-                            "IBAN / CC Number",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.red,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          const SizeBox(height: 7),
-                          CustomTextField(
-                            hintText: "Enter IBAN / Credit Card Number",
-                            keyboardType: TextInputType.number,
-                            controller: _ibanController,
-                            onChanged: (p0) {
-                              if (p0.isEmpty) {
-                                isIban = false;
-                              } else {
-                                isIban = true;
-                              }
-                              showButtonBloc.add(
-                                ShowButtonEvent(
-                                  show: isName &&
-                                      isIban &&
-                                      isAccountTypeSelected &&
-                                      isBankNameSelected &&
-                                      isReasonSelected,
-                                ),
-                              );
-                            },
-                          ),
-                          const SizeBox(height: 15),
-                          Text(
-                            "Bank Name / Card Issuer",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.red,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          const SizeBox(height: 7),
-                          BlocBuilder<DropdownSelectedBloc,
-                              DropdownSelectedState>(
-                            builder: (context, state) {
-                              return CustomDropDown(
-                                title: "Name of Recipients Bank",
-                                items: items,
-                                value: selectedBank,
-                                onChanged: (value) {
-                                  toggles++;
-                                  isBankNameSelected = true;
-                                  selectedBank = value as String;
-                                  bankNameBloc.add(
-                                    DropdownSelectedEvent(
-                                      isDropdownSelected: isBankNameSelected,
-                                      toggles: toggles,
-                                    ),
-                                  );
-                                  showButtonBloc.add(
-                                    ShowButtonEvent(
-                                      show: isName &&
-                                          isIban &&
-                                          isAccountTypeSelected &&
-                                          isBankNameSelected &&
-                                          isReasonSelected,
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                          const SizeBox(height: 15),
-                          Text(
-                            "Purpose of Payment",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.red,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          const SizeBox(height: 7),
-                          BlocBuilder<DropdownSelectedBloc,
-                              DropdownSelectedState>(
-                            builder: (context, state) {
-                              return CustomDropDown(
-                                title: "e.g., Family Support",
-                                items: items,
-                                value: selectedReason,
-                                onChanged: (value) {
-                                  toggles++;
-                                  isReasonSelected = true;
-                                  selectedReason = value as String;
-                                  reasonTypeBloc.add(
-                                    DropdownSelectedEvent(
-                                      isDropdownSelected: isReasonSelected,
-                                      toggles: toggles,
-                                    ),
-                                  );
-                                  showButtonBloc.add(
-                                    ShowButtonEvent(
-                                      show: isName &&
-                                          isIban &&
-                                          isAccountTypeSelected &&
-                                          isBankNameSelected &&
-                                          isReasonSelected,
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                          const SizeBox(height: 20),
-                        ],
-                      ),
-                    ))
-                  ],
-                ),
-              ),
-              BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                builder: (context, state) {
-                  if (isName &&
-                      isIban &&
-                      isAccountTypeSelected &&
-                      isBankNameSelected &&
-                      isReasonSelected) {
-                    return Column(
+                  ),
+                  const SizeBox(height: 20),
+                  Expanded(
+                      child: SingleChildScrollView(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizeBox(height: 20),
-                        Row(
-                          children: [
-                            BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                              builder: (context, state) {
-                                if (isChecked) {
-                                  return InkWell(
-                                    onTap: () {
-                                      isChecked = false;
-                                      triggerCheckBoxEvent(isChecked);
-                                    },
-                                    child: SvgPicture.asset(
-                                      ImageConstants.checkedBox,
-                                      width: (14 / Dimensions.designWidth).w,
-                                      height: (14 / Dimensions.designWidth).w,
-                                    ),
-                                  );
-                                } else {
-                                  return InkWell(
-                                    onTap: () {
-                                      isChecked = true;
-                                      triggerCheckBoxEvent(isChecked);
-                                    },
-                                    child: SvgPicture.asset(
-                                      ImageConstants.uncheckedBox,
-                                      width: (14 / Dimensions.designWidth).w,
-                                      height: (14 / Dimensions.designWidth).w,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                            const SizeBox(width: 10),
-                            Text(
-                              "Add this person to my recipient list",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0XFF414141),
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          "Full Name",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.red,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
                         ),
-                        const SizeBox(height: 10),
-                        GradientButton(
-                          onTap: () {},
-                          text: "Continue",
+                        const SizeBox(height: 7),
+                        CustomTextField(
+                          hintText: "e.g., Muhammad Al Mansour",
+                          controller: _nameController,
+                          onChanged: (p0) {
+                            if (p0.isEmpty) {
+                              isName = false;
+                            } else {
+                              isName = true;
+                            }
+                            showButtonBloc.add(
+                              ShowButtonEvent(
+                                show: isName &&
+                                    isIban &&
+                                    isAccountTypeSelected &&
+                                    isBankNameSelected &&
+                                    isReasonSelected,
+                              ),
+                            );
+                          },
+                        ),
+                        const SizeBox(height: 15),
+                        Text(
+                          "Account Type",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.red,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const SizeBox(height: 7),
+                        BlocBuilder<DropdownSelectedBloc,
+                            DropdownSelectedState>(
+                          builder: (context, state) {
+                            return CustomDropDown(
+                              title: "e.g., Savings",
+                              items: items,
+                              value: selectedAccType,
+                              onChanged: (value) {
+                                toggles++;
+                                isAccountTypeSelected = true;
+                                selectedAccType = value as String;
+                                accountTypeBloc.add(
+                                  DropdownSelectedEvent(
+                                    isDropdownSelected: isAccountTypeSelected,
+                                    toggles: toggles,
+                                  ),
+                                );
+                                showButtonBloc.add(
+                                  ShowButtonEvent(
+                                    show: isName &&
+                                        isIban &&
+                                        isAccountTypeSelected &&
+                                        isBankNameSelected &&
+                                        isReasonSelected,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        const SizeBox(height: 15),
+                        Text(
+                          "IBAN / CC Number",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.red,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const SizeBox(height: 7),
+                        CustomTextField(
+                          hintText: "Enter IBAN / Credit Card Number",
+                          keyboardType: TextInputType.number,
+                          controller: _ibanController,
+                          onChanged: (p0) {
+                            if (p0.isEmpty) {
+                              isIban = false;
+                            } else {
+                              isIban = true;
+                            }
+                            showButtonBloc.add(
+                              ShowButtonEvent(
+                                show: isName &&
+                                    isIban &&
+                                    isAccountTypeSelected &&
+                                    isBankNameSelected &&
+                                    isReasonSelected,
+                              ),
+                            );
+                          },
+                        ),
+                        const SizeBox(height: 15),
+                        Text(
+                          "Bank Name / Card Issuer",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.red,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const SizeBox(height: 7),
+                        BlocBuilder<DropdownSelectedBloc,
+                            DropdownSelectedState>(
+                          builder: (context, state) {
+                            return CustomDropDown(
+                              title: "Name of Recipients Bank",
+                              items: items,
+                              value: selectedBank,
+                              onChanged: (value) {
+                                toggles++;
+                                isBankNameSelected = true;
+                                selectedBank = value as String;
+                                bankNameBloc.add(
+                                  DropdownSelectedEvent(
+                                    isDropdownSelected: isBankNameSelected,
+                                    toggles: toggles,
+                                  ),
+                                );
+                                showButtonBloc.add(
+                                  ShowButtonEvent(
+                                    show: isName &&
+                                        isIban &&
+                                        isAccountTypeSelected &&
+                                        isBankNameSelected &&
+                                        isReasonSelected,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                        const SizeBox(height: 15),
+                        Text(
+                          "Purpose of Payment",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.red,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const SizeBox(height: 7),
+                        BlocBuilder<DropdownSelectedBloc,
+                            DropdownSelectedState>(
+                          builder: (context, state) {
+                            return CustomDropDown(
+                              title: "e.g., Family Support",
+                              items: items,
+                              value: selectedReason,
+                              onChanged: (value) {
+                                toggles++;
+                                isReasonSelected = true;
+                                selectedReason = value as String;
+                                reasonTypeBloc.add(
+                                  DropdownSelectedEvent(
+                                    isDropdownSelected: isReasonSelected,
+                                    toggles: toggles,
+                                  ),
+                                );
+                                showButtonBloc.add(
+                                  ShowButtonEvent(
+                                    show: isName &&
+                                        isIban &&
+                                        isAccountTypeSelected &&
+                                        isBankNameSelected &&
+                                        isReasonSelected,
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         ),
                         const SizeBox(height: 20),
                       ],
-                    );
-                  } else {
-                    return const SizeBox();
-                  }
-                },
+                    ),
+                  ))
+                ],
               ),
-            ],
-          ),
+            ),
+            BlocBuilder<ShowButtonBloc, ShowButtonState>(
+              builder: (context, state) {
+                if (isName &&
+                    isIban &&
+                    isAccountTypeSelected &&
+                    isBankNameSelected &&
+                    isReasonSelected) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizeBox(height: 20),
+                      Row(
+                        children: [
+                          BlocBuilder<CheckBoxBloc, CheckBoxState>(
+                            builder: (context, state) {
+                              if (isChecked) {
+                                return InkWell(
+                                  onTap: () {
+                                    isChecked = false;
+                                    triggerCheckBoxEvent(isChecked);
+                                  },
+                                  child: SvgPicture.asset(
+                                    ImageConstants.checkedBox,
+                                    width: (14 / Dimensions.designWidth).w,
+                                    height: (14 / Dimensions.designWidth).w,
+                                  ),
+                                );
+                              } else {
+                                return InkWell(
+                                  onTap: () {
+                                    isChecked = true;
+                                    triggerCheckBoxEvent(isChecked);
+                                  },
+                                  child: SvgPicture.asset(
+                                    ImageConstants.uncheckedBox,
+                                    width: (14 / Dimensions.designWidth).w,
+                                    height: (14 / Dimensions.designWidth).w,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                          const SizeBox(width: 10),
+                          Text(
+                            "Add this person to my recipient list",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: const Color(0XFF414141),
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizeBox(height: 10),
+                      GradientButton(
+                        onTap: () {},
+                        text: "Continue",
+                      ),
+                      const SizeBox(height: 20),
+                    ],
+                  );
+                } else {
+                  return const SizeBox();
+                }
+              },
+            ),
+          ],
         ),
       ),
     );

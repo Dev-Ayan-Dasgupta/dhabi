@@ -42,170 +42,164 @@ class _PasswordScreenState extends State<PasswordScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizeBox(height: 10),
-                    Text(
-                      "Password",
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
-                      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizeBox(height: 10),
+                  Text(
+                    "Password",
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
-                    const SizeBox(height: 20),
-                    Text(
-                      "Enter your login password to complete the transaction",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.grey40,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
+                  ),
+                  const SizeBox(height: 20),
+                  Text(
+                    "Enter your login password to complete the transaction",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.grey40,
+                      fontSize: (16 / Dimensions.designWidth).w,
                     ),
-                    const SizeBox(height: 20),
-                    Text(
-                      "Password",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.red,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
+                  ),
+                  const SizeBox(height: 20),
+                  Text(
+                    "Password",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.red,
+                      fontSize: (16 / Dimensions.designWidth).w,
                     ),
-                    const SizeBox(height: 10),
-                    BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                      builder: (context, state) {
-                        if (showPassword) {
-                          return CustomTextField(
-                            controller: _passwordController,
-                            suffix: Padding(
-                              padding: EdgeInsets.only(
-                                  left: (10 / Dimensions.designWidth).w),
-                              child: InkWell(
-                                onTap: () {
-                                  passwordBloc.add(HidePasswordEvent(
-                                      showPassword: false, toggle: ++toggle));
-                                  showPassword = !showPassword;
-                                },
-                                child: Icon(
-                                  Icons.visibility_off_outlined,
-                                  color: const Color.fromRGBO(34, 97, 105, 0.5),
-                                  size: (20 / Dimensions.designWidth).w,
-                                ),
+                  ),
+                  const SizeBox(height: 10),
+                  BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                    builder: (context, state) {
+                      if (showPassword) {
+                        return CustomTextField(
+                          controller: _passwordController,
+                          suffix: Padding(
+                            padding: EdgeInsets.only(
+                                left: (10 / Dimensions.designWidth).w),
+                            child: InkWell(
+                              onTap: () {
+                                passwordBloc.add(HidePasswordEvent(
+                                    showPassword: false, toggle: ++toggle));
+                                showPassword = !showPassword;
+                              },
+                              child: Icon(
+                                Icons.visibility_off_outlined,
+                                color: const Color.fromRGBO(34, 97, 105, 0.5),
+                                size: (20 / Dimensions.designWidth).w,
                               ),
                             ),
-                            onChanged: (p0) {
-                              triggerCriteriaEvent(p0);
-                              triggerAllTrueEvent();
-                            },
-                            obscureText: !showPassword,
-                          );
-                        } else {
-                          return CustomTextField(
-                            controller: _passwordController,
-                            suffix: Padding(
-                              padding: EdgeInsets.only(
-                                  left: (10 / Dimensions.designWidth).w),
-                              child: InkWell(
-                                onTap: () {
-                                  passwordBloc.add(DisplayPasswordEvent(
-                                      showPassword: true, toggle: ++toggle));
-                                  showPassword = !showPassword;
-                                },
-                                child: Icon(
-                                  Icons.visibility_outlined,
-                                  color: const Color.fromRGBO(34, 97, 105, 0.5),
-                                  size: (20 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                            ),
-                            onChanged: (p0) {
-                              triggerCriteriaEvent(p0);
-                              triggerAllTrueEvent();
-                            },
-                            obscureText: !showPassword,
-                          );
-                        }
-                      },
-                    ),
-                    const SizeBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        // TODO: Navigate to forgot password screen
-                      },
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          "Forgot Password?",
-                          style: TextStyles.primaryMedium.copyWith(
-                            color: const Color.fromRGBO(34, 97, 105, 0.5),
-                            fontSize: (16 / Dimensions.designWidth).w,
                           ),
+                          onChanged: (p0) {
+                            triggerCriteriaEvent(p0);
+                            triggerAllTrueEvent();
+                          },
+                          obscureText: !showPassword,
+                        );
+                      } else {
+                        return CustomTextField(
+                          controller: _passwordController,
+                          suffix: Padding(
+                            padding: EdgeInsets.only(
+                                left: (10 / Dimensions.designWidth).w),
+                            child: InkWell(
+                              onTap: () {
+                                passwordBloc.add(DisplayPasswordEvent(
+                                    showPassword: true, toggle: ++toggle));
+                                showPassword = !showPassword;
+                              },
+                              child: Icon(
+                                Icons.visibility_outlined,
+                                color: const Color.fromRGBO(34, 97, 105, 0.5),
+                                size: (20 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                          ),
+                          onChanged: (p0) {
+                            triggerCriteriaEvent(p0);
+                            triggerAllTrueEvent();
+                          },
+                          obscureText: !showPassword,
+                        );
+                      }
+                    },
+                  ),
+                  const SizeBox(height: 10),
+                  InkWell(
+                    onTap: () {
+                      // TODO: Navigate to forgot password screen
+                    },
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: const Color.fromRGBO(34, 97, 105, 0.5),
+                          fontSize: (16 / Dimensions.designWidth).w,
                         ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  )
+                ],
               ),
-              BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                builder: (context, state) {
-                  if (allTrue) {
-                    return Column(
-                      children: [
-                        GradientButton(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              Routes.errorSuccessScreen,
-                              arguments: ErrorArgumentModel(
-                                hasSecondaryButton: true,
-                                iconPath: ImageConstants.checkCircleOutlined,
-                                title: "Success!",
-                                message:
-                                    "Your transaction has been completed\n\nTransfer reference: 254455588800",
-                                buttonText: "Home",
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                                buttonTextSecondary: "Make another transaction",
-                                onTapSecondary: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                              ).toMap(),
-                            );
-                          },
-                          text: "Proceed",
-                        ),
-                        const SizeBox(height: 20),
-                      ],
-                    );
-                  } else {
-                    return const SizeBox();
-                  }
-                },
-              ),
-            ],
-          ),
+            ),
+            BlocBuilder<ShowButtonBloc, ShowButtonState>(
+              builder: (context, state) {
+                if (allTrue) {
+                  return Column(
+                    children: [
+                      GradientButton(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.errorSuccessScreen,
+                            arguments: ErrorArgumentModel(
+                              hasSecondaryButton: true,
+                              iconPath: ImageConstants.checkCircleOutlined,
+                              title: "Success!",
+                              message:
+                                  "Your transaction has been completed\n\nTransfer reference: 254455588800",
+                              buttonText: "Home",
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              buttonTextSecondary: "Make another transaction",
+                              onTapSecondary: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                            ).toMap(),
+                          );
+                        },
+                        text: "Proceed",
+                      ),
+                      const SizeBox(height: 20),
+                    ],
+                  );
+                } else {
+                  return const SizeBox();
+                }
+              },
+            ),
+          ],
         ),
       ),
     );

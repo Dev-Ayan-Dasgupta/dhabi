@@ -35,121 +35,61 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: (22 / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizeBox(height: 10),
-                    Text(
-                      "Recipient Details",
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 30),
-                    Text(
-                      "IBAN / Account number",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.red,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 10),
-                    CustomTextField(
-                      hintText: "Enter IBAN or Account Number",
-                      keyboardType: TextInputType.number,
-                      controller: _ibanController,
-                      onChanged: (p0) {
-                        proceedBloc.add(ShowButtonEvent(show: isProceed));
-                      },
-                    ),
-                    const SizeBox(height: 20),
-                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                      builder: (context, state) {
-                        if (isProceed) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Recipient Name",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.red,
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                              const SizeBox(height: 10),
-                              CustomTextField(
-                                enabled: false,
-                                color: AppColors.blackEE,
-                                controller: _recipientNameController,
-                                onChanged: (p0) {},
-                              ),
-                            ],
-                          );
-                        } else {
-                          return const SizeBox();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Column(
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: (22 / Dimensions.designWidth).w,
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizeBox(height: 10),
+                  Text(
+                    "Recipient Details",
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 30),
+                  Text(
+                    "IBAN / Account number",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.red,
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 10),
+                  CustomTextField(
+                    hintText: "Enter IBAN or Account Number",
+                    keyboardType: TextInputType.number,
+                    controller: _ibanController,
+                    onChanged: (p0) {
+                      proceedBloc.add(ShowButtonEvent(show: isProceed));
+                    },
+                  ),
+                  const SizeBox(height: 20),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
                       if (isProceed) {
-                        return Row(
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                              builder: (context, state) {
-                                if (isChecked) {
-                                  return InkWell(
-                                    onTap: () {
-                                      isChecked = false;
-                                      triggerCheckBoxEvent(isChecked);
-                                    },
-                                    child: SvgPicture.asset(
-                                      ImageConstants.checkedBox,
-                                      width: (14 / Dimensions.designWidth).w,
-                                      height: (14 / Dimensions.designWidth).w,
-                                    ),
-                                  );
-                                } else {
-                                  return InkWell(
-                                    onTap: () {
-                                      isChecked = true;
-                                      triggerCheckBoxEvent(isChecked);
-                                    },
-                                    child: SvgPicture.asset(
-                                      ImageConstants.uncheckedBox,
-                                      width: (14 / Dimensions.designWidth).w,
-                                      height: (14 / Dimensions.designWidth).w,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                            const SizeBox(width: 10),
                             Text(
-                              "Add this person to my recipient list",
+                              "Recipient Name",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: const Color(0XFF414141),
+                                color: AppColors.red,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
+                            ),
+                            const SizeBox(height: 10),
+                            CustomTextField(
+                              enabled: false,
+                              color: AppColors.blackEE,
+                              controller: _recipientNameController,
+                              onChanged: (p0) {},
                             ),
                           ],
                         );
@@ -158,33 +98,86 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                       }
                     },
                   ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      if (_ibanController.text.isNotEmpty) {
-                        return GradientButton(
-                          onTap: () {
-                            if (!isProceed) {
-                              isProceed = true;
-                              buttonText = "Proceed";
-                              proceedBloc.add(ShowButtonEvent(show: isProceed));
-                            } else {
-                              Navigator.pushNamed(
-                                  context, Routes.transferAmount);
-                            }
-                          },
-                          text: buttonText,
-                        );
-                      } else {
-                        return const SizeBox();
-                      }
-                    },
-                  ),
-                  const SizeBox(height: 20),
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: (context, state) {
+                    if (isProceed) {
+                      return Row(
+                        children: [
+                          BlocBuilder<CheckBoxBloc, CheckBoxState>(
+                            builder: (context, state) {
+                              if (isChecked) {
+                                return InkWell(
+                                  onTap: () {
+                                    isChecked = false;
+                                    triggerCheckBoxEvent(isChecked);
+                                  },
+                                  child: SvgPicture.asset(
+                                    ImageConstants.checkedBox,
+                                    width: (14 / Dimensions.designWidth).w,
+                                    height: (14 / Dimensions.designWidth).w,
+                                  ),
+                                );
+                              } else {
+                                return InkWell(
+                                  onTap: () {
+                                    isChecked = true;
+                                    triggerCheckBoxEvent(isChecked);
+                                  },
+                                  child: SvgPicture.asset(
+                                    ImageConstants.uncheckedBox,
+                                    width: (14 / Dimensions.designWidth).w,
+                                    height: (14 / Dimensions.designWidth).w,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                          const SizeBox(width: 10),
+                          Text(
+                            "Add this person to my recipient list",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: const Color(0XFF414141),
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const SizeBox();
+                    }
+                  },
+                ),
+                const SizeBox(height: 10),
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: (context, state) {
+                    if (_ibanController.text.isNotEmpty) {
+                      return GradientButton(
+                        onTap: () {
+                          if (!isProceed) {
+                            isProceed = true;
+                            buttonText = "Proceed";
+                            proceedBloc.add(ShowButtonEvent(show: isProceed));
+                          } else {
+                            Navigator.pushNamed(context, Routes.transferAmount);
+                          }
+                        },
+                        text: buttonText,
+                      );
+                    } else {
+                      return const SizeBox();
+                    }
+                  },
+                ),
+                const SizeBox(height: 20),
+              ],
+            )
+          ],
         ),
       ),
     );

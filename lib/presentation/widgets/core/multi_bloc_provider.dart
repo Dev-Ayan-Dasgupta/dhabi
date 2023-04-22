@@ -134,15 +134,21 @@ class _CustomMultiBlocProviderState extends State<CustomMultiBlocProvider> {
           create: (context) => CurrencyPickerBloc(),
         ),
       ],
-      child: MaterialApp(
-        title: 'Dhabi',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: AppColors.primarySwatch,
-          scaffoldBackgroundColor: Colors.white,
+      child: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        behavior: HitTestBehavior.opaque,
+        child: MaterialApp(
+          title: 'Dhabi',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: AppColors.primarySwatch,
+            scaffoldBackgroundColor: Colors.white,
+          ),
+          initialRoute: Routes.splash,
+          onGenerateRoute: widget.appRouter.onGenerateRoute,
         ),
-        initialRoute: Routes.splash,
-        onGenerateRoute: widget.appRouter.onGenerateRoute,
       ),
     );
   }
