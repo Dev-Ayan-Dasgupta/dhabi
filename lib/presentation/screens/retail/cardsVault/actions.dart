@@ -22,8 +22,6 @@ class _ActionsScreenState extends State<ActionsScreen> {
   bool isPaymentAbroad = false;
   @override
   Widget build(BuildContext context) {
-    final ShowButtonBloc onlinePaymentBloc = context.read<ShowButtonBloc>();
-    final ShowButtonBloc paymentAbroadBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -121,21 +119,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
                         ),
                       ),
                       BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                        builder: (context, state) {
-                          return FlutterSwitch(
-                            width: (45 / Dimensions.designWidth).w,
-                            height: (25 / Dimensions.designWidth).w,
-                            activeColor: AppColors.primaryBright,
-                            inactiveColor: const Color(0XFFD7D9D8),
-                            toggleSize: (15 / Dimensions.designWidth).w,
-                            value: isOnlinePayments,
-                            onToggle: (val) {
-                              isOnlinePayments = val;
-                              onlinePaymentBloc
-                                  .add(ShowButtonEvent(show: isOnlinePayments));
-                            },
-                          );
-                        },
+                        builder: buildOnlinePaymentSwitch,
                       ),
                     ],
                   ),
@@ -152,21 +136,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
                         ),
                       ),
                       BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                        builder: (context, state) {
-                          return FlutterSwitch(
-                            width: (45 / Dimensions.designWidth).w,
-                            height: (25 / Dimensions.designWidth).w,
-                            activeColor: AppColors.primaryBright,
-                            inactiveColor: const Color(0XFFD7D9D8),
-                            toggleSize: (15 / Dimensions.designWidth).w,
-                            value: isPaymentAbroad,
-                            onToggle: (val) {
-                              isPaymentAbroad = val;
-                              paymentAbroadBloc
-                                  .add(ShowButtonEvent(show: isPaymentAbroad));
-                            },
-                          );
-                        },
+                        builder: buildAbroadPaymentSwitch,
                       ),
                     ],
                   ),
@@ -176,6 +146,38 @@ class _ActionsScreenState extends State<ActionsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildOnlinePaymentSwitch(BuildContext context, ShowButtonState state) {
+    final ShowButtonBloc onlinePaymentBloc = context.read<ShowButtonBloc>();
+    return FlutterSwitch(
+      width: (45 / Dimensions.designWidth).w,
+      height: (25 / Dimensions.designWidth).w,
+      activeColor: AppColors.primaryBright,
+      inactiveColor: const Color(0XFFD7D9D8),
+      toggleSize: (15 / Dimensions.designWidth).w,
+      value: isOnlinePayments,
+      onToggle: (val) {
+        isOnlinePayments = val;
+        onlinePaymentBloc.add(ShowButtonEvent(show: isOnlinePayments));
+      },
+    );
+  }
+
+  Widget buildAbroadPaymentSwitch(BuildContext context, ShowButtonState state) {
+    final ShowButtonBloc paymentAbroadBloc = context.read<ShowButtonBloc>();
+    return FlutterSwitch(
+      width: (45 / Dimensions.designWidth).w,
+      height: (25 / Dimensions.designWidth).w,
+      activeColor: AppColors.primaryBright,
+      inactiveColor: const Color(0XFFD7D9D8),
+      toggleSize: (15 / Dimensions.designWidth).w,
+      value: isPaymentAbroad,
+      onToggle: (val) {
+        isPaymentAbroad = val;
+        paymentAbroadBloc.add(ShowButtonEvent(show: isPaymentAbroad));
+      },
     );
   }
 }

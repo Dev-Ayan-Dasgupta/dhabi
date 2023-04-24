@@ -74,103 +74,100 @@ class _VaultScreenState extends State<VaultScreen> {
                           ),
                         ),
                       ),
-                      isFrozen
-                          ? Positioned(
-                              left: (25 / Dimensions.designWidth).w,
-                              bottom: (25 / Dimensions.designWidth).w,
-                              child: Row(
+                      Ternary(
+                        condition: isFrozen,
+                        truthy: Positioned(
+                          left: (25 / Dimensions.designWidth).w,
+                          bottom: (25 / Dimensions.designWidth).w,
+                          child: Row(
+                            children: [
+                              Text(
+                                "**** ${cardNumber.substring(cardNumber.length - 4, cardNumber.length)}",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.grey40,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const SizeBox(width: 220),
+                              SizedBox(
+                                width: (42 / Dimensions.designWidth).w,
+                                height: (39 / Dimensions.designWidth).w,
+                                child: Opacity(
+                                  opacity: 0.4,
+                                  child: Image.asset(
+                                    ImageConstants.mastercardLogo,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        falsy: Positioned(
+                          left: (25 / Dimensions.designWidth).w,
+                          top: (114 / Dimensions.designWidth).w,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Card Number",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black81,
+                                  fontSize: (14 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const SizeBox(height: 7),
+                              Row(
                                 children: [
                                   Text(
-                                    "**** ${cardNumber.substring(cardNumber.length - 4, cardNumber.length)}",
+                                    cardNumber,
                                     style: TextStyles.primaryMedium.copyWith(
-                                      color: AppColors.grey40,
+                                      color: const Color(0XFF1A3C40),
                                       fontSize: (16 / Dimensions.designWidth).w,
                                     ),
                                   ),
-                                  const SizeBox(width: 220),
-                                  SizedBox(
-                                    width: (42 / Dimensions.designWidth).w,
-                                    height: (39 / Dimensions.designWidth).w,
-                                    child: Opacity(
-                                      opacity: 0.4,
-                                      child: Image.asset(
-                                        ImageConstants.mastercardLogo,
-                                        fit: BoxFit.fill,
-                                      ),
+                                  const SizeBox(width: 10),
+                                  InkWell(
+                                    onTap: () {
+                                      Clipboard.setData(
+                                        ClipboardData(
+                                          text: cardNumber,
+                                        ),
+                                      );
+                                    },
+                                    child: SvgPicture.asset(
+                                      ImageConstants.contentCopy,
+                                      width: (17 / Dimensions.designWidth).w,
+                                      height: (20 / Dimensions.designWidth).w,
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
-                            )
-                          : Positioned(
-                              left: (25 / Dimensions.designWidth).w,
-                              top: (114 / Dimensions.designWidth).w,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Card Number",
-                                    style: TextStyles.primaryMedium.copyWith(
-                                      color: AppColors.black81,
-                                      fontSize: (14 / Dimensions.designWidth).w,
-                                    ),
+                              const SizeBox(height: 20),
+                              RichText(
+                                text: TextSpan(
+                                  text: 'AED ',
+                                  style: TextStyles.primaryMedium.copyWith(
+                                    color: const Color(0xFF094148),
+                                    fontSize: (20 / Dimensions.designWidth).w,
                                   ),
-                                  const SizeBox(height: 7),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        cardNumber,
-                                        style:
-                                            TextStyles.primaryMedium.copyWith(
-                                          color: const Color(0XFF1A3C40),
-                                          fontSize:
-                                              (16 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                      const SizeBox(width: 10),
-                                      InkWell(
-                                        onTap: () {
-                                          Clipboard.setData(
-                                            ClipboardData(
-                                              text: cardNumber,
-                                            ),
-                                          );
-                                        },
-                                        child: SvgPicture.asset(
-                                          ImageConstants.contentCopy,
-                                          width:
-                                              (17 / Dimensions.designWidth).w,
-                                          height:
-                                              (20 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizeBox(height: 20),
-                                  RichText(
-                                    text: TextSpan(
-                                      text: 'AED ',
-                                      style: TextStyles.primaryMedium.copyWith(
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: '5,100.00',
+                                      style: TextStyles.primary.copyWith(
                                         color: const Color(0xFF094148),
                                         fontSize:
                                             (20 / Dimensions.designWidth).w,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                      children: <TextSpan>[
-                                        TextSpan(
-                                          text: '5,100.00',
-                                          style: TextStyles.primary.copyWith(
-                                            color: const Color(0xFF094148),
-                                            fontSize:
-                                                (20 / Dimensions.designWidth).w,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
+                            ],
+                          ),
+                        ),
+                      ),
                       Positioned(
                         right: (25 / Dimensions.designWidth).w,
                         top: (25 / Dimensions.designWidth).w,
