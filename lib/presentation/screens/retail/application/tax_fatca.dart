@@ -99,102 +99,75 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                               ),
                               const SizeBox(width: 10),
                               BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                                builder: (context, state) {
-                                  return CustomTooltip(
-                                    tooltiptap: () {
-                                      isShowTCCHelp = false;
-                                      showButtonBloc.add(
-                                          ShowButtonEvent(show: isShowTCCHelp));
-                                    },
-                                    content: "Tax Compliance Confirmation",
-                                    show: isShowTCCHelp,
-                                    onTap: () {
-                                      isShowTCCHelp = !isShowTCCHelp;
-                                      showButtonBloc.add(
-                                          ShowButtonEvent(show: isShowTCCHelp));
-                                    },
-                                  );
-                                },
+                                builder: buildTitleTooltip,
                               ),
                             ],
                           ),
                           const SizeBox(height: 20),
                           BlocBuilder<ApplicationTaxBloc, ApplicationTaxState>(
-                            builder: (context, state) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Are you a U.S. citizen or resident for tax purposes?",
-                                    style: TextStyles.primary.copyWith(
-                                      color: AppColors.black63,
-                                      fontSize: (16 / Dimensions.designWidth).w,
-                                    ),
-                                  ),
-                                ],
-                              );
-                              // if (isUSCitizen) {
-                              //   return Column(
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     children: [
-                              //       Text(
-                              //         "Are you a U.S. citizen or resident for tax purposes?",
-                              //         style: TextStyles.primary.copyWith(
-                              //           color: AppColors.black63,
-                              //           fontSize:
-                              //               (16 / Dimensions.designWidth).w,
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   );
-                              // } else {
-                              //   return Column(
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     children: [
-                              //       RichText(
-                              //         text: TextSpan(
-                              //           text: 'Press ',
-                              //           style: TextStyles.primary.copyWith(
-                              //             color: AppColors.black63,
-                              //             fontSize:
-                              //                 (15 / Dimensions.designWidth).w,
-                              //           ),
-                              //           children: <TextSpan>[
-                              //             TextSpan(
-                              //               text: 'Yes',
-                              //               style:
-                              //                   TextStyles.primaryBold.copyWith(
-                              //                 color: AppColors.black63,
-                              //                 fontSize:
-                              //                     (15 / Dimensions.designWidth)
-                              //                         .w,
-                              //               ),
-                              //             ),
-                              //             TextSpan(
-                              //               text: ' if:',
-                              //               style: TextStyles.primary.copyWith(
-                              //                 color: AppColors.black63,
-                              //                 fontSize:
-                              //                     (15 / Dimensions.designWidth)
-                              //                         .w,
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       ),
-                              //       const SizeBox(height: 10),
-                              //       Text(
-                              //         "You are a U.S. Citizen or Resident?",
-                              //         style: TextStyles.primary.copyWith(
-                              //           color: AppColors.black63,
-                              //           fontSize:
-                              //               (16 / Dimensions.designWidth).w,
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   );
-                              // }
-                            },
+                            builder: buildQuestion1,
+                            // if (isUSCitizen) {
+                            //   return Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: [
+                            //       Text(
+                            //         "Are you a U.S. citizen or resident for tax purposes?",
+                            //         style: TextStyles.primary.copyWith(
+                            //           color: AppColors.black63,
+                            //           fontSize:
+                            //               (16 / Dimensions.designWidth).w,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   );
+                            // } else {
+                            //   return Column(
+                            //     crossAxisAlignment: CrossAxisAlignment.start,
+                            //     children: [
+                            //       RichText(
+                            //         text: TextSpan(
+                            //           text: 'Press ',
+                            //           style: TextStyles.primary.copyWith(
+                            //             color: AppColors.black63,
+                            //             fontSize:
+                            //                 (15 / Dimensions.designWidth).w,
+                            //           ),
+                            //           children: <TextSpan>[
+                            //             TextSpan(
+                            //               text: 'Yes',
+                            //               style:
+                            //                   TextStyles.primaryBold.copyWith(
+                            //                 color: AppColors.black63,
+                            //                 fontSize:
+                            //                     (15 / Dimensions.designWidth)
+                            //                         .w,
+                            //               ),
+                            //             ),
+                            //             TextSpan(
+                            //               text: ' if:',
+                            //               style: TextStyles.primary.copyWith(
+                            //                 color: AppColors.black63,
+                            //                 fontSize:
+                            //                     (15 / Dimensions.designWidth)
+                            //                         .w,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //       const SizeBox(height: 10),
+                            //       Text(
+                            //         "You are a U.S. Citizen or Resident?",
+                            //         style: TextStyles.primary.copyWith(
+                            //           color: AppColors.black63,
+                            //           fontSize:
+                            //               (16 / Dimensions.designWidth).w,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   );
+                            // }
+                            // },
                           ),
                           BlocBuilder<ApplicationTaxBloc, ApplicationTaxState>(
                             builder: (context, state) {
@@ -429,6 +402,37 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildTitleTooltip(BuildContext context, ShowButtonState state) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return CustomTooltip(
+      tooltiptap: () {
+        isShowTCCHelp = false;
+        showButtonBloc.add(ShowButtonEvent(show: isShowTCCHelp));
+      },
+      content: "Tax Compliance Confirmation",
+      show: isShowTCCHelp,
+      onTap: () {
+        isShowTCCHelp = !isShowTCCHelp;
+        showButtonBloc.add(ShowButtonEvent(show: isShowTCCHelp));
+      },
+    );
+  }
+
+  Widget buildQuestion1(BuildContext context, ApplicationTaxState state) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Are you a U.S. citizen or resident for tax purposes?",
+          style: TextStyles.primary.copyWith(
+            color: AppColors.black63,
+            fontSize: (16 / Dimensions.designWidth).w,
+          ),
+        ),
+      ],
     );
   }
 

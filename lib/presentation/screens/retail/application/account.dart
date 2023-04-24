@@ -27,8 +27,6 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
   bool isSavingsSelected = false;
   @override
   Widget build(BuildContext context) {
-    final MultiSelectBloc multiSelectBloc = context.read<MultiSelectBloc>();
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -80,121 +78,127 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                   ),
                   const SizeBox(height: 20),
                   BlocBuilder<MultiSelectBloc, MultiSelectState>(
-                    builder: (context, state) {
-                      return MultiSelectButton(
-                        isSelected: isCurrentSelected,
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Current",
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.primaryDark,
-                                fontSize: (18 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            const SizeBox(height: 7),
-                            Text(
-                              "For everyday banking transactions.",
-                              style: TextStyles.primary.copyWith(
-                                color: const Color.fromRGBO(1, 1, 1, 0.4),
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          isCurrentSelected = !isCurrentSelected;
-                          multiSelectBloc.add(
-                              MultiSelectEvent(isSelected: isCurrentSelected));
-                          showButtonBloc.add(ShowButtonEvent(
-                              show: isCurrentSelected && isSavingsSelected));
-                        },
-                      );
-                    },
+                    builder: buildCurrentButton,
                   ),
                   const SizeBox(height: 20),
                   BlocBuilder<MultiSelectBloc, MultiSelectState>(
-                    builder: (context, state) {
-                      return MultiSelectButton(
-                        isSelected: isSavingsSelected,
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Savings",
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.primaryDark,
-                                fontSize: (18 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            const SizeBox(height: 7),
-                            Text(
-                              "An interest-bearing deposit account.",
-                              style: TextStyles.primary.copyWith(
-                                color: const Color.fromRGBO(1, 1, 1, 0.4),
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                          ],
-                        ),
-                        onTap: () {
-                          isSavingsSelected = !isSavingsSelected;
-                          multiSelectBloc.add(
-                              MultiSelectEvent(isSelected: isSavingsSelected));
-                          showButtonBloc.add(ShowButtonEvent(
-                              show: isCurrentSelected && isSavingsSelected));
-                        },
-                      );
-                    },
+                    builder: buildSavingsButton,
                   ),
                 ],
               ),
             ),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: (context, state) {
-                if (isCurrentSelected || isSavingsSelected) {
-                  return Column(
-                    children: [
-                      Text(
-                        "You will be receiving a free Prepaid Card! Available in the \"Cards\" tab.",
-                        style: TextStyles.primary.copyWith(
-                          color: const Color(0XFF252525),
-                          fontSize: (12 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const SizeBox(height: 10),
-                      GradientButton(
-                        onTap: () {
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   Routes.termsAndConditions,
-                          //   arguments: CreateAccountArgumentModel(
-                          //           email: "ayan@qolarisdata.com",
-                          //           isRetail: true)
-                          //       .toMap(),
-                          // );
-                          Navigator.pushNamed(
-                            context,
-                            Routes.verifyMobile,
-                            arguments:
-                                VerifyMobileArgumentModel(isBusiness: false)
-                                    .toMap(),
-                          );
-                        },
-                        text: "Create Account",
-                      ),
-                      const SizeBox(height: 32),
-                    ],
-                  );
-                } else {
-                  return const SizeBox();
-                }
-              },
+              builder: buildSubmitButton,
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildCurrentButton(BuildContext context, MultiSelectState state) {
+    final MultiSelectBloc multiSelectBloc = context.read<MultiSelectBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return MultiSelectButton(
+      isSelected: isCurrentSelected,
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Current",
+            style: TextStyles.primary.copyWith(
+              color: AppColors.primaryDark,
+              fontSize: (18 / Dimensions.designWidth).w,
+            ),
+          ),
+          const SizeBox(height: 7),
+          Text(
+            "For everyday banking transactions.",
+            style: TextStyles.primary.copyWith(
+              color: const Color.fromRGBO(1, 1, 1, 0.4),
+              fontSize: (14 / Dimensions.designWidth).w,
+            ),
+          ),
+        ],
+      ),
+      onTap: () {
+        isCurrentSelected = !isCurrentSelected;
+        multiSelectBloc.add(MultiSelectEvent(isSelected: isCurrentSelected));
+        showButtonBloc
+            .add(ShowButtonEvent(show: isCurrentSelected && isSavingsSelected));
+      },
+    );
+  }
+
+  Widget buildSavingsButton(BuildContext context, MultiSelectState state) {
+    final MultiSelectBloc multiSelectBloc = context.read<MultiSelectBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return MultiSelectButton(
+      isSelected: isSavingsSelected,
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Savings",
+            style: TextStyles.primary.copyWith(
+              color: AppColors.primaryDark,
+              fontSize: (18 / Dimensions.designWidth).w,
+            ),
+          ),
+          const SizeBox(height: 7),
+          Text(
+            "An interest-bearing deposit account.",
+            style: TextStyles.primary.copyWith(
+              color: const Color.fromRGBO(1, 1, 1, 0.4),
+              fontSize: (14 / Dimensions.designWidth).w,
+            ),
+          ),
+        ],
+      ),
+      onTap: () {
+        isSavingsSelected = !isSavingsSelected;
+        multiSelectBloc.add(MultiSelectEvent(isSelected: isSavingsSelected));
+        showButtonBloc
+            .add(ShowButtonEvent(show: isCurrentSelected && isSavingsSelected));
+      },
+    );
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (isCurrentSelected || isSavingsSelected) {
+      return Column(
+        children: [
+          Text(
+            "You will be receiving a free Prepaid Card! Available in the \"Cards\" tab.",
+            style: TextStyles.primary.copyWith(
+              color: const Color(0XFF252525),
+              fontSize: (12 / Dimensions.designWidth).w,
+            ),
+          ),
+          const SizeBox(height: 10),
+          GradientButton(
+            onTap: () {
+              // Navigator.pushNamed(
+              //   context,
+              //   Routes.termsAndConditions,
+              //   arguments: CreateAccountArgumentModel(
+              //           email: "ayan@qolarisdata.com",
+              //           isRetail: true)
+              //       .toMap(),
+              // );
+              Navigator.pushNamed(
+                context,
+                Routes.verifyMobile,
+                arguments: VerifyMobileArgumentModel(isBusiness: false).toMap(),
+              );
+            },
+            text: "Create Account",
+          ),
+          const SizeBox(height: 32),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 }

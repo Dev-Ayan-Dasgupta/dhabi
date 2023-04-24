@@ -38,8 +38,6 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final DropdownSelectedBloc incomeSourceSelectedBloc =
-        context.read<DropdownSelectedBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -83,51 +81,56 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
                   ),
                   const SizeBox(height: 9),
                   BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                    builder: (context, state) {
-                      return CustomDropDown(
-                        title: "Select",
-                        items: items,
-                        value: selectedValue,
-                        onChanged: (value) {
-                          toggles++;
-                          isIncomeSourceSelected = true;
-                          selectedValue = value as String;
-                          incomeSourceSelectedBloc.add(
-                            DropdownSelectedEvent(
-                              isDropdownSelected: isIncomeSourceSelected,
-                              toggles: toggles,
-                            ),
-                          );
-                        },
-                      );
-                    },
+                    builder: buildDropdown,
                   ),
                 ],
               ),
             ),
             BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-              builder: (context, state) {
-                if (isIncomeSourceSelected) {
-                  return Column(
-                    children: [
-                      GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, Routes.applicationTaxFATCA);
-                        },
-                        text: "Continue",
-                      ),
-                      const SizeBox(height: 20),
-                    ],
-                  );
-                } else {
-                  return const SizeBox();
-                }
-              },
+              builder: buildSubmitButton,
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildDropdown(BuildContext context, DropdownSelectedState state) {
+    final DropdownSelectedBloc incomeSourceSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    return CustomDropDown(
+      title: "Select",
+      items: items,
+      value: selectedValue,
+      onChanged: (value) {
+        toggles++;
+        isIncomeSourceSelected = true;
+        selectedValue = value as String;
+        incomeSourceSelectedBloc.add(
+          DropdownSelectedEvent(
+            isDropdownSelected: isIncomeSourceSelected,
+            toggles: toggles,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildSubmitButton(BuildContext context, DropdownSelectedState state) {
+    if (isIncomeSourceSelected) {
+      return Column(
+        children: [
+          GradientButton(
+            onTap: () {
+              Navigator.pushNamed(context, Routes.applicationTaxFATCA);
+            },
+            text: "Continue",
+          ),
+          const SizeBox(height: 20),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 }

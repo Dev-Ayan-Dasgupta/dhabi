@@ -157,7 +157,8 @@ class _FinalFaceImageScreenState extends State<FinalFaceImageScreen> {
                     const SizeBox(height: 10),
                     SolidButton(
                       onTap: () {
-                        Navigator.pushNamed(context, Routes.captureFace);
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, Routes.captureFace, (route) => false);
                       },
                       text: "Retake Selfie",
                       color: AppColors.primaryBright17,
