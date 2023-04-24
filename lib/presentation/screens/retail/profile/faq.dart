@@ -56,8 +56,9 @@ class _FaqScreenState extends State<FaqScreen> {
                         childrenText: item.childrenText,
                         onExpansionChanged: (val) {
                           item.isExpanded = val;
-                          showButtonBloc
-                              .add(ShowButtonEvent(show: item.isExpanded));
+                          showButtonBloc.add(
+                            ShowButtonEvent(show: item.isExpanded),
+                          );
                         },
                       );
                     },

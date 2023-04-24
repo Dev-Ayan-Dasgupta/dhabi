@@ -21,7 +21,6 @@ class _SecurityScreenState extends State<SecurityScreen> {
   bool isEnabled = true;
   @override
   Widget build(BuildContext context) {
-    final ShowButtonBloc isEnabledBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -70,20 +69,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
                     ),
                   ),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      return FlutterSwitch(
-                        width: (45 / Dimensions.designWidth).w,
-                        height: (25 / Dimensions.designWidth).w,
-                        activeColor: AppColors.primaryBright,
-                        inactiveColor: const Color(0XFFD7D9D8),
-                        toggleSize: (15 / Dimensions.designWidth).w,
-                        value: isEnabled,
-                        onToggle: (val) {
-                          isEnabled = val;
-                          isEnabledBloc.add(ShowButtonEvent(show: isEnabled));
-                        },
-                      );
-                    },
+                    builder: buildBiometricSwitch,
                   ),
                 ],
               ),
@@ -114,6 +100,22 @@ class _SecurityScreenState extends State<SecurityScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildBiometricSwitch(BuildContext context, ShowButtonState state) {
+    final ShowButtonBloc isEnabledBloc = context.read<ShowButtonBloc>();
+    return FlutterSwitch(
+      width: (45 / Dimensions.designWidth).w,
+      height: (25 / Dimensions.designWidth).w,
+      activeColor: AppColors.primaryBright,
+      inactiveColor: const Color(0XFFD7D9D8),
+      toggleSize: (15 / Dimensions.designWidth).w,
+      value: isEnabled,
+      onToggle: (val) {
+        isEnabled = val;
+        isEnabledBloc.add(ShowButtonEvent(show: isEnabled));
+      },
     );
   }
 }

@@ -39,9 +39,6 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    final DropdownSelectedBloc dropdownSelectedBloc =
-        context.read<DropdownSelectedBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -75,26 +72,7 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
                   ),
                   const SizeBox(height: 10),
                   BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                    builder: (context, state) {
-                      return CustomDropDown(
-                        title: "Select from the list",
-                        items: items,
-                        value: selectedValue,
-                        onChanged: (value) {
-                          toggles++;
-                          isRequestTypeSelected = true;
-                          selectedValue = value as String;
-                          dropdownSelectedBloc.add(
-                            DropdownSelectedEvent(
-                              isDropdownSelected: isRequestTypeSelected,
-                              toggles: toggles,
-                            ),
-                          );
-                          showButtonBloc.add(ShowButtonEvent(
-                              show: isRequestTypeSelected && isRemarkValid));
-                        },
-                      );
-                    },
+                    builder: buildDropdown,
                   ),
                   const SizeBox(height: 20),
                   Text(
@@ -106,52 +84,81 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
                   ),
                   const SizeBox(height: 10),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      return CustomTextField(
-                        controller: _remarkController,
-                        hintText: "Type Your Remarks Here",
-                        bottomPadding: (16 / Dimensions.designWidth).w,
-                        minLines: 3,
-                        maxLines: 5,
-                        maxLength: 200,
-                        onChanged: (p0) {
-                          if (p0.length >= 20) {
-                            isRemarkValid = true;
-                          } else {
-                            isRemarkValid = false;
-                          }
-                          showButtonBloc.add(
-                            ShowButtonEvent(
-                                show: isRequestTypeSelected && isRemarkValid),
-                          );
-                        },
-                      );
-                    },
+                    builder: buildRemarks,
                   ),
                 ],
               ),
             ),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: (context, state) {
-                if (isRequestTypeSelected && isRemarkValid) {
-                  return Column(
-                    children: [
-                      GradientButton(
-                        onTap: () {},
-                        text: "Continue",
-                      ),
-                      const SizeBox(height: 20),
-                    ],
-                  );
-                } else {
-                  return const SizeBox();
-                }
-              },
+              builder: buildSubmitButton,
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildDropdown(BuildContext context, DropdownSelectedState state) {
+    final DropdownSelectedBloc dropdownSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return CustomDropDown(
+      title: "Select from the list",
+      items: items,
+      value: selectedValue,
+      onChanged: (value) {
+        toggles++;
+        isRequestTypeSelected = true;
+        selectedValue = value as String;
+        dropdownSelectedBloc.add(
+          DropdownSelectedEvent(
+            isDropdownSelected: isRequestTypeSelected,
+            toggles: toggles,
+          ),
+        );
+        showButtonBloc.add(
+          ShowButtonEvent(show: isRequestTypeSelected && isRemarkValid),
+        );
+      },
+    );
+  }
+
+  Widget buildRemarks(BuildContext context, ShowButtonState state) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return CustomTextField(
+      controller: _remarkController,
+      hintText: "Type Your Remarks Here",
+      bottomPadding: (16 / Dimensions.designWidth).w,
+      minLines: 3,
+      maxLines: 5,
+      maxLength: 200,
+      onChanged: (p0) {
+        if (p0.length >= 20) {
+          isRemarkValid = true;
+        } else {
+          isRemarkValid = false;
+        }
+        showButtonBloc.add(
+          ShowButtonEvent(show: isRequestTypeSelected && isRemarkValid),
+        );
+      },
+    );
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (isRequestTypeSelected && isRemarkValid) {
+      return Column(
+        children: [
+          GradientButton(
+            onTap: () {},
+            text: "Continue",
+          ),
+          const SizeBox(height: 20),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 
   @override

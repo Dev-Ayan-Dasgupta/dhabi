@@ -66,59 +66,61 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
               ),
             ),
             SizeBox(height: notifications.isEmpty ? 0 : 15),
-            notifications.isEmpty
-                ? Column(
-                    children: [
-                      const SizeBox(height: 225),
-                      SvgPicture.asset(
-                        ImageConstants.notificationsBlank,
-                        width: (67.33 / Dimensions.designWidth).w,
-                        height: (84.17 / Dimensions.designWidth).w,
-                      ),
-                      const SizeBox(height: 20),
-                      Text(
-                        "You're all caught up",
-                        style: TextStyles.primary.copyWith(
-                          color: const Color(0XFF414141),
-                          fontSize: (18 / Dimensions.designWidth).w,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizeBox(height: 10),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: (34 / Dimensions.designWidth).w),
-                        child: Text(
-                          "Check back later for promotions and recommendations to keep your account up to date.",
-                          style: TextStyles.primaryMedium.copyWith(
-                            color: const Color(0XFF414141),
-                            fontSize: (18 / Dimensions.designWidth).w,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  )
-                : Expanded(
-                    child: ListView.separated(
-                      itemBuilder: (context, index) {
-                        NotificationsTileModel item = notifications[index];
-                        return NotificationsTile(
-                          title: item.title,
-                          message: item.message,
-                          dateTime: item.dateTime,
-                          widget: item.widget,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const Divider(
-                          color: Color.fromRGBO(129, 129, 129, 0.2),
-                          thickness: 1,
-                        );
-                      },
-                      itemCount: notifications.length,
+            Ternary(
+              condition: notifications.isEmpty,
+              truthy: Column(
+                children: [
+                  const SizeBox(height: 225),
+                  SvgPicture.asset(
+                    ImageConstants.notificationsBlank,
+                    width: (67.33 / Dimensions.designWidth).w,
+                    height: (84.17 / Dimensions.designWidth).w,
+                  ),
+                  const SizeBox(height: 20),
+                  Text(
+                    "You're all caught up",
+                    style: TextStyles.primary.copyWith(
+                      color: const Color(0XFF414141),
+                      fontSize: (18 / Dimensions.designWidth).w,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
+                  const SizeBox(height: 10),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: (34 / Dimensions.designWidth).w),
+                    child: Text(
+                      "Check back later for promotions and recommendations to keep your account up to date.",
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: const Color(0XFF414141),
+                        fontSize: (18 / Dimensions.designWidth).w,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+              falsy: Expanded(
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    NotificationsTileModel item = notifications[index];
+                    return NotificationsTile(
+                      title: item.title,
+                      message: item.message,
+                      dateTime: item.dateTime,
+                      widget: item.widget,
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider(
+                      color: Color.fromRGBO(129, 129, 129, 0.2),
+                      thickness: 1,
+                    );
+                  },
+                  itemCount: notifications.length,
+                ),
+              ),
+            ),
           ],
         ),
       ),

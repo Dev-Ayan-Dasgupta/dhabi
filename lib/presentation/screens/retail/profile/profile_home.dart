@@ -94,31 +94,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                   const SizeBox(height: 10),
                   TopicTile(
                     color: const Color(0XFFFAFAFA),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CustomDialog(
-                            svgAssetPath: ImageConstants.sentimentSatisfied,
-                            title: "Hey, there!",
-                            message:
-                                "Please check FAQs.\nIf you do not find your query,\nContact us at +971 200 0000",
-                            auxWidget: const SizeBox(),
-                            actionWidget: Column(
-                              children: [
-                                GradientButton(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  text: "Back",
-                                ),
-                                const SizeBox(height: 22),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
+                    onTap: promptUserContactUs,
                     iconPath: ImageConstants.atTheRate,
                     text: "Contact Us",
                   ),
@@ -147,39 +123,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                 const SizeBox(height: 10),
                 TopicTile(
                   color: const Color(0XFFFAFAFA),
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CustomDialog(
-                          svgAssetPath: ImageConstants.warning,
-                          title: "Are you sure?",
-                          message:
-                              "If you log out you would need to re-login again",
-                          auxWidget: const SizeBox(),
-                          actionWidget: Column(
-                            children: [
-                              GradientButton(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.onboarding,
-                                    arguments: OnboardingArgumentModel(
-                                      isInitial: false,
-                                    ).toMap(),
-                                  );
-                                },
-                                text: "Yes, I am sure",
-                              ),
-                              const SizeBox(height: 22),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
+                  onTap: promptUserLogout,
                   iconPath: ImageConstants.logout,
                   text: "Logout",
                   fontColor: AppColors.red,
@@ -199,6 +143,65 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void promptUserContactUs() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.sentimentSatisfied,
+          title: "Hey, there!",
+          message:
+              "Please check FAQs.\nIf you do not find your query,\nContact us at +971 200 0000",
+          auxWidget: const SizeBox(),
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: "Back",
+              ),
+              const SizeBox(height: 22),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void promptUserLogout() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Are you sure?",
+          message: "If you log out you would need to re-login again",
+          auxWidget: const SizeBox(),
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pushNamed(
+                    context,
+                    Routes.onboarding,
+                    arguments: OnboardingArgumentModel(
+                      isInitial: false,
+                    ).toMap(),
+                  );
+                },
+                text: "Yes, I am sure",
+              ),
+              const SizeBox(height: 22),
+            ],
+          ),
+        );
+      },
     );
   }
 }

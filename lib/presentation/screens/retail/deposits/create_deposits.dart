@@ -631,11 +631,11 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     );
   }
 
-  void onDropdownChanged(Object? p0) {
+  void onDropdownChanged(Object? value) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     final DropdownSelectedBloc dropdownSelectedBloc =
         context.read<DropdownSelectedBloc>();
-    selectedPayout = p0 as String;
+    selectedPayout = value as String;
     isShowButton = true;
     dropdownSelectedBloc.add(
       DropdownSelectedEvent(isDropdownSelected: true, toggles: 1),

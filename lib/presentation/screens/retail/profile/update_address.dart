@@ -45,8 +45,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
   @override
   Widget build(BuildContext context) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    final DropdownSelectedBloc dropdownSelectedBloc =
-        context.read<DropdownSelectedBloc>();
+
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -151,24 +150,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             const SizeBox(height: 10),
                             BlocBuilder<DropdownSelectedBloc,
                                 DropdownSelectedState>(
-                              builder: (context, state) {
-                                return CustomDropDown(
-                                  title: "Select from the list",
-                                  items: items,
-                                  value: selectedValue,
-                                  onChanged: (value) {
-                                    toggles++;
-                                    isEmirateSelected = true;
-                                    selectedValue = value as String;
-                                    dropdownSelectedBloc.add(
-                                      DropdownSelectedEvent(
-                                        isDropdownSelected: isEmirateSelected,
-                                        toggles: toggles,
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
+                              builder: buildDropdown,
                             ),
                             const SizeBox(height: 20),
                             Text(
@@ -194,26 +176,51 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
               ),
             ),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: (context, state) {
-                if (isShowButton) {
-                  return Column(
-                    children: [
-                      GradientButton(
-                        onTap: () {},
-                        text: "Continue",
-                      ),
-                      const SizeBox(height: 20),
-                    ],
-                  );
-                } else {
-                  return const SizeBox();
-                }
-              },
+              builder: buildSubmitButton,
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget buildDropdown(BuildContext context, DropdownSelectedState state) {
+    return CustomDropDown(
+      title: "Select from the list",
+      items: items,
+      value: selectedValue,
+      onChanged: onDropdownChanged,
+    );
+  }
+
+  void onDropdownChanged(Object? value) {
+    final DropdownSelectedBloc dropdownSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    toggles++;
+    isEmirateSelected = true;
+    selectedValue = value as String;
+    dropdownSelectedBloc.add(
+      DropdownSelectedEvent(
+        isDropdownSelected: isEmirateSelected,
+        toggles: toggles,
+      ),
+    );
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (isShowButton) {
+      return Column(
+        children: [
+          GradientButton(
+            onTap: () {},
+            text: "Continue",
+          ),
+          const SizeBox(height: 20),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 
   @override

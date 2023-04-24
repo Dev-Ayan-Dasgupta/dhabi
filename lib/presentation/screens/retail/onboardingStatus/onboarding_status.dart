@@ -130,35 +130,7 @@ class _RetailOnboardingStatusScreenState
                   Row(
                     children: [
                       BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                        builder: (context, state) {
-                          if (isChecked) {
-                            return InkWell(
-                              onTap: () {
-                                isChecked = false;
-                                triggerCheckBoxEvent(isChecked);
-                                triggerAllTrueEvent();
-                              },
-                              child: SvgPicture.asset(
-                                ImageConstants.checkedBox,
-                                width: (14 / Dimensions.designWidth).w,
-                                height: (14 / Dimensions.designWidth).w,
-                              ),
-                            );
-                          } else {
-                            return InkWell(
-                              onTap: () {
-                                isChecked = true;
-                                triggerCheckBoxEvent(isChecked);
-                                triggerAllTrueEvent();
-                              },
-                              child: SvgPicture.asset(
-                                ImageConstants.uncheckedBox,
-                                width: (14 / Dimensions.designWidth).w,
-                                height: (14 / Dimensions.designWidth).w,
-                              ),
-                            );
-                          }
-                        },
+                        builder: buildTC,
                       ),
                       const SizeBox(width: 10),
                       RichText(
@@ -251,6 +223,36 @@ class _RetailOnboardingStatusScreenState
         ),
       ),
     );
+  }
+
+  Widget buildTC(BuildContext context, CheckBoxState state) {
+    if (isChecked) {
+      return InkWell(
+        onTap: () {
+          isChecked = false;
+          triggerCheckBoxEvent(isChecked);
+          triggerAllTrueEvent();
+        },
+        child: SvgPicture.asset(
+          ImageConstants.checkedBox,
+          width: (14 / Dimensions.designWidth).w,
+          height: (14 / Dimensions.designWidth).w,
+        ),
+      );
+    } else {
+      return InkWell(
+        onTap: () {
+          isChecked = true;
+          triggerCheckBoxEvent(isChecked);
+          triggerAllTrueEvent();
+        },
+        child: SvgPicture.asset(
+          ImageConstants.uncheckedBox,
+          width: (14 / Dimensions.designWidth).w,
+          height: (14 / Dimensions.designWidth).w,
+        ),
+      );
+    }
   }
 
   void triggerCheckBoxEvent(bool isChecked) {
