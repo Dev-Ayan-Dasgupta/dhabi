@@ -85,33 +85,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
             Column(
               children: [
                 SolidButton(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CustomDialog(
-                          svgAssetPath: ImageConstants.warning,
-                          title: "Are you sure?",
-                          message:
-                              "Penal rate will apply in case of premature withdrawal.",
-                          auxWidget: const SizeBox(),
-                          actionWidget: Column(
-                            children: [
-                              GradientButton(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.pushNamed(
-                                      context, Routes.prematureWithdrawal);
-                                },
-                                text: "Yes, I am sure",
-                              ),
-                              const SizeBox(height: 20),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
+                  onTap: promptUser,
                   text: "Premature Withdrawal",
                   color: const Color.fromRGBO(34, 97, 105, 0.17),
                   fontColor: AppColors.primary,
@@ -129,6 +103,32 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void promptUser() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Are you sure?",
+          message: "Penalty rate will apply in case of premature withdrawal.",
+          auxWidget: const SizeBox(),
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, Routes.prematureWithdrawal);
+                },
+                text: "Yes, I am sure",
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+        );
+      },
     );
   }
 }

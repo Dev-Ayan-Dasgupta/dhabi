@@ -85,26 +85,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                 Row(
                   children: [
                     BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                      builder: (context, state) {
-                        if (isChecked) {
-                          return InkWell(
-                            onTap: () {
-                              isChecked = false;
-                              triggerCheckBoxEvent(isChecked);
-                            },
-                            child: SvgPicture.asset(ImageConstants.checkedBox),
-                          );
-                        } else {
-                          return InkWell(
-                            onTap: () {
-                              isChecked = true;
-                              triggerCheckBoxEvent(isChecked);
-                            },
-                            child:
-                                SvgPicture.asset(ImageConstants.uncheckedBox),
-                          );
-                        }
-                      },
+                      builder: buildTC,
                     ),
                     const SizeBox(width: 10),
                     Text(
@@ -118,36 +99,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                 ),
                 const SizeBox(height: 10),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                  builder: (context, state) {
-                    if (isChecked) {
-                      return GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.errorSuccessScreen,
-                            arguments: ErrorArgumentModel(
-                              hasSecondaryButton: false,
-                              iconPath: ImageConstants.checkCircleOutlined,
-                              title: "Congratulations!",
-                              message:
-                                  "Your deposit account has been created. Acc. 254455588800",
-                              buttonText: "Home",
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              },
-                              buttonTextSecondary: "",
-                              onTapSecondary: () {},
-                            ).toMap(),
-                          );
-                        },
-                        text: "I Agree",
-                      );
-                    } else {
-                      return const SizeBox();
-                    }
-                  },
+                  builder: buildSubmitButton,
                 ),
                 const SizeBox(height: 20),
               ],
@@ -158,10 +110,61 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
     );
   }
 
+  Widget buildTC(BuildContext context, CheckBoxState state) {
+    if (isChecked) {
+      return InkWell(
+        onTap: () {
+          isChecked = false;
+          triggerCheckBoxEvent(isChecked);
+        },
+        child: SvgPicture.asset(ImageConstants.checkedBox),
+      );
+    } else {
+      return InkWell(
+        onTap: () {
+          isChecked = true;
+          triggerCheckBoxEvent(isChecked);
+        },
+        child: SvgPicture.asset(ImageConstants.uncheckedBox),
+      );
+    }
+  }
+
   void triggerCheckBoxEvent(bool isChecked) {
     final CheckBoxBloc checkBoxBloc = context.read<CheckBoxBloc>();
     checkBoxBloc.add(CheckBoxEvent(isChecked: isChecked));
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     showButtonBloc.add(ShowButtonEvent(show: isChecked));
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (isChecked) {
+      return GradientButton(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            Routes.errorSuccessScreen,
+            arguments: ErrorArgumentModel(
+              hasSecondaryButton: false,
+              iconPath: ImageConstants.checkCircleOutlined,
+              title: "Congratulations!",
+              message:
+                  "Your deposit account has been created. Acc. 254455588800",
+              buttonText: "Home",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              buttonTextSecondary: "",
+              onTapSecondary: () {},
+            ).toMap(),
+          );
+        },
+        text: "I Agree",
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 }

@@ -83,33 +83,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                 Row(
                   children: [
                     BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                      builder: (context, state) {
-                        if (isChecked) {
-                          return InkWell(
-                            onTap: () {
-                              isChecked = false;
-                              triggerCheckBoxEvent(isChecked);
-                            },
-                            child: SvgPicture.asset(
-                              ImageConstants.checkedBox,
-                              width: (14 / Dimensions.designWidth).w,
-                              height: (14 / Dimensions.designWidth).w,
-                            ),
-                          );
-                        } else {
-                          return InkWell(
-                            onTap: () {
-                              isChecked = true;
-                              triggerCheckBoxEvent(isChecked);
-                            },
-                            child: SvgPicture.asset(
-                              ImageConstants.uncheckedBox,
-                              width: (14 / Dimensions.designWidth).w,
-                              height: (14 / Dimensions.designWidth).w,
-                            ),
-                          );
-                        }
-                      },
+                      builder: buildTC,
                     ),
                     const SizeBox(width: 10),
                     RichText(
@@ -148,27 +122,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                 ),
                 const SizeBox(height: 10),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                  builder: (context, state) {
-                    if (isChecked) {
-                      return Column(
-                        children: [
-                          GradientButton(
-                            onTap: () {
-                              if (isChecked) {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              }
-                            },
-                            text: "Withdraw and close deposit",
-                            fontColor: Colors.white,
-                          ),
-                          const SizeBox(height: 20),
-                        ],
-                      );
-                    } else {
-                      return const SizeBox();
-                    }
-                  },
+                  builder: buildSubmitButton,
                 ),
               ],
             )
@@ -178,10 +132,60 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
     );
   }
 
+  Widget buildTC(BuildContext context, CheckBoxState state) {
+    if (isChecked) {
+      return InkWell(
+        onTap: () {
+          isChecked = false;
+          triggerCheckBoxEvent(isChecked);
+        },
+        child: SvgPicture.asset(
+          ImageConstants.checkedBox,
+          width: (14 / Dimensions.designWidth).w,
+          height: (14 / Dimensions.designWidth).w,
+        ),
+      );
+    } else {
+      return InkWell(
+        onTap: () {
+          isChecked = true;
+          triggerCheckBoxEvent(isChecked);
+        },
+        child: SvgPicture.asset(
+          ImageConstants.uncheckedBox,
+          width: (14 / Dimensions.designWidth).w,
+          height: (14 / Dimensions.designWidth).w,
+        ),
+      );
+    }
+  }
+
   void triggerCheckBoxEvent(bool isChecked) {
     final CheckBoxBloc checkBoxBloc = context.read<CheckBoxBloc>();
     checkBoxBloc.add(CheckBoxEvent(isChecked: isChecked));
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     showButtonBloc.add(ShowButtonEvent(show: isChecked));
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (isChecked) {
+      return Column(
+        children: [
+          GradientButton(
+            onTap: () {
+              if (isChecked) {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
+            },
+            text: "Withdraw and close deposit",
+            fontColor: Colors.white,
+          ),
+          const SizeBox(height: 20),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 }

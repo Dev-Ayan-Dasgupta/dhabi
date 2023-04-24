@@ -96,47 +96,12 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    final ShowButtonBloc showPeriodSection = context.read<ShowButtonBloc>();
-    final ErrorMessageBloc errorMessageBloc = context.read<ErrorMessageBloc>();
-    final DropdownSelectedBloc dropdownSelectedBloc =
-        context.read<DropdownSelectedBloc>();
-    final DateSelectionBloc dateSelectionBloc =
-        context.read<DateSelectionBloc>();
-    final ButtonFocussedBloc maturityBloc = context.read<ButtonFocussedBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
         actions: [
           InkWell(
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      left: (22 / Dimensions.designWidth).w,
-                      right: (22 / Dimensions.designWidth).w,
-                      top: (192 / Dimensions.designWidth).w,
-                      bottom: (32 / Dimensions.designWidth).w,
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: SizedBox(
-                        height: (100 / Dimensions.designWidth).w,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: DetailsTile(length: 10, details: rates),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
+            onTap: promptUser,
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: (15 / Dimensions.designWidth).w,
@@ -190,28 +155,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                   ),
                   const SizeBox(height: 10),
                   BlocBuilder<SummaryTileBloc, SummaryTileState>(
-                    builder: (context, state) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 47.w -
-                                (22 / Dimensions.designWidth).w -
-                                ((5 - 1) * (6.5 / Dimensions.designWidth).w)),
-                        child: SizedBox(
-                          width: 90.w,
-                          height: (9 / Dimensions.designWidth).w,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 5,
-                            itemBuilder: (context, index) {
-                              return ScrollIndicator(
-                                isCurrent: (index == _scrollIndex),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    },
+                    builder: buildSummaryTile,
                   ),
                   const SizeBox(height: 20),
                   Expanded(
@@ -300,52 +244,11 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                           CustomTextField(
                             controller: _depositController,
                             hintText: "E.g., 500",
-                            onChanged: (p0) {
-                              if (double.parse(p0) < minAmtReq ||
-                                  double.parse(p0) > maxAmtReq) {
-                                errorMsg =
-                                    "Please check the amount limit criteria";
-                                errorMessageBloc.add(
-                                  ErrorMessageEvent(hasError: errorMsg.isEmpty),
-                                );
-                              } else if (double.parse(p0) > bal) {
-                                errorMsg = "Insufficient fund";
-                                errorMessageBloc.add(
-                                  ErrorMessageEvent(hasError: errorMsg.isEmpty),
-                                );
-                              } else {
-                                errorMsg = "";
-                                errorMessageBloc.add(
-                                  ErrorMessageEvent(hasError: errorMsg.isEmpty),
-                                );
-                              }
-                              showPeriodSection.add(
-                                ShowButtonEvent(
-                                    show: showPeriod &&
-                                        errorMsg.isEmpty &&
-                                        _depositController.text.isNotEmpty),
-                              );
-                              showButtonBloc.add(ShowButtonEvent(
-                                  show: isShowButton &&
-                                      errorMsg.isEmpty &&
-                                      _depositController.text.isNotEmpty));
-                            },
+                            onChanged: onDepositChanged,
                           ),
                           const SizeBox(height: 5),
                           BlocBuilder<ErrorMessageBloc, ErrorMessageState>(
-                            builder: (context, state) {
-                              if (errorMsg.isNotEmpty) {
-                                return Text(
-                                  errorMsg,
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: AppColors.red,
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                );
-                              } else {
-                                return const SizeBox();
-                              }
-                            },
+                            builder: buildErrorMessage,
                           ),
                           const SizeBox(height: 10),
                           Text(
@@ -357,136 +260,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                           ),
                           const SizeBox(height: 10),
                           InkWell(
-                            onTap: () {
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (_) {
-                                  return Material(
-                                    color: Colors.transparent,
-                                    child: Container(
-                                      height: (300 / Dimensions.designWidth).w,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(
-                                              (20 / Dimensions.designWidth).w),
-                                          topRight: Radius.circular(
-                                              (20 / Dimensions.designWidth).w),
-                                        ),
-                                        color: Colors.white,
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            DateFormat('EEE, d MMM, yyyy')
-                                                .format(DateTime.now()),
-                                            style:
-                                                TextStyles.primaryBold.copyWith(
-                                              color: AppColors.black25,
-                                              fontSize:
-                                                  (18 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          ),
-                                          const SizeBox(height: 20),
-                                          SizedBox(
-                                            height:
-                                                (170 / Dimensions.designWidth)
-                                                    .w,
-                                            child: CupertinoDatePicker(
-                                              mode:
-                                                  CupertinoDatePickerMode.date,
-                                              onDateTimeChanged: (p0) {
-                                                date =
-                                                    DateFormat('d MMMM, yyyy')
-                                                        .format(p0);
-                                              },
-                                            ),
-                                          ),
-                                          const SizeBox(height: 20),
-                                          Row(
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Container(
-                                                  width: (50.w) - 1,
-                                                  color: Colors.white,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "CANCEL",
-                                                      style: TextStyles
-                                                          .primaryMedium
-                                                          .copyWith(
-                                                        color:
-                                                            AppColors.primary,
-                                                        fontSize: (16 /
-                                                                Dimensions
-                                                                    .designWidth)
-                                                            .w,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Container(
-                                                width: 1,
-                                                height: 30,
-                                                color: Colors.black12,
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  if (date.isNotEmpty) {
-                                                    dateSelectionBloc.add(
-                                                        const DateSelectionEvent(
-                                                            isDateSelected:
-                                                                true));
-                                                    showPeriod = true;
-                                                    showPeriodSection.add(
-                                                      ShowButtonEvent(
-                                                          show: showPeriod &&
-                                                              errorMsg
-                                                                  .isEmpty &&
-                                                              _depositController
-                                                                  .text
-                                                                  .isNotEmpty),
-                                                    );
-                                                  }
-
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Container(
-                                                  width: (50.w) - 1,
-                                                  color: Colors.white,
-                                                  child: Center(
-                                                    child: Text(
-                                                      "OK",
-                                                      style: TextStyles
-                                                          .primaryMedium
-                                                          .copyWith(
-                                                        color:
-                                                            AppColors.primary,
-                                                        fontSize: (16 /
-                                                                Dimensions
-                                                                    .designWidth)
-                                                            .w,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizeBox(height: 20),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                            onTap: showDatePickerWidget,
                             child: Container(
                               padding: EdgeInsets.all(
                                   (15 / Dimensions.designWidth).w),
@@ -511,18 +285,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                     children: [
                                       BlocBuilder<DateSelectionBloc,
                                           DateSelectionState>(
-                                        builder: (context, state) {
-                                          return Text(
-                                            "$date\t\t\t\t",
-                                            style: TextStyles.primaryMedium
-                                                .copyWith(
-                                              color: AppColors.black63,
-                                              fontSize:
-                                                  (16 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          );
-                                        },
+                                        builder: buildCurrentDate,
                                       ),
                                       SvgPicture.asset(
                                         ImageConstants.arrowForwardIos,
@@ -540,273 +303,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                             ),
                           ),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: (context, state) {
-                              if (showPeriod &&
-                                  errorMsg.isEmpty &&
-                                  _depositController.text.isNotEmpty) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizeBox(height: 10),
-                                    Container(
-                                      width: 100.w,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              (15 / Dimensions.designWidth).w,
-                                          vertical:
-                                              (8 / Dimensions.designWidth).w),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                (10 / Dimensions.designWidth)
-                                                    .w)),
-                                        color: AppColors.blackEE,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              SvgPicture.asset(
-                                                ImageConstants.warningSmall,
-                                                width: (20 /
-                                                        Dimensions.designWidth)
-                                                    .w,
-                                                height: (20 /
-                                                        Dimensions.designWidth)
-                                                    .w,
-                                                colorFilter:
-                                                    const ColorFilter.mode(
-                                                  AppColors.primary,
-                                                  BlendMode.srcIn,
-                                                ),
-                                              ),
-                                              const SizeBox(width: 10),
-                                              Text(
-                                                "Tenure",
-                                                style: TextStyles.primaryMedium
-                                                    .copyWith(
-                                                  color: AppColors.primary,
-                                                  fontSize: (18 /
-                                                          Dimensions
-                                                              .designWidth)
-                                                      .w,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Text(
-                                            "6.10%",
-                                            style: TextStyles.primaryMedium
-                                                .copyWith(
-                                              color: AppColors.primary,
-                                              fontSize:
-                                                  (18 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizeBox(height: 20),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Interest Payout ",
-                                          style:
-                                              TextStyles.primaryMedium.copyWith(
-                                            color: AppColors.black63,
-                                            fontSize:
-                                                (16 / Dimensions.designWidth).w,
-                                          ),
-                                        ),
-                                        SvgPicture.asset(
-                                          ImageConstants.help,
-                                          width:
-                                              (16.67 / Dimensions.designWidth)
-                                                  .w,
-                                          height:
-                                              (16.67 / Dimensions.designWidth)
-                                                  .w,
-                                          colorFilter: const ColorFilter.mode(
-                                            Color(0XFFA1A1A1),
-                                            BlendMode.srcIn,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizeBox(height: 7),
-                                    BlocBuilder<DropdownSelectedBloc,
-                                        DropdownSelectedState>(
-                                      builder: (context, state) {
-                                        return CustomDropDown(
-                                          title: "Select",
-                                          items: items,
-                                          value: selectedPayout,
-                                          onChanged: (p0) {
-                                            selectedPayout = p0 as String;
-                                            isShowButton = true;
-                                            dropdownSelectedBloc.add(
-                                              DropdownSelectedEvent(
-                                                  isDropdownSelected: true,
-                                                  toggles: 1),
-                                            );
-                                            showButtonBloc.add(ShowButtonEvent(
-                                                show: isShowButton &&
-                                                    errorMsg.isEmpty &&
-                                                    _depositController
-                                                        .text.isNotEmpty));
-                                          },
-                                        );
-                                      },
-                                    ),
-                                    const SizeBox(height: 20),
-                                    Text(
-                                      "On maturity",
-                                      style: TextStyles.primaryMedium.copyWith(
-                                        color: AppColors.black63,
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                    const SizeBox(height: 10),
-                                    Row(
-                                      children: [
-                                        BlocBuilder<ButtonFocussedBloc,
-                                            ButtonFocussedState>(
-                                          builder: (context, state) {
-                                            return InkWell(
-                                              onTap: () {
-                                                isAutoRenewal = true;
-                                                isAutoClosure = false;
-                                                maturityBloc.add(
-                                                  ButtonFocussedEvent(
-                                                      isFocussed: isAutoRenewal,
-                                                      toggles: 1),
-                                                );
-                                              },
-                                              child: Container(
-                                                width: (18 /
-                                                        Dimensions.designWidth)
-                                                    .w,
-                                                height: (18 /
-                                                        Dimensions.designWidth)
-                                                    .w,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                      width: 1,
-                                                      color: const Color(
-                                                          0XFFDDDDDD)),
-                                                ),
-                                                child: isAutoRenewal
-                                                    ? Center(
-                                                        child: SvgPicture.asset(
-                                                          ImageConstants.dot,
-                                                          width: (10 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                          height: (10 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                          colorFilter:
-                                                              const ColorFilter
-                                                                  .mode(
-                                                            Color(0XFF00B894),
-                                                            BlendMode.srcIn,
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : const SizeBox(),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        const SizeBox(width: 5),
-                                        Text(
-                                          "Auto Renewal",
-                                          style:
-                                              TextStyles.primaryMedium.copyWith(
-                                            color: AppColors.black63,
-                                            fontSize:
-                                                (16 / Dimensions.designWidth).w,
-                                          ),
-                                        ),
-                                        const SizeBox(width: 30),
-                                        BlocBuilder<ButtonFocussedBloc,
-                                            ButtonFocussedState>(
-                                          builder: (context, state) {
-                                            return InkWell(
-                                              onTap: () {
-                                                isAutoRenewal = false;
-                                                isAutoClosure = true;
-                                                maturityBloc.add(
-                                                  ButtonFocussedEvent(
-                                                      isFocussed: isAutoRenewal,
-                                                      toggles: 1),
-                                                );
-                                              },
-                                              child: Container(
-                                                width: (18 /
-                                                        Dimensions.designWidth)
-                                                    .w,
-                                                height: (18 /
-                                                        Dimensions.designWidth)
-                                                    .w,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                      width: 1,
-                                                      color: const Color(
-                                                          0XFFDDDDDD)),
-                                                ),
-                                                child: isAutoClosure
-                                                    ? Center(
-                                                        child: SvgPicture.asset(
-                                                          ImageConstants.dot,
-                                                          width: (10 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                          height: (10 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                          colorFilter:
-                                                              const ColorFilter
-                                                                  .mode(
-                                                            Color(0XFF00B894),
-                                                            BlendMode.srcIn,
-                                                          ),
-                                                        ),
-                                                      )
-                                                    : const SizeBox(),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        const SizeBox(width: 5),
-                                        Text(
-                                          "Auto Closure",
-                                          style:
-                                              TextStyles.primaryMedium.copyWith(
-                                            color: AppColors.black63,
-                                            fontSize:
-                                                (16 / Dimensions.designWidth).w,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizeBox(height: 10),
-                                  ],
-                                );
-                              } else {
-                                return const SizeBox();
-                              }
-                            },
+                            builder: buildDepositColumn,
                           ),
                         ],
                       ),
@@ -816,30 +313,467 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               ),
             ),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: (context, state) {
-                if (isShowButton &&
-                    errorMsg.isEmpty &&
-                    _depositController.text.isNotEmpty) {
-                  return Column(
-                    children: [
-                      const SizeBox(height: 20),
-                      GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, Routes.depositConfirmation);
-                        },
-                        text: "Proceed",
-                      ),
-                      const SizeBox(height: 20),
-                    ],
-                  );
-                } else {
-                  return const SizeBox();
-                }
-              },
+              builder: buildSubmitButton,
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void promptUser() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: (22 / Dimensions.designWidth).w,
+            right: (22 / Dimensions.designWidth).w,
+            top: (192 / Dimensions.designWidth).w,
+            bottom: (32 / Dimensions.designWidth).w,
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: SizedBox(
+              height: (100 / Dimensions.designWidth).w,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: DetailsTile(length: 10, details: rates),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildSummaryTile(BuildContext context, SummaryTileState state) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: 47.w -
+              (22 / Dimensions.designWidth).w -
+              ((5 - 1) * (6.5 / Dimensions.designWidth).w)),
+      child: SizedBox(
+        width: 90.w,
+        height: (9 / Dimensions.designWidth).w,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return ScrollIndicator(
+              isCurrent: (index == _scrollIndex),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget buildErrorMessage(BuildContext context, ErrorMessageState state) {
+    if (errorMsg.isNotEmpty) {
+      return Text(
+        errorMsg,
+        style: TextStyles.primaryMedium.copyWith(
+          color: AppColors.red,
+          fontSize: (16 / Dimensions.designWidth).w,
+        ),
+      );
+    } else {
+      return const SizeBox();
+    }
+  }
+
+  void showDatePickerWidget() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (_) {
+        return Material(
+          color: Colors.transparent,
+          child: Container(
+            height: (300 / Dimensions.designWidth).w,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular((20 / Dimensions.designWidth).w),
+                topRight: Radius.circular((20 / Dimensions.designWidth).w),
+              ),
+              color: Colors.white,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  DateFormat('EEE, d MMM, yyyy').format(DateTime.now()),
+                  style: TextStyles.primaryBold.copyWith(
+                    color: AppColors.black25,
+                    fontSize: (18 / Dimensions.designWidth).w,
+                  ),
+                ),
+                const SizeBox(height: 20),
+                SizedBox(
+                  height: (170 / Dimensions.designWidth).w,
+                  child: CupertinoDatePicker(
+                    mode: CupertinoDatePickerMode.date,
+                    onDateTimeChanged: (p0) {
+                      date = DateFormat('d MMMM, yyyy').format(p0);
+                    },
+                  ),
+                ),
+                const SizeBox(height: 20),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: (50.w) - 1,
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(
+                            "CANCEL",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 1,
+                      height: 30,
+                      color: Colors.black12,
+                    ),
+                    InkWell(
+                      onTap: onDateOK,
+                      child: Container(
+                        width: (50.w) - 1,
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(
+                            "OK",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizeBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void onDateOK() {
+    final DateSelectionBloc dateSelectionBloc =
+        context.read<DateSelectionBloc>();
+    final ShowButtonBloc showPeriodSection = context.read<ShowButtonBloc>();
+    if (date.isNotEmpty) {
+      dateSelectionBloc.add(const DateSelectionEvent(isDateSelected: true));
+      showPeriod = true;
+      showPeriodSection.add(
+        ShowButtonEvent(
+            show: showPeriod &&
+                errorMsg.isEmpty &&
+                _depositController.text.isNotEmpty),
+      );
+    }
+    Navigator.pop(context);
+  }
+
+  Widget buildCurrentDate(BuildContext context, DateSelectionState state) {
+    return Text(
+      "$date\t\t\t\t",
+      style: TextStyles.primaryMedium.copyWith(
+        color: AppColors.black63,
+        fontSize: (16 / Dimensions.designWidth).w,
+      ),
+    );
+  }
+
+  Widget buildDepositColumn(BuildContext context, ShowButtonState state) {
+    if (showPeriod && errorMsg.isEmpty && _depositController.text.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizeBox(height: 10),
+          Container(
+            width: 100.w,
+            padding: EdgeInsets.symmetric(
+                horizontal: (15 / Dimensions.designWidth).w,
+                vertical: (8 / Dimensions.designWidth).w),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                  Radius.circular((10 / Dimensions.designWidth).w)),
+              color: AppColors.blackEE,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SvgPicture.asset(
+                      ImageConstants.warningSmall,
+                      width: (20 / Dimensions.designWidth).w,
+                      height: (20 / Dimensions.designWidth).w,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.primary,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    const SizeBox(width: 10),
+                    Text(
+                      "Tenure",
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (18 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  "6.10%",
+                  style: TextStyles.primaryMedium.copyWith(
+                    color: AppColors.primary,
+                    fontSize: (18 / Dimensions.designWidth).w,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizeBox(height: 20),
+          Row(
+            children: [
+              Text(
+                "Interest Payout ",
+                style: TextStyles.primaryMedium.copyWith(
+                  color: AppColors.black63,
+                  fontSize: (16 / Dimensions.designWidth).w,
+                ),
+              ),
+              SvgPicture.asset(
+                ImageConstants.help,
+                width: (16.67 / Dimensions.designWidth).w,
+                height: (16.67 / Dimensions.designWidth).w,
+                colorFilter: const ColorFilter.mode(
+                  Color(0XFFA1A1A1),
+                  BlendMode.srcIn,
+                ),
+              ),
+            ],
+          ),
+          const SizeBox(height: 7),
+          BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+            builder: buildInterestDropdown,
+          ),
+          const SizeBox(height: 20),
+          Text(
+            "On maturity",
+            style: TextStyles.primaryMedium.copyWith(
+              color: AppColors.black63,
+              fontSize: (16 / Dimensions.designWidth).w,
+            ),
+          ),
+          const SizeBox(height: 10),
+          Row(
+            children: [
+              BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
+                builder: buildAutoRollover,
+              ),
+              const SizeBox(width: 5),
+              Text(
+                "Auto Rollover",
+                style: TextStyles.primaryMedium.copyWith(
+                  color: AppColors.black63,
+                  fontSize: (16 / Dimensions.designWidth).w,
+                ),
+              ),
+              const SizeBox(width: 30),
+              BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
+                builder: buildAutoClosure,
+              ),
+              const SizeBox(width: 5),
+              Text(
+                "Auto Closure",
+                style: TextStyles.primaryMedium.copyWith(
+                  color: AppColors.black63,
+                  fontSize: (16 / Dimensions.designWidth).w,
+                ),
+              ),
+            ],
+          ),
+          const SizeBox(height: 10),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
+  }
+
+  Widget buildInterestDropdown(
+      BuildContext context, DropdownSelectedState state) {
+    return CustomDropDown(
+      title: "Select",
+      items: items,
+      value: selectedPayout,
+      onChanged: onDropdownChanged,
+    );
+  }
+
+  void onDropdownChanged(Object? p0) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    final DropdownSelectedBloc dropdownSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    selectedPayout = p0 as String;
+    isShowButton = true;
+    dropdownSelectedBloc.add(
+      DropdownSelectedEvent(isDropdownSelected: true, toggles: 1),
+    );
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isShowButton &&
+            errorMsg.isEmpty &&
+            _depositController.text.isNotEmpty,
+      ),
+    );
+  }
+
+  Widget buildAutoRollover(BuildContext context, ButtonFocussedState state) {
+    final ButtonFocussedBloc maturityBloc = context.read<ButtonFocussedBloc>();
+    return InkWell(
+      onTap: () {
+        isAutoRenewal = true;
+        isAutoClosure = false;
+        maturityBloc.add(
+          ButtonFocussedEvent(isFocussed: isAutoRenewal, toggles: 1),
+        );
+      },
+      child: Container(
+        width: (18 / Dimensions.designWidth).w,
+        height: (18 / Dimensions.designWidth).w,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(width: 1, color: const Color(0XFFDDDDDD)),
+        ),
+        child: Ternary(
+          condition: isAutoRenewal,
+          truthy: Center(
+            child: SvgPicture.asset(
+              ImageConstants.dot,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+              colorFilter: const ColorFilter.mode(
+                Color(0XFF00B894),
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          falsy: const SizeBox(),
+        ),
+      ),
+    );
+  }
+
+  Widget buildAutoClosure(BuildContext context, ButtonFocussedState state) {
+    final ButtonFocussedBloc maturityBloc = context.read<ButtonFocussedBloc>();
+    return InkWell(
+      onTap: () {
+        isAutoRenewal = false;
+        isAutoClosure = true;
+        maturityBloc.add(
+          ButtonFocussedEvent(isFocussed: isAutoRenewal, toggles: 1),
+        );
+      },
+      child: Container(
+        width: (18 / Dimensions.designWidth).w,
+        height: (18 / Dimensions.designWidth).w,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(width: 1, color: const Color(0XFFDDDDDD)),
+        ),
+        child: Ternary(
+          condition: isAutoClosure,
+          truthy: Center(
+            child: SvgPicture.asset(
+              ImageConstants.dot,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+              colorFilter: const ColorFilter.mode(
+                Color(0XFF00B894),
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          falsy: const SizeBox(),
+        ),
+      ),
+    );
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (isShowButton &&
+        errorMsg.isEmpty &&
+        _depositController.text.isNotEmpty) {
+      return Column(
+        children: [
+          const SizeBox(height: 20),
+          GradientButton(
+            onTap: () {
+              Navigator.pushNamed(context, Routes.depositConfirmation);
+            },
+            text: "Proceed",
+          ),
+          const SizeBox(height: 20),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
+  }
+
+  void onDepositChanged(String p0) {
+    final ErrorMessageBloc errorMessageBloc = context.read<ErrorMessageBloc>();
+    final ShowButtonBloc showPeriodSection = context.read<ShowButtonBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    if (double.parse(p0) < minAmtReq || double.parse(p0) > maxAmtReq) {
+      errorMsg = "Please check the amount limit criteria";
+      errorMessageBloc.add(
+        ErrorMessageEvent(hasError: errorMsg.isEmpty),
+      );
+    } else if (double.parse(p0) > bal) {
+      errorMsg = "Insufficient fund";
+      errorMessageBloc.add(
+        ErrorMessageEvent(hasError: errorMsg.isEmpty),
+      );
+    } else {
+      errorMsg = "";
+      errorMessageBloc.add(
+        ErrorMessageEvent(hasError: errorMsg.isEmpty),
+      );
+    }
+    showPeriodSection.add(
+      ShowButtonEvent(
+        show: showPeriod &&
+            errorMsg.isEmpty &&
+            _depositController.text.isNotEmpty,
+      ),
+    );
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isShowButton &&
+            errorMsg.isEmpty &&
+            _depositController.text.isNotEmpty,
       ),
     );
   }
