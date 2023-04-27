@@ -31,8 +31,6 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShowButtonBloc showProceedButtonBloc = context.read<ShowButtonBloc>();
-    final ShowButtonBloc toggleCaptionsBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -80,44 +78,12 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                         children: [
                           const SizeBox(height: 10),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: (context, state) {
-                              return Text(
-                                !isNotZero ? "You Send" : "You're Sending",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.black63,
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                              );
-                            },
+                            builder: buildYouSend,
                           ),
                           const SizeBox(height: 10),
                           CustomTextField(
                             controller: _sendController,
-                            onChanged: (p0) {
-                              if (_sendController.text.isEmpty ||
-                                  double.parse(_sendController.text) == 0) {
-                                isNotZero = false;
-                                toggleCaptionsBloc
-                                    .add(ShowButtonEvent(show: isNotZero));
-                              } else {
-                                isNotZero = true;
-                                toggleCaptionsBloc
-                                    .add(ShowButtonEvent(show: isNotZero));
-                              }
-                              if (double.parse(_sendController.text) >
-                                  maxBalance) {
-                                isShowButton = false;
-                                showProceedButtonBloc
-                                    .add(ShowButtonEvent(show: isShowButton));
-                              } else {
-                                isShowButton = true;
-                                showProceedButtonBloc
-                                    .add(ShowButtonEvent(show: isShowButton));
-                              }
-                              _receiveController.text =
-                                  (double.parse(p0) * exchangeRate)
-                                      .toStringAsFixed(2);
-                            },
+                            onChanged: onSendChanged,
                             keyboardType: TextInputType.number,
                             suffix: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -140,62 +106,15 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                           ),
                           const SizeBox(height: 7),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: (context, state) {
-                              return Row(
-                                children: [
-                                  isShowButton
-                                      ? const SizeBox()
-                                      : SvgPicture.asset(
-                                          ImageConstants.errorSolid,
-                                          width:
-                                              (30 / Dimensions.designWidth).w,
-                                          height:
-                                              (30 / Dimensions.designHeight).w,
-                                        ),
-                                  Text(
-                                    isShowButton
-                                        ? "Available to transfer AED 1000"
-                                        : " Insufficient balance",
-                                    style: TextStyles.primaryMedium.copyWith(
-                                      color: isShowButton
-                                          ? AppColors.black81
-                                          : AppColors.red,
-                                      fontSize: (15 / Dimensions.designWidth).w,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
+                            builder: buildSendError,
                           ),
                           const SizeBox(height: 10),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: (context, state) {
-                              return FeeExchangeRate(
-                                transferFeeCurrency: "USD",
-                                transferFee: isShowButton ? 5 : 0,
-                                exchangeRateSenderCurrency: "USD",
-                                exchangeRate: isShowButton ? exchangeRate : 0,
-                                exchangeRateReceiverCurrency: "AED",
-                              );
-                            },
+                            builder: buildExchangeRate,
                           ),
                           const SizeBox(height: 10),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: (context, state) {
-                              return Text(
-                                !isNotZero
-                                    ? isBetweenAccounts
-                                        ? "You Receive"
-                                        : "They Receive"
-                                    : isBetweenAccounts
-                                        ? "You will receive"
-                                        : "They will receive",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.black63,
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                              );
-                            },
+                            builder: buildYourReceive,
                           ),
                           const SizeBox(height: 10),
                           CustomTextField(
@@ -232,21 +151,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
             Column(
               children: [
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                  builder: (context, state) {
-                    if (isShowButton && isNotZero) {
-                      return GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.transferConfirmation,
-                          );
-                        },
-                        text: "Proceed",
-                      );
-                    } else {
-                      return const SizeBox();
-                    }
-                  },
+                  builder: buildSubmitButton,
                 ),
                 const SizeBox(height: 20),
               ],
@@ -255,6 +160,105 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
         ),
       ),
     );
+  }
+
+  Widget buildYouSend(BuildContext context, ShowButtonState state) {
+    return Text(
+      !isNotZero ? "You Send" : "You're Sending",
+      style: TextStyles.primaryMedium.copyWith(
+        color: AppColors.black63,
+        fontSize: (16 / Dimensions.designWidth).w,
+      ),
+    );
+  }
+
+  void onSendChanged(String p0) {
+    final ShowButtonBloc showProceedButtonBloc = context.read<ShowButtonBloc>();
+    final ShowButtonBloc toggleCaptionsBloc = context.read<ShowButtonBloc>();
+    if (_sendController.text.isEmpty ||
+        double.parse(_sendController.text) == 0) {
+      isNotZero = false;
+      toggleCaptionsBloc.add(ShowButtonEvent(show: isNotZero));
+    } else {
+      isNotZero = true;
+      toggleCaptionsBloc.add(ShowButtonEvent(show: isNotZero));
+    }
+    if (double.parse(_sendController.text) > maxBalance) {
+      isShowButton = false;
+      showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));
+    } else {
+      isShowButton = true;
+      showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));
+    }
+    _receiveController.text =
+        (double.parse(p0) * exchangeRate).toStringAsFixed(2);
+  }
+
+  Widget buildSendError(BuildContext context, ShowButtonState state) {
+    return Row(
+      children: [
+        Ternary(
+          condition: isShowButton,
+          truthy: const SizeBox(),
+          falsy: SvgPicture.asset(
+            ImageConstants.errorSolid,
+            width: (30 / Dimensions.designWidth).w,
+            height: (30 / Dimensions.designHeight).w,
+          ),
+        ),
+        Text(
+          isShowButton
+              ? "Available to transfer AED 1000"
+              : " Insufficient balance",
+          style: TextStyles.primaryMedium.copyWith(
+            color: isShowButton ? AppColors.black81 : AppColors.red,
+            fontSize: (15 / Dimensions.designWidth).w,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildExchangeRate(BuildContext context, ShowButtonState state) {
+    return FeeExchangeRate(
+      transferFeeCurrency: "USD",
+      transferFee: isShowButton ? 5 : 0,
+      exchangeRateSenderCurrency: "USD",
+      exchangeRate: isShowButton ? exchangeRate : 0,
+      exchangeRateReceiverCurrency: "AED",
+    );
+  }
+
+  Widget buildYourReceive(BuildContext context, ShowButtonState state) {
+    return Text(
+      !isNotZero
+          ? isBetweenAccounts
+              ? "You Receive"
+              : "They Receive"
+          : isBetweenAccounts
+              ? "You will receive"
+              : "They will receive",
+      style: TextStyles.primaryMedium.copyWith(
+        color: AppColors.black63,
+        fontSize: (16 / Dimensions.designWidth).w,
+      ),
+    );
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (isShowButton && isNotZero) {
+      return GradientButton(
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            Routes.transferConfirmation,
+          );
+        },
+        text: "Proceed",
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 
   @override

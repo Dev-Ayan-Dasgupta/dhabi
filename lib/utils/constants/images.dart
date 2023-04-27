@@ -82,8 +82,12 @@ class ImageConstants {
   static const String idCard = "${iconsRoot}id_card.svg";
   static const String mobile = "${iconsRoot}mobile.svg";
   static const String building = "${iconsRoot}building.svg";
+  static const String support = "${iconsRoot}support.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";
   static const String cardBase = "${bannersRoot}card_base.png";
+  static const String eidFront = "${bannersRoot}eid_front.png";
+  static const String eidBack = "${bannersRoot}eid_back.png";
+  static const String passport = "${bannersRoot}passport.png";
 }

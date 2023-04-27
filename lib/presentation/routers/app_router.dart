@@ -14,6 +14,7 @@ import 'package:dialup_mobile_app/presentation/screens/retail/onboardingStatus/o
 import 'package:dialup_mobile_app/presentation/screens/retail/profile/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/transfer/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/verification/index.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -77,6 +78,20 @@ class AppRouter {
       case Routes.retailOnboardingStatus:
         return MaterialPageRoute(
           builder: (_) => RetailOnboardingStatusScreen(
+            argument: args,
+          ),
+        );
+      case Routes.eidExplanation:
+        return MaterialPageRoute(
+          builder: (_) => const EIDExplanationScreen(),
+        );
+      case Routes.passportExplanation:
+        return MaterialPageRoute(
+          builder: (_) => const PassportExplanationScreen(),
+        );
+      case Routes.scannedDetails:
+        return MaterialPageRoute(
+          builder: (_) => ScannedDetailsScreen(
             argument: args,
           ),
         );

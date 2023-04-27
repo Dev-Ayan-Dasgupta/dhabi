@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "dialup_mobile_app" "\0"
+            VALUE "FileDescription", "Dhabi" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "dialup_mobile_app" "\0"
+            VALUE "InternalName", "Dhabi" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "dialup_mobile_app.exe" "\0"
-            VALUE "ProductName", "dialup_mobile_app" "\0"
+            VALUE "ProductName", "Dhabi" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

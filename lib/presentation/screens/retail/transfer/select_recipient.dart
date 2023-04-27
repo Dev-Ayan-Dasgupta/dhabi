@@ -87,7 +87,6 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShowButtonBloc recipientListBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -121,15 +120,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
             CustomSearchBox(
               hintText: "Search",
               controller: _searchController,
-              onChanged: (p0) {
-                searchRecipient(recipients, p0);
-                if (p0.isEmpty) {
-                  isShowAll = true;
-                } else {
-                  isShowAll = false;
-                }
-                recipientListBloc.add(ShowButtonEvent(show: isShowAll));
-              },
+              onChanged: onSearchChanged,
             ),
             const SizeBox(height: 10),
             InkWell(
@@ -185,42 +176,24 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
             ),
             const SizeBox(height: 10),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: (context, state) {
-                return Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      RecipientModel item = isShowAll
-                          ? recipients[index]
-                          : filteredRecipients[index];
-                      return RecipientsTile(
-                        isWithinDhabi: item.isWithinDhabi,
-                        onTap: () {
-                          Navigator.pushNamed(context, Routes.transferAmount);
-                        },
-                        flagImgUrl: item.flagImgUrl,
-                        name: item.name,
-                        accountNumber: item.accountNumber,
-                        currency: item.currency,
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const Divider(
-                        color: Color(0XFFDDDDDD),
-                        height: 1,
-                      );
-                    },
-                    itemCount: isShowAll
-                        ? recipients.length
-                        : filteredRecipients.length,
-                  ),
-                );
-              },
+              builder: buildRecipientList,
             ),
             const SizeBox(height: 20),
           ],
         ),
       ),
     );
+  }
+
+  void onSearchChanged(String p0) {
+    final ShowButtonBloc recipientListBloc = context.read<ShowButtonBloc>();
+    searchRecipient(recipients, p0);
+    if (p0.isEmpty) {
+      isShowAll = true;
+    } else {
+      isShowAll = false;
+    }
+    recipientListBloc.add(ShowButtonEvent(show: isShowAll));
   }
 
   void searchRecipient(List<RecipientModel> recipients, String matcher) {
@@ -230,6 +203,34 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
         filteredRecipients.add(recipient);
       }
     }
+  }
+
+  Widget buildRecipientList(BuildContext context, ShowButtonState state) {
+    return Expanded(
+      child: ListView.separated(
+        itemBuilder: (context, index) {
+          RecipientModel item =
+              isShowAll ? recipients[index] : filteredRecipients[index];
+          return RecipientsTile(
+            isWithinDhabi: item.isWithinDhabi,
+            onTap: () {
+              Navigator.pushNamed(context, Routes.transferAmount);
+            },
+            flagImgUrl: item.flagImgUrl,
+            name: item.name,
+            accountNumber: item.accountNumber,
+            currency: item.currency,
+          );
+        },
+        separatorBuilder: (context, index) {
+          return const Divider(
+            color: Color(0XFFDDDDDD),
+            height: 1,
+          );
+        },
+        itemCount: isShowAll ? recipients.length : filteredRecipients.length,
+      ),
+    );
   }
 
   @override

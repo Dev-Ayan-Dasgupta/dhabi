@@ -95,7 +95,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                   ),
                   const SizeBox(height: 30),
                   ApplicationProgress(progress: progress),
-                  const SizeBox(height: 30),
+                  const SizeBox(height: 20),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -103,11 +103,13 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                "International Tax Reporting Confirmation",
-                                style: TextStyles.primary.copyWith(
-                                  color: AppColors.primary,
-                                  fontSize: (24 / Dimensions.designWidth).w,
+                              Expanded(
+                                child: Text(
+                                  "International Tax Reporting Confirmation",
+                                  style: TextStyles.primary.copyWith(
+                                    color: AppColors.primary,
+                                    fontSize: (24 / Dimensions.designWidth).w,
+                                  ),
                                 ),
                               ),
                               const SizeBox(width: 10),

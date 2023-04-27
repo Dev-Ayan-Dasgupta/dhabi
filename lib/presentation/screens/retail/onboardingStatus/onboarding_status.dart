@@ -210,8 +210,21 @@ class _RetailOnboardingStatusScreenState
                 children: [
                   GradientButton(
                     onTap: () {
-                      Navigator.pushNamed(context, Routes.applicationAddress);
-                      // Navigator.pushNamed(context, Routes.captureFace);
+                      // Navigator.pushNamed(context, Routes.applicationAddress);
+                      switch (onboardingStatusArgument.stepsCompleted) {
+                        case 1:
+                          // Navigator.pushNamed(context, Routes.captureFace);
+                          Navigator.pushNamed(context, Routes.eidExplanation);
+                          break;
+                        case 2:
+                          Navigator.pushNamed(
+                              context, Routes.applicationAddress);
+                          break;
+                        case 3:
+                          Navigator.pushNamed(context, Routes.verifyMobile);
+                          break;
+                        default:
+                      }
                     },
                     text: "Proceed",
                   ),

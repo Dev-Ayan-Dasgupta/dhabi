@@ -72,31 +72,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                   ),
                   const SizeBox(height: 20),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      if (isProceed) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Recipient Name",
-                              style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.red,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            const SizeBox(height: 10),
-                            CustomTextField(
-                              enabled: false,
-                              color: AppColors.blackEE,
-                              controller: _recipientNameController,
-                              onChanged: (p0) {},
-                            ),
-                          ],
-                        );
-                      } else {
-                        return const SizeBox();
-                      }
-                    },
+                    builder: buildRecipientName,
                   ),
                 ],
               ),
@@ -110,33 +86,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                       return Row(
                         children: [
                           BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                            builder: (context, state) {
-                              if (isChecked) {
-                                return InkWell(
-                                  onTap: () {
-                                    isChecked = false;
-                                    triggerCheckBoxEvent(isChecked);
-                                  },
-                                  child: SvgPicture.asset(
-                                    ImageConstants.checkedBox,
-                                    width: (14 / Dimensions.designWidth).w,
-                                    height: (14 / Dimensions.designWidth).w,
-                                  ),
-                                );
-                              } else {
-                                return InkWell(
-                                  onTap: () {
-                                    isChecked = true;
-                                    triggerCheckBoxEvent(isChecked);
-                                  },
-                                  child: SvgPicture.asset(
-                                    ImageConstants.uncheckedBox,
-                                    width: (14 / Dimensions.designWidth).w,
-                                    height: (14 / Dimensions.designWidth).w,
-                                  ),
-                                );
-                              }
-                            },
+                            builder: buildTC,
                           ),
                           const SizeBox(width: 10),
                           Text(
@@ -155,24 +105,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                 ),
                 const SizeBox(height: 10),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                  builder: (context, state) {
-                    if (_ibanController.text.isNotEmpty) {
-                      return GradientButton(
-                        onTap: () {
-                          if (!isProceed) {
-                            isProceed = true;
-                            buttonText = "Proceed";
-                            proceedBloc.add(ShowButtonEvent(show: isProceed));
-                          } else {
-                            Navigator.pushNamed(context, Routes.transferAmount);
-                          }
-                        },
-                        text: buttonText,
-                      );
-                    } else {
-                      return const SizeBox();
-                    }
-                  },
+                  builder: buildSubmitButton,
                 ),
                 const SizeBox(height: 20),
               ],
@@ -186,6 +119,80 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
   void triggerCheckBoxEvent(bool isChecked) {
     final CheckBoxBloc checkBoxBloc = context.read<CheckBoxBloc>();
     checkBoxBloc.add(CheckBoxEvent(isChecked: isChecked));
+  }
+
+  Widget buildRecipientName(BuildContext context, ShowButtonState state) {
+    if (isProceed) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Recipient Name",
+            style: TextStyles.primaryMedium.copyWith(
+              color: AppColors.red,
+              fontSize: (16 / Dimensions.designWidth).w,
+            ),
+          ),
+          const SizeBox(height: 10),
+          CustomTextField(
+            enabled: false,
+            color: AppColors.blackEE,
+            controller: _recipientNameController,
+            onChanged: (p0) {},
+          ),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
+  }
+
+  Widget buildTC(BuildContext context, CheckBoxState state) {
+    if (isChecked) {
+      return InkWell(
+        onTap: () {
+          isChecked = false;
+          triggerCheckBoxEvent(isChecked);
+        },
+        child: SvgPicture.asset(
+          ImageConstants.checkedBox,
+          width: (14 / Dimensions.designWidth).w,
+          height: (14 / Dimensions.designWidth).w,
+        ),
+      );
+    } else {
+      return InkWell(
+        onTap: () {
+          isChecked = true;
+          triggerCheckBoxEvent(isChecked);
+        },
+        child: SvgPicture.asset(
+          ImageConstants.uncheckedBox,
+          width: (14 / Dimensions.designWidth).w,
+          height: (14 / Dimensions.designWidth).w,
+        ),
+      );
+    }
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    final ShowButtonBloc proceedBloc = context.read<ShowButtonBloc>();
+    if (_ibanController.text.isNotEmpty) {
+      return GradientButton(
+        onTap: () {
+          if (!isProceed) {
+            isProceed = true;
+            buttonText = "Proceed";
+            proceedBloc.add(ShowButtonEvent(show: isProceed));
+          } else {
+            Navigator.pushNamed(context, Routes.transferAmount);
+          }
+        },
+        text: buttonText,
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 
   @override

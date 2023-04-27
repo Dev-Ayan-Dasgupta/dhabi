@@ -54,13 +54,6 @@ class _AddRecipientDetailsUaeScreenState
 
   @override
   Widget build(BuildContext context) {
-    final DropdownSelectedBloc accountTypeBloc =
-        context.read<DropdownSelectedBloc>();
-    final DropdownSelectedBloc bankNameBloc =
-        context.read<DropdownSelectedBloc>();
-    final DropdownSelectedBloc reasonTypeBloc =
-        context.read<DropdownSelectedBloc>();
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -101,22 +94,7 @@ class _AddRecipientDetailsUaeScreenState
                         CustomTextField(
                           hintText: "e.g., Muhammad Al Mansour",
                           controller: _nameController,
-                          onChanged: (p0) {
-                            if (p0.isEmpty) {
-                              isName = false;
-                            } else {
-                              isName = true;
-                            }
-                            showButtonBloc.add(
-                              ShowButtonEvent(
-                                show: isName &&
-                                    isIban &&
-                                    isAccountTypeSelected &&
-                                    isBankNameSelected &&
-                                    isReasonSelected,
-                              ),
-                            );
-                          },
+                          onChanged: onNameChanged,
                         ),
                         const SizeBox(height: 15),
                         Text(
@@ -129,33 +107,7 @@ class _AddRecipientDetailsUaeScreenState
                         const SizeBox(height: 7),
                         BlocBuilder<DropdownSelectedBloc,
                             DropdownSelectedState>(
-                          builder: (context, state) {
-                            return CustomDropDown(
-                              title: "e.g., Savings",
-                              items: items,
-                              value: selectedAccType,
-                              onChanged: (value) {
-                                toggles++;
-                                isAccountTypeSelected = true;
-                                selectedAccType = value as String;
-                                accountTypeBloc.add(
-                                  DropdownSelectedEvent(
-                                    isDropdownSelected: isAccountTypeSelected,
-                                    toggles: toggles,
-                                  ),
-                                );
-                                showButtonBloc.add(
-                                  ShowButtonEvent(
-                                    show: isName &&
-                                        isIban &&
-                                        isAccountTypeSelected &&
-                                        isBankNameSelected &&
-                                        isReasonSelected,
-                                  ),
-                                );
-                              },
-                            );
-                          },
+                          builder: buildAccountType,
                         ),
                         const SizeBox(height: 15),
                         Text(
@@ -170,22 +122,7 @@ class _AddRecipientDetailsUaeScreenState
                           hintText: "Enter IBAN / Credit Card Number",
                           keyboardType: TextInputType.number,
                           controller: _ibanController,
-                          onChanged: (p0) {
-                            if (p0.isEmpty) {
-                              isIban = false;
-                            } else {
-                              isIban = true;
-                            }
-                            showButtonBloc.add(
-                              ShowButtonEvent(
-                                show: isName &&
-                                    isIban &&
-                                    isAccountTypeSelected &&
-                                    isBankNameSelected &&
-                                    isReasonSelected,
-                              ),
-                            );
-                          },
+                          onChanged: onIbanChanged,
                         ),
                         const SizeBox(height: 15),
                         Text(
@@ -198,33 +135,7 @@ class _AddRecipientDetailsUaeScreenState
                         const SizeBox(height: 7),
                         BlocBuilder<DropdownSelectedBloc,
                             DropdownSelectedState>(
-                          builder: (context, state) {
-                            return CustomDropDown(
-                              title: "Name of Recipients Bank",
-                              items: items,
-                              value: selectedBank,
-                              onChanged: (value) {
-                                toggles++;
-                                isBankNameSelected = true;
-                                selectedBank = value as String;
-                                bankNameBloc.add(
-                                  DropdownSelectedEvent(
-                                    isDropdownSelected: isBankNameSelected,
-                                    toggles: toggles,
-                                  ),
-                                );
-                                showButtonBloc.add(
-                                  ShowButtonEvent(
-                                    show: isName &&
-                                        isIban &&
-                                        isAccountTypeSelected &&
-                                        isBankNameSelected &&
-                                        isReasonSelected,
-                                  ),
-                                );
-                              },
-                            );
-                          },
+                          builder: buildBankName,
                         ),
                         const SizeBox(height: 15),
                         Text(
@@ -237,33 +148,7 @@ class _AddRecipientDetailsUaeScreenState
                         const SizeBox(height: 7),
                         BlocBuilder<DropdownSelectedBloc,
                             DropdownSelectedState>(
-                          builder: (context, state) {
-                            return CustomDropDown(
-                              title: "e.g., Family Support",
-                              items: items,
-                              value: selectedReason,
-                              onChanged: (value) {
-                                toggles++;
-                                isReasonSelected = true;
-                                selectedReason = value as String;
-                                reasonTypeBloc.add(
-                                  DropdownSelectedEvent(
-                                    isDropdownSelected: isReasonSelected,
-                                    toggles: toggles,
-                                  ),
-                                );
-                                showButtonBloc.add(
-                                  ShowButtonEvent(
-                                    show: isName &&
-                                        isIban &&
-                                        isAccountTypeSelected &&
-                                        isBankNameSelected &&
-                                        isReasonSelected,
-                                  ),
-                                );
-                              },
-                            );
-                          },
+                          builder: buildPurpose,
                         ),
                         const SizeBox(height: 20),
                       ],
@@ -273,74 +158,205 @@ class _AddRecipientDetailsUaeScreenState
               ),
             ),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: (context, state) {
-                if (isName &&
-                    isIban &&
-                    isAccountTypeSelected &&
-                    isBankNameSelected &&
-                    isReasonSelected) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizeBox(height: 20),
-                      Row(
-                        children: [
-                          BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                            builder: (context, state) {
-                              if (isChecked) {
-                                return InkWell(
-                                  onTap: () {
-                                    isChecked = false;
-                                    triggerCheckBoxEvent(isChecked);
-                                  },
-                                  child: SvgPicture.asset(
-                                    ImageConstants.checkedBox,
-                                    width: (14 / Dimensions.designWidth).w,
-                                    height: (14 / Dimensions.designWidth).w,
-                                  ),
-                                );
-                              } else {
-                                return InkWell(
-                                  onTap: () {
-                                    isChecked = true;
-                                    triggerCheckBoxEvent(isChecked);
-                                  },
-                                  child: SvgPicture.asset(
-                                    ImageConstants.uncheckedBox,
-                                    width: (14 / Dimensions.designWidth).w,
-                                    height: (14 / Dimensions.designWidth).w,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                          const SizeBox(width: 10),
-                          Text(
-                            "Add this person to my recipient list",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: const Color(0XFF414141),
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizeBox(height: 10),
-                      GradientButton(
-                        onTap: () {},
-                        text: "Continue",
-                      ),
-                      const SizeBox(height: 20),
-                    ],
-                  );
-                } else {
-                  return const SizeBox();
-                }
-              },
+              builder: buildSubmitButton,
             ),
           ],
         ),
       ),
     );
+  }
+
+  void onNameChanged(String p0) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    if (p0.isEmpty) {
+      isName = false;
+    } else {
+      isName = true;
+    }
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isName &&
+            isIban &&
+            isAccountTypeSelected &&
+            isBankNameSelected &&
+            isReasonSelected,
+      ),
+    );
+  }
+
+  Widget buildAccountType(BuildContext context, DropdownSelectedState state) {
+    final DropdownSelectedBloc accountTypeBloc =
+        context.read<DropdownSelectedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return CustomDropDown(
+      title: "e.g., Savings",
+      items: items,
+      value: selectedAccType,
+      onChanged: (value) {
+        toggles++;
+        isAccountTypeSelected = true;
+        selectedAccType = value as String;
+        accountTypeBloc.add(
+          DropdownSelectedEvent(
+            isDropdownSelected: isAccountTypeSelected,
+            toggles: toggles,
+          ),
+        );
+        showButtonBloc.add(
+          ShowButtonEvent(
+            show: isName &&
+                isIban &&
+                isAccountTypeSelected &&
+                isBankNameSelected &&
+                isReasonSelected,
+          ),
+        );
+      },
+    );
+  }
+
+  void onIbanChanged(String p0) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    if (p0.isEmpty) {
+      isIban = false;
+    } else {
+      isIban = true;
+    }
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isName &&
+            isIban &&
+            isAccountTypeSelected &&
+            isBankNameSelected &&
+            isReasonSelected,
+      ),
+    );
+  }
+
+  Widget buildBankName(BuildContext context, DropdownSelectedState state) {
+    final DropdownSelectedBloc bankNameBloc =
+        context.read<DropdownSelectedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return CustomDropDown(
+      title: "Name of Recipients Bank",
+      items: items,
+      value: selectedBank,
+      onChanged: (value) {
+        toggles++;
+        isBankNameSelected = true;
+        selectedBank = value as String;
+        bankNameBloc.add(
+          DropdownSelectedEvent(
+            isDropdownSelected: isBankNameSelected,
+            toggles: toggles,
+          ),
+        );
+        showButtonBloc.add(
+          ShowButtonEvent(
+            show: isName &&
+                isIban &&
+                isAccountTypeSelected &&
+                isBankNameSelected &&
+                isReasonSelected,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildPurpose(BuildContext context, DropdownSelectedState state) {
+    final DropdownSelectedBloc reasonTypeBloc =
+        context.read<DropdownSelectedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return CustomDropDown(
+      title: "e.g., Family Support",
+      items: items,
+      value: selectedReason,
+      onChanged: (value) {
+        toggles++;
+        isReasonSelected = true;
+        selectedReason = value as String;
+        reasonTypeBloc.add(
+          DropdownSelectedEvent(
+            isDropdownSelected: isReasonSelected,
+            toggles: toggles,
+          ),
+        );
+        showButtonBloc.add(
+          ShowButtonEvent(
+            show: isName &&
+                isIban &&
+                isAccountTypeSelected &&
+                isBankNameSelected &&
+                isReasonSelected,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    if (isName &&
+        isIban &&
+        isAccountTypeSelected &&
+        isBankNameSelected &&
+        isReasonSelected) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizeBox(height: 20),
+          Row(
+            children: [
+              BlocBuilder<CheckBoxBloc, CheckBoxState>(
+                builder: (context, state) {
+                  if (isChecked) {
+                    return InkWell(
+                      onTap: () {
+                        isChecked = false;
+                        triggerCheckBoxEvent(isChecked);
+                      },
+                      child: SvgPicture.asset(
+                        ImageConstants.checkedBox,
+                        width: (14 / Dimensions.designWidth).w,
+                        height: (14 / Dimensions.designWidth).w,
+                      ),
+                    );
+                  } else {
+                    return InkWell(
+                      onTap: () {
+                        isChecked = true;
+                        triggerCheckBoxEvent(isChecked);
+                      },
+                      child: SvgPicture.asset(
+                        ImageConstants.uncheckedBox,
+                        width: (14 / Dimensions.designWidth).w,
+                        height: (14 / Dimensions.designWidth).w,
+                      ),
+                    );
+                  }
+                },
+              ),
+              const SizeBox(width: 10),
+              Text(
+                "Add this person to my recipient list",
+                style: TextStyles.primaryMedium.copyWith(
+                  color: const Color(0XFF414141),
+                  fontSize: (16 / Dimensions.designWidth).w,
+                ),
+              ),
+            ],
+          ),
+          const SizeBox(height: 10),
+          GradientButton(
+            onTap: () {},
+            text: "Continue",
+          ),
+          const SizeBox(height: 20),
+        ],
+      );
+    } else {
+      return const SizeBox();
+    }
   }
 
   void triggerCheckBoxEvent(bool isChecked) {

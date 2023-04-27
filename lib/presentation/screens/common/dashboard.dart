@@ -42,7 +42,7 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
             child: GradientButton(
               width: (90 / Dimensions.designWidth).w,
               height: (40 / Dimensions.designWidth).w,
-              fontSize: (18 / Dimensions.designWidth).w,
+              fontSize: (16 / Dimensions.designWidth).w,
               borderRadius: (5 / Dimensions.designWidth).w,
               onTap: () {
                 Navigator.pushNamed(context, Routes.registration);
@@ -82,7 +82,7 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
               ),
               SizedBox(
                 width: 100.w,
-                height: (144 / Dimensions.designWidth).w,
+                height: (145 / Dimensions.designWidth).w,
                 child: Row(
                   children: [
                     Expanded(

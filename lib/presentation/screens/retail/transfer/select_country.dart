@@ -83,7 +83,6 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ShowButtonBloc countryListBloc = context.read<ShowButtonBloc>();
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
@@ -124,15 +123,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
             CustomSearchBox(
               hintText: "Search",
               controller: _searchController,
-              onChanged: (p0) {
-                searchCountry(countries, p0);
-                if (p0.isEmpty) {
-                  isShowAll = true;
-                } else {
-                  isShowAll = false;
-                }
-                countryListBloc.add(ShowButtonEvent(show: isShowAll));
-              },
+              onChanged: onSearchChanged,
             ),
             const SizeBox(height: 20),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -164,6 +155,19 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
         ),
       ),
     );
+  }
+
+  void onSearchChanged(String p0) {
+    final ShowButtonBloc countryListBloc = context.read<ShowButtonBloc>();
+    {
+      searchCountry(countries, p0);
+      if (p0.isEmpty) {
+        isShowAll = true;
+      } else {
+        isShowAll = false;
+      }
+      countryListBloc.add(ShowButtonEvent(show: isShowAll));
+    }
   }
 
   void searchCountry(List<CountryTileModel> countries, String matcher) {

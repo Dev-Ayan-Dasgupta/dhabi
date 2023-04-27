@@ -157,36 +157,40 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                           Column(
                             children: [
                               const SizeBox(height: 9.5),
-                              Expanded(
-                                child: ListView.builder(
-                                  controller: _scrollController,
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 6,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        left: (index == 0)
-                                            ? (15 / Dimensions.designWidth).w
-                                            : 0,
-                                      ),
-                                      child: AccountSummaryTile(
-                                        onTap: () {
-                                          if (index == 2) {
-                                            Navigator.pushNamed(
-                                                context, Routes.vault);
-                                          }
-                                        },
-                                        imgUrl:
-                                            "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                        accountType: "Savings",
-                                        currency: "AED",
-                                        amount: 0.00,
-                                        subText: "Powered by FH",
-                                        subImgUrl:
-                                            "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-                                      ),
-                                    );
-                                  },
+                              SizedBox(
+                                width: 100.w,
+                                height: (145 / Dimensions.designWidth).w,
+                                child: Expanded(
+                                  child: ListView.builder(
+                                    controller: _scrollController,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 6,
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                          left: (index == 0)
+                                              ? (15 / Dimensions.designWidth).w
+                                              : 0,
+                                        ),
+                                        child: AccountSummaryTile(
+                                          onTap: () {
+                                            if (index == 2) {
+                                              Navigator.pushNamed(
+                                                  context, Routes.vault);
+                                            }
+                                          },
+                                          imgUrl:
+                                              "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
+                                          accountType: "Savings",
+                                          currency: "AED",
+                                          amount: 0.00,
+                                          subText: "Powered by FH",
+                                          subImgUrl:
+                                              "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                               const SizeBox(height: 10),
@@ -216,16 +220,16 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                   );
                                 },
                               ),
-                              const SizeBox(height: 15),
+                              const SizeBox(height: 12.5),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  DashboardActivityTile(
-                                    iconPath: ImageConstants.add,
-                                    activityText: "Add Money",
-                                    onTap: () {},
-                                  ),
-                                  const SizeBox(width: 40),
+                                  // DashboardActivityTile(
+                                  //   iconPath: ImageConstants.add,
+                                  //   activityText: "Add Money",
+                                  //   onTap: () {},
+                                  // ),
+                                  // const SizeBox(width: 40),
                                   DashboardActivityTile(
                                     iconPath: ImageConstants.arrowOutward,
                                     activityText: "Send Money",
@@ -234,15 +238,15 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                           context, Routes.sendMoney);
                                     },
                                   ),
-                                  const SizeBox(width: 40),
-                                  DashboardActivityTile(
-                                    iconPath: ImageConstants.barChart,
-                                    activityText: "Insights",
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, Routes.insights);
-                                    },
-                                  ),
+                                  // const SizeBox(width: 40),
+                                  // DashboardActivityTile(
+                                  //   iconPath: ImageConstants.barChart,
+                                  //   activityText: "Insights",
+                                  //   onTap: () {
+                                  //     Navigator.pushNamed(
+                                  //         context, Routes.insights);
+                                  //   },
+                                  // ),
                                 ],
                               ),
                             ],
@@ -429,26 +433,30 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                 ),
               ),
               const SizeBox(height: 15),
-              Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 2,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          left: (15 / Dimensions.designWidth).w,
-                        ),
-                        child: const DashboardBannerImage(
+              SizedBox(
+                width: 100.w,
+                height: (120 / Dimensions.designWidth).w,
+                child: Expanded(
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 2,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            left: (15 / Dimensions.designWidth).w,
+                          ),
+                          child: const DashboardBannerImage(
+                            imgUrl: ImageConstants.dashboard,
+                          ),
+                        );
+                      } else {
+                        return const DashboardBannerImage(
                           imgUrl: ImageConstants.dashboard,
-                        ),
-                      );
-                    } else {
-                      return const DashboardBannerImage(
-                        imgUrl: ImageConstants.dashboard,
-                      );
-                    }
-                  },
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
               const SizeBox(height: 15),
@@ -478,9 +486,9 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           !hasOnboarded
               ? const SizeBox(height: 265)
               : DraggableScrollableSheet(
-                  initialChildSize: 0.33,
-                  minChildSize: 0.33,
-                  maxChildSize: 0.85,
+                  initialChildSize: 0.4,
+                  minChildSize: 0.4,
+                  maxChildSize: 1,
                   builder: (context, scrollController) {
                     return Stack(
                       children: [
