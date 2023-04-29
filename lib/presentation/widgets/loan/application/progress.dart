@@ -175,6 +175,7 @@ class ApplicationProgress extends StatelessWidget {
         const SizeBox(height: 8),
         Row(
           children: [
+            const SizeBox(width: 3),
             Text(
               "Address",
               style: TextStyles.primary.copyWith(
@@ -182,7 +183,7 @@ class ApplicationProgress extends StatelessWidget {
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
-            const SizeBox(width: 75),
+            const SizeBox(width: 82),
             Text(
               "Income",
               style: TextStyles.primary.copyWith(
@@ -190,7 +191,7 @@ class ApplicationProgress extends StatelessWidget {
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
-            const SizeBox(width: 83),
+            const SizeBox(width: 92),
             Text(
               "Tax",
               style: TextStyles.primary.copyWith(
@@ -198,7 +199,7 @@ class ApplicationProgress extends StatelessWidget {
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
-            const SizeBox(width: 85),
+            const SizeBox(width: 90),
             Text(
               "Account",
               style: TextStyles.primary.copyWith(

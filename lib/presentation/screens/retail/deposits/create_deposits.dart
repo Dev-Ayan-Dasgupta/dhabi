@@ -21,6 +21,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -732,7 +733,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
             onTap: () {
               Navigator.pushNamed(context, Routes.depositConfirmation);
             },
-            text: "Proceed",
+            text: labels[31]["labelText"],
           ),
           const SizeBox(height: 20),
         ],

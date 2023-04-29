@@ -5,6 +5,7 @@ import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:dialup_mobile_app/utils/helpers/input_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,7 +47,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Let's get started!",
+                      labels[211]["labelText"],
                       style: TextStyles.primaryBold.copyWith(
                         color: AppColors.primary,
                         fontSize: (28 / Dimensions.designWidth).w,
@@ -54,7 +55,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                     const SizeBox(height: 22),
                     Text(
-                      "This email address will be used as your User ID for your account creation",
+                      labels[212]["labelText"],
                       style: TextStyles.primaryMedium.copyWith(
                         color: AppColors.grey40,
                         fontSize: (16 / Dimensions.designWidth).w,
@@ -96,7 +97,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     },
                     child: RichText(
                       text: TextSpan(
-                        text: 'Already have an Account? ',
+                        text: '${labels[213]["labelText"]} ',
                         style: TextStyles.primary.copyWith(
                           color: AppColors.primary,
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -213,7 +214,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ).toMap(),
           );
         },
-        text: "Proceed",
+        text: labels[31]["labelText"],
       );
     }
   }

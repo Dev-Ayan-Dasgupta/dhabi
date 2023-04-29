@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
+import 'package:dialup_mobile_app/data/repositories/get_app_labels.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/utils/constants/images.dart';
 import 'package:dialup_mobile_app/utils/helpers/index.dart';
@@ -31,6 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    MapAppLabels.mapAppLabels();
     initPlatformState();
     navigate(context);
   }

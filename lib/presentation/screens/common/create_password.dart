@@ -20,6 +20,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -120,7 +121,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Password",
+                    labels[182]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -161,7 +162,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                           ),
                           const SizeBox(height: 15),
                           Text(
-                            "Password",
+                            labels[182]["labelText"],
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.black63,
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -173,7 +174,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                           ),
                           const SizeBox(height: 15),
                           Text(
-                            "Confirm Password",
+                            labels[49]["labelText"],
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.black63,
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -504,7 +505,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 Navigator.pushNamed(context, Routes.businessOnboardingStatus);
               }
             },
-            text: "Create Profile",
+            text: labels[222]["labelText"],
           ),
         ],
       );

@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
@@ -42,7 +43,7 @@ class PasswordCriteria extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Password Criteria",
+            labels[50]["labelText"],
             style: TextStyles.primaryBold.copyWith(
               color: AppColors.primary,
               fontSize: (16 / Dimensions.designWidth).w,
@@ -54,7 +55,7 @@ class PasswordCriteria extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Minimum 8 characters",
+                labels[51]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
                   color: criteria1Color ?? AppColors.red,
                   fontSize: (16 / Dimensions.designWidth).w,
@@ -68,7 +69,7 @@ class PasswordCriteria extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Must Contain one Numeric value",
+                labels[52]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
                   color: criteria2Color ?? AppColors.red,
                   fontSize: (16 / Dimensions.designWidth).w,
@@ -82,7 +83,7 @@ class PasswordCriteria extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Must include upper and lower cases",
+                labels[53]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
                   color: criteria3Color ?? AppColors.red,
                   fontSize: (16 / Dimensions.designWidth).w,
@@ -96,7 +97,7 @@ class PasswordCriteria extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Must include one special character (!,@,#...)",
+                labels[54]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
                   color: criteria4Color ?? AppColors.red,
                   fontSize: (16 / Dimensions.designWidth).w,

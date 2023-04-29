@@ -6,6 +6,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -76,7 +77,7 @@ class _RetailOnboardingStatusScreenState
                     iconPath: ImageConstants.envelope,
                     iconWidth: 10,
                     iconHeight: 14,
-                    text: "Email Verification",
+                    text: labels[224]["labelText"],
                     dividerHeight: 24,
                   ),
                   OnboardingStatusRow(
@@ -85,7 +86,7 @@ class _RetailOnboardingStatusScreenState
                     iconPath: ImageConstants.idCard,
                     iconWidth: 10,
                     iconHeight: 14,
-                    text: "Verify your ID",
+                    text: labels[225]["labelText"],
                     dividerHeight: 24,
                   ),
                   OnboardingStatusRow(
@@ -94,7 +95,7 @@ class _RetailOnboardingStatusScreenState
                     iconPath: ImageConstants.article,
                     iconWidth: 14,
                     iconHeight: 14,
-                    text: "Enter your Details",
+                    text: labels[226]["labelText"],
                     dividerHeight: 24,
                   ),
                   OnboardingStatusRow(
@@ -103,7 +104,7 @@ class _RetailOnboardingStatusScreenState
                     iconPath: ImageConstants.mobile,
                     iconWidth: 14,
                     iconHeight: 18,
-                    text: "Verify Mobile Number",
+                    text: labels[227]["labelText"],
                     dividerHeight: 0,
                   ),
                   const SizeBox(height: 30),
@@ -194,7 +195,7 @@ class _RetailOnboardingStatusScreenState
                                 // );
                                 // Navigator.pushNamed(context, Routes.captureFace);
                               },
-                              text: "Create Account",
+                              text: labels[288]["labelText"],
                             ),
                             const SizeBox(height: 20),
                           ],
@@ -226,7 +227,7 @@ class _RetailOnboardingStatusScreenState
                         default:
                       }
                     },
-                    text: "Proceed",
+                    text: labels[31]["labelText"],
                   ),
                   const SizeBox(height: 20),
                 ],

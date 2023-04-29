@@ -8,6 +8,7 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -106,7 +107,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                   ),
                   const SizeBox(height: 10),
                   Text(
-                    "Country of Registration",
+                    labels[297]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.black63,
                       fontSize: (16 / Dimensions.designWidth).w,
@@ -183,7 +184,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                                     .toMap(),
                           );
                         },
-                        text: "Proceed",
+                        text: labels[31]["labelText"],
                       ),
                       const SizeBox(height: 20),
                     ],

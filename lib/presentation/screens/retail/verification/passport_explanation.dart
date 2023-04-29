@@ -4,6 +4,7 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
@@ -72,8 +73,13 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
     if (completion.action == DocReaderAction.COMPLETE ||
         completion.action == DocReaderAction.TIMEOUT) {
       DocumentReaderResults? results = completion.results;
-      fullName = await results
-          ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      String? firstName =
+          await results?.textFieldValueByType(EVisualFieldType.FT_GIVEN_NAMES);
+      String? surname =
+          await results?.textFieldValueByType(EVisualFieldType.FT_SURNAME);
+      // fullName = await results
+      //     ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      fullName = "$firstName $surname";
       String? passportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
       // passportNumber = ppMrz!.substring(0, 9);
@@ -126,7 +132,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Here is how to scan your passport",
+                    labels[252]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.primary,
                       fontSize: (24 / Dimensions.designWidth).w,
@@ -153,7 +159,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "Place your passport on a flat surface, and make sure the pages are straight.",
+                      labels[254]["labelText"],
                       style: TextStyles.primaryMedium.copyWith(
                         color: AppColors.blackD9,
                         fontSize: (16 / Dimensions.designWidth).w,
@@ -167,7 +173,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               children: [
                 GradientButton(
                   onTap: promptUser,
-                  text: "Start Scanning",
+                  text: labels[231]["labelText"],
                 ),
                 const SizeBox(height: 15),
                 SolidButton(
@@ -183,7 +189,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                       ).toMap(),
                     );
                   },
-                  text: "Skip for now",
+                  text: labels[235]["labelText"],
                   color: AppColors.primaryBright17,
                   fontColor: AppColors.primary,
                 ),
@@ -202,9 +208,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
-          title: "Allow camera access",
-          message:
-              "To complete your verification, we need temporary access to your camera",
+          title: labels[233]["labelText"],
+          message: labels[234]["labelText"],
           auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
@@ -221,7 +226,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               const SizeBox(height: 15),
               SolidButton(
                 onTap: () {},
-                text: "Skip for now",
+                text: labels[235]["labelText"],
                 color: AppColors.primaryBright17,
                 fontColor: AppColors.primary,
               ),

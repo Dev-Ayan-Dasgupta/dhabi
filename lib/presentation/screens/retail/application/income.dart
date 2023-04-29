@@ -5,6 +5,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/application/progress.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -55,7 +56,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Application Details",
+                    labels[261]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -65,7 +66,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
                   ApplicationProgress(progress: progress),
                   const SizeBox(height: 30),
                   Text(
-                    "Income Status",
+                    labels[270]["labelText"],
                     style: TextStyles.primary.copyWith(
                       color: AppColors.primary,
                       fontSize: (24 / Dimensions.designWidth).w,
@@ -73,7 +74,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
                   ),
                   const SizeBox(height: 30),
                   Text(
-                    "Source of Income",
+                    labels[271]["labelText"],
                     style: TextStyles.primary.copyWith(
                       color: AppColors.black63,
                       fontSize: (16 / Dimensions.designWidth).w,
@@ -124,7 +125,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
             onTap: () {
               Navigator.pushNamed(context, Routes.applicationTaxFATCA);
             },
-            text: "Continue",
+            text: labels[127]["labelText"],
           ),
           const SizeBox(height: 20),
         ],

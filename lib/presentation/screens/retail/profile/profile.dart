@@ -1,6 +1,7 @@
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -209,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Address Details",
+                        labels[28]["labelText"],
                         style: TextStyles.primaryMedium.copyWith(
                           color: const Color.fromRGBO(9, 9, 9, 0.4),
                           fontSize: (16 / Dimensions.designWidth).w,

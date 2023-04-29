@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -98,7 +99,7 @@ class _AddRecipientDetailsUaeScreenState
                         ),
                         const SizeBox(height: 15),
                         Text(
-                          "Account Type",
+                          labels[195]["labelText"],
                           style: TextStyles.primaryMedium.copyWith(
                             color: AppColors.red,
                             fontSize: (16 / Dimensions.designWidth).w,
@@ -349,7 +350,7 @@ class _AddRecipientDetailsUaeScreenState
           const SizeBox(height: 10),
           GradientButton(
             onTap: () {},
-            text: "Continue",
+            text: labels[127]["labelText"],
           ),
           const SizeBox(height: 20),
         ],

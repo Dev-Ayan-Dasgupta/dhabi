@@ -12,6 +12,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/login/attempts.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:dialup_mobile_app/utils/helpers/input_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizeBox(height: 10),
               Text(
-                "Login",
+                labels[205]["labelText"],
                 style: TextStyles.primaryBold.copyWith(
                   color: AppColors.primary,
                   fontSize: (28 / Dimensions.designWidth).w,
@@ -215,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (state.count < 3) {
                     return GradientButton(
                       onTap: onSubmit,
-                      text: "Login",
+                      text: labels[205]["labelText"],
                     );
                   } else {
                     return const SizeBox();

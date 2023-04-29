@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -74,7 +75,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Application Details",
+                    labels[261]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -91,7 +92,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                           Row(
                             children: [
                               Text(
-                                "Tax Compliance Confirmation",
+                                labels[273]["labelText"],
                                 style: TextStyles.primary.copyWith(
                                   color: AppColors.primary,
                                   fontSize: (24 / Dimensions.designWidth).w,
@@ -302,7 +303,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Please provide your U.S. Tax Identification Number",
+                                      labels[276]["labelText"],
                                       style: TextStyles.primary.copyWith(
                                         color: AppColors.black63,
                                         fontSize:
@@ -389,7 +390,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                 context, Routes.applicationTaxCRS);
                           }
                         },
-                        text: "Continue",
+                        text: labels[127]["labelText"],
                       ),
                       const SizeBox(height: 20),
                     ],
@@ -412,7 +413,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
         isShowTCCHelp = false;
         showButtonBloc.add(ShowButtonEvent(show: isShowTCCHelp));
       },
-      content: "Tax Compliance Confirmation",
+      content: labels[273]["labelText"],
       show: isShowTCCHelp,
       onTap: () {
         isShowTCCHelp = !isShowTCCHelp;

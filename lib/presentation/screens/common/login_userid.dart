@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -188,7 +189,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
         onTap: () {
           Navigator.pushNamed(context, Routes.loginPassword);
         },
-        text: "Proceed",
+        text: labels[31]["labelText"],
       );
     } else {
       return const SizeBox();

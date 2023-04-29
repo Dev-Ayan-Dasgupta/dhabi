@@ -21,6 +21,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -655,7 +656,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   title: "Password Changed!",
                   message:
                       "Your password updated successfully.\nPlease log in again with your new password.",
-                  buttonText: "Login",
+                  buttonText: labels[205]["labelText"],
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.pop(context);

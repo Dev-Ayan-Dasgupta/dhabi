@@ -6,6 +6,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -71,7 +72,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                   ),
                   const SizeBox(height: 20),
                   Text(
-                    "Address Details",
+                    labels[28]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.primary,
                       fontSize: (24 / Dimensions.designWidth).w,
@@ -85,7 +86,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Country",
+                              labels[264]["labelText"],
                               style: TextStyles.primaryMedium.copyWith(
                                 color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
@@ -101,7 +102,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             ),
                             const SizeBox(height: 20),
                             Text(
-                              "Address line 1*",
+                              labels[265]["labelText"],
                               style: TextStyles.primaryMedium.copyWith(
                                 color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
@@ -127,7 +128,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             ),
                             const SizeBox(height: 20),
                             Text(
-                              "Address line 2",
+                              labels[266]["labelText"],
                               style: TextStyles.primaryMedium.copyWith(
                                 color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
@@ -213,7 +214,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
         children: [
           GradientButton(
             onTap: () {},
-            text: "Continue",
+            text: labels[127]["labelText"],
           ),
           const SizeBox(height: 20),
         ],

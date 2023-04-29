@@ -13,6 +13,7 @@ import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:dialup_mobile_app/utils/helpers/obscure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -157,7 +158,7 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget buildTitle(BuildContext context, PinputErrorState state) {
     if (pinputErrorCount < 3) {
       return Text(
-        "Enter One-Time Password",
+        labels[32]["labelText"],
         style: TextStyles.primaryMedium.copyWith(
           color: const Color(0xFF252525),
           fontSize: (24 / Dimensions.designWidth).w,
@@ -178,7 +179,7 @@ class _OTPScreenState extends State<OTPScreen> {
     if (pinputErrorCount < 3) {
       if (otpArgumentModel.isEmail) {
         return Text(
-          "A 6-digit code has been sent to the email: $obscuredEmail",
+          "${labels[41]["labelText"]} $obscuredEmail",
           style: TextStyles.primaryMedium.copyWith(
             color: const Color(0xFF343434),
             fontSize: (18 / Dimensions.designWidth).w,
@@ -187,7 +188,7 @@ class _OTPScreenState extends State<OTPScreen> {
         );
       } else {
         return Text(
-          "A 6-digit code has been sent to the mobile number: $obscuredPhone",
+          "${labels[33]["labelText"]} $obscuredPhone",
           style: TextStyles.primaryMedium.copyWith(
             color: const Color(0xFF343434),
             fontSize: (18 / Dimensions.designWidth).w,
@@ -256,7 +257,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           children: [
                             GradientButton(
                               onTap: () {},
-                              text: "Proceed",
+                              text: labels[31]["labelText"],
                             ),
                             const SizeBox(height: 20),
                           ],
@@ -301,7 +302,7 @@ class _OTPScreenState extends State<OTPScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Your code will expire in ",
+                "${labels[34]["labelText"]} ",
                 style: TextStyles.primaryMedium.copyWith(
                   color: const Color(0xFF636363),
                   fontSize: (14 / Dimensions.designWidth).w,
@@ -340,7 +341,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 highlightColor: Colors.transparent,
                 splashColor: Colors.transparent,
                 child: Text(
-                  "Resend code",
+                  labels[35]["labelText"],
                   style: TextStyles.primaryMedium.copyWith(
                     color: seconds == 0
                         ? AppColors.primary

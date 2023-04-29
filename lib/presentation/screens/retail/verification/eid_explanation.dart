@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -82,7 +83,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Here is how to scan your Emirates ID",
+                    labels[228]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.primary,
                       fontSize: (24 / Dimensions.designWidth).w,
@@ -90,7 +91,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                   ),
                   const SizeBox(height: 10),
                   Text(
-                    "Scan the front and back side of your Emirates ID.",
+                    labels[229]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.black81,
                       fontSize: (16 / Dimensions.designWidth).w,
@@ -118,7 +119,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "Place your ID on a flat surface.",
+                      labels[230]["labelText"],
                       style: TextStyles.primaryMedium.copyWith(
                         color: AppColors.blackD9,
                         fontSize: (16 / Dimensions.designWidth).w,
@@ -132,14 +133,14 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
               children: [
                 GradientButton(
                   onTap: promptUser,
-                  text: "Start Scanning",
+                  text: labels[231]["labelText"],
                 ),
                 const SizeBox(height: 15),
                 SolidButton(
                   onTap: () {
                     Navigator.pushNamed(context, Routes.passportExplanation);
                   },
-                  text: "Don't have Emirates ID",
+                  text: labels[232]["labelText"],
                   color: AppColors.primaryBright17,
                   fontColor: AppColors.primary,
                 ),
@@ -158,9 +159,8 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
-          title: "Allow camera access",
-          message:
-              "To complete your verification, we need temporary access to your camera",
+          title: labels[233]["labelText"],
+          message: labels[234]["labelText"],
           auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
@@ -176,7 +176,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
               const SizeBox(height: 15),
               SolidButton(
                 onTap: () {},
-                text: "Skip for now",
+                text: labels[235]["labelText"],
                 color: AppColors.primaryBright17,
                 fontColor: AppColors.primary,
               ),

@@ -8,6 +8,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class ScannedDetailsScreen extends StatefulWidget {
   const ScannedDetailsScreen({
@@ -55,12 +57,19 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       DetailsTileModel(
           key: "Nationality", value: scannedDetailsArgument.nationality!),
       DetailsTileModel(
-          key: scannedDetailsArgument.isEID
-              ? "EID Expiry Date"
-              : "Passport Expiry Date",
-          value: scannedDetailsArgument.expiryDate!),
+        key: scannedDetailsArgument.isEID
+            ? "EID Expiry Date"
+            : "Passport Expiry Date",
+        value: DateFormat('dd MMMM yyyy').format(
+          DateFormat('dd/MM/yyyy').parse(scannedDetailsArgument.expiryDate!),
+        ),
+      ),
       DetailsTileModel(
-          key: "Date of Birth", value: scannedDetailsArgument.dob!),
+        key: "Date of Birth",
+        value: DateFormat('dd MMMM yyyy').format(
+          DateFormat('dd/MM/yyyy').parse(scannedDetailsArgument.dob!),
+        ),
+      ),
       DetailsTileModel(
           key: "Gender",
           value: scannedDetailsArgument.gender! == "M" ? "Male" : "Female"),
@@ -78,15 +87,16 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       var response = jsonDecode(event);
       String transactionId = response["transactionId"];
       bool success = response["success"];
-      print("video_encoder_completion:");
-      print("    success: $success");
-      print("    transactionId: $transactionId");
+      debugPrint("video_encoder_completion:");
+      debugPrint("success: $success");
+      debugPrint("transactionId: $transactionId");
     });
   }
 
   void liveliness() async {
-    var value = await FaceSDK.startLiveness();
-    var result = LivenessResponse.fromJson(json.decode(value));
+    // var value =
+    await FaceSDK.startLiveness();
+    // var result = LivenessResponse.fromJson(json.decode(value));
     // setState(
     //   () {
     //     image2.bitmap = base64Encode(
@@ -151,18 +161,18 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                 children: [
                   Text(
                     scannedDetailsArgument.isEID
-                        ? "Emirates ID Details"
-                        : "Passport Details",
+                        ? labels[238]["labelText"]
+                        : labels[255]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
-                      fontSize: (24 / Dimensions.designWidth).w,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 15),
                   Text(
                     scannedDetailsArgument.isEID
-                        ? "Review the details of your scanned Emirates ID"
-                        : "Below are the OCR scanned details from your passport.",
+                        ? labels[239]["labelText"]
+                        : labels[256]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.black81,
                       fontSize: (16 / Dimensions.designWidth).w,
@@ -190,8 +200,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                     Expanded(
                       child: Text(
                         scannedDetailsArgument.isEID
-                            ? "I confirm the above-mentioned information is the same as on my Emirates ID card"
-                            : "I confirm all the information mentioned above is the same as mentioned in my passport.",
+                            ? labels[245]["labelText"]
+                            : labels[259]["labelText"],
                         style: TextStyles.primaryMedium.copyWith(
                           color: AppColors.black81,
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -260,14 +270,14 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             onTap: () {
               liveliness();
             },
-            text: "Proceed and Take Selfie",
+            text: labels[246]["labelText"],
           ),
           const SizeBox(height: 15),
           SolidButton(
             onTap: () {},
             text: scannedDetailsArgument.isEID
-                ? "Rescan Emirates ID"
-                : "Rescan Passport",
+                ? labels[247]["labelText"]
+                : labels[260]["labelText"],
             color: AppColors.primaryBright17,
             fontColor: AppColors.primary,
           ),
