@@ -9,6 +9,18 @@ class AllConfig {
 }
 
 class EnvConfig implements BaseConfig {
+  // ? Authentication APIs
+
+  @override
+  String get login {
+    return dotenv.env['LOGIN'] ?? "";
+  }
+
+  @override
+  String get addNewDevice {
+    return dotenv.env['ADD_NEW_DEVICE'] ?? "";
+  }
+
   // ? Configuration APIs
 
   @override

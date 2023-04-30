@@ -1,4 +1,9 @@
 abstract class BaseConfig {
+  // ? Authentication APIs
+
+  String get login;
+  String get addNewDevice;
+
   // ? Configuration APIs
 
   String get getAllCountries;
