@@ -1,13 +1,14 @@
 import 'dart:convert';
 
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
+import 'package:flutter_face_api/face_api.dart' as regula;
 
 class EIDExplanationScreen extends StatefulWidget {
   const EIDExplanationScreen({Key? key}) : super(key: key);
@@ -17,6 +18,21 @@ class EIDExplanationScreen extends StatefulWidget {
 }
 
 class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
+  String? fullName;
+  String? eiDNumber;
+  String? nationality;
+  String? expiryDate;
+  String? dob;
+  String? gender;
+  String? photo;
+
+  regula.MatchFacesImage image1 = regula.MatchFacesImage();
+
+  Image img1 = Image.asset(ImageConstants.eidFront);
+
+  String status = "";
+  double progress = 0;
+
   @override
   void initState() {
     super.initState();
@@ -30,15 +46,32 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
             )!,
           ),
         );
+    const EventChannel('flutter_document_reader_api/event/database_progress')
+        .receiveBroadcastStream()
+        .listen(
+          (progress) => setState(
+            () {
+              progress = progress;
+            },
+          ),
+        );
   }
 
   Future<void> initPlatformState() async {
-    await DocumentReader.prepareDatabase("Full");
+    var prepareDatabase = await DocumentReader.prepareDatabase("Full");
+    print("prepareDatabase -> $prepareDatabase");
+    setState(() {
+      status = "Initializing";
+    });
     ByteData byteData = await rootBundle.load("assets/regula.license");
-    await DocumentReader.initializeReader({
+    var documentReaderInitialization = await DocumentReader.initializeReader({
       "license": base64.encode(byteData.buffer
           .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
       "delayedNNLoad": true
+    });
+    print("documentReaderInitialization -> $documentReaderInitialization");
+    setState(() {
+      status = "Ready";
     });
     DocumentReader.setConfig({
       "functionality": {
@@ -61,7 +94,50 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
 
   void handleCompletion(DocumentReaderCompletion completion) async {
     if (completion.action == DocReaderAction.COMPLETE ||
-        completion.action == DocReaderAction.TIMEOUT) {}
+        completion.action == DocReaderAction.TIMEOUT) {
+      DocumentReaderResults? results = completion.results;
+
+      fullName = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      eiDNumber = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_IDENTITY_CARD_NUMBER);
+      nationality =
+          await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      expiryDate = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
+      dob = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);
+      gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
+      photo =
+          results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+      if (photo != null) {
+        setState(() {
+          image1.bitmap =
+              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+          image1.imageType = regula.ImageType.PRINTED;
+          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
+        });
+      }
+
+      if (context.mounted) {
+        Navigator.pushNamed(
+          context,
+          Routes.scannedDetails,
+          arguments: ScannedDetailsArgumentModel(
+            isEID: true,
+            fullName: fullName,
+            idNumber: eiDNumber,
+            nationality: nationality,
+            expiryDate: expiryDate,
+            dob: dob,
+            gender: gender,
+            photo: photo,
+            img1: img1,
+            image1: image1,
+          ).toMap(),
+        );
+      }
+    }
   }
 
   @override
@@ -126,6 +202,10 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                       ),
                     ),
                   ),
+                  const SizeBox(height: 10),
+                  Text("Database downloaded: $progress%"),
+                  const SizeBox(height: 10),
+                  Text("Status: $status"),
                 ],
               ),
             ),

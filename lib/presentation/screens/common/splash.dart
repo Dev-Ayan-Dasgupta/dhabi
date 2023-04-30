@@ -4,9 +4,9 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
-import 'package:dialup_mobile_app/data/repositories/get_app_labels.dart';
+import 'package:dialup_mobile_app/data/repositories/configurations/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/utils/constants/images.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +32,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    MapAppLabels.mapAppLabels();
-    initPlatformState();
-    navigate(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await initPlatformState();
+      await initLabelsAndMessages();
+      if (context.mounted) {
+        navigate(context);
+      }
+    });
+  }
+
+  Future<void> initLabelsAndMessages() async {
+    labels = await MapAppLabels.mapAppLabels({"languageCode": "en"});
+    messages = await MapAppMessages.mapAppMessages({"languageCode": "en"});
   }
 
   // Future<void> initPlatformState() async {

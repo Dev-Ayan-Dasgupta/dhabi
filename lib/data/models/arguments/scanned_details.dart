@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_face_api/face_api.dart' as regula;
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class ScannedDetailsArgumentModel {
   final bool isEID;
@@ -10,6 +13,9 @@ class ScannedDetailsArgumentModel {
   final String? dob;
   final String? gender;
   final String? photo;
+  final Image img1;
+  final regula.MatchFacesImage image1;
+
   ScannedDetailsArgumentModel({
     required this.isEID,
     required this.fullName,
@@ -19,6 +25,8 @@ class ScannedDetailsArgumentModel {
     required this.dob,
     required this.gender,
     required this.photo,
+    required this.img1,
+    required this.image1,
   });
 
   ScannedDetailsArgumentModel copyWith({
@@ -30,6 +38,8 @@ class ScannedDetailsArgumentModel {
     String? dob,
     String? gender,
     String? photo,
+    Image? img1,
+    regula.MatchFacesImage? image1,
   }) {
     return ScannedDetailsArgumentModel(
       isEID: isEID ?? this.isEID,
@@ -40,6 +50,8 @@ class ScannedDetailsArgumentModel {
       dob: dob ?? this.dob,
       gender: gender ?? this.gender,
       photo: photo ?? this.photo,
+      img1: img1 ?? this.img1,
+      image1: image1 ?? this.image1,
     );
   }
 
@@ -53,6 +65,8 @@ class ScannedDetailsArgumentModel {
       'dob': dob,
       'gender': gender,
       'photo': photo,
+      'img1': img1,
+      'image1': image1,
     };
   }
 
@@ -68,6 +82,8 @@ class ScannedDetailsArgumentModel {
       dob: map['dob'] != null ? map['dob'] as String : null,
       gender: map['gender'] != null ? map['gender'] as String : null,
       photo: map['photo'] != null ? map['photo'] as String : null,
+      img1: (map['img1'] as Map<String, dynamic>) as Image,
+      image1: (map['image1'] as Map<String, dynamic>) as regula.MatchFacesImage,
     );
   }
 
@@ -79,7 +95,7 @@ class ScannedDetailsArgumentModel {
 
   @override
   String toString() {
-    return 'ScannedDetailsArgumentModel(isEID: $isEID, fullName: $fullName, idNumber: $idNumber, nationality: $nationality, expiryDate: $expiryDate, dob: $dob, gender: $gender, photo: $photo)';
+    return 'ScannedDetailsArgumentModel(isEID: $isEID, fullName: $fullName, idNumber: $idNumber, nationality: $nationality, expiryDate: $expiryDate, dob: $dob, gender: $gender, photo: $photo, img1: $img1, image1: $image1)';
   }
 
   @override
@@ -93,7 +109,9 @@ class ScannedDetailsArgumentModel {
         other.expiryDate == expiryDate &&
         other.dob == dob &&
         other.gender == gender &&
-        other.photo == photo;
+        other.photo == photo &&
+        other.img1 == img1 &&
+        other.image1 == image1;
   }
 
   @override
@@ -105,6 +123,8 @@ class ScannedDetailsArgumentModel {
         expiryDate.hashCode ^
         dob.hashCode ^
         gender.hashCode ^
-        photo.hashCode;
+        photo.hashCode ^
+        img1.hashCode ^
+        image1.hashCode;
   }
 }

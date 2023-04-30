@@ -15,8 +15,6 @@ import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
 import 'package:dialup_mobile_app/utils/lists/onboarding_soft.dart';
 import 'package:open_settings/open_settings.dart';
 
-import '../../../utils/constants/labels.dart';
-
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({
     Key? key,

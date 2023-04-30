@@ -14,6 +14,7 @@ import 'package:dialup_mobile_app/presentation/screens/retail/onboardingStatus/o
 import 'package:dialup_mobile_app/presentation/screens/retail/profile/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/transfer/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/verification/face_compare.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verification/index.dart';
 import 'package:flutter/material.dart';
 
@@ -92,6 +93,12 @@ class AppRouter {
       case Routes.scannedDetails:
         return MaterialPageRoute(
           builder: (_) => ScannedDetailsScreen(
+            argument: args,
+          ),
+        );
+      case Routes.faceCompare:
+        return MaterialPageRoute(
+          builder: (_) => FaceCompareScreen(
             argument: args,
           ),
         );

@@ -4,11 +4,11 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/constants/labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_face_api/face_api.dart' as regula;
 
 class PassportExplanationScreen extends StatefulWidget {
   const PassportExplanationScreen({Key? key}) : super(key: key);
@@ -26,6 +26,10 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   String? dob;
   String? gender;
   String? photo;
+
+  regula.MatchFacesImage image1 = regula.MatchFacesImage();
+
+  Image img1 = Image.asset(ImageConstants.eidFront);
 
   @override
   void initState() {
@@ -93,6 +97,15 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+      if (photo != null) {
+        setState(() {
+          image1.bitmap =
+              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+          image1.imageType = regula.ImageType.PRINTED;
+          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
+        });
+      }
+      // results?.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
 
       if (context.mounted) {
         Navigator.pushNamed(
@@ -107,6 +120,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             dob: dob,
             gender: gender,
             photo: photo,
+            img1: img1,
+            image1: image1,
           ).toMap(),
         );
       }
