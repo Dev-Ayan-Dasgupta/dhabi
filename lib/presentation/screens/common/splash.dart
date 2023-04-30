@@ -34,16 +34,33 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await initPlatformState();
-      await initLabelsAndMessages();
+      await initConfigurations();
       if (context.mounted) {
         navigate(context);
       }
     });
   }
 
-  Future<void> initLabelsAndMessages() async {
+  Future<void> initConfigurations() async {
     labels = await MapAppLabels.mapAppLabels({"languageCode": "en"});
     messages = await MapAppMessages.mapAppMessages({"languageCode": "en"});
+    allDDs = await MapDropdownLists.mapDropdownLists({"languageCode": "en"});
+    populateDD(serviceRequestDDs, 0);
+    populateDD(statementFileDDs, 1);
+    populateDD(moneyTransferReasonDDs, 2);
+    populateDD(typeOfAccountDDs, 3);
+    populateDD(bearerDetailDDs, 4);
+    populateDD(sourceOfIncomeDDs, 5);
+    populateDD(noTinReasonDDs, 6);
+    populateDD(statementDurationDDs, 7);
+  }
+
+  void populateDD(List dropdownList, int dropdownIndex) {
+    dropdownList.clear();
+    for (Map<String, dynamic> item in allDDs[dropdownIndex]["items"]) {
+      dropdownList.add(item["value"]);
+    }
+    // print(dropdownList);
   }
 
   // Future<void> initPlatformState() async {

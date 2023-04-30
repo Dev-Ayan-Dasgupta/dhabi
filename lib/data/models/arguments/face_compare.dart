@@ -41,10 +41,10 @@ class FaceCompareArgumentModel {
 
   factory FaceCompareArgumentModel.fromMap(Map<String, dynamic> map) {
     return FaceCompareArgumentModel(
-      image1: (map['image1'] as Map<String, dynamic>) as regula.MatchFacesImage,
-      img1: (map['img1'] as Map<String, dynamic>) as Image,
-      image2: (map['image2'] as Map<String, dynamic>) as regula.MatchFacesImage,
-      img2: (map['img2'] as Map<String, dynamic>) as Image,
+      image1: (map['image1'] as regula.MatchFacesImage),
+      img1: (map['img1'] as Image),
+      image2: (map['image2'] as regula.MatchFacesImage),
+      img2: (map['img2'] as Image),
     );
   }
 

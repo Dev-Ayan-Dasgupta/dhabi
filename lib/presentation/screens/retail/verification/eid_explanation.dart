@@ -31,7 +31,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
   Image img1 = Image.asset(ImageConstants.eidFront);
 
   String status = "";
-  double progress = 0;
+  double progressValue = 0;
 
   @override
   void initState() {
@@ -49,12 +49,14 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
     const EventChannel('flutter_document_reader_api/event/database_progress')
         .receiveBroadcastStream()
         .listen(
-          (progress) => setState(
-            () {
-              progress = progress;
-            },
-          ),
+      (progress) {
+        setState(
+          () {
+            progressValue = progress;
+          },
         );
+      },
+    );
   }
 
   Future<void> initPlatformState() async {
@@ -203,7 +205,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                     ),
                   ),
                   const SizeBox(height: 10),
-                  Text("Database downloaded: $progress%"),
+                  Text("Database downloaded: $progressValue%"),
                   const SizeBox(height: 10),
                   Text("Status: $status"),
                 ],

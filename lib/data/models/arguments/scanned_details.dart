@@ -82,8 +82,8 @@ class ScannedDetailsArgumentModel {
       dob: map['dob'] != null ? map['dob'] as String : null,
       gender: map['gender'] != null ? map['gender'] as String : null,
       photo: map['photo'] != null ? map['photo'] as String : null,
-      img1: (map['img1'] as Map<String, dynamic>) as Image,
-      image1: (map['image1'] as Map<String, dynamic>) as regula.MatchFacesImage,
+      img1: (map['img1'] as Image),
+      image1: (map['image1'] as regula.MatchFacesImage),
     );
   }
 
