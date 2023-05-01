@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const SizeBox(height: 10),
               Text(
-                "Login",
+                labels[205]["labelText"],
                 style: TextStyles.primaryBold.copyWith(
                   color: AppColors.primary,
                   fontSize: (28 / Dimensions.designWidth).w,
@@ -215,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (state.count < 3) {
                     return GradientButton(
                       onTap: onSubmit,
-                      text: "Login",
+                      text: labels[205]["labelText"],
                     );
                   } else {
                     return const SizeBox();

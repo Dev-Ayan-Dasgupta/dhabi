@@ -45,6 +45,7 @@ class _CustomMultiBlocProviderState extends State<CustomMultiBlocProvider> {
   @override
   void initState() {
     super.initState();
+    initEnvironment();
   }
 
   Future<void> initEnvironment() async {

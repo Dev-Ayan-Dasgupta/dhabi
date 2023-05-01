@@ -11,13 +11,15 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_face_api/face_api.dart';
+import 'package:flutter_document_reader_api/document_reader.dart';
+import 'package:flutter_face_api/face_api.dart' as regula;
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class ScannedDetailsScreen extends StatefulWidget {
   const ScannedDetailsScreen({
@@ -38,34 +40,104 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
   bool isChecked = false;
 
+  String? fullName;
+  String? eiDNumber;
+  String? nationality;
+  String? expiryDate;
+  String? dob;
+  String? gender;
+  String? photo;
+
+  late regula.MatchFacesImage image1;
+  regula.MatchFacesImage image2 = regula.MatchFacesImage();
+
+  late Image img1;
+  Image img2 = Image.asset(ImageConstants.eidFront);
+
   @override
   void initState() {
     super.initState();
+    initializeArgument();
+    initializeDetails();
+    initializeFaceSdk();
+    initPlatformState();
+    if (scannedDetailsArgument.isEID) {
+      const EventChannel('flutter_document_reader_api/event/completion')
+          .receiveBroadcastStream()
+          .listen(
+            (jsonString) => handleEIDCompletion(
+              DocumentReaderCompletion.fromJson(
+                json.decode(jsonString),
+              )!,
+            ),
+          );
+    } else {
+      const EventChannel('flutter_document_reader_api/event/completion')
+          .receiveBroadcastStream()
+          .listen(
+            (jsonString) => handlePassportCompletion(
+              DocumentReaderCompletion.fromJson(
+                json.decode(jsonString),
+              )!,
+            ),
+          );
+    }
+  }
+
+  void initializeArgument() {
     scannedDetailsArgument =
         ScannedDetailsArgumentModel.fromMap(widget.argument as dynamic ?? {});
+
+    image1 = scannedDetailsArgument.image1;
+    img1 = scannedDetailsArgument.img1;
+  }
+
+  void initializeDetails() {
     details = [
       DetailsTileModel(
-          key: "Full Name", value: scannedDetailsArgument.fullName!),
+          key: "Full Name", value: scannedDetailsArgument.fullName ?? "null"),
       DetailsTileModel(
         key: scannedDetailsArgument.isEID ? "EID No." : "Passport No.",
         value: scannedDetailsArgument.isEID
-            ? scannedDetailsArgument.idNumber!
-            : scannedDetailsArgument.idNumber!.split("\n").last.substring(0, 8),
+            ? scannedDetailsArgument.idNumber ?? "null"
+            : scannedDetailsArgument.idNumber
+                    ?.split("\n")
+                    .last
+                    .substring(0, 8) ??
+                "null",
       ),
       DetailsTileModel(
-          key: "Nationality", value: scannedDetailsArgument.nationality!),
+          key: "Nationality",
+          value: scannedDetailsArgument.nationality ?? "null"),
       DetailsTileModel(
-          key: scannedDetailsArgument.isEID
-              ? "EID Expiry Date"
-              : "Passport Expiry Date",
-          value: scannedDetailsArgument.expiryDate!),
+        key: scannedDetailsArgument.isEID
+            ? "EID Expiry Date"
+            : "Passport Expiry Date",
+        value: DateFormat('dd MMMM yyyy').format(
+          DateFormat('dd/MM/yyyy')
+              .parse(scannedDetailsArgument.expiryDate ?? "00/00/0000"),
+        ),
+      ),
       DetailsTileModel(
-          key: "Date of Birth", value: scannedDetailsArgument.dob!),
+        key: "Date of Birth",
+        value: DateFormat('dd MMMM yyyy').format(
+          DateFormat('dd/MM/yyyy')
+              .parse(scannedDetailsArgument.dob ?? "00/00/0000"),
+        ),
+      ),
       DetailsTileModel(
-          key: "Gender",
-          value: scannedDetailsArgument.gender! == "M" ? "Male" : "Female"),
+        key: "Gender",
+        value: scannedDetailsArgument.gender == null
+            ? "null"
+            : scannedDetailsArgument.gender == "M"
+                ? "Male"
+                : "Female",
+      ),
     ];
-    FaceSDK.init().then((json) {
+  }
+
+  void initializeFaceSdk() {
+    regula.FaceSDK.init().then((json) {
       var response = jsonDecode(json);
       if (!response["success"]) {
         // print("Init failed: ");
@@ -78,41 +150,174 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       var response = jsonDecode(event);
       String transactionId = response["transactionId"];
       bool success = response["success"];
-      print("video_encoder_completion:");
-      print("    success: $success");
-      print("    transactionId: $transactionId");
+      debugPrint("video_encoder_completion:");
+      debugPrint("success: $success");
+      debugPrint("transactionId: $transactionId");
     });
   }
 
+  Future<void> initPlatformState() async {
+    await DocumentReader.prepareDatabase("Full");
+    ByteData byteData = await rootBundle.load("assets/regula.license");
+    await DocumentReader.initializeReader({
+      "license": base64.encode(byteData.buffer
+          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
+      "delayedNNLoad": true
+    });
+    DocumentReader.setConfig({
+      "functionality": {
+        "showCaptureButton": true,
+        "showCaptureButtonDelayFromStart": 2,
+        "showCaptureButtonDelayFromDetect": 1,
+        "showCloseButton": true,
+        "showTorchButton": true,
+      },
+      "customization": {
+        "status": "Searching for document",
+      },
+      "processParams": {
+        "dateFormat": "dd/MM/yyyy",
+        "scenario": "MrzOrOcr",
+        "multipageProcessing": true
+      }
+    });
+  }
+
+  void handleEIDCompletion(DocumentReaderCompletion completion) async {
+    if (completion.action == DocReaderAction.COMPLETE ||
+        completion.action == DocReaderAction.TIMEOUT) {
+      DocumentReaderResults? results = completion.results;
+
+      fullName = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      eiDNumber = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_IDENTITY_CARD_NUMBER);
+      nationality =
+          await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      expiryDate = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
+      dob = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);
+      gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
+      photo =
+          results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+
+      if (context.mounted) {
+        Navigator.pushNamed(
+          context,
+          Routes.scannedDetails,
+          arguments: ScannedDetailsArgumentModel(
+            isEID: true,
+            fullName: fullName,
+            idNumber: eiDNumber,
+            nationality: nationality,
+            expiryDate: expiryDate,
+            dob: dob,
+            gender: gender,
+            photo: photo,
+            img1: img1,
+            image1: image1,
+          ).toMap(),
+        );
+      }
+    }
+  }
+
+  void handlePassportCompletion(DocumentReaderCompletion completion) async {
+    if (completion.action == DocReaderAction.COMPLETE ||
+        completion.action == DocReaderAction.TIMEOUT) {
+      DocumentReaderResults? results = completion.results;
+      String? firstName =
+          await results?.textFieldValueByType(EVisualFieldType.FT_GIVEN_NAMES);
+      String? surname =
+          await results?.textFieldValueByType(EVisualFieldType.FT_SURNAME);
+      // fullName = await results
+      //     ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      fullName = "$firstName $surname";
+      String? passportNumber =
+          await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
+      // passportNumber = ppMrz!.substring(0, 9);
+      // print("passportNumber -> $passportNumber");
+      nationality =
+          await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      expiryDate = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
+      dob = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);
+      gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
+      photo =
+          results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+      if (photo != null) {
+        setState(() {
+          image1.bitmap =
+              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+          image1.imageType = regula.ImageType.PRINTED;
+          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
+        });
+      }
+
+      if (context.mounted) {
+        Navigator.pushNamed(
+          context,
+          Routes.scannedDetails,
+          arguments: ScannedDetailsArgumentModel(
+            isEID: false,
+            fullName: fullName,
+            idNumber: passportNumber,
+            nationality: nationality,
+            expiryDate: expiryDate,
+            dob: dob,
+            gender: gender,
+            photo: photo,
+            img1: img1,
+            image1: image1,
+          ).toMap(),
+        );
+      }
+    }
+  }
+
   void liveliness() async {
-    var value = await FaceSDK.startLiveness();
-    var result = LivenessResponse.fromJson(json.decode(value));
-    // setState(
-    //   () {
-    //     image2.bitmap = base64Encode(
-    //       base64Decode(
-    //         result!.bitmap!.replaceAll("\n", ""),
-    //       ),
-    //     );
-    //     image2.imageType = Regula.ImageType.LIVE;
-    //     img2 = Image.memory(base64Decode(result.bitmap!.replaceAll("\n", "")));
-    //     liveness = result.liveness == Regula.LivenessStatus.PASSED
-    //         ? "passed"
-    //         : "unknown";
-    //   },
-    // );
+    var value = await regula.FaceSDK.startLiveness();
+    var result = regula.LivenessResponse.fromJson(json.decode(value));
+    setState(
+      () {
+        image2.bitmap = base64Encode(
+          base64Decode(
+            result!.bitmap!.replaceAll("\n", ""),
+          ),
+        );
+        image2.imageType = regula.ImageType.LIVE;
+        img2 = Image.memory(base64Decode(result.bitmap!.replaceAll("\n", "")));
+        // liveness = result.liveness == regula.LivenessStatus.PASSED
+        //     ? "passed"
+        //     : "unknown";
+      },
+    );
     if (context.mounted) {
       Navigator.pushNamed(
         context,
-        Routes.retailOnboardingStatus,
-        arguments: OnboardingStatusArgumentModel(
-          stepsCompleted: 2,
-          isFatca: false,
-          isPassport: false,
-          isRetail: true,
+        Routes.faceCompare,
+        arguments: FaceCompareArgumentModel(
+          image1: image1,
+          img1: img1,
+          image2: image2,
+          img2: img2,
         ).toMap(),
       );
     }
+    // if (context.mounted) {
+    //   Navigator.pushNamed(
+    //     context,
+    //     Routes.retailOnboardingStatus,
+    //     arguments: OnboardingStatusArgumentModel(
+    //       stepsCompleted: 2,
+    //       isFatca: false,
+    //       isPassport: false,
+    //       isRetail: true,
+    //     ).toMap(),
+    //   );
+    // }
   }
 
   @override
@@ -151,18 +356,18 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                 children: [
                   Text(
                     scannedDetailsArgument.isEID
-                        ? "Emirates ID Details"
-                        : "Passport Details",
+                        ? labels[238]["labelText"]
+                        : labels[255]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
-                      fontSize: (24 / Dimensions.designWidth).w,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 15),
                   Text(
                     scannedDetailsArgument.isEID
-                        ? "Review the details of your scanned Emirates ID"
-                        : "Below are the OCR scanned details from your passport.",
+                        ? labels[239]["labelText"]
+                        : labels[256]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.black81,
                       fontSize: (16 / Dimensions.designWidth).w,
@@ -190,8 +395,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                     Expanded(
                       child: Text(
                         scannedDetailsArgument.isEID
-                            ? "I confirm the above-mentioned information is the same as on my Emirates ID card"
-                            : "I confirm all the information mentioned above is the same as mentioned in my passport.",
+                            ? labels[245]["labelText"]
+                            : labels[259]["labelText"],
                         style: TextStyles.primaryMedium.copyWith(
                           color: AppColors.black81,
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -260,14 +465,16 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             onTap: () {
               liveliness();
             },
-            text: "Proceed and Take Selfie",
+            text: labels[246]["labelText"],
           ),
           const SizeBox(height: 15),
           SolidButton(
-            onTap: () {},
+            onTap: () {
+              DocumentReader.showScanner();
+            },
             text: scannedDetailsArgument.isEID
-                ? "Rescan Emirates ID"
-                : "Rescan Passport",
+                ? labels[247]["labelText"]
+                : labels[260]["labelText"],
             color: AppColors.primaryBright17,
             fontColor: AppColors.primary,
           ),

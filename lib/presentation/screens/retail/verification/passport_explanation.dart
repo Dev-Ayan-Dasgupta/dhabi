@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_face_api/face_api.dart' as regula;
 
 class PassportExplanationScreen extends StatefulWidget {
   const PassportExplanationScreen({Key? key}) : super(key: key);
@@ -25,6 +26,10 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   String? dob;
   String? gender;
   String? photo;
+
+  regula.MatchFacesImage image1 = regula.MatchFacesImage();
+
+  Image img1 = Image.asset(ImageConstants.eidFront);
 
   @override
   void initState() {
@@ -72,8 +77,13 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
     if (completion.action == DocReaderAction.COMPLETE ||
         completion.action == DocReaderAction.TIMEOUT) {
       DocumentReaderResults? results = completion.results;
-      fullName = await results
-          ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      String? firstName =
+          await results?.textFieldValueByType(EVisualFieldType.FT_GIVEN_NAMES);
+      String? surname =
+          await results?.textFieldValueByType(EVisualFieldType.FT_SURNAME);
+      // fullName = await results
+      //     ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      fullName = "$firstName $surname";
       String? passportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
       // passportNumber = ppMrz!.substring(0, 9);
@@ -87,6 +97,15 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+      if (photo != null) {
+        setState(() {
+          image1.bitmap =
+              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+          image1.imageType = regula.ImageType.PRINTED;
+          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
+        });
+      }
+      // results?.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
 
       if (context.mounted) {
         Navigator.pushNamed(
@@ -101,6 +120,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             dob: dob,
             gender: gender,
             photo: photo,
+            img1: img1,
+            image1: image1,
           ).toMap(),
         );
       }
@@ -126,7 +147,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Here is how to scan your passport",
+                    labels[252]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.primary,
                       fontSize: (24 / Dimensions.designWidth).w,
@@ -153,7 +174,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      "Place your passport on a flat surface, and make sure the pages are straight.",
+                      labels[254]["labelText"],
                       style: TextStyles.primaryMedium.copyWith(
                         color: AppColors.blackD9,
                         fontSize: (16 / Dimensions.designWidth).w,
@@ -167,7 +188,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               children: [
                 GradientButton(
                   onTap: promptUser,
-                  text: "Start Scanning",
+                  text: labels[231]["labelText"],
                 ),
                 const SizeBox(height: 15),
                 SolidButton(
@@ -183,7 +204,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                       ).toMap(),
                     );
                   },
-                  text: "Skip for now",
+                  text: labels[235]["labelText"],
                   color: AppColors.primaryBright17,
                   fontColor: AppColors.primary,
                 ),
@@ -202,9 +223,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
-          title: "Allow camera access",
-          message:
-              "To complete your verification, we need temporary access to your camera",
+          title: labels[233]["labelText"],
+          message: labels[234]["labelText"],
           auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
@@ -221,7 +241,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               const SizeBox(height: 15),
               SolidButton(
                 onTap: () {},
-                text: "Skip for now",
+                text: labels[235]["labelText"],
                 color: AppColors.primaryBright17,
                 fontColor: AppColors.primary,
               ),

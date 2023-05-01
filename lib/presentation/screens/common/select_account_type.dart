@@ -59,7 +59,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Select your account type",
+                    labels[215]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -67,7 +67,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                   ),
                   const SizeBox(height: 22),
                   Text(
-                    "Please select the type of account you wish to open",
+                    labels[216]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.grey40,
                       fontSize: (16 / Dimensions.designWidth).w,
@@ -147,7 +147,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
         ),
       ],
       fontColor: AppColors.primary,
-      text: "Personal",
+      text: labels[217]["labelText"],
     );
   }
 
@@ -171,7 +171,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
         ),
       ],
       fontColor: AppColors.primary,
-      text: "Business",
+      text: labels[218]["labelText"],
     );
   }
 
@@ -190,7 +190,8 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
     );
     showButtonBloc.add(
       ShowButtonEvent(
-          show: isPersonal ? isPersonalFocussed : isBusinessFocussed),
+        show: isPersonal ? isPersonalFocussed : isBusinessFocussed,
+      ),
     );
   }
 
@@ -207,7 +208,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
             ).toMap(),
           );
         },
-        text: "Proceed",
+        text: labels[31]["labelText"],
       );
     } else {
       return const SizeBox();

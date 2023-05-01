@@ -71,7 +71,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                   ),
                   const SizeBox(height: 20),
                   Text(
-                    "Address Details",
+                    labels[28]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.primary,
                       fontSize: (24 / Dimensions.designWidth).w,
@@ -85,7 +85,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Country",
+                              labels[264]["labelText"],
                               style: TextStyles.primaryMedium.copyWith(
                                 color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
@@ -101,7 +101,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             ),
                             const SizeBox(height: 20),
                             Text(
-                              "Address line 1*",
+                              labels[265]["labelText"],
                               style: TextStyles.primaryMedium.copyWith(
                                 color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
@@ -127,7 +127,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             ),
                             const SizeBox(height: 20),
                             Text(
-                              "Address line 2",
+                              labels[266]["labelText"],
                               style: TextStyles.primaryMedium.copyWith(
                                 color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,
@@ -213,7 +213,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
         children: [
           GradientButton(
             onTap: () {},
-            text: "Continue",
+            text: labels[127]["labelText"],
           ),
           const SizeBox(height: 20),
         ],

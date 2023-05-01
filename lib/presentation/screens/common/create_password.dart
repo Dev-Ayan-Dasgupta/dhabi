@@ -120,7 +120,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Password",
+                    labels[182]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -161,7 +161,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                           ),
                           const SizeBox(height: 15),
                           Text(
-                            "Password",
+                            labels[182]["labelText"],
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.black63,
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -173,7 +173,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                           ),
                           const SizeBox(height: 15),
                           Text(
-                            "Confirm Password",
+                            labels[49]["labelText"],
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.black63,
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -504,7 +504,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 Navigator.pushNamed(context, Routes.businessOnboardingStatus);
               }
             },
-            text: "Create Profile",
+            text: labels[222]["labelText"],
           ),
         ],
       );

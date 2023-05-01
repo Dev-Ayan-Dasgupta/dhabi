@@ -66,4 +66,6 @@ class Routes {
   static const String dormant = 'dormant';
   static const String captureFace = 'capture-face';
   static const String finalImage = 'final-image';
+
+  static const String faceCompare = 'face-compare';
 }

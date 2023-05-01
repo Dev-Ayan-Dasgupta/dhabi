@@ -101,7 +101,7 @@ class RetailDashboardOnboarding extends StatelessWidget {
                     ? ImageConstants.checkCircle
                     : ImageConstants.warningSmall,
                 iconPath: ImageConstants.phoneAndroid,
-                text: "Verify Mobile Number",
+                text: labels[227]["labelText"],
               ),
               const SizeBox(width: 20),
               DashboardStageTile(
@@ -121,7 +121,7 @@ class RetailDashboardOnboarding extends StatelessWidget {
                     ? ImageConstants.checkCircle
                     : ImageConstants.warningSmall,
                 iconPath: ImageConstants.article,
-                text: "Application Details",
+                text: labels[261]["labelText"],
               ),
             ],
           ),

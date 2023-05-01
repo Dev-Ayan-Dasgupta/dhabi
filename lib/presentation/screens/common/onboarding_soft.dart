@@ -119,7 +119,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               truthy: InkWell(
                                 onTap: biometricPrompt,
                                 child: Text(
-                                  "Login",
+                                  labels[205]["labelText"],
                                   style: TextStyles.primaryBold.copyWith(
                                     fontSize: (20 / Dimensions.designWidth).w,
                                   ),
@@ -180,11 +180,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             onTap: () {
                               Navigator.pushNamed(context, Routes.registration);
                             },
-                            text: "Get Started",
+                            text: labels[207]["labelText"],
                           ),
                           falsy: GradientButton(
                             onTap: biometricPrompt,
-                            text: "Login",
+                            text: labels[205]["labelText"],
                           ),
                         ),
                         const SizeBox(height: 20),
@@ -196,7 +196,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   context, Routes.exploreDashboard);
                               // OAuthHelper.oAuth();
                             },
-                            text: "Explore as a Guest",
+                            text: labels[208]["labelText"],
                           ),
                           falsy: SolidButton(
                             onTap: () {

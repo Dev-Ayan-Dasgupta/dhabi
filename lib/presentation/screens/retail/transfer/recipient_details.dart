@@ -182,7 +182,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
         onTap: () {
           if (!isProceed) {
             isProceed = true;
-            buttonText = "Proceed";
+            buttonText = labels[31]["labelText"];
             proceedBloc.add(ShowButtonEvent(show: isProceed));
           } else {
             Navigator.pushNamed(context, Routes.transferAmount);

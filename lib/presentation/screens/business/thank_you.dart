@@ -49,7 +49,7 @@ class ThankYouScreen extends StatelessWidget {
               children: [
                 SolidButton(
                   onTap: () {},
-                  text: "Continue",
+                  text: labels[127]["labelText"],
                   color: AppColors.black81,
                   fontColor: const Color(0xFF3B3B3B),
                 ),

@@ -188,7 +188,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
         onTap: () {
           Navigator.pushNamed(context, Routes.loginPassword);
         },
-        text: "Proceed",
+        text: labels[31]["labelText"],
       );
     } else {
       return const SizeBox();

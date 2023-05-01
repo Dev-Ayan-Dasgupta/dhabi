@@ -209,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Address Details",
+                        labels[28]["labelText"],
                         style: TextStyles.primaryMedium.copyWith(
                           color: const Color.fromRGBO(9, 9, 9, 0.4),
                           fontSize: (16 / Dimensions.designWidth).w,

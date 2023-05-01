@@ -57,7 +57,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                 children: [
                   const SizeBox(height: 10),
                   Text(
-                    "Verify Mobile Number",
+                    labels[227]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -179,7 +179,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
             ).toMap(),
           );
         },
-        text: "Proceed",
+        text: labels[31]["labelText"],
       );
     }
   }

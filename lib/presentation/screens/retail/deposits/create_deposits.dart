@@ -732,7 +732,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
             onTap: () {
               Navigator.pushNamed(context, Routes.depositConfirmation);
             },
-            text: "Proceed",
+            text: labels[31]["labelText"],
           ),
           const SizeBox(height: 20),
         ],

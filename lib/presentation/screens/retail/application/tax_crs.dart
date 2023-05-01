@@ -87,7 +87,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Application Details",
+                    labels[261]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -105,7 +105,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  "International Tax Reporting Confirmation",
+                                  labels[277]["labelText"],
                                   style: TextStyles.primary.copyWith(
                                     color: AppColors.primary,
                                     fontSize: (24 / Dimensions.designWidth).w,
@@ -266,7 +266,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           ),
           const SizeBox(height: 10),
           CustomDropDown(
-            title: "Country",
+            title: labels[264]["labelText"],
             items: items,
             value: selectedCountry,
             onChanged: (value) {
@@ -305,7 +305,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           Row(
             children: [
               Text(
-                "Do you have a Tax Identification Number?",
+                labels[281]["labelText"],
                 style: TextStyles.primary.copyWith(
                   color: AppColors.black63,
                   fontSize: (16 / Dimensions.designWidth).w,
@@ -462,7 +462,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
         children: [
           const SizeBox(height: 20),
           Text(
-            "Select a reason",
+            labels[282]["labelText"],
             style: TextStyles.primary.copyWith(
               color: AppColors.black63,
               fontSize: (16 / Dimensions.designWidth).w,
@@ -506,7 +506,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           const SizeBox(height: 20),
           SolidButton(
             onTap: () {},
-            text: "Add more tax countries",
+            text: labels[284]["labelText"],
             color: Colors.white,
             boxShadow: [BoxShadows.primary],
             fontColor: AppColors.primary,
@@ -516,7 +516,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             onTap: () {
               Navigator.pushNamed(context, Routes.applicationAccount);
             },
-            text: "Continue",
+            text: labels[127]["labelText"],
           ),
           const SizeBox(height: 20),
         ],

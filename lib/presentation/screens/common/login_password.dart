@@ -227,7 +227,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     if (matchPasswordErrorCount < 3) {
       return GradientButton(
         onTap: onSubmit,
-        text: "Login",
+        text: labels[205]["labelText"],
       );
     } else {
       return const SizeBox();

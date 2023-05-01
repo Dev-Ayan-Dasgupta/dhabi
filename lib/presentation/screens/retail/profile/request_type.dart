@@ -151,7 +151,7 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
         children: [
           GradientButton(
             onTap: () {},
-            text: "Continue",
+            text: labels[127]["labelText"],
           ),
           const SizeBox(height: 20),
         ],

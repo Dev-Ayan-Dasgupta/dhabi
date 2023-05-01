@@ -70,7 +70,7 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
             VaultAccountCard(
               isVault: false,
               onTap: () {},
-              title: "Savings",
+              title: labels[92]["labelText"],
               accountNo: "1098234571629834",
               currency: "USD",
               amount: 10000,

@@ -254,7 +254,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
             Routes.transferConfirmation,
           );
         },
-        text: "Proceed",
+        text: labels[31]["labelText"],
       );
     } else {
       return const SizeBox();

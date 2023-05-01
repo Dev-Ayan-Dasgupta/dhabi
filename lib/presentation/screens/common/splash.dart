@@ -4,8 +4,9 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
+import 'package:dialup_mobile_app/data/repositories/configurations/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/utils/constants/images.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +32,35 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-    navigate(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await initPlatformState();
+      await initConfigurations();
+      if (context.mounted) {
+        navigate(context);
+      }
+    });
+  }
+
+  Future<void> initConfigurations() async {
+    labels = await MapAppLabels.mapAppLabels({"languageCode": "en"});
+    messages = await MapAppMessages.mapAppMessages({"languageCode": "en"});
+    allDDs = await MapDropdownLists.mapDropdownLists({"languageCode": "en"});
+    populateDD(serviceRequestDDs, 0);
+    populateDD(statementFileDDs, 1);
+    populateDD(moneyTransferReasonDDs, 2);
+    populateDD(typeOfAccountDDs, 3);
+    populateDD(bearerDetailDDs, 4);
+    populateDD(sourceOfIncomeDDs, 5);
+    populateDD(noTinReasonDDs, 6);
+    populateDD(statementDurationDDs, 7);
+  }
+
+  void populateDD(List dropdownList, int dropdownIndex) {
+    dropdownList.clear();
+    for (Map<String, dynamic> item in allDDs[dropdownIndex]["items"]) {
+      dropdownList.add(item["value"]);
+    }
+    // print(dropdownList);
   }
 
   // Future<void> initPlatformState() async {

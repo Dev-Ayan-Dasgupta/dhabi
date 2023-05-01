@@ -189,7 +189,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                             ).toMap(),
                           );
                         },
-                        text: "Proceed",
+                        text: labels[31]["labelText"],
                       ),
                       const SizeBox(height: 20),
                     ],

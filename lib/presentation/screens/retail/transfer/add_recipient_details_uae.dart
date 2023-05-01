@@ -98,7 +98,7 @@ class _AddRecipientDetailsUaeScreenState
                         ),
                         const SizeBox(height: 15),
                         Text(
-                          "Account Type",
+                          labels[195]["labelText"],
                           style: TextStyles.primaryMedium.copyWith(
                             color: AppColors.red,
                             fontSize: (16 / Dimensions.designWidth).w,
@@ -349,7 +349,7 @@ class _AddRecipientDetailsUaeScreenState
           const SizeBox(height: 10),
           GradientButton(
             onTap: () {},
-            text: "Continue",
+            text: labels[127]["labelText"],
           ),
           const SizeBox(height: 20),
         ],

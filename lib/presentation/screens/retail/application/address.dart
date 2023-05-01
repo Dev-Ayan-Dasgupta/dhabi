@@ -75,7 +75,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Application Details",
+              labels[261]["labelText"],
               style: TextStyles.primaryBold.copyWith(
                 color: AppColors.primary,
                 fontSize: (28 / Dimensions.designWidth).w,
@@ -85,7 +85,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
             ApplicationProgress(progress: progress),
             const SizeBox(height: 30),
             Text(
-              "Address Details",
+              labels[28]["labelText"],
               style: TextStyles.primary.copyWith(
                 color: AppColors.primary,
                 fontSize: (24 / Dimensions.designWidth).w,
@@ -98,7 +98,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Country",
+                      labels[264]["labelText"],
                       style: TextStyles.primary.copyWith(
                         color: AppColors.black63,
                         fontSize: (16 / Dimensions.designWidth).w,
@@ -114,7 +114,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     ),
                     const SizeBox(height: 20),
                     Text(
-                      "Address Line 1 *",
+                      labels[265]["labelText"],
                       style: TextStyles.primary.copyWith(
                         color: AppColors.black63,
                         fontSize: (16 / Dimensions.designWidth).w,
@@ -141,7 +141,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     ),
                     const SizeBox(height: 20),
                     Text(
-                      "Address Line 2",
+                      labels[266]["labelText"],
                       style: TextStyles.primary.copyWith(
                         color: AppColors.black63,
                         fontSize: (16 / Dimensions.designWidth).w,
@@ -155,7 +155,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     ),
                     const SizeBox(height: 20),
                     Text(
-                      "City *",
+                      "${labels[331]["labelText"]} *",
                       style: TextStyles.primary.copyWith(
                         color: AppColors.black63,
                         fontSize: (16 / Dimensions.designWidth).w,
@@ -178,7 +178,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                           ),
                         );
                       },
-                      hintText: "City",
+                      hintText: labels[331]["labelText"],
                     ),
                     const SizeBox(height: 20),
                     Text(
@@ -255,7 +255,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                           Navigator.pushNamed(
                               context, Routes.applicationIncome);
                         },
-                        text: "Continue",
+                        text: labels[127]["labelText"],
                       ),
                       const SizeBox(height: 20),
                     ],
