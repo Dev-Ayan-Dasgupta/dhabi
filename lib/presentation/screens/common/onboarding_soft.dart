@@ -194,6 +194,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             onTap: () {
                               Navigator.pushNamed(
                                   context, Routes.exploreDashboard);
+
                               // OAuthHelper.oAuth();
                             },
                             text: labels[208]["labelText"],
@@ -230,7 +231,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       if (isAuthenticated) {
         if (context.mounted) {
-          Navigator.pushNamed(context, Routes.loginPassword);
+          Navigator.pushNamed(context, Routes.loginUserId);
         }
       } else {
         // TODO: Verify from client if they want a dialog box to enable biometric

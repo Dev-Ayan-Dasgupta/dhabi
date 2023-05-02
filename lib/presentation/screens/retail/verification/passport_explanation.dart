@@ -19,14 +19,6 @@ class PassportExplanationScreen extends StatefulWidget {
 }
 
 class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
-  String? fullName;
-  String? passportNumber;
-  String? nationality;
-  String? expiryDate;
-  String? dob;
-  String? gender;
-  String? photo;
-
   regula.MatchFacesImage image1 = regula.MatchFacesImage();
 
   Image img1 = Image.asset(ImageConstants.eidFront);
@@ -90,6 +82,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       // print("passportNumber -> $passportNumber");
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      nationalityCode = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
       dob = await results
@@ -105,6 +99,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
         });
       }
+      docPhoto = results
+          ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
       // results?.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
 
       if (context.mounted) {
@@ -116,10 +112,12 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             fullName: fullName,
             idNumber: passportNumber,
             nationality: nationality,
+            nationalityCode: nationalityCode,
             expiryDate: expiryDate,
             dob: dob,
             gender: gender,
             photo: photo,
+            docPhoto: docPhoto,
             img1: img1,
             image1: image1,
           ).toMap(),

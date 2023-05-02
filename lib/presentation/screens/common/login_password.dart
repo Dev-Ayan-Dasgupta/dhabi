@@ -1,3 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+
 import 'package:dialup_mobile_app/bloc/matchPassword/match_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/matchPassword/match_password_event.dart';
 import 'package:dialup_mobile_app/bloc/matchPassword/match_password_state.dart';
@@ -9,12 +14,14 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/login/attempts.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 
 class LoginPasswordScreen extends StatefulWidget {
-  const LoginPasswordScreen({Key? key}) : super(key: key);
+  const LoginPasswordScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<LoginPasswordScreen> createState() => _LoginPasswordScreenState();
@@ -29,6 +36,15 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
 
   int matchPasswordErrorCount = 0;
   int toggle = 0;
+
+  late LoginPasswordArgumentModel loginPasswordArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    loginPasswordArgument =
+        LoginPasswordArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -8,6 +8,7 @@ import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/arguments/tax_crs.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -92,15 +93,15 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                             children: [
                               Text(
                                 labels[273]["labelText"],
-                                style: TextStyles.primary.copyWith(
+                                style: TextStyles.primaryBold.copyWith(
                                   color: AppColors.primary,
-                                  fontSize: (24 / Dimensions.designWidth).w,
+                                  fontSize: (16 / Dimensions.designWidth).w,
                                 ),
                               ),
-                              const SizeBox(width: 10),
-                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                                builder: buildTitleTooltip,
-                              ),
+                              // const SizeBox(width: 10),
+                              // BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                              //   builder: buildTitleTooltip,
+                              // ),
                             ],
                           ),
                           const SizeBox(height: 20),
@@ -386,7 +387,13 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                 context, Routes.applicationAccount);
                           } else {
                             Navigator.pushNamed(
-                                context, Routes.applicationTaxCRS);
+                              context,
+                              Routes.applicationTaxCRS,
+                              arguments: TaxCrsArgumentModel(
+                                isUSFATCA: isUSCitizen,
+                                ustin: _tinssnController.text,
+                              ).toMap(),
+                            );
                           }
                         },
                         text: labels[127]["labelText"],

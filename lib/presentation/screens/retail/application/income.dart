@@ -23,17 +23,6 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
   bool isIncomeSourceSelected = false;
   int toggles = 0;
 
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
-
   String? selectedValue;
 
   @override
@@ -100,7 +89,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
         context.read<DropdownSelectedBloc>();
     return CustomDropDown(
       title: "Select",
-      items: items,
+      items: sourceOfIncomeDDs,
       value: selectedValue,
       onChanged: (value) {
         toggles++;

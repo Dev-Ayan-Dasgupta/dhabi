@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
@@ -7,7 +8,9 @@ import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,19 +43,13 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
   bool isChecked = false;
 
-  String? fullName;
-  String? eiDNumber;
-  String? nationality;
-  String? expiryDate;
-  String? dob;
-  String? gender;
-  String? photo;
-
   late regula.MatchFacesImage image1;
   regula.MatchFacesImage image2 = regula.MatchFacesImage();
 
   late Image img1;
   Image img2 = Image.asset(ImageConstants.eidFront);
+
+  bool isUploading = false;
 
   @override
   void initState() {
@@ -90,6 +87,35 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
     image1 = scannedDetailsArgument.image1;
     img1 = scannedDetailsArgument.img1;
+
+    fullName = scannedDetailsArgument.fullName;
+    log("Full Name -> $fullName");
+
+    if (scannedDetailsArgument.isEID) {
+      eiDNumber = scannedDetailsArgument.idNumber;
+      log("EID Number -> $eiDNumber");
+    } else {
+      passportNumber = scannedDetailsArgument.idNumber;
+      log("Passport Number -> $passportNumber");
+    }
+
+    nationality = scannedDetailsArgument.nationality;
+    log("Nationality -> $nationality");
+    nationalityCode = scannedDetailsArgument.nationalityCode;
+    log("Nationality Code -> $nationalityCode");
+
+    expiryDate = scannedDetailsArgument.expiryDate;
+    log("Expiry Date -> ${DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))}");
+    dob = scannedDetailsArgument.dob;
+    log("DoB -> ${DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000"))}");
+
+    gender = scannedDetailsArgument.gender;
+    log("Gender -> $gender");
+
+    photo = scannedDetailsArgument.photo;
+    log("Photo -> $photo");
+    docPhoto = scannedDetailsArgument.docPhoto;
+    log("DocPhoto -> $docPhoto");
   }
 
   void initializeDetails() {
@@ -194,6 +220,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           ?.textFieldValueByType(EVisualFieldType.FT_IDENTITY_CARD_NUMBER);
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      nationalityCode = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
       dob = await results
@@ -201,6 +229,16 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+      if (photo != null) {
+        setState(() {
+          image1.bitmap =
+              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+          image1.imageType = regula.ImageType.PRINTED;
+          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
+        });
+      }
+      docPhoto = results
+          ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
 
       if (context.mounted) {
         Navigator.pushNamed(
@@ -211,10 +249,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             fullName: fullName,
             idNumber: eiDNumber,
             nationality: nationality,
+            nationalityCode: nationalityCode,
             expiryDate: expiryDate,
             dob: dob,
             gender: gender,
             photo: photo,
+            docPhoto: docPhoto,
             img1: img1,
             image1: image1,
           ).toMap(),
@@ -234,12 +274,14 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       // fullName = await results
       //     ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
       fullName = "$firstName $surname";
-      String? passportNumber =
+      passportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
       // passportNumber = ppMrz!.substring(0, 9);
       // print("passportNumber -> $passportNumber");
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      nationalityCode = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
       dob = await results
@@ -255,6 +297,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
         });
       }
+      docPhoto = results
+          ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
 
       if (context.mounted) {
         Navigator.pushNamed(
@@ -265,10 +309,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             fullName: fullName,
             idNumber: passportNumber,
             nationality: nationality,
+            nationalityCode: nationalityCode,
             expiryDate: expiryDate,
             dob: dob,
             gender: gender,
             photo: photo,
+            docPhoto: docPhoto,
             img1: img1,
             image1: image1,
           ).toMap(),
@@ -278,6 +324,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
   }
 
   void liveliness() async {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     var value = await regula.FaceSDK.startLiveness();
     var result = regula.LivenessResponse.fromJson(json.decode(value));
     setState(
@@ -294,30 +341,99 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         //     : "unknown";
       },
     );
-    if (context.mounted) {
-      Navigator.pushNamed(
-        context,
-        Routes.faceCompare,
-        arguments: FaceCompareArgumentModel(
-          image1: image1,
-          img1: img1,
-          image2: image2,
-          img2: img2,
-        ).toMap(),
-      );
-    }
+    log("Selfie -> ${result!.bitmap!.replaceAll("\n", "")}");
     // if (context.mounted) {
     //   Navigator.pushNamed(
     //     context,
-    //     Routes.retailOnboardingStatus,
-    //     arguments: OnboardingStatusArgumentModel(
-    //       stepsCompleted: 2,
-    //       isFatca: false,
-    //       isPassport: false,
-    //       isRetail: true,
+    //     Routes.faceCompare,
+    //     arguments: FaceCompareArgumentModel(
+    //       image1: image1,
+    //       img1: img1,
+    //       image2: image2,
+    //       img2: img2,
     //     ).toMap(),
     //   );
     // }
+    await matchfaces();
+    if (scannedDetailsArgument.isEID) {
+      isUploading = true;
+      showButtonBloc.add(ShowButtonEvent(show: isUploading));
+      var response = await MapUploadEid.mapUploadEid(
+        {
+          "eidDocumentImage": docPhoto,
+          "eidUserPhoto": photo,
+          "selfiePhoto": result.bitmap!.replaceAll("\n", ""),
+          "photoMatchScore": photoMatchScore,
+          "eidNumber": eiDNumber,
+          "fullName": fullName,
+          "dateOfBirth": DateFormat('yyyy-MM-dd')
+              .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")),
+          "nationalityCountryCode": nationalityCode,
+          "genderId": gender == 'M' ? 1 : 2,
+          "expiresOn": DateFormat('yyyy-MM-dd').format(
+              DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")),
+          "isReKYC": false
+        },
+        token,
+      );
+      log("UploadEid API response -> $response");
+      isUploading = false;
+      showButtonBloc.add(ShowButtonEvent(show: isUploading));
+    } else {
+      isUploading = true;
+      showButtonBloc.add(ShowButtonEvent(show: isUploading));
+      var response = await MapUploadPassport.mapUploadPassport(
+        {
+          "passportDocumentImage": docPhoto,
+          "passportUserPhoto": photo,
+          "selfiePhoto": result.bitmap!.replaceAll("\n", ""),
+          "photoMatchScore": photoMatchScore,
+          "passportNumber": passportNumber,
+          "fullName": fullName,
+          "dateOfBirth": DateFormat('yyyy-MM-dd')
+              .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")),
+          "nationalityCountryCode": nationalityCode,
+          "genderId": gender == 'M' ? 1 : 2,
+          "expiresOn": DateFormat('yyyy-MM-dd').format(
+              DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")),
+          "isReKYC": false
+        },
+        token,
+      );
+      log("UploadPassport API response -> $response");
+      isUploading = false;
+      showButtonBloc.add(ShowButtonEvent(show: isUploading));
+    }
+
+    if (context.mounted) {
+      Navigator.pushNamed(
+        context,
+        Routes.retailOnboardingStatus,
+        arguments: OnboardingStatusArgumentModel(
+          stepsCompleted: 2,
+          isFatca: false,
+          isPassport: false,
+          isRetail: true,
+        ).toMap(),
+      );
+    }
+  }
+
+  matchfaces() async {
+    regula.MatchFacesRequest request = regula.MatchFacesRequest();
+    request.images = [image1, image2];
+    var value = await regula.FaceSDK.matchFaces(jsonEncode(request));
+    var response = regula.MatchFacesResponse.fromJson(json.decode(value));
+    var str = await regula.FaceSDK.matchFacesSimilarityThresholdSplit(
+        jsonEncode(response!.results), 0.75);
+    regula.MatchFacesSimilarityThresholdSplit? split =
+        regula.MatchFacesSimilarityThresholdSplit.fromJson(json.decode(str));
+
+    photoMatchScore = split!.matchedFaces.isNotEmpty
+        ? (split.matchedFaces[0]!.similarity! * 100)
+        : 0;
+
+    log("photoMatchScore -> $photoMatchScore");
   }
 
   @override
@@ -463,14 +579,20 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         children: [
           GradientButton(
             onTap: () {
-              liveliness();
+              if (!isUploading) {
+                liveliness();
+              }
             },
-            text: labels[246]["labelText"],
+            text: isUploading
+                ? "Uploading your details"
+                : labels[246]["labelText"],
           ),
           const SizeBox(height: 15),
           SolidButton(
             onTap: () {
-              DocumentReader.showScanner();
+              if (!isUploading) {
+                DocumentReader.showScanner();
+              }
             },
             text: scannedDetailsArgument.isEID
                 ? labels[247]["labelText"]

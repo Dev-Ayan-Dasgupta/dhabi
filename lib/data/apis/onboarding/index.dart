@@ -9,3 +9,4 @@ export './upload_personal_details.dart';
 export './validate_email.dart';
 export './verify_email_otp.dart';
 export './verify_mobile_otp.dart';
+export './upload_customer_tax_information.dart';

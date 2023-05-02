@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/application/progress.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -28,9 +32,10 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _zipController = TextEditingController();
 
-  bool isResidenceYearSelected = false;
+  // bool isResidenceYearSelected = false;
   bool isAddress1Entered = false;
-  bool isCityEntered = false;
+  bool isEmirateSelected = false;
+  // bool isCityEntered = false;
   int toggles = 0;
 
   final List<String> items = [
@@ -45,6 +50,8 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
   ];
 
   String? selectedValue;
+
+  int emirateIndex = -1;
 
   @override
   void initState() {
@@ -131,8 +138,11 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                         }
                         residenceSelectedBloc.add(
                           DropdownSelectedEvent(
-                            isDropdownSelected: isResidenceYearSelected &&
-                                (isAddress1Entered && isCityEntered),
+                            isDropdownSelected:
+                                // isResidenceYearSelected &&
+                                (isAddress1Entered
+                                // && isCityEntered
+                                ),
                             toggles: toggles,
                           ),
                         );
@@ -153,46 +163,79 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       onChanged: (p0) {},
                       hintText: "Address",
                     ),
+                    // const SizeBox(height: 20),
+                    // Text(
+                    //   "${labels[331]["labelText"]} *",
+                    //   style: TextStyles.primary.copyWith(
+                    //     color: AppColors.black63,
+                    //     fontSize: (16 / Dimensions.designWidth).w,
+                    //   ),
+                    // ),
+                    // const SizeBox(height: 9),
+                    // CustomTextField(
+                    //   controller: _cityController,
+                    //   onChanged: (p0) {
+                    //     if (_cityController.text.isEmpty) {
+                    //       isCityEntered = false;
+                    //     } else {
+                    //       isCityEntered = true;
+                    //     }
+                    //     residenceSelectedBloc.add(
+                    //       DropdownSelectedEvent(
+                    //         isDropdownSelected: isResidenceYearSelected &&
+                    //             (isAddress1Entered && isCityEntered),
+                    //         toggles: toggles,
+                    //       ),
+                    //     );
+                    //   },
+                    //   hintText: labels[331]["labelText"],
+                    // ),
+                    // const SizeBox(height: 20),
+                    // Text(
+                    //   "State",
+                    //   style: TextStyles.primary.copyWith(
+                    //     color: AppColors.black63,
+                    //     fontSize: (16 / Dimensions.designWidth).w,
+                    //   ),
+                    // ),
+                    // const SizeBox(height: 9),
+                    // CustomTextField(
+                    //   controller: _stateController,
+                    //   onChanged: (p0) {},
+                    //   hintText: "State",
+                    // ),
                     const SizeBox(height: 20),
                     Text(
-                      "${labels[331]["labelText"]} *",
+                      "Emirate *",
                       style: TextStyles.primary.copyWith(
                         color: AppColors.black63,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
                     const SizeBox(height: 9),
-                    CustomTextField(
-                      controller: _cityController,
-                      onChanged: (p0) {
-                        if (_cityController.text.isEmpty) {
-                          isCityEntered = false;
-                        } else {
-                          isCityEntered = true;
-                        }
-                        residenceSelectedBloc.add(
-                          DropdownSelectedEvent(
-                            isDropdownSelected: isResidenceYearSelected &&
-                                (isAddress1Entered && isCityEntered),
-                            toggles: toggles,
-                          ),
+                    BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                      builder: (context, state) {
+                        return CustomDropDown(
+                          title: "Select from the list",
+                          items: emirates,
+                          value: selectedValue,
+                          onChanged: (value) {
+                            toggles++;
+                            isEmirateSelected = true;
+                            selectedValue = value as String;
+                            emirateIndex = emirates.indexOf(selectedValue!);
+                            residenceSelectedBloc.add(
+                              DropdownSelectedEvent(
+                                isDropdownSelected: isEmirateSelected &&
+                                    (isAddress1Entered
+                                    // && isCityEntered
+                                    ),
+                                toggles: toggles,
+                              ),
+                            );
+                          },
                         );
                       },
-                      hintText: labels[331]["labelText"],
-                    ),
-                    const SizeBox(height: 20),
-                    Text(
-                      "State",
-                      style: TextStyles.primary.copyWith(
-                        color: AppColors.black63,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 9),
-                    CustomTextField(
-                      controller: _stateController,
-                      onChanged: (p0) {},
-                      hintText: "State",
                     ),
                     const SizeBox(height: 20),
                     Text(
@@ -209,36 +252,36 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       onChanged: (p0) {},
                       hintText: "0000",
                     ),
-                    const SizeBox(height: 20),
-                    Text(
-                      "Resident Since *",
-                      style: TextStyles.primary.copyWith(
-                        color: AppColors.black63,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 9),
-                    BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                      builder: (context, state) {
-                        return CustomDropDown(
-                          title: "Year",
-                          items: items,
-                          value: selectedValue,
-                          onChanged: (value) {
-                            toggles++;
-                            isResidenceYearSelected = true;
-                            selectedValue = value as String;
-                            residenceSelectedBloc.add(
-                              DropdownSelectedEvent(
-                                isDropdownSelected: isResidenceYearSelected &&
-                                    (isAddress1Entered && isCityEntered),
-                                toggles: toggles,
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                    // const SizeBox(height: 20),
+                    // Text(
+                    //   "Resident Since *",
+                    //   style: TextStyles.primary.copyWith(
+                    //     color: AppColors.black63,
+                    //     fontSize: (16 / Dimensions.designWidth).w,
+                    //   ),
+                    // ),
+                    // const SizeBox(height: 9),
+                    // BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                    //   builder: (context, state) {
+                    //     return CustomDropDown(
+                    //       title: "Year",
+                    //       items: items,
+                    //       value: selectedValue,
+                    //       onChanged: (value) {
+                    //         toggles++;
+                    //         isResidenceYearSelected = true;
+                    //         selectedValue = value as String;
+                    //         residenceSelectedBloc.add(
+                    //           DropdownSelectedEvent(
+                    //             isDropdownSelected: isResidenceYearSelected &&
+                    //                 (isAddress1Entered && isCityEntered),
+                    //             toggles: toggles,
+                    //           ),
+                    //         );
+                    //       },
+                    //     );
+                    //   },
+                    // ),
                     const SizeBox(height: 30),
                   ],
                 ),
@@ -247,13 +290,27 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
             const SizeBox(height: 20),
             BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
               builder: (context, state) {
-                if (state.isDropdownSelected) {
+                if (isEmirateSelected) {
                   return Column(
                     children: [
                       GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, Routes.applicationIncome);
+                        onTap: () async {
+                          var result = await MapRegisterRetailCustomerAddress
+                              .mapRegisterRetailCustomerAddress({
+                            "addressLine_1": _address1Controller.text,
+                            "addressLine_2": _address2Controller.text,
+                            "areaId": uaeDetails[emirateIndex]["areas"][0]
+                                ["area_Id"],
+                            "cityId": uaeDetails[emirateIndex]["city_Id"],
+                            "stateId": 1,
+                            "countryId": 1,
+                            "pinCode": _zipController.text
+                          }, token);
+                          log("RegisterRetailCustomerAddress API Response -> $result");
+                          if (context.mounted) {
+                            Navigator.pushNamed(
+                                context, Routes.applicationIncome);
+                          }
                         },
                         text: labels[127]["labelText"],
                       ),

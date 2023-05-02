@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
@@ -16,7 +18,10 @@ import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -61,6 +66,9 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   bool isChecked = false;
 
   bool allTrue = false;
+
+  bool isRegistering = false;
+  bool isLoggingIn = false;
 
   @override
   void initState() {
@@ -124,6 +132,14 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 15),
+                  Text(
+                    labels[219]["labelText"],
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.black81,
+                      fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 30),
@@ -226,6 +242,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             style: TextStyles.primary.copyWith(
                               color: AppColors.primary,
                               fontSize: (14 / Dimensions.designWidth).w,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                           TextSpan(
@@ -240,6 +257,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             style: TextStyles.primary.copyWith(
                               color: AppColors.primary,
                               fontSize: (14 / Dimensions.designWidth).w,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                         ],
@@ -479,32 +497,106 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         children: [
           const SizeBox(height: 10),
           GradientButton(
-            onTap: () {
+            onTap: () async {
+              final CreatePasswordBloc createPasswordBloc =
+                  context.read<CreatePasswordBloc>();
               if (createAccountArgumentModel.isRetail) {
-                // Navigator.pushReplacementNamed(
-                //   context,
-                //   Routes.retailDashboard,
-                //   arguments: RetailDashboardArgumentModel(
-                //     imgUrl:
-                //         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                //     name: createAccountArgumentModel.email,
-                //   ).toMap(),
-                // );
-                Navigator.pushNamed(
-                  context,
-                  Routes.retailOnboardingStatus,
-                  arguments: OnboardingStatusArgumentModel(
-                    stepsCompleted: 1,
-                    isFatca: false,
-                    isPassport: false,
-                    isRetail: createAccountArgumentModel.isRetail,
-                  ).toMap(),
-                );
+                isRegistering = true;
+                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+                var result1 = await MapRegisterUser.mapRegisterUser({
+                  "userType": 1,
+                  "emailId": createAccountArgumentModel.email,
+                  "password": _confirmPasswordController.text,
+                  "deviceId": deviceId,
+                  "deviceName": deviceName,
+                  "deviceType": deviceType,
+                  "appVersion": appVersion
+                });
+                log("Create User API Response -> $result1");
+                isRegistering = false;
+                isLoggingIn = true;
+                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+                var result = await MapLogin.mapLogin({
+                  "emailId": createAccountArgumentModel.email,
+                  "userTypeId": 1,
+                  "companyId": 0,
+                  "password": _confirmPasswordController.text,
+                  "deviceId": deviceId,
+                  "registerDevice": true,
+                  "deviceName": deviceName,
+                  "deviceType": deviceType,
+                  "appVersion": appVersion
+                });
+                log("Login API Response -> $result");
+                token = result["token"];
+                log("token -> $token");
+                isLoggingIn = false;
+                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+                if (context.mounted) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.retailOnboardingStatus,
+                    arguments: OnboardingStatusArgumentModel(
+                      stepsCompleted:
+                          2, // TODO: change it back to 1 after completeing onboarding APIs
+                      isFatca: false,
+                      isPassport: false,
+                      isRetail: createAccountArgumentModel.isRetail,
+                    ).toMap(),
+                  );
+                }
               } else {
-                Navigator.pushNamed(context, Routes.businessOnboardingStatus);
+                isRegistering = true;
+                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+                var result1 = await MapRegisterUser.mapRegisterUser({
+                  "userType": 2,
+                  "emailId": createAccountArgumentModel.email,
+                  "password": _confirmPasswordController.text,
+                  "deviceId": deviceId,
+                  "deviceName": deviceName,
+                  "deviceType": deviceType,
+                  "appVersion": appVersion
+                });
+                log("Create User API Response -> $result1");
+                isRegistering = false;
+                isLoggingIn = true;
+                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+                var result = await MapLogin.mapLogin({
+                  "emailId": createAccountArgumentModel.email,
+                  "userTypeId": 2,
+                  "companyId": 1,
+                  "password": _confirmPasswordController.text,
+                  "deviceId": deviceId,
+                  "registerDevice": true,
+                  "deviceName": deviceName,
+                  "deviceType": deviceType,
+                  "appVersion": appVersion
+                });
+                log("Login API Response -> $result");
+                token = result["token"];
+                log("token -> $token");
+                isLoggingIn = false;
+                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+                if (context.mounted) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.businessOnboardingStatus,
+                    arguments: OnboardingStatusArgumentModel(
+                      stepsCompleted: 1,
+                      isFatca: false,
+                      isPassport: false,
+                      isRetail: createAccountArgumentModel.isRetail,
+                    ).toMap(),
+                  );
+                }
+                // Navigator.pushNamed(context, Routes.businessOnboardingStatus);
               }
             },
-            text: labels[222]["labelText"],
+            text: isRegistering
+                ? "Registering you"
+                : isLoggingIn
+                    ? "Logging you in"
+                    : labels[222]["labelText"],
           ),
         ],
       );

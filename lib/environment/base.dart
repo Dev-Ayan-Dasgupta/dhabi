@@ -26,4 +26,5 @@ abstract class BaseConfig {
   String get verifyMobileOtp;
   String get registerRetailCustomerAddress;
   String get registerRetailCustomer;
+  String get uploadCustomerTaxInformation;
 }

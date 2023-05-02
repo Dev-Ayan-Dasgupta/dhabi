@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/map_send_email_otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -21,6 +24,8 @@ class RegistrationScreen extends StatefulWidget {
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _emailController = TextEditingController();
   bool _isEmailValid = false;
+
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -197,23 +202,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     if (!_isEmailValid) {
       return const SizeBox();
     } else {
       return GradientButton(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            Routes.otp,
-            arguments: OTPArgumentModel(
-              code: "123456",
-              emailOrPhone: _emailController.text,
-              isEmail: true,
-              isBusiness: false,
-            ).toMap(),
-          );
+        onTap: () async {
+          _isLoading = true;
+          showButtonBloc.add(ShowButtonEvent(show: _isLoading));
+          var result = await MapSendEmailOtp.mapSendEmailOtp(
+              {"emailID": _emailController.text});
+          log("Send Email OTP Response -> $result");
+          _isLoading = false;
+          showButtonBloc.add(ShowButtonEvent(show: _isLoading));
+          if (context.mounted) {
+            Navigator.pushNamed(
+              context,
+              Routes.otp,
+              arguments: OTPArgumentModel(
+                // code: "123456",
+                emailOrPhone: _emailController.text,
+                isEmail: true,
+                isBusiness: false,
+              ).toMap(),
+            );
+          }
         },
-        text: labels[31]["labelText"],
+        text: _isLoading ? "Sending OTP" : labels[31]["labelText"],
       );
     }
   }

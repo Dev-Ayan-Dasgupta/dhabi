@@ -1,8 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -31,6 +35,8 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
   bool isPersonalFocussed = false;
   bool isBusinessFocussed = false;
   int toggles = 0;
+
+  bool isValidating = false;
 
   late CreateAccountArgumentModel createAccountArgumentModel;
 
@@ -197,18 +203,68 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
     if (isPersonalFocussed || isBusinessFocussed) {
+      final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
       return GradientButton(
-        onTap: () {
-          Navigator.pushReplacementNamed(
-            context,
-            Routes.createPassword,
-            arguments: CreateAccountArgumentModel(
-              email: createAccountArgumentModel.email,
-              isRetail: isPersonalFocussed ? true : false,
-            ).toMap(),
-          );
+        onTap: () async {
+          isValidating = true;
+          showButtonBloc.add(ShowButtonEvent(show: isValidating));
+          Map<String, dynamic> result;
+          if (isPersonalFocussed && !isBusinessFocussed) {
+            result = await MapValidateEmail.mapValidateEmail(
+                {"emailId": createAccountArgumentModel.email, "userTypeId": 1});
+            log("Validate Email (Retail) response -> $result");
+          } else {
+            result = await MapValidateEmail.mapValidateEmail(
+                {"emailId": createAccountArgumentModel.email, "userTypeId": 2});
+            log("Validate Email (Business) response -> $result");
+          }
+          if (result["success"]) {
+            if (context.mounted) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.createPassword,
+                arguments: CreateAccountArgumentModel(
+                  email: createAccountArgumentModel.email,
+                  isRetail: isPersonalFocussed ? true : false,
+                ).toMap(),
+              );
+            }
+          } else {
+            if (context.mounted) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return CustomDialog(
+                    svgAssetPath: ImageConstants.warning,
+                    title: "User already exists",
+                    message: "Try logging in again.",
+                    auxWidget: const SizeBox(),
+                    actionWidget: Column(
+                      children: [
+                        GradientButton(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              Routes.loginPassword,
+                              arguments: LoginPasswordArgumentModel(
+                                userId: createAccountArgumentModel.email,
+                              ).toMap(),
+                            );
+                          },
+                          text: "Login",
+                        ),
+                        const SizeBox(height: 20),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+          }
+          isValidating = false;
+          showButtonBloc.add(ShowButtonEvent(show: isValidating));
         },
-        text: labels[31]["labelText"],
+        text: isValidating ? "Validating your email" : labels[31]["labelText"],
       );
     } else {
       return const SizeBox();

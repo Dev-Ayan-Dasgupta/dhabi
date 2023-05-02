@@ -46,7 +46,7 @@ List bearerDetailDDs = [
   // {"key": "DD_0005_003", "value": "We share the charges (SHA)"}
 ];
 
-List sourceOfIncomeDDs = [
+List<String> sourceOfIncomeDDs = [
   // {"key": "DD_0006_001", "value": "Capital of company/dividends"},
   // {"key": "DD_0006_002", "value": "Income from business"},
   // {"key": "DD_0006_003", "value": "Gift/Inheritance"},
@@ -67,7 +67,7 @@ List sourceOfIncomeDDs = [
   // }
 ];
 
-List noTinReasonDDs = [
+List<String> noTinReasonDDs = [
   // {"key": "DD_0007_001", "value": "Country does not issue TIN"},
   // {"key": "DD_0007_002", "value": "Account Holder unable to obtain a TIN"},
   // {"key": "DD_0007_003", "value": "No TIN is required."}
@@ -78,3 +78,5 @@ List statementDurationDDs = [
   // {"key": "DD_0008_002", "value": "3 Months"},
   // {"key": "DD_0008_003", "value": "6 Months"}
 ];
+
+List<String> dhabiCountryNames = [];

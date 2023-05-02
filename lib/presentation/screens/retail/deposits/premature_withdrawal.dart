@@ -99,6 +99,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                             style: TextStyles.primary.copyWith(
                               color: AppColors.primary,
                               fontSize: (14 / Dimensions.designWidth).w,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                           TextSpan(
@@ -113,6 +114,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                             style: TextStyles.primary.copyWith(
                               color: AppColors.primary,
                               fontSize: (14 / Dimensions.designWidth).w,
+                              decoration: TextDecoration.underline,
                             ),
                           ),
                         ],

@@ -109,4 +109,9 @@ class EnvConfig implements BaseConfig {
   String get registerRetailCustomer {
     return dotenv.env['REGISTER_RETAIL_CUSTOMER'] ?? "";
   }
+
+  @override
+  String get uploadCustomerTaxInformation {
+    return dotenv.env['UPLOAD_CUSTOMER_TAX_INFORMATION'] ?? "";
+  }
 }

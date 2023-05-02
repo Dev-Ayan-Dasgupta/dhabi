@@ -18,14 +18,6 @@ class EIDExplanationScreen extends StatefulWidget {
 }
 
 class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
-  String? fullName;
-  String? eiDNumber;
-  String? nationality;
-  String? expiryDate;
-  String? dob;
-  String? gender;
-  String? photo;
-
   regula.MatchFacesImage image1 = regula.MatchFacesImage();
 
   Image img1 = Image.asset(ImageConstants.eidFront);
@@ -105,6 +97,8 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           ?.textFieldValueByType(EVisualFieldType.FT_IDENTITY_CARD_NUMBER);
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      nationalityCode = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
       dob = await results
@@ -120,6 +114,8 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
         });
       }
+      docPhoto = results
+          ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
 
       if (context.mounted) {
         Navigator.pushNamed(
@@ -130,10 +126,12 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
             fullName: fullName,
             idNumber: eiDNumber,
             nationality: nationality,
+            nationalityCode: nationalityCode,
             expiryDate: expiryDate,
             dob: dob,
             gender: gender,
             photo: photo,
+            docPhoto: docPhoto,
             img1: img1,
             image1: image1,
           ).toMap(),

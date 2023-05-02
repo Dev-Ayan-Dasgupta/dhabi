@@ -172,7 +172,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
             context,
             Routes.otp,
             arguments: OTPArgumentModel(
-              code: "123456",
+              // code: "123456",
               emailOrPhone: _phoneController.text,
               isEmail: false,
               isBusiness: verifyMobileArgumentModel.isBusiness,

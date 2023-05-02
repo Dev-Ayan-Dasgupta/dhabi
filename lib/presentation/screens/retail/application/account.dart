@@ -180,16 +180,18 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
             onTap: () {
               // Navigator.pushNamed(
               //   context,
-              //   Routes.termsAndConditions,
-              //   arguments: CreateAccountArgumentModel(
-              //           email: "ayan@qolarisdata.com",
-              //           isRetail: true)
-              //       .toMap(),
+              //   Routes.verifyMobile,
+              //   arguments: VerifyMobileArgumentModel(isBusiness: false).toMap(),
               // );
               Navigator.pushNamed(
                 context,
-                Routes.verifyMobile,
-                arguments: VerifyMobileArgumentModel(isBusiness: false).toMap(),
+                Routes.retailOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 3,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
               );
             },
             text: labels[288]["labelText"],

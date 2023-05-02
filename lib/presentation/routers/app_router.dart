@@ -42,7 +42,7 @@ class AppRouter {
         );
       case Routes.login:
         return MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
+          builder: (_) => const LoginScreen(), // Deprecated
         );
       case Routes.loginUserId:
         return MaterialPageRoute(
@@ -50,7 +50,9 @@ class AppRouter {
         );
       case Routes.loginPassword:
         return MaterialPageRoute(
-          builder: (_) => const LoginPasswordScreen(),
+          builder: (_) => LoginPasswordScreen(
+            argument: args,
+          ),
         );
       case Routes.selectAccountType:
         return MaterialPageRoute(
@@ -165,7 +167,9 @@ class AppRouter {
         );
       case Routes.applicationTaxCRS:
         return MaterialPageRoute(
-          builder: (_) => const ApplicationTaxCRSScreen(),
+          builder: (_) => ApplicationTaxCRSScreen(
+            argument: args,
+          ),
         );
       case Routes.applicationAccount:
         return MaterialPageRoute(

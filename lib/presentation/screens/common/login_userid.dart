@@ -4,6 +4,7 @@ import 'package:dialup_mobile_app/bloc/emailExists/email_exists_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/arguments/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -186,7 +187,13 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
     if (emailExists && isEmailValid) {
       return GradientButton(
         onTap: () {
-          Navigator.pushNamed(context, Routes.loginPassword);
+          Navigator.pushNamed(
+            context,
+            Routes.loginPassword,
+            arguments: LoginPasswordArgumentModel(
+              userId: _emailController.text,
+            ).toMap(),
+          );
         },
         text: labels[31]["labelText"],
       );
