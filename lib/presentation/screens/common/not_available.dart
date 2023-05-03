@@ -35,8 +35,10 @@ class _NotAvaiableScreenState extends State<NotAvaiableScreen> {
         elevation: 0,
       ),
       body: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: (22 / Dimensions.designWidth).w),
+        padding: EdgeInsets.symmetric(
+            horizontal:
+                (PaddingConstants.horizontalPadding / Dimensions.designWidth)
+                    .w),
         child: Column(
           children: [
             Expanded(

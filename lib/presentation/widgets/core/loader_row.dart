@@ -4,6 +4,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoaderRow extends StatelessWidget {
   const LoaderRow({
@@ -24,13 +25,9 @@ class LoaderRow extends StatelessWidget {
     return Row(
       children: [
         const SizeBox(width: 10),
-        SizedBox(
-          width: ((width ?? 15) / Dimensions.designWidth).w,
-          height: ((height ?? 15) / Dimensions.designWidth).w,
-          child: CircularProgressIndicator(
-            color: color ?? Colors.white,
-            strokeWidth: ((strokeWidth ?? 2) / Dimensions.designWidth).w,
-          ),
+        SpinKitFadingCircle(
+          color: color ?? Colors.white,
+          size: ((width ?? 20) / Dimensions.designWidth).w,
         ),
       ],
     );

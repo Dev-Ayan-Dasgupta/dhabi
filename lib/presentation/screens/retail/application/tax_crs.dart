@@ -91,7 +91,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -560,7 +561,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             text: labels[127]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
-          const SizeBox(height: 20),
+          const SizeBox(height: PaddingConstants.bottomPadding),
         ],
       );
     } else {

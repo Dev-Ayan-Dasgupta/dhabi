@@ -47,7 +47,7 @@ class ApplicationProgress extends StatelessWidget {
               ),
             ),
             Container(
-              width: (90 / Dimensions.designWidth).w,
+              width: (94 / Dimensions.designWidth).w,
               height: (5 / Dimensions.designWidth).w,
               color: progress > 1 ? AppColors.primary : AppColors.blackD9,
             ),
@@ -91,7 +91,7 @@ class ApplicationProgress extends StatelessWidget {
               ],
             ),
             Container(
-              width: (90 / Dimensions.designWidth).w,
+              width: (94 / Dimensions.designWidth).w,
               height: (5 / Dimensions.designWidth).w,
               color: progress > 2 ? AppColors.primary : AppColors.blackD9,
             ),
@@ -131,7 +131,7 @@ class ApplicationProgress extends StatelessWidget {
               ),
             ),
             Container(
-              width: (90 / Dimensions.designWidth).w,
+              width: (94 / Dimensions.designWidth).w,
               height: (5 / Dimensions.designWidth).w,
               color: progress > 3 ? AppColors.primary : AppColors.blackD9,
             ),
@@ -183,7 +183,7 @@ class ApplicationProgress extends StatelessWidget {
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
-            const SizeBox(width: 82),
+            const SizeBox(width: 78),
             Text(
               "Income",
               style: TextStyles.primary.copyWith(
@@ -191,7 +191,7 @@ class ApplicationProgress extends StatelessWidget {
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
-            const SizeBox(width: 92),
+            const SizeBox(width: 87),
             Text(
               "Tax",
               style: TextStyles.primary.copyWith(
@@ -199,7 +199,7 @@ class ApplicationProgress extends StatelessWidget {
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
-            const SizeBox(width: 90),
+            const SizeBox(width: 85),
             Text(
               "Account",
               style: TextStyles.primary.copyWith(

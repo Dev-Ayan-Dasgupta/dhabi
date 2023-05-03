@@ -138,7 +138,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -148,9 +149,9 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                 children: [
                   Text(
                     labels[252]["labelText"],
-                    style: TextStyles.primaryMedium.copyWith(
+                    style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
-                      fontSize: (24 / Dimensions.designWidth).w,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 10),
@@ -161,7 +162,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 67),
+                  const SizeBox(height: 50),
                   Align(
                     alignment: Alignment.center,
                     child: SizedBox(
@@ -170,7 +171,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                       child: Image.asset(ImageConstants.passport),
                     ),
                   ),
-                  const SizeBox(height: 67),
+                  const SizeBox(height: 50),
                   Align(
                     alignment: Alignment.center,
                     child: Text(

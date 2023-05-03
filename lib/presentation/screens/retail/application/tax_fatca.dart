@@ -66,7 +66,8 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -398,7 +399,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                         },
                         text: labels[127]["labelText"],
                       ),
-                      const SizeBox(height: 20),
+                      const SizeBox(height: PaddingConstants.bottomPadding),
                     ],
                   );
                 } else {

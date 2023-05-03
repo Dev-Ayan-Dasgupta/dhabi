@@ -110,15 +110,17 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
-        setState(() {
-          image1.bitmap =
-              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
-          image1.imageType = regula.ImageType.PRINTED;
-          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
-        });
+        // setState(() {
+
+        // });
+        image1.bitmap = base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+        image1.imageType = regula.ImageType.PRINTED;
+        img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
       }
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
+
+      log("fullName -> $fullName");
 
       if (context.mounted) {
         Navigator.pushNamed(
@@ -153,7 +155,8 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -163,9 +166,9 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                 children: [
                   Text(
                     labels[228]["labelText"],
-                    style: TextStyles.primaryMedium.copyWith(
+                    style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
-                      fontSize: (24 / Dimensions.designWidth).w,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 10),
@@ -176,7 +179,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 100),
+                  const SizeBox(height: 80),
                   Align(
                     alignment: Alignment.center,
                     child: SizedBox(
@@ -194,7 +197,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                       child: Image.asset(ImageConstants.eidBack),
                     ),
                   ),
-                  const SizeBox(height: 100),
+                  const SizeBox(height: 80),
                   Align(
                     alignment: Alignment.center,
                     child: Text(

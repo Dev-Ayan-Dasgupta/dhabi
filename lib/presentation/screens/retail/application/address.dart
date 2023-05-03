@@ -3,9 +3,6 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
@@ -81,7 +78,8 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -330,7 +328,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                         auxWidget:
                             isUploading ? const LoaderRow() : const SizeBox(),
                       ),
-                      const SizeBox(height: 20),
+                      const SizeBox(height: PaddingConstants.bottomPadding),
                     ],
                   );
                 } else {

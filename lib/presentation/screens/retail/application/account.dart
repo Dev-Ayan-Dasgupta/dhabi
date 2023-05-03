@@ -38,7 +38,8 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -200,7 +201,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
             text: labels[288]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
-          const SizeBox(height: 32),
+          const SizeBox(height: PaddingConstants.bottomPadding),
         ],
       );
     } else {

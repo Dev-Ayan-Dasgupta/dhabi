@@ -81,7 +81,8 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Stack(
           children: [
