@@ -47,7 +47,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
   late Image img1;
   Image img2 = Image.asset(ImageConstants.eidFront);
 
-  bool isUploading = false;
+  bool isFaceScanning = false;
 
   @override
   void initState() {
@@ -55,7 +55,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     initializeArgument();
     initializeDetails();
     initializeFaceSdk();
-    initPlatformState();
+    // initPlatformState();
     if (scannedDetailsArgument.isEID) {
       const EventChannel('flutter_document_reader_api/event/completion')
           .receiveBroadcastStream()
@@ -180,34 +180,34 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     });
   }
 
-  Future<void> initPlatformState() async {
-    await DocumentReader.prepareDatabase("Full");
-    ByteData byteData = await rootBundle.load("assets/regula.license");
-    await DocumentReader.initializeReader({
-      "license": base64.encode(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
-      "delayedNNLoad": true
-    });
-    DocumentReader.setConfig({
-      "functionality": {
-        "showCaptureButton": true,
-        "showCaptureButtonDelayFromStart": 2,
-        "showCaptureButtonDelayFromDetect": 1,
-        "showCloseButton": true,
-        "showTorchButton": true,
-      },
-      "customization": {
-        "status": "Searching for document",
-        "showBackgroundMask": true,
-        "backgroundMaskAlpha": 0.6,
-      },
-      "processParams": {
-        "dateFormat": "dd/MM/yyyy",
-        "scenario": "MrzOrOcr",
-        "multipageProcessing": true
-      }
-    });
-  }
+  // Future<void> initPlatformState() async {
+  //   await DocumentReader.prepareDatabase("Full");
+  //   ByteData byteData = await rootBundle.load("assets/regula.license");
+  //   await DocumentReader.initializeReader({
+  //     "license": base64.encode(byteData.buffer
+  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
+  //     "delayedNNLoad": true
+  //   });
+  //   DocumentReader.setConfig({
+  //     "functionality": {
+  //       "showCaptureButton": true,
+  //       "showCaptureButtonDelayFromStart": 2,
+  //       "showCaptureButtonDelayFromDetect": 1,
+  //       "showCloseButton": true,
+  //       "showTorchButton": true,
+  //     },
+  //     "customization": {
+  //       "status": "Searching for document",
+  //       "showBackgroundMask": true,
+  //       "backgroundMaskAlpha": 0.6,
+  //     },
+  //     "processParams": {
+  //       "dateFormat": "dd/MM/yyyy",
+  //       "scenario": "MrzOrOcr",
+  //       "multipageProcessing": true
+  //     }
+  //   });
+  // }
 
   void handleEIDCompletion(DocumentReaderCompletion completion) async {
     if (completion.action == DocReaderAction.COMPLETE ||
@@ -324,21 +324,24 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
   }
 
   void liveliness() async {
-    // final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+
+    isFaceScanning = true;
+    showButtonBloc.add(ShowButtonEvent(show: isFaceScanning));
+
     var value = await regula.FaceSDK.startLiveness();
     var result = regula.LivenessResponse.fromJson(json.decode(value));
     selfiePhoto = result!.bitmap!.replaceAll("\n", "");
-    setState(
-      () {
-        image2.bitmap = base64Encode(base64Decode(selfiePhoto));
-        image2.imageType = regula.ImageType.LIVE;
+    image2.bitmap = base64Encode(base64Decode(selfiePhoto));
+    image2.imageType = regula.ImageType.LIVE;
 
-        img2 = Image.memory(base64Decode(selfiePhoto));
-      },
-    );
+    img2 = Image.memory(base64Decode(selfiePhoto));
     log("Selfie -> $selfiePhoto");
 
     await matchfaces();
+
+    isFaceScanning = false;
+    showButtonBloc.add(ShowButtonEvent(show: isFaceScanning));
 
     if (photoMatchScore > 80) {
       if (context.mounted) {
@@ -355,6 +358,41 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       }
     } else {
       // TODO: Show face match failed message in UI, take confirmation from FH team
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return CustomDialog(
+              svgAssetPath: ImageConstants.warning,
+              title: "Selfie Match Failed",
+              message:
+                  "Your selfie does not match with the photo from your scanned document",
+              auxWidget: Column(
+                children: [
+                  SolidButton(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    text: "Go Back",
+                    color: AppColors.primaryBright17,
+                    fontColor: AppColors.primary,
+                  ),
+                  const SizeBox(height: 10),
+                ],
+              ),
+              actionWidget: Column(
+                children: [
+                  GradientButton(
+                    onTap: liveliness,
+                    text: "Retake Selfie",
+                  ),
+                  const SizeBox(height: PaddingConstants.bottomPadding),
+                ],
+              ),
+            );
+          },
+        );
+      }
     }
     // if (scannedDetailsArgument.isEID) {
     //   isUploading = true;
@@ -568,18 +606,17 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         children: [
           GradientButton(
             onTap: () {
-              if (!isUploading) {
+              if (!isFaceScanning) {
                 liveliness();
               }
             },
-            text: isUploading
-                ? "Uploading your details"
-                : labels[246]["labelText"],
+            text: labels[246]["labelText"],
+            auxWidget: isFaceScanning ? const LoaderRow() : const SizeBox(),
           ),
           const SizeBox(height: 15),
           SolidButton(
             onTap: () {
-              if (!isUploading) {
+              if (!isFaceScanning) {
                 scannedDetailsArgument.isEID
                     ? isEidChosen = true
                     : isEidChosen = false;

@@ -29,7 +29,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    // initPlatformState();
     const EventChannel('flutter_document_reader_api/event/completion')
         .receiveBroadcastStream()
         .listen(
@@ -43,51 +43,51 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
         .receiveBroadcastStream()
         .listen(
       (progress) {
-        setState(
-          () {
-            progressValue = progress;
-          },
-        );
+        // setState(
+        //   () {
+        //     progressValue = progress;
+        //   },
+        // );
       },
     );
   }
 
-  Future<void> initPlatformState() async {
-    var prepareDatabase = await DocumentReader.prepareDatabase("Full");
-    log("prepareDatabase -> $prepareDatabase");
-    setState(() {
-      status = "Initializing";
-    });
-    ByteData byteData = await rootBundle.load("assets/regula.license");
-    var documentReaderInitialization = await DocumentReader.initializeReader({
-      "license": base64.encode(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
-      "delayedNNLoad": true
-    });
-    log("documentReaderInitialization -> $documentReaderInitialization");
-    setState(() {
-      status = "Ready";
-    });
-    DocumentReader.setConfig({
-      "functionality": {
-        "showCaptureButton": true,
-        "showCaptureButtonDelayFromStart": 2,
-        "showCaptureButtonDelayFromDetect": 1,
-        "showCloseButton": true,
-        "showTorchButton": true,
-      },
-      "customization": {
-        "status": "Searching for document",
-        "showBackgroundMask": true,
-        "backgroundMaskAlpha": 0.6,
-      },
-      "processParams": {
-        "dateFormat": "dd/MM/yyyy",
-        "scenario": "MrzOrOcr",
-        "multipageProcessing": true
-      }
-    });
-  }
+  // Future<void> initPlatformState() async {
+  //   var prepareDatabase = await DocumentReader.prepareDatabase("Full");
+  //   log("prepareDatabase -> $prepareDatabase");
+  //   // setState(() {
+  //   //   status = "Initializing";
+  //   // });
+  //   ByteData byteData = await rootBundle.load("assets/regula.license");
+  //   var documentReaderInitialization = await DocumentReader.initializeReader({
+  //     "license": base64.encode(byteData.buffer
+  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
+  //     "delayedNNLoad": true
+  //   });
+  //   log("documentReaderInitialization -> $documentReaderInitialization");
+  //   // setState(() {
+  //   //   status = "Ready";
+  //   // });
+  //   DocumentReader.setConfig({
+  //     "functionality": {
+  //       "showCaptureButton": true,
+  //       "showCaptureButtonDelayFromStart": 2,
+  //       "showCaptureButtonDelayFromDetect": 1,
+  //       "showCloseButton": true,
+  //       "showTorchButton": true,
+  //     },
+  //     "customization": {
+  //       "status": "Searching for document",
+  //       "showBackgroundMask": true,
+  //       "backgroundMaskAlpha": 0.6,
+  //     },
+  //     "processParams": {
+  //       "dateFormat": "dd/MM/yyyy",
+  //       "scenario": "MrzOrOcr",
+  //       "multipageProcessing": true
+  //     }
+  //   });
+  // }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
     if (completion.action == DocReaderAction.COMPLETE ||
@@ -119,8 +119,6 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       }
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
-
-      log("fullName -> $fullName");
 
       if (context.mounted) {
         Navigator.pushNamed(
@@ -209,9 +207,9 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                     ),
                   ),
                   const SizeBox(height: 10),
-                  Text("Database downloaded: $progressValue%"),
+                  // Text("Database downloaded: $progressValue%"),
                   const SizeBox(height: 10),
-                  Text("Status: $status"),
+                  // Text("Status: $status"),
                 ],
               ),
             ),

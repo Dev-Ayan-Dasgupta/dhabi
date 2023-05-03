@@ -207,7 +207,9 @@ class _RetailOnboardingStatusScreenState
                       switch (onboardingStatusArgument.stepsCompleted) {
                         case 1:
                           // Navigator.pushNamed(context, Routes.captureFace);
-                          Navigator.pushNamed(context, Routes.eidExplanation);
+                          // Navigator.pushNamed(context, Routes.eidExplanation);
+                          Navigator.pushNamed(
+                              context, Routes.verificationInitializing);
                           break;
                         case 2:
                           Navigator.pushNamed(

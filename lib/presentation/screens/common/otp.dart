@@ -12,8 +12,6 @@ import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
-import 'package:dialup_mobile_app/data/repositories/onboarding/map_send_email_otp.dart';
-import 'package:dialup_mobile_app/data/repositories/onboarding/map_verify_email_otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';

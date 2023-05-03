@@ -1,5 +1,3 @@
-import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
-import 'package:dialup_mobile_app/utils/constants/images.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';

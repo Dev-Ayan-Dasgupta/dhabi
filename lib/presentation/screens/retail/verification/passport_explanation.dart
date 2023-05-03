@@ -26,7 +26,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    // initPlatformState();
     const EventChannel('flutter_document_reader_api/event/completion')
         .receiveBroadcastStream()
         .listen(
@@ -38,34 +38,34 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
         );
   }
 
-  Future<void> initPlatformState() async {
-    await DocumentReader.prepareDatabase("Full");
-    ByteData byteData = await rootBundle.load("assets/regula.license");
-    await DocumentReader.initializeReader({
-      "license": base64.encode(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
-      "delayedNNLoad": true
-    });
-    DocumentReader.setConfig({
-      "functionality": {
-        "showCaptureButton": true,
-        "showCaptureButtonDelayFromStart": 2,
-        "showCaptureButtonDelayFromDetect": 1,
-        "showCloseButton": true,
-        "showTorchButton": true,
-      },
-      "customization": {
-        "status": "Searching for document",
-        "showBackgroundMask": true,
-        "backgroundMaskAlpha": 0.6,
-      },
-      "processParams": {
-        "dateFormat": "dd/MM/yyyy",
-        "scenario": "MrzOrOcr",
-        "multipageProcessing": true
-      }
-    });
-  }
+  // Future<void> initPlatformState() async {
+  //   await DocumentReader.prepareDatabase("Full");
+  //   ByteData byteData = await rootBundle.load("assets/regula.license");
+  //   await DocumentReader.initializeReader({
+  //     "license": base64.encode(byteData.buffer
+  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
+  //     "delayedNNLoad": true
+  //   });
+  //   DocumentReader.setConfig({
+  //     "functionality": {
+  //       "showCaptureButton": true,
+  //       "showCaptureButtonDelayFromStart": 2,
+  //       "showCaptureButtonDelayFromDetect": 1,
+  //       "showCloseButton": true,
+  //       "showTorchButton": true,
+  //     },
+  //     "customization": {
+  //       "status": "Searching for document",
+  //       "showBackgroundMask": true,
+  //       "backgroundMaskAlpha": 0.6,
+  //     },
+  //     "processParams": {
+  //       "dateFormat": "dd/MM/yyyy",
+  //       "scenario": "MrzOrOcr",
+  //       "multipageProcessing": true
+  //     }
+  //   });
+  // }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
     if (completion.action == DocReaderAction.COMPLETE ||
