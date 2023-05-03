@@ -72,6 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
     populateDD(noTinReasonDDs, 6);
     populateDD(statementDurationDDs, 7);
     populateEmirates();
+    getPolicies();
   }
 
   void getDhabiCountryNames() {
@@ -98,6 +99,15 @@ class _SplashScreenState extends State<SplashScreen> {
       emirates.add(emirate["city_Name"]);
     }
     log("Emirates -> $emirates");
+  }
+
+  void getPolicies() async {
+    terms = await MapTermsAndConditions.mapTermsAndConditions(
+        {"languageCode": "en"});
+    statement =
+        await MapPrivacyStatement.mapPrivacyStatement({"languageCode": "en"});
+    log("Terms -> $terms");
+    log("statement -> $statement");
   }
 
   Future<void> getDeviceId() async {

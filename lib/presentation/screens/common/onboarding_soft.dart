@@ -192,9 +192,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
                             onTap: () {
+                              // Navigator.pushNamed(
+                              //     context, Routes.exploreDashboard);
                               Navigator.pushNamed(
-                                  context, Routes.exploreDashboard);
-
+                                context,
+                                Routes.termsAndConditions,
+                                arguments: CreateAccountArgumentModel(
+                                  email: "",
+                                  isRetail: true,
+                                ).toMap(),
+                              );
                               // OAuthHelper.oAuth();
                             },
                             text: labels[208]["labelText"],

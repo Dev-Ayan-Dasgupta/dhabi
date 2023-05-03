@@ -53,6 +53,16 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['GET_DROPDOWN_LISTS'] ?? "";
   }
 
+  @override
+  String get getTermsAndConditions {
+    return dotenv.env['GET_TERMS_AND_CONDITIONS'] ?? "";
+  }
+
+  @override
+  String get getPrivacyStatement {
+    return dotenv.env['GET_PRIVACY_STATEMENT'] ?? "";
+  }
+
   // ? Onboarding APIs
 
   @override

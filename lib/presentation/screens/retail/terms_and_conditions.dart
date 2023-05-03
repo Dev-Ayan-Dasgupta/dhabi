@@ -22,6 +22,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/constants/text.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:intl/intl.dart';
 
 class TermsAndConditionsScreen extends StatefulWidget {
@@ -110,14 +111,15 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                                 itemBuilder: (context, _) {
                                   return SizedBox(
                                     width: 100.w,
-                                    child: Text(
-                                      tAndC,
-                                      style: TextStyles.primary.copyWith(
-                                        color: const Color(0XFF252525),
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
+                                    child: HtmlWidget(terms),
+                                    // Text(
+                                    //   tAndC,
+                                    //   style: TextStyles.primary.copyWith(
+                                    //     color: const Color(0XFF252525),
+                                    //     fontSize:
+                                    //         (16 / Dimensions.designWidth).w,
+                                    //   ),
+                                    // ),
                                   );
                                 },
                               ),

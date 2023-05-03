@@ -6,6 +6,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -182,7 +183,7 @@ class _RetailOnboardingStatusScreenState
                                   context,
                                   Routes.termsAndConditions,
                                   arguments: CreateAccountArgumentModel(
-                                    email: "ADasgupta@aspire-infotech.net",
+                                    email: emailAddress,
                                     isRetail: true,
                                   ).toMap(),
                                 );
@@ -203,7 +204,6 @@ class _RetailOnboardingStatusScreenState
                 children: [
                   GradientButton(
                     onTap: () {
-                      // Navigator.pushNamed(context, Routes.applicationAddress);
                       switch (onboardingStatusArgument.stepsCompleted) {
                         case 1:
                           // Navigator.pushNamed(context, Routes.captureFace);

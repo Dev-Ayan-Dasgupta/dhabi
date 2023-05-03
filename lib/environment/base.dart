@@ -12,6 +12,8 @@ abstract class BaseConfig {
   String get getAppLabels;
   String get getAppMessages;
   String get getDropdownLists;
+  String get getTermsAndConditions;
+  String get getPrivacyStatement;
 
   // ? Onboarding APIs
 
