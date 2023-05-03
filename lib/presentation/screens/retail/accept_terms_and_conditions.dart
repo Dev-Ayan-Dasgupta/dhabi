@@ -21,12 +21,11 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/constants/text.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:intl/intl.dart';
 
-class TermsAndConditionsScreen extends StatefulWidget {
-  const TermsAndConditionsScreen({
+class AcceptTermsAndConditionsScreen extends StatefulWidget {
+  const AcceptTermsAndConditionsScreen({
     Key? key,
     this.argument,
   }) : super(key: key);
@@ -34,11 +33,12 @@ class TermsAndConditionsScreen extends StatefulWidget {
   final Object? argument;
 
   @override
-  State<TermsAndConditionsScreen> createState() =>
-      _TermsAndConditionsScreenState();
+  State<AcceptTermsAndConditionsScreen> createState() =>
+      _AcceptTermsAndConditionsScreenState();
 }
 
-class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
+class _AcceptTermsAndConditionsScreenState
+    extends State<AcceptTermsAndConditionsScreen> {
   bool isChecked = false;
   final ScrollController _scrollController = ScrollController();
   bool scrollDown = true;
@@ -54,20 +54,24 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
         CreateAccountArgumentModel.fromMap(widget.argument as dynamic ?? {});
     final ScrollDirectionBloc scrollDirectionBloc =
         context.read<ScrollDirectionBloc>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        if (_scrollController.offset >
-            (_scrollController.position.maxScrollExtent -
-                    _scrollController.position.minScrollExtent) /
-                2) {
-          scrollDown = false;
-          scrollDirectionBloc.add(ScrollDirectionEvent(scrollDown: scrollDown));
-        } else {
-          scrollDown = true;
-          scrollDirectionBloc.add(ScrollDirectionEvent(scrollDown: scrollDown));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        if (_scrollController.hasClients) {
+          if (_scrollController.offset >
+              (_scrollController.position.maxScrollExtent -
+                      _scrollController.position.minScrollExtent) /
+                  2) {
+            scrollDown = false;
+            scrollDirectionBloc
+                .add(ScrollDirectionEvent(scrollDown: scrollDown));
+          } else {
+            scrollDown = true;
+            scrollDirectionBloc
+                .add(ScrollDirectionEvent(scrollDown: scrollDown));
+          }
         }
-      }
-    });
+      },
+    );
   }
 
   @override

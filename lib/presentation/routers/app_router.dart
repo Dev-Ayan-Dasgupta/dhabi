@@ -12,7 +12,7 @@ import 'package:dialup_mobile_app/presentation/screens/retail/insights.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/notifications/notifications.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/onboardingStatus/onboarding_status.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/profile/index.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/accept_terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/transfer/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verification/face_compare.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verification/index.dart';
@@ -179,9 +179,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const ApplicationAccountScreen(),
         );
-      case Routes.termsAndConditions:
+      case Routes.acceptTermsAndConditions:
         return MaterialPageRoute(
-          builder: (_) => TermsAndConditionsScreen(
+          builder: (_) => AcceptTermsAndConditionsScreen(
             argument: args,
           ),
         );
@@ -326,6 +326,14 @@ class AppRouter {
       case Routes.explore:
         return MaterialPageRoute(
           builder: (_) => const ExploreScreen(),
+        );
+      case Routes.termsAndConditions:
+        return MaterialPageRoute(
+          builder: (_) => const TermsAndConsitionsScreen(),
+        );
+      case Routes.privacyStatement:
+        return MaterialPageRoute(
+          builder: (_) => const PrivacyStatementScreen(),
         );
       case Routes.dormant:
         return MaterialPageRoute(

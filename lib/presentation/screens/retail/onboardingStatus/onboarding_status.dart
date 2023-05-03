@@ -135,39 +135,51 @@ class _RetailOnboardingStatusScreenState
                         builder: buildTC,
                       ),
                       const SizeBox(width: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: 'I agree to the ',
-                          style: TextStyles.primary.copyWith(
-                            color: const Color.fromRGBO(0, 0, 0, 0.5),
-                            fontSize: (14 / Dimensions.designWidth).w,
+                      Row(
+                        children: [
+                          Text(
+                            'I agree to the ',
+                            style: TextStyles.primary.copyWith(
+                              color: const Color.fromRGBO(0, 0, 0, 0.5),
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
                           ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Terms & Conditions',
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, Routes.termsAndConditions);
+                            },
+                            child: Text(
+                              'Terms & Conditions',
                               style: TextStyles.primary.copyWith(
                                 color: AppColors.primary,
-                                fontSize: (14 / Dimensions.designWidth).w,
+                                fontSize: (16 / Dimensions.designWidth).w,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
-                            TextSpan(
-                              text: ' and ',
-                              style: TextStyles.primary.copyWith(
-                                color: const Color.fromRGBO(0, 0, 0, 0.5),
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
+                          ),
+                          Text(
+                            ' and ',
+                            style: TextStyles.primary.copyWith(
+                              color: const Color.fromRGBO(0, 0, 0, 0.5),
+                              fontSize: (16 / Dimensions.designWidth).w,
                             ),
-                            TextSpan(
-                              text: 'Privacy Policy',
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, Routes.privacyStatement);
+                            },
+                            child: Text(
+                              'Privacy Policy',
                               style: TextStyles.primary.copyWith(
                                 color: AppColors.primary,
-                                fontSize: (14 / Dimensions.designWidth).w,
+                                fontSize: (16 / Dimensions.designWidth).w,
                                 decoration: TextDecoration.underline,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -181,7 +193,7 @@ class _RetailOnboardingStatusScreenState
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
-                                  Routes.termsAndConditions,
+                                  Routes.acceptTermsAndConditions,
                                   arguments: CreateAccountArgumentModel(
                                     email: emailAddress,
                                     isRetail: true,

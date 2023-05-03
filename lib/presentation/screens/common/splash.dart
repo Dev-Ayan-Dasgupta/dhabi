@@ -166,12 +166,11 @@ class _SplashScreenState extends State<SplashScreen> {
     log("appVersion -> $appVersion");
   }
 
-  void navigate(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 1));
-    if (context.mounted) {
-      Navigator.pushReplacementNamed(context, Routes.onboarding,
-          arguments: OnboardingArgumentModel(isInitial: true).toMap());
-    }
+  void navigate(BuildContext context) {
+    // await Future.delayed(const Duration(seconds: 1));
+    // if (context.mounted) {}
+    Navigator.pushReplacementNamed(context, Routes.onboarding,
+        arguments: OnboardingArgumentModel(isInitial: true).toMap());
   }
 
   @override

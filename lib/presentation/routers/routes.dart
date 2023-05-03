@@ -28,7 +28,7 @@ class Routes {
   static const String applicationTaxFATCA = 'application-tax-fatca';
   static const String applicationTaxCRS = 'application-tax-crs';
   static const String applicationAccount = 'application-account';
-  static const String termsAndConditions = 'terms-and-conditions';
+  static const String acceptTermsAndConditions = 'accept-terms-and-conditions';
   static const String errorSuccessScreen = 'error-success-screen';
   static const String interestRates = 'interest-rates';
   static const String createDeposits = 'create-deposits';
@@ -67,6 +67,8 @@ class Routes {
   static const String dormant = 'dormant';
   static const String captureFace = 'capture-face';
   static const String finalImage = 'final-image';
+  static const String termsAndConditions = 'terms-and-conditions';
+  static const String privacyStatement = 'privacy-statement';
 
   static const String faceCompare = 'face-compare';
 }

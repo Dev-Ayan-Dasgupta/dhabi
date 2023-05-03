@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
-import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -192,16 +191,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
                             onTap: () {
-                              // Navigator.pushNamed(
-                              //     context, Routes.exploreDashboard);
                               Navigator.pushNamed(
-                                context,
-                                Routes.termsAndConditions,
-                                arguments: CreateAccountArgumentModel(
-                                  email: "",
-                                  isRetail: true,
-                                ).toMap(),
-                              );
+                                  context, Routes.exploreDashboard);
+                              // Navigator.pushNamed(
+                              //     context, Routes.privacyStatement);
                               // OAuthHelper.oAuth();
                             },
                             text: labels[208]["labelText"],
