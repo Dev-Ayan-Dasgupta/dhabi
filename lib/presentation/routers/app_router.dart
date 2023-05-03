@@ -84,6 +84,10 @@ class AppRouter {
             argument: args,
           ),
         );
+      case Routes.verificationInitializing:
+        return MaterialPageRoute(
+          builder: (_) => const VerificationInitializingScreen(),
+        );
       case Routes.eidExplanation:
         return MaterialPageRoute(
           builder: (_) => const EIDExplanationScreen(),

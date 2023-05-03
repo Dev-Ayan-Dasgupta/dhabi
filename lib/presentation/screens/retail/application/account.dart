@@ -25,6 +25,9 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
   int progress = 4;
   bool isCurrentSelected = false;
   bool isSavingsSelected = false;
+
+  bool isUploading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -177,12 +180,12 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
           ),
           const SizeBox(height: 10),
           GradientButton(
-            onTap: () {
-              // Navigator.pushNamed(
-              //   context,
-              //   Routes.verifyMobile,
-              //   arguments: VerifyMobileArgumentModel(isBusiness: false).toMap(),
-              // );
+            onTap: () async {
+              final ShowButtonBloc showButtonBloc =
+                  context.read<ShowButtonBloc>();
+              isUploading = true;
+              showButtonBloc.add(ShowButtonEvent(show: isUploading));
+              // TODO: Call relevant API
               Navigator.pushNamed(
                 context,
                 Routes.retailOnboardingStatus,
@@ -195,6 +198,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
               );
             },
             text: labels[288]["labelText"],
+            auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
           const SizeBox(height: 32),
         ],

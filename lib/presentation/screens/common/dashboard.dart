@@ -272,7 +272,6 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
           svgAssetPath: ImageConstants.checkCircleOutlined,
           title: "Done exploring?",
           message: "Register now and enjoy the world of digital banking!",
-          auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
               GradientButton(

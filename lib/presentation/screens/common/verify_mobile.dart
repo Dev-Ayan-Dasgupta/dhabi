@@ -1,8 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/verify_mobile.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -65,7 +69,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                   ),
                   const SizeBox(height: 22),
                   Text(
-                    "Mobile Number",
+                    labels[27]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.black63,
                       fontSize: (16 / Dimensions.designWidth).w,
@@ -167,17 +171,23 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
       return const SizeBox();
     } else {
       return GradientButton(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            Routes.otp,
-            arguments: OTPArgumentModel(
-              // code: "123456",
-              emailOrPhone: _phoneController.text,
-              isEmail: false,
-              isBusiness: verifyMobileArgumentModel.isBusiness,
-            ).toMap(),
-          );
+        onTap: () async {
+          // TODO: Call Send Mobile OTP API here
+          var result = await MapSendMobileOtp.mapSendMobileOtp(
+              {"mobileNo": "+971${_phoneController.text}"}, token);
+          log("Send Mobile OTP API response -> $result");
+          if (context.mounted) {
+            Navigator.pushNamed(
+              context,
+              Routes.otp,
+              arguments: OTPArgumentModel(
+                // code: "123456",
+                emailOrPhone: "+971${_phoneController.text}",
+                isEmail: false,
+                isBusiness: verifyMobileArgumentModel.isBusiness,
+              ).toMap(),
+            );
+          }
         },
         text: labels[31]["labelText"],
       );

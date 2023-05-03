@@ -56,6 +56,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       },
       "customization": {
         "status": "Searching for document",
+        "showBackgroundMask": true,
+        "backgroundMaskAlpha": 0.6,
       },
       "processParams": {
         "dateFormat": "dd/MM/yyyy",
@@ -223,20 +225,22 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           svgAssetPath: ImageConstants.warning,
           title: labels[233]["labelText"],
           message: labels[234]["labelText"],
-          auxWidget: const SizeBox(),
-          actionWidget: Column(
+          auxWidget: Column(
             children: [
               GradientButton(
                 onTap: () {
-                  // TODO: call function to launch regula document scanner here
                   // Navigator.pushNamed(context, Routes.eidDetails);
-
+                  isEidChosen = false;
                   DocumentReader.showScanner();
                   Navigator.pop(context);
                 },
                 text: "Allow Access",
               ),
               const SizeBox(height: 15),
+            ],
+          ),
+          actionWidget: Column(
+            children: [
               SolidButton(
                 onTap: () {},
                 text: labels[235]["labelText"],

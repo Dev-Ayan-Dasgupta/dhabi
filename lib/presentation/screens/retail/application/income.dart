@@ -1,6 +1,7 @@
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/application/progress.dart';
@@ -24,6 +25,8 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
   int toggles = 0;
 
   String? selectedValue;
+
+  bool isUploading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -110,10 +113,17 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
       return Column(
         children: [
           GradientButton(
-            onTap: () {
+            onTap: () async {
+              final DropdownSelectedBloc showButtonBloc =
+                  context.read<DropdownSelectedBloc>();
+              isUploading = true;
+              showButtonBloc.add(DropdownSelectedEvent(
+                  isDropdownSelected: isUploading, toggles: toggles));
+              // TODO: Call relevant API here...
               Navigator.pushNamed(context, Routes.applicationTaxFATCA);
             },
             text: labels[127]["labelText"],
+            auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
           const SizeBox(height: 20),
         ],

@@ -12,6 +12,7 @@ class Routes {
   static const String createPassword = 'create-password';
   static const String retailOnboardingStatus = 'retail-onboarding-status';
   static const String businessOnboardingStatus = 'business-onboarding-status';
+  static const String verificationInitializing = 'verification-initializing';
   static const String eidExplanation = 'eid-explanation';
   static const String passportExplanation = 'passport-explanation';
   static const String scannedDetails = 'scanned-details';

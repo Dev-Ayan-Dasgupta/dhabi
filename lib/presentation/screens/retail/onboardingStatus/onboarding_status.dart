@@ -63,10 +63,10 @@ class _RetailOnboardingStatusScreenState
                 children: [
                   const SizeBox(height: 20),
                   Text(
-                    "Let's get your identification documents verified",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: const Color(0XFF1A3C40),
-                      fontSize: (24 / Dimensions.designWidth).w,
+                    labels[223]["labelText"],
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 20),
@@ -185,16 +185,6 @@ class _RetailOnboardingStatusScreenState
                                     isRetail: true,
                                   ).toMap(),
                                 );
-                                // Navigator.pushNamed(
-                                //   context,
-                                //   Routes.retailDashboard,
-                                //   arguments: RetailDashboardArgumentModel(
-                                //     imgUrl:
-                                //         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                //     name: "ayan@qolarisdata.com",
-                                //   ).toMap(),
-                                // );
-                                // Navigator.pushNamed(context, Routes.captureFace);
                               },
                               text: labels[288]["labelText"],
                             ),
@@ -223,7 +213,13 @@ class _RetailOnboardingStatusScreenState
                               context, Routes.applicationAddress);
                           break;
                         case 3:
-                          Navigator.pushNamed(context, Routes.verifyMobile);
+                          Navigator.pushNamed(
+                            context,
+                            Routes.verifyMobile,
+                            arguments: VerifyMobileArgumentModel(
+                              isBusiness: false,
+                            ).toMap(),
+                          );
                           break;
                         default:
                       }

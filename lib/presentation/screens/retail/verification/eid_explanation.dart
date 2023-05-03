@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -53,7 +54,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
 
   Future<void> initPlatformState() async {
     var prepareDatabase = await DocumentReader.prepareDatabase("Full");
-    print("prepareDatabase -> $prepareDatabase");
+    log("prepareDatabase -> $prepareDatabase");
     setState(() {
       status = "Initializing";
     });
@@ -63,7 +64,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
       "delayedNNLoad": true
     });
-    print("documentReaderInitialization -> $documentReaderInitialization");
+    log("documentReaderInitialization -> $documentReaderInitialization");
     setState(() {
       status = "Ready";
     });
@@ -77,6 +78,8 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       },
       "customization": {
         "status": "Searching for document",
+        "showBackgroundMask": true,
+        "backgroundMaskAlpha": 0.6,
       },
       "processParams": {
         "dateFormat": "dd/MM/yyyy",
@@ -241,19 +244,22 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           svgAssetPath: ImageConstants.warning,
           title: labels[233]["labelText"],
           message: labels[234]["labelText"],
-          auxWidget: const SizeBox(),
-          actionWidget: Column(
+          auxWidget: Column(
             children: [
               GradientButton(
                 onTap: () {
-                  // TODO: call function to launch regula document scanner here
                   // Navigator.pushNamed(context, Routes.eidDetails);
+                  isEidChosen = true;
                   DocumentReader.showScanner();
                   Navigator.pop(context);
                 },
                 text: "Allow Access",
               ),
               const SizeBox(height: 15),
+            ],
+          ),
+          actionWidget: Column(
+            children: [
               SolidButton(
                 onTap: () {},
                 text: labels[235]["labelText"],

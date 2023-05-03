@@ -84,7 +84,7 @@ class OnboardingStatusRow extends StatelessWidget {
                 child: Text(
                   text,
                   style: TextStyles.primaryMedium.copyWith(
-                    color: const Color(0XFF0A1B60),
+                    color: AppColors.dark80,
                     fontSize: (16 / Dimensions.designWidth).w,
                   ),
                 ),
@@ -94,7 +94,7 @@ class OnboardingStatusRow extends StatelessWidget {
                 width: (20 / Dimensions.designWidth).w,
                 height: (20 / Dimensions.designWidth).w,
                 colorFilter: ColorFilter.mode(
-                  isCompleted ? AppColors.primaryBright : AppColors.blackD9,
+                  isCompleted ? AppColors.green100 : AppColors.blackD9,
                   BlendMode.srcIn,
                 ),
               ),

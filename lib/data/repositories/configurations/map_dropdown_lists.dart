@@ -7,11 +7,8 @@ class MapDropdownLists {
   static Future<List> mapDropdownLists(Map<String, dynamic> body) async {
     try {
       http.Response response = await GetDropdownLists.getDropdownLists(body);
-      print(
-          "Dropdown List API output -> ${jsonDecode(response.body).runtimeType}");
       return jsonDecode(response.body);
-    } catch (e) {
-      print("API error -> $e");
+    } catch (_) {
       rethrow;
     }
   }

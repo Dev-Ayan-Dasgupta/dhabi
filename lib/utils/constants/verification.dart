@@ -7,5 +7,7 @@ String? dob;
 String? gender;
 String? photo;
 String? docPhoto;
+String selfiePhoto = "";
 String? passportNumber;
 double photoMatchScore = 0;
+bool? isEidChosen;

@@ -155,7 +155,6 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           title: "Hey, there!",
           message:
               "Please check FAQs.\nIf you do not find your query,\nContact us at +971 200 0000",
-          auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
               GradientButton(
@@ -180,7 +179,6 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           svgAssetPath: ImageConstants.warning,
           title: "Are you sure?",
           message: "If you log out you would need to re-login again",
-          auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
               GradientButton(

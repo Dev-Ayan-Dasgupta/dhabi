@@ -1,7 +1,10 @@
-import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
-import 'package:dialup_mobile_app/utils/constants/textstyles.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+
+import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
+import 'package:dialup_mobile_app/utils/constants/textstyles.dart';
 
 class GradientButton extends StatelessWidget {
   const GradientButton({
@@ -12,6 +15,7 @@ class GradientButton extends StatelessWidget {
     this.borderRadius,
     this.gradient,
     required this.text,
+    this.auxWidget,
     this.fontColor,
     this.fontFamily,
     this.fontSize,
@@ -24,6 +28,7 @@ class GradientButton extends StatelessWidget {
   final double? borderRadius;
   final Gradient? gradient;
   final String text;
+  final Widget? auxWidget;
   final Color? fontColor;
   final String? fontFamily;
   final double? fontSize;
@@ -51,14 +56,18 @@ class GradientButton extends StatelessWidget {
                 ],
               ),
         ),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyles.primary.copyWith(
-              fontSize: fontSize ?? (20 / Dimensions.designWidth).w,
-              fontWeight: fontWeight ?? FontWeight.w700,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: TextStyles.primary.copyWith(
+                fontSize: fontSize ?? (20 / Dimensions.designWidth).w,
+                fontWeight: fontWeight ?? FontWeight.w700,
+              ),
             ),
-          ),
+            auxWidget ?? const SizeBox(),
+          ],
         ),
       ),
     );

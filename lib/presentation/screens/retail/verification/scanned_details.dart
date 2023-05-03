@@ -8,9 +8,7 @@ import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
-import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -200,6 +198,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       },
       "customization": {
         "status": "Searching for document",
+        "showBackgroundMask": true,
+        "backgroundMaskAlpha": 0.6,
       },
       "processParams": {
         "dateFormat": "dd/MM/yyyy",
@@ -324,99 +324,87 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
   }
 
   void liveliness() async {
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    // final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     var value = await regula.FaceSDK.startLiveness();
     var result = regula.LivenessResponse.fromJson(json.decode(value));
+    selfiePhoto = result!.bitmap!.replaceAll("\n", "");
     setState(
       () {
-        image2.bitmap = base64Encode(
-          base64Decode(
-            result!.bitmap!.replaceAll("\n", ""),
-          ),
-        );
+        image2.bitmap = base64Encode(base64Decode(selfiePhoto));
         image2.imageType = regula.ImageType.LIVE;
-        img2 = Image.memory(base64Decode(result.bitmap!.replaceAll("\n", "")));
-        // liveness = result.liveness == regula.LivenessStatus.PASSED
-        //     ? "passed"
-        //     : "unknown";
+
+        img2 = Image.memory(base64Decode(selfiePhoto));
       },
     );
-    log("Selfie -> ${result!.bitmap!.replaceAll("\n", "")}");
-    // if (context.mounted) {
-    //   Navigator.pushNamed(
-    //     context,
-    //     Routes.faceCompare,
-    //     arguments: FaceCompareArgumentModel(
-    //       image1: image1,
-    //       img1: img1,
-    //       image2: image2,
-    //       img2: img2,
-    //     ).toMap(),
-    //   );
-    // }
-    await matchfaces();
-    if (scannedDetailsArgument.isEID) {
-      isUploading = true;
-      showButtonBloc.add(ShowButtonEvent(show: isUploading));
-      var response = await MapUploadEid.mapUploadEid(
-        {
-          "eidDocumentImage": docPhoto,
-          "eidUserPhoto": photo,
-          "selfiePhoto": result.bitmap!.replaceAll("\n", ""),
-          "photoMatchScore": photoMatchScore,
-          "eidNumber": eiDNumber,
-          "fullName": fullName,
-          "dateOfBirth": DateFormat('yyyy-MM-dd')
-              .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")),
-          "nationalityCountryCode": nationalityCode,
-          "genderId": gender == 'M' ? 1 : 2,
-          "expiresOn": DateFormat('yyyy-MM-dd').format(
-              DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")),
-          "isReKYC": false
-        },
-        token,
-      );
-      log("UploadEid API response -> $response");
-      isUploading = false;
-      showButtonBloc.add(ShowButtonEvent(show: isUploading));
-    } else {
-      isUploading = true;
-      showButtonBloc.add(ShowButtonEvent(show: isUploading));
-      var response = await MapUploadPassport.mapUploadPassport(
-        {
-          "passportDocumentImage": docPhoto,
-          "passportUserPhoto": photo,
-          "selfiePhoto": result.bitmap!.replaceAll("\n", ""),
-          "photoMatchScore": photoMatchScore,
-          "passportNumber": passportNumber,
-          "fullName": fullName,
-          "dateOfBirth": DateFormat('yyyy-MM-dd')
-              .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")),
-          "nationalityCountryCode": nationalityCode,
-          "genderId": gender == 'M' ? 1 : 2,
-          "expiresOn": DateFormat('yyyy-MM-dd').format(
-              DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")),
-          "isReKYC": false
-        },
-        token,
-      );
-      log("UploadPassport API response -> $response");
-      isUploading = false;
-      showButtonBloc.add(ShowButtonEvent(show: isUploading));
-    }
+    log("Selfie -> $selfiePhoto");
 
-    if (context.mounted) {
-      Navigator.pushNamed(
-        context,
-        Routes.retailOnboardingStatus,
-        arguments: OnboardingStatusArgumentModel(
-          stepsCompleted: 2,
-          isFatca: false,
-          isPassport: false,
-          isRetail: true,
-        ).toMap(),
-      );
+    await matchfaces();
+
+    if (photoMatchScore > 80) {
+      if (context.mounted) {
+        Navigator.pushNamed(
+          context,
+          Routes.retailOnboardingStatus,
+          arguments: OnboardingStatusArgumentModel(
+            stepsCompleted: 2,
+            isFatca: false,
+            isPassport: false,
+            isRetail: true,
+          ).toMap(),
+        );
+      }
+    } else {
+      // TODO: Show face match failed message in UI, take confirmation from FH team
     }
+    // if (scannedDetailsArgument.isEID) {
+    //   isUploading = true;
+    //   showButtonBloc.add(ShowButtonEvent(show: isUploading));
+    //   // var response = await MapUploadEid.mapUploadEid(
+    //   //   {
+    //   //     "eidDocumentImage": docPhoto,
+    //   //     "eidUserPhoto": photo,
+    //   //     "selfiePhoto": selfiePhoto,
+    //   //     "photoMatchScore": photoMatchScore,
+    //   //     "eidNumber": eiDNumber,
+    //   //     "fullName": fullName,
+    //   //     "dateOfBirth": DateFormat('yyyy-MM-dd')
+    //   //         .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")),
+    //   //     "nationalityCountryCode": nationalityCode,
+    //   //     "genderId": gender == 'M' ? 1 : 2,
+    //   //     "expiresOn": DateFormat('yyyy-MM-dd').format(
+    //   //         DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")),
+    //   //     "isReKYC": false
+    //   //   },
+    //   //   token,
+    //   // );
+    //   // log("UploadEid API response -> $response");
+    //   isUploading = false;
+    //   showButtonBloc.add(ShowButtonEvent(show: isUploading));
+    // } else {
+    //   isUploading = true;
+    //   showButtonBloc.add(ShowButtonEvent(show: isUploading));
+    //   // var response = await MapUploadPassport.mapUploadPassport(
+    //   //   {
+    //   //     "passportDocumentImage": docPhoto,
+    //   //     "passportUserPhoto": photo,
+    //   //     "selfiePhoto": selfiePhoto,
+    //   //     "photoMatchScore": photoMatchScore,
+    //   //     "passportNumber": passportNumber,
+    //   //     "fullName": fullName,
+    //   //     "dateOfBirth": DateFormat('yyyy-MM-dd')
+    //   //         .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")),
+    //   //     "nationalityCountryCode": nationalityCode,
+    //   //     "genderId": gender == 'M' ? 1 : 2,
+    //   //     "expiresOn": DateFormat('yyyy-MM-dd').format(
+    //   //         DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")),
+    //   //     "isReKYC": false
+    //   //   },
+    //   //   token,
+    //   // );
+    //   // log("UploadPassport API response -> $response");
+    //   isUploading = false;
+    //   showButtonBloc.add(ShowButtonEvent(show: isUploading));
+    // }
   }
 
   matchfaces() async {
@@ -425,7 +413,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     var value = await regula.FaceSDK.matchFaces(jsonEncode(request));
     var response = regula.MatchFacesResponse.fromJson(json.decode(value));
     var str = await regula.FaceSDK.matchFacesSimilarityThresholdSplit(
-        jsonEncode(response!.results), 0.75);
+        jsonEncode(response!.results), 0.8);
     regula.MatchFacesSimilarityThresholdSplit? split =
         regula.MatchFacesSimilarityThresholdSplit.fromJson(json.decode(str));
 
@@ -591,6 +579,9 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           SolidButton(
             onTap: () {
               if (!isUploading) {
+                scannedDetailsArgument.isEID
+                    ? isEidChosen = true
+                    : isEidChosen = false;
                 DocumentReader.showScanner();
               }
             },

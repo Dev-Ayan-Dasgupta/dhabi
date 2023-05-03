@@ -66,6 +66,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
 
   final TextEditingController _tinController = TextEditingController();
 
+  bool isUploading = false;
+
   late TaxCrsArgumentModel taxCrsArgument;
 
   @override
@@ -526,7 +528,11 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           const SizeBox(height: 20),
           GradientButton(
             onTap: () async {
-              log("countryCode -> ${dhabiCountries[dhabiCountryIndex]["shortCode"]}");
+              final ShowButtonBloc showButtonBloc =
+                  context.read<ShowButtonBloc>();
+              isUploading = true;
+              showButtonBloc.add(ShowButtonEvent(show: isUploading));
+              // log("countryCode -> ${dhabiCountries[dhabiCountryIndex]["shortCode"]}");
               log("noTINReason -> ${selectedReason ?? ""}");
               var result =
                   await MapCustomerTaxInformation.mapCustomerTaxInformation(
@@ -535,8 +541,9 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                   "ustin": taxCrsArgument.ustin,
                   "internationalTaxes": [
                     {
-                      "countryCode": dhabiCountries[dhabiCountryIndex]
-                          ["shortCode"],
+                      "countryCode": dhabiCountryIndex == -1
+                          ? "US"
+                          : dhabiCountries[dhabiCountryIndex]["shortCode"],
                       "isTIN": isTinYes,
                       "tin": _tinController.text,
                       "noTINReason": selectedReason ?? ""
@@ -551,6 +558,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
               }
             },
             text: labels[127]["labelText"],
+            auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
           const SizeBox(height: 20),
         ],

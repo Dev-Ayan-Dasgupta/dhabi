@@ -68,7 +68,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   bool allTrue = false;
 
   bool isRegistering = false;
-  bool isLoggingIn = false;
 
   @override
   void initState() {
@@ -286,7 +285,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           title: "Are you sure?",
           message:
               "Going to the previous screen will make you repeat this step.",
-          auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
               GradientButton(
@@ -513,9 +511,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   "appVersion": appVersion
                 });
                 log("Create User API Response -> $result1");
-                isRegistering = false;
-                isLoggingIn = true;
-                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+
                 var result = await MapLogin.mapLogin({
                   "emailId": createAccountArgumentModel.email,
                   "userTypeId": 1,
@@ -530,15 +526,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 log("Login API Response -> $result");
                 token = result["token"];
                 log("token -> $token");
-                isLoggingIn = false;
-                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+
                 if (context.mounted) {
                   Navigator.pushNamed(
                     context,
                     Routes.retailOnboardingStatus,
                     arguments: OnboardingStatusArgumentModel(
-                      stepsCompleted:
-                          2, // TODO: change it back to 1 after completeing onboarding APIs
+                      stepsCompleted: 1,
                       isFatca: false,
                       isPassport: false,
                       isRetail: createAccountArgumentModel.isRetail,
@@ -558,9 +552,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   "appVersion": appVersion
                 });
                 log("Create User API Response -> $result1");
-                isRegistering = false;
-                isLoggingIn = true;
-                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+
                 var result = await MapLogin.mapLogin({
                   "emailId": createAccountArgumentModel.email,
                   "userTypeId": 2,
@@ -575,8 +567,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 log("Login API Response -> $result");
                 token = result["token"];
                 log("token -> $token");
-                isLoggingIn = false;
-                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+
                 if (context.mounted) {
                   Navigator.pushNamed(
                     context,
@@ -592,11 +583,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 // Navigator.pushNamed(context, Routes.businessOnboardingStatus);
               }
             },
-            text: isRegistering
-                ? "Registering you"
-                : isLoggingIn
-                    ? "Logging you in"
-                    : labels[222]["labelText"],
+            text: labels[222]["labelText"],
+            auxWidget: isRegistering ? const LoaderRow() : const SizeBox(),
           ),
         ],
       );

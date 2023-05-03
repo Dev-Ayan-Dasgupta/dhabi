@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
@@ -52,6 +55,8 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
   String? selectedValue;
 
   int emirateIndex = -1;
+
+  bool isUploading = false;
 
   @override
   void initState() {
@@ -295,6 +300,15 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     children: [
                       GradientButton(
                         onTap: () async {
+                          final DropdownSelectedBloc showButtonBloc =
+                              context.read<DropdownSelectedBloc>();
+                          isUploading = true;
+                          showButtonBloc.add(
+                            DropdownSelectedEvent(
+                              isDropdownSelected: isUploading,
+                              toggles: toggles,
+                            ),
+                          );
                           var result = await MapRegisterRetailCustomerAddress
                               .mapRegisterRetailCustomerAddress({
                             "addressLine_1": _address1Controller.text,
@@ -313,6 +327,8 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                           }
                         },
                         text: labels[127]["labelText"],
+                        auxWidget:
+                            isUploading ? const LoaderRow() : const SizeBox(),
                       ),
                       const SizeBox(height: 20),
                     ],

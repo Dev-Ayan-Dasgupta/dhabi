@@ -4,9 +4,9 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
-import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -206,6 +206,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
       final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
       return GradientButton(
         onTap: () async {
+          log("emailAddress -> $emailAddress");
           isValidating = true;
           showButtonBloc.add(ShowButtonEvent(show: isValidating));
           Map<String, dynamic> result;
@@ -230,41 +231,51 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
               );
             }
           } else {
+            // TODO: uncomment this after testing
+            // if (context.mounted) {
+            //   showDialog(
+            //     context: context,
+            //     builder: (context) {
+            //       return CustomDialog(
+            //         svgAssetPath: ImageConstants.warning,
+            //         title: "User already exists",
+            //         message: "Try logging in again.",
+            //         actionWidget: Column(
+            //           children: [
+            //             GradientButton(
+            //               onTap: () {
+            //                 Navigator.pushNamed(
+            //                   context,
+            //                   Routes.loginPassword,
+            //                   arguments: LoginPasswordArgumentModel(
+            //                     userId: createAccountArgumentModel.email,
+            //                   ).toMap(),
+            //                 );
+            //               },
+            //               text: "Login",
+            //             ),
+            //             const SizeBox(height: 20),
+            //           ],
+            //         ),
+            //       );
+            //     },
+            //   );
+            // }
+            // TODO: Comment/remove this after testing
             if (context.mounted) {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return CustomDialog(
-                    svgAssetPath: ImageConstants.warning,
-                    title: "User already exists",
-                    message: "Try logging in again.",
-                    auxWidget: const SizeBox(),
-                    actionWidget: Column(
-                      children: [
-                        GradientButton(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              Routes.loginPassword,
-                              arguments: LoginPasswordArgumentModel(
-                                userId: createAccountArgumentModel.email,
-                              ).toMap(),
-                            );
-                          },
-                          text: "Login",
-                        ),
-                        const SizeBox(height: 20),
-                      ],
-                    ),
-                  );
-                },
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.createPassword,
+                arguments: CreateAccountArgumentModel(
+                  email: createAccountArgumentModel.email,
+                  isRetail: isPersonalFocussed ? true : false,
+                ).toMap(),
               );
             }
           }
-          isValidating = false;
-          showButtonBloc.add(ShowButtonEvent(show: isValidating));
         },
-        text: isValidating ? "Validating your email" : labels[31]["labelText"],
+        text: labels[31]["labelText"],
+        auxWidget: isValidating ? const LoaderRow() : const SizeBox(),
       );
     } else {
       return const SizeBox();

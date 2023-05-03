@@ -21,6 +21,8 @@ class RegistrationScreen extends StatefulWidget {
   State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
+String emailAddress = "";
+
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _emailController = TextEditingController();
   bool _isEmailValid = false;
@@ -66,12 +68,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     const SizeBox(height: 30),
-                    Text(
-                      "Email",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0xFF636363),
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          labels[39]["labelText"],
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: const Color(0xFF636363),
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const Asterisk(),
+                      ],
                     ),
                     const SizeBox(height: 9),
                     CustomTextField(
@@ -138,7 +145,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           title: "Are you sure?",
           message:
               "Going to the previous screen will make you repeat this step.",
-          auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
               GradientButton(
@@ -208,13 +214,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     } else {
       return GradientButton(
         onTap: () async {
+          emailAddress = _emailController.text;
           _isLoading = true;
           showButtonBloc.add(ShowButtonEvent(show: _isLoading));
           var result = await MapSendEmailOtp.mapSendEmailOtp(
               {"emailID": _emailController.text});
           log("Send Email OTP Response -> $result");
-          _isLoading = false;
-          showButtonBloc.add(ShowButtonEvent(show: _isLoading));
+          // _isLoading = false;
+          // showButtonBloc.add(ShowButtonEvent(show: _isLoading));
           if (context.mounted) {
             Navigator.pushNamed(
               context,
@@ -228,7 +235,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             );
           }
         },
-        text: _isLoading ? "Sending OTP" : labels[31]["labelText"],
+        text: labels[31]["labelText"],
+        auxWidget: Ternary(
+          condition: _isLoading,
+          truthy: const LoaderRow(),
+          falsy: const SizeBox(),
+        ),
       );
     }
   }
