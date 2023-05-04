@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -18,14 +19,6 @@ class EIDExplanationScreen extends StatefulWidget {
 }
 
 class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
-  String? fullName;
-  String? eiDNumber;
-  String? nationality;
-  String? expiryDate;
-  String? dob;
-  String? gender;
-  String? photo;
-
   regula.MatchFacesImage image1 = regula.MatchFacesImage();
 
   Image img1 = Image.asset(ImageConstants.eidFront);
@@ -36,7 +29,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    // initPlatformState();
     const EventChannel('flutter_document_reader_api/event/completion')
         .receiveBroadcastStream()
         .listen(
@@ -50,49 +43,51 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
         .receiveBroadcastStream()
         .listen(
       (progress) {
-        setState(
-          () {
-            progressValue = progress;
-          },
-        );
+        // setState(
+        //   () {
+        //     progressValue = progress;
+        //   },
+        // );
       },
     );
   }
 
-  Future<void> initPlatformState() async {
-    var prepareDatabase = await DocumentReader.prepareDatabase("Full");
-    print("prepareDatabase -> $prepareDatabase");
-    setState(() {
-      status = "Initializing";
-    });
-    ByteData byteData = await rootBundle.load("assets/regula.license");
-    var documentReaderInitialization = await DocumentReader.initializeReader({
-      "license": base64.encode(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
-      "delayedNNLoad": true
-    });
-    print("documentReaderInitialization -> $documentReaderInitialization");
-    setState(() {
-      status = "Ready";
-    });
-    DocumentReader.setConfig({
-      "functionality": {
-        "showCaptureButton": true,
-        "showCaptureButtonDelayFromStart": 2,
-        "showCaptureButtonDelayFromDetect": 1,
-        "showCloseButton": true,
-        "showTorchButton": true,
-      },
-      "customization": {
-        "status": "Searching for document",
-      },
-      "processParams": {
-        "dateFormat": "dd/MM/yyyy",
-        "scenario": "MrzOrOcr",
-        "multipageProcessing": true
-      }
-    });
-  }
+  // Future<void> initPlatformState() async {
+  //   var prepareDatabase = await DocumentReader.prepareDatabase("Full");
+  //   log("prepareDatabase -> $prepareDatabase");
+  //   // setState(() {
+  //   //   status = "Initializing";
+  //   // });
+  //   ByteData byteData = await rootBundle.load("assets/regula.license");
+  //   var documentReaderInitialization = await DocumentReader.initializeReader({
+  //     "license": base64.encode(byteData.buffer
+  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
+  //     "delayedNNLoad": true
+  //   });
+  //   log("documentReaderInitialization -> $documentReaderInitialization");
+  //   // setState(() {
+  //   //   status = "Ready";
+  //   // });
+  //   DocumentReader.setConfig({
+  //     "functionality": {
+  //       "showCaptureButton": true,
+  //       "showCaptureButtonDelayFromStart": 2,
+  //       "showCaptureButtonDelayFromDetect": 1,
+  //       "showCloseButton": true,
+  //       "showTorchButton": true,
+  //     },
+  //     "customization": {
+  //       "status": "Searching for document",
+  //       "showBackgroundMask": true,
+  //       "backgroundMaskAlpha": 0.6,
+  //     },
+  //     "processParams": {
+  //       "dateFormat": "dd/MM/yyyy",
+  //       "scenario": "MrzOrOcr",
+  //       "multipageProcessing": true
+  //     }
+  //   });
+  // }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
     if (completion.action == DocReaderAction.COMPLETE ||
@@ -105,6 +100,8 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           ?.textFieldValueByType(EVisualFieldType.FT_IDENTITY_CARD_NUMBER);
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      nationalityCode = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
       dob = await results
@@ -113,13 +110,15 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
-        setState(() {
-          image1.bitmap =
-              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
-          image1.imageType = regula.ImageType.PRINTED;
-          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
-        });
+        // setState(() {
+
+        // });
+        image1.bitmap = base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+        image1.imageType = regula.ImageType.PRINTED;
+        img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
       }
+      docPhoto = results
+          ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
 
       if (context.mounted) {
         Navigator.pushNamed(
@@ -130,10 +129,12 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
             fullName: fullName,
             idNumber: eiDNumber,
             nationality: nationality,
+            nationalityCode: nationalityCode,
             expiryDate: expiryDate,
             dob: dob,
             gender: gender,
             photo: photo,
+            docPhoto: docPhoto,
             img1: img1,
             image1: image1,
           ).toMap(),
@@ -152,7 +153,8 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -162,9 +164,9 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                 children: [
                   Text(
                     labels[228]["labelText"],
-                    style: TextStyles.primaryMedium.copyWith(
+                    style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
-                      fontSize: (24 / Dimensions.designWidth).w,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 10),
@@ -175,7 +177,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 100),
+                  const SizeBox(height: 80),
                   Align(
                     alignment: Alignment.center,
                     child: SizedBox(
@@ -193,7 +195,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                       child: Image.asset(ImageConstants.eidBack),
                     ),
                   ),
-                  const SizeBox(height: 100),
+                  const SizeBox(height: 80),
                   Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -204,10 +206,6 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                       ),
                     ),
                   ),
-                  const SizeBox(height: 10),
-                  Text("Database downloaded: $progressValue%"),
-                  const SizeBox(height: 10),
-                  Text("Status: $status"),
                 ],
               ),
             ),
@@ -243,19 +241,22 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           svgAssetPath: ImageConstants.warning,
           title: labels[233]["labelText"],
           message: labels[234]["labelText"],
-          auxWidget: const SizeBox(),
-          actionWidget: Column(
+          auxWidget: Column(
             children: [
               GradientButton(
                 onTap: () {
-                  // TODO: call function to launch regula document scanner here
                   // Navigator.pushNamed(context, Routes.eidDetails);
+                  isEidChosen = true;
                   DocumentReader.showScanner();
                   Navigator.pop(context);
                 },
                 text: "Allow Access",
               ),
               const SizeBox(height: 15),
+            ],
+          ),
+          actionWidget: Column(
+            children: [
               SolidButton(
                 onTap: () {},
                 text: labels[235]["labelText"],

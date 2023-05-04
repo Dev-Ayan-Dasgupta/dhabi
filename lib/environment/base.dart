@@ -12,6 +12,8 @@ abstract class BaseConfig {
   String get getAppLabels;
   String get getAppMessages;
   String get getDropdownLists;
+  String get getTermsAndConditions;
+  String get getPrivacyStatement;
 
   // ? Onboarding APIs
 
@@ -25,5 +27,7 @@ abstract class BaseConfig {
   String get sendMobileOtp;
   String get verifyMobileOtp;
   String get registerRetailCustomerAddress;
+  String get addOrUpdateIncomeSource;
+  String get uploadCustomerTaxInformation;
   String get registerRetailCustomer;
 }

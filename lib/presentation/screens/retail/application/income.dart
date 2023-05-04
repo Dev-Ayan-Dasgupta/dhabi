@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/application/progress.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -23,18 +27,9 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
   bool isIncomeSourceSelected = false;
   int toggles = 0;
 
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
-
   String? selectedValue;
+
+  bool isUploading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +41,8 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -100,7 +96,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
         context.read<DropdownSelectedBloc>();
     return CustomDropDown(
       title: "Select",
-      items: items,
+      items: sourceOfIncomeDDs,
       value: selectedValue,
       onChanged: (value) {
         toggles++;
@@ -121,12 +117,27 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
       return Column(
         children: [
           GradientButton(
-            onTap: () {
-              Navigator.pushNamed(context, Routes.applicationTaxFATCA);
+            onTap: () async {
+              final DropdownSelectedBloc showButtonBloc =
+                  context.read<DropdownSelectedBloc>();
+              isUploading = true;
+              showButtonBloc.add(DropdownSelectedEvent(
+                  isDropdownSelected: isUploading, toggles: toggles));
+              // TODO: Call relevant API here...
+              var result =
+                  await MapAddOrUpdateIncomeSource.mapAddOrUpdateIncomeSource(
+                {"incomeSource": selectedValue},
+                token,
+              );
+              log("Income Source API response -> $result");
+              if (context.mounted) {
+                Navigator.pushNamed(context, Routes.applicationTaxFATCA);
+              }
             },
             text: labels[127]["labelText"],
+            auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
-          const SizeBox(height: 20),
+          const SizeBox(height: PaddingConstants.bottomPadding),
         ],
       );
     } else {

@@ -351,7 +351,6 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
           title: "Are you sure?",
           message:
               "Going to the previous screen will make you repeat this step.",
-          auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
               GradientButton(

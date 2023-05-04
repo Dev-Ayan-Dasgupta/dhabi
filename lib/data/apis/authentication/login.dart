@@ -7,9 +7,7 @@ class Login {
   static Future<http.Response> login(Map<String, dynamic> body) async {
     try {
       return http.post(
-        Uri.parse(
-          Environment().config.login,
-        ),
+        Uri.parse(Environment().config.login),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },

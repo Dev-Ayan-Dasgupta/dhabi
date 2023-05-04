@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
-import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -194,6 +193,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             onTap: () {
                               Navigator.pushNamed(
                                   context, Routes.exploreDashboard);
+                              // Navigator.pushNamed(
+                              //     context, Routes.privacyStatement);
                               // OAuthHelper.oAuth();
                             },
                             text: labels[208]["labelText"],
@@ -230,7 +231,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       if (isAuthenticated) {
         if (context.mounted) {
-          Navigator.pushNamed(context, Routes.loginPassword);
+          Navigator.pushNamed(context, Routes.loginUserId);
         }
       } else {
         // TODO: Verify from client if they want a dialog box to enable biometric

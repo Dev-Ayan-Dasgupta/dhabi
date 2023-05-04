@@ -66,7 +66,7 @@ class DashboardTransactionListTile extends StatelessWidget {
                               BlendMode.srcIn,
                             )
                           : const ColorFilter.mode(
-                              Color(0XFF054047),
+                              AppColors.primaryDark,
                               BlendMode.srcIn,
                             ),
                     ),
@@ -111,9 +111,8 @@ class DashboardTransactionListTile extends StatelessWidget {
                       ? "${amount.toStringAsFixed(2)} $currency"
                       : "- ${amount.toStringAsFixed(2)} $currency",
                   style: TextStyles.primary.copyWith(
-                    color: isCredit
-                        ? AppColors.primaryBright
-                        : const Color(0XFF054047),
+                    color:
+                        isCredit ? AppColors.green100 : AppColors.primaryDark,
                     fontSize: (14 / Dimensions.designWidth).w,
                   ),
                 ),

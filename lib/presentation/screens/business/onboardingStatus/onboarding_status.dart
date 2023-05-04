@@ -31,7 +31,8 @@ class _BusinessOnboardingStatusScreenState
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -40,10 +41,10 @@ class _BusinessOnboardingStatusScreenState
                 children: [
                   const SizeBox(height: 20),
                   Text(
-                    "Let us commence your onboarding journey",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: const Color(0XFF1A3C40),
-                      fontSize: (24 / Dimensions.designWidth).w,
+                    labels[223]["labelText"],
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 20),

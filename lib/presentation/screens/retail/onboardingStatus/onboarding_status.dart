@@ -6,6 +6,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -53,7 +54,8 @@ class _RetailOnboardingStatusScreenState
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -63,10 +65,10 @@ class _RetailOnboardingStatusScreenState
                 children: [
                   const SizeBox(height: 20),
                   Text(
-                    "Let's get your identification documents verified",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: const Color(0XFF1A3C40),
-                      fontSize: (24 / Dimensions.designWidth).w,
+                    labels[223]["labelText"],
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 20),
@@ -133,37 +135,51 @@ class _RetailOnboardingStatusScreenState
                         builder: buildTC,
                       ),
                       const SizeBox(width: 10),
-                      RichText(
-                        text: TextSpan(
-                          text: 'I agree to the ',
-                          style: TextStyles.primary.copyWith(
-                            color: const Color.fromRGBO(0, 0, 0, 0.5),
-                            fontSize: (14 / Dimensions.designWidth).w,
+                      Row(
+                        children: [
+                          Text(
+                            'I agree to the ',
+                            style: TextStyles.primary.copyWith(
+                              color: const Color.fromRGBO(0, 0, 0, 0.5),
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
                           ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: 'Terms & Conditions',
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, Routes.termsAndConditions);
+                            },
+                            child: Text(
+                              'Terms & Conditions',
                               style: TextStyles.primary.copyWith(
                                 color: AppColors.primary,
-                                fontSize: (14 / Dimensions.designWidth).w,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                                decoration: TextDecoration.underline,
                               ),
                             ),
-                            TextSpan(
-                              text: ' and ',
-                              style: TextStyles.primary.copyWith(
-                                color: const Color.fromRGBO(0, 0, 0, 0.5),
-                                fontSize: (14 / Dimensions.designWidth).w,
-                              ),
+                          ),
+                          Text(
+                            ' and ',
+                            style: TextStyles.primary.copyWith(
+                              color: const Color.fromRGBO(0, 0, 0, 0.5),
+                              fontSize: (16 / Dimensions.designWidth).w,
                             ),
-                            TextSpan(
-                              text: 'Privacy Policy',
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                  context, Routes.privacyStatement);
+                            },
+                            child: Text(
+                              'Privacy Policy',
                               style: TextStyles.primary.copyWith(
                                 color: AppColors.primary,
-                                fontSize: (14 / Dimensions.designWidth).w,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                                decoration: TextDecoration.underline,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -177,22 +193,12 @@ class _RetailOnboardingStatusScreenState
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
-                                  Routes.termsAndConditions,
+                                  Routes.acceptTermsAndConditions,
                                   arguments: CreateAccountArgumentModel(
-                                    email: "ADasgupta@aspire-infotech.net",
+                                    email: emailAddress,
                                     isRetail: true,
                                   ).toMap(),
                                 );
-                                // Navigator.pushNamed(
-                                //   context,
-                                //   Routes.retailDashboard,
-                                //   arguments: RetailDashboardArgumentModel(
-                                //     imgUrl:
-                                //         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                //     name: "ayan@qolarisdata.com",
-                                //   ).toMap(),
-                                // );
-                                // Navigator.pushNamed(context, Routes.captureFace);
                               },
                               text: labels[288]["labelText"],
                             ),
@@ -210,18 +216,25 @@ class _RetailOnboardingStatusScreenState
                 children: [
                   GradientButton(
                     onTap: () {
-                      // Navigator.pushNamed(context, Routes.applicationAddress);
                       switch (onboardingStatusArgument.stepsCompleted) {
                         case 1:
                           // Navigator.pushNamed(context, Routes.captureFace);
-                          Navigator.pushNamed(context, Routes.eidExplanation);
+                          // Navigator.pushNamed(context, Routes.eidExplanation);
+                          Navigator.pushNamed(
+                              context, Routes.verificationInitializing);
                           break;
                         case 2:
                           Navigator.pushNamed(
                               context, Routes.applicationAddress);
                           break;
                         case 3:
-                          Navigator.pushNamed(context, Routes.verifyMobile);
+                          Navigator.pushNamed(
+                            context,
+                            Routes.verifyMobile,
+                            arguments: VerifyMobileArgumentModel(
+                              isBusiness: false,
+                            ).toMap(),
+                          );
                           break;
                         default:
                       }

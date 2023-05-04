@@ -25,6 +25,9 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
   int progress = 4;
   bool isCurrentSelected = false;
   bool isSavingsSelected = false;
+
+  bool isUploading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +38,8 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -177,24 +181,27 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
           ),
           const SizeBox(height: 10),
           GradientButton(
-            onTap: () {
-              // Navigator.pushNamed(
-              //   context,
-              //   Routes.termsAndConditions,
-              //   arguments: CreateAccountArgumentModel(
-              //           email: "ayan@qolarisdata.com",
-              //           isRetail: true)
-              //       .toMap(),
-              // );
+            onTap: () async {
+              final ShowButtonBloc showButtonBloc =
+                  context.read<ShowButtonBloc>();
+              isUploading = true;
+              showButtonBloc.add(ShowButtonEvent(show: isUploading));
+              // TODO: Call relevant API
               Navigator.pushNamed(
                 context,
-                Routes.verifyMobile,
-                arguments: VerifyMobileArgumentModel(isBusiness: false).toMap(),
+                Routes.retailOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 3,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
               );
             },
             text: labels[288]["labelText"],
+            auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
-          const SizeBox(height: 32),
+          const SizeBox(height: PaddingConstants.bottomPadding),
         ],
       );
     } else {

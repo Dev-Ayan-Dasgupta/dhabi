@@ -7,7 +7,7 @@ class MapAllCountries {
   static Future<List> mapAllCountries() async {
     try {
       http.Response response = await GetAllCountries.getAllCountries();
-      return jsonDecode(response.body)["countries"];
+      return jsonDecode(response.body)["dhabiCountries"];
     } catch (_) {
       rethrow;
     }

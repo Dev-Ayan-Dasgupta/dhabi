@@ -53,6 +53,16 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['GET_DROPDOWN_LISTS'] ?? "";
   }
 
+  @override
+  String get getTermsAndConditions {
+    return dotenv.env['GET_TERMS_AND_CONDITIONS'] ?? "";
+  }
+
+  @override
+  String get getPrivacyStatement {
+    return dotenv.env['GET_PRIVACY_STATEMENT'] ?? "";
+  }
+
   // ? Onboarding APIs
 
   @override
@@ -103,6 +113,16 @@ class EnvConfig implements BaseConfig {
   @override
   String get registerRetailCustomerAddress {
     return dotenv.env['REGISTER_RETAIL_CUSTOMER_ADDRESS'] ?? "";
+  }
+
+  @override
+  String get addOrUpdateIncomeSource {
+    return dotenv.env['ADD_OR_UPDATE_INCOME_SOURCE'] ?? "";
+  }
+
+  @override
+  String get uploadCustomerTaxInformation {
+    return dotenv.env['UPLOAD_CUSTOMER_TAX_INFORMATION'] ?? "";
   }
 
   @override

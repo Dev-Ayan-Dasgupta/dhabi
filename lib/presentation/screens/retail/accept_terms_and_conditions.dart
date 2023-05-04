@@ -1,4 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -17,10 +21,11 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/constants/text.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:intl/intl.dart';
 
-class TermsAndConditionsScreen extends StatefulWidget {
-  const TermsAndConditionsScreen({
+class AcceptTermsAndConditionsScreen extends StatefulWidget {
+  const AcceptTermsAndConditionsScreen({
     Key? key,
     this.argument,
   }) : super(key: key);
@@ -28,14 +33,17 @@ class TermsAndConditionsScreen extends StatefulWidget {
   final Object? argument;
 
   @override
-  State<TermsAndConditionsScreen> createState() =>
-      _TermsAndConditionsScreenState();
+  State<AcceptTermsAndConditionsScreen> createState() =>
+      _AcceptTermsAndConditionsScreenState();
 }
 
-class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
+class _AcceptTermsAndConditionsScreenState
+    extends State<AcceptTermsAndConditionsScreen> {
   bool isChecked = false;
   final ScrollController _scrollController = ScrollController();
   bool scrollDown = true;
+
+  bool isUploading = false;
 
   late CreateAccountArgumentModel createAccountArgumentModel;
 
@@ -46,20 +54,24 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
         CreateAccountArgumentModel.fromMap(widget.argument as dynamic ?? {});
     final ScrollDirectionBloc scrollDirectionBloc =
         context.read<ScrollDirectionBloc>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        if (_scrollController.offset >
-            (_scrollController.position.maxScrollExtent -
-                    _scrollController.position.minScrollExtent) /
-                2) {
-          scrollDown = false;
-          scrollDirectionBloc.add(ScrollDirectionEvent(scrollDown: scrollDown));
-        } else {
-          scrollDown = true;
-          scrollDirectionBloc.add(ScrollDirectionEvent(scrollDown: scrollDown));
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        if (_scrollController.hasClients) {
+          if (_scrollController.offset >
+              (_scrollController.position.maxScrollExtent -
+                      _scrollController.position.minScrollExtent) /
+                  2) {
+            scrollDown = false;
+            scrollDirectionBloc
+                .add(ScrollDirectionEvent(scrollDown: scrollDown));
+          } else {
+            scrollDown = true;
+            scrollDirectionBloc
+                .add(ScrollDirectionEvent(scrollDown: scrollDown));
+          }
         }
-      }
-    });
+      },
+    );
   }
 
   @override
@@ -74,7 +86,8 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Stack(
           children: [
@@ -102,14 +115,15 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                                 itemBuilder: (context, _) {
                                   return SizedBox(
                                     width: 100.w,
-                                    child: Text(
-                                      tAndC,
-                                      style: TextStyles.primary.copyWith(
-                                        color: const Color(0XFF252525),
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
+                                    child: HtmlWidget(terms),
+                                    // Text(
+                                    //   tAndC,
+                                    //   style: TextStyles.primary.copyWith(
+                                    //     color: const Color(0XFF252525),
+                                    //     fontSize:
+                                    //         (16 / Dimensions.designWidth).w,
+                                    //   ),
+                                    // ),
                                   );
                                 },
                               ),
@@ -163,20 +177,86 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                       builder: (context, state) {
                         if (isChecked) {
                           return GradientButton(
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pushNamed(
-                                  context, Routes.retailDashboard,
+                            onTap: () async {
+                              final ShowButtonBloc showButtonBloc =
+                                  context.read<ShowButtonBloc>();
+                              isUploading = true;
+                              showButtonBloc
+                                  .add(ShowButtonEvent(show: isUploading));
+                              if (isEidChosen != null) {
+                                if (isEidChosen == true) {
+                                  var response =
+                                      await MapUploadEid.mapUploadEid(
+                                    {
+                                      "eidDocumentImage": docPhoto,
+                                      "eidUserPhoto": photo,
+                                      "selfiePhoto": selfiePhoto,
+                                      "photoMatchScore": photoMatchScore,
+                                      "eidNumber": eiDNumber,
+                                      "fullName": fullName,
+                                      "dateOfBirth": DateFormat('yyyy-MM-dd')
+                                          .format(DateFormat('dd MMMM yyyy')
+                                              .parse(dob ?? "1 January 1900")),
+                                      "nationalityCountryCode": nationalityCode,
+                                      "genderId": gender == 'M' ? 1 : 2,
+                                      "expiresOn": DateFormat('yyyy-MM-dd')
+                                          .format(DateFormat('dd MMMM yyyy')
+                                              .parse(expiryDate ??
+                                                  "1 January 1900")),
+                                      "isReKYC": false
+                                    },
+                                    token,
+                                  );
+
+                                  log("UploadEid API response -> $response");
+                                } else {
+                                  var response =
+                                      await MapUploadPassport.mapUploadPassport(
+                                    {
+                                      "passportDocumentImage": docPhoto,
+                                      "passportUserPhoto": photo,
+                                      "selfiePhoto": selfiePhoto,
+                                      "photoMatchScore": photoMatchScore,
+                                      "passportNumber": passportNumber,
+                                      "fullName": fullName,
+                                      "dateOfBirth": DateFormat('yyyy-MM-dd')
+                                          .format(DateFormat('dd/MM/yyyy')
+                                              .parse(dob ?? "00/00/0000")),
+                                      "nationalityCountryCode": nationalityCode,
+                                      "genderId": gender == 'M' ? 1 : 2,
+                                      "expiresOn": DateFormat('yyyy-MM-dd')
+                                          .format(DateFormat('dd/MM/yyyy')
+                                              .parse(
+                                                  expiryDate ?? "00/00/0000")),
+                                      "isReKYC": false
+                                    },
+                                    token,
+                                  );
+                                  log("UploadPassport API response -> $response");
+                                }
+                              }
+
+                              // TODO: Use Navigator.pushNamedAndRemoveUntil
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.retailDashboard,
                                   arguments: RetailDashboardArgumentModel(
                                     imgUrl:
                                         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
                                     name: createAccountArgumentModel.email,
-                                  ).toMap());
+                                  ).toMap(),
+                                );
+                              }
                             },
                             text: "I Agree",
+                            auxWidget: isUploading
+                                ? const LoaderRow()
+                                : const SizeBox(),
                           );
                         } else {
                           return const SizeBox();
@@ -198,12 +278,7 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                     highlightColor: Colors.transparent,
                     splashColor: Colors.transparent,
                     onTap: () async {
-                      if (!scrollDown
-                          // _scrollController.offset >
-                          //   (_scrollController.position.maxScrollExtent -
-                          //           _scrollController.position.minScrollExtent) /
-                          //       2
-                          ) {
+                      if (!scrollDown) {
                         if (_scrollController.hasClients) {
                           await _scrollController.animateTo(
                             _scrollController.position.minScrollExtent,
@@ -239,9 +314,6 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                       ),
                       child: Center(
                         child: SvgPicture.asset(
-                          // _scrollController.hasClients
-                          //     ? _scrollController.offset ==
-                          //             _scrollController.position.maxScrollExtent
                           !scrollDown
                               ? ImageConstants.arrowUpward
                               : ImageConstants.arrowDownward,

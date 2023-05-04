@@ -49,7 +49,8 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -114,7 +115,6 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
           svgAssetPath: ImageConstants.warning,
           title: "Are you sure?",
           message: "Penalty rate will apply in case of premature withdrawal.",
-          auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
               GradientButton(

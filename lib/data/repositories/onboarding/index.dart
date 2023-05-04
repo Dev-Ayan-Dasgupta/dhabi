@@ -9,3 +9,5 @@ export './map_upload_personal_details.dart';
 export './map_validate_email.dart';
 export './map_verify_email_otp.dart';
 export './map_verify_mobile_otp.dart';
+export './map_customer_tax_information.dart';
+export './map_add_or_update_income_source.dart';

@@ -19,14 +19,6 @@ class PassportExplanationScreen extends StatefulWidget {
 }
 
 class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
-  String? fullName;
-  String? passportNumber;
-  String? nationality;
-  String? expiryDate;
-  String? dob;
-  String? gender;
-  String? photo;
-
   regula.MatchFacesImage image1 = regula.MatchFacesImage();
 
   Image img1 = Image.asset(ImageConstants.eidFront);
@@ -34,7 +26,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    // initPlatformState();
     const EventChannel('flutter_document_reader_api/event/completion')
         .receiveBroadcastStream()
         .listen(
@@ -46,32 +38,34 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
         );
   }
 
-  Future<void> initPlatformState() async {
-    await DocumentReader.prepareDatabase("Full");
-    ByteData byteData = await rootBundle.load("assets/regula.license");
-    await DocumentReader.initializeReader({
-      "license": base64.encode(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
-      "delayedNNLoad": true
-    });
-    DocumentReader.setConfig({
-      "functionality": {
-        "showCaptureButton": true,
-        "showCaptureButtonDelayFromStart": 2,
-        "showCaptureButtonDelayFromDetect": 1,
-        "showCloseButton": true,
-        "showTorchButton": true,
-      },
-      "customization": {
-        "status": "Searching for document",
-      },
-      "processParams": {
-        "dateFormat": "dd/MM/yyyy",
-        "scenario": "MrzOrOcr",
-        "multipageProcessing": true
-      }
-    });
-  }
+  // Future<void> initPlatformState() async {
+  //   await DocumentReader.prepareDatabase("Full");
+  //   ByteData byteData = await rootBundle.load("assets/regula.license");
+  //   await DocumentReader.initializeReader({
+  //     "license": base64.encode(byteData.buffer
+  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
+  //     "delayedNNLoad": true
+  //   });
+  //   DocumentReader.setConfig({
+  //     "functionality": {
+  //       "showCaptureButton": true,
+  //       "showCaptureButtonDelayFromStart": 2,
+  //       "showCaptureButtonDelayFromDetect": 1,
+  //       "showCloseButton": true,
+  //       "showTorchButton": true,
+  //     },
+  //     "customization": {
+  //       "status": "Searching for document",
+  //       "showBackgroundMask": true,
+  //       "backgroundMaskAlpha": 0.6,
+  //     },
+  //     "processParams": {
+  //       "dateFormat": "dd/MM/yyyy",
+  //       "scenario": "MrzOrOcr",
+  //       "multipageProcessing": true
+  //     }
+  //   });
+  // }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
     if (completion.action == DocReaderAction.COMPLETE ||
@@ -90,6 +84,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       // print("passportNumber -> $passportNumber");
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      nationalityCode = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
       dob = await results
@@ -105,6 +101,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
         });
       }
+      docPhoto = results
+          ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
       // results?.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
 
       if (context.mounted) {
@@ -116,10 +114,12 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             fullName: fullName,
             idNumber: passportNumber,
             nationality: nationality,
+            nationalityCode: nationalityCode,
             expiryDate: expiryDate,
             dob: dob,
             gender: gender,
             photo: photo,
+            docPhoto: docPhoto,
             img1: img1,
             image1: image1,
           ).toMap(),
@@ -138,7 +138,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -148,9 +149,9 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                 children: [
                   Text(
                     labels[252]["labelText"],
-                    style: TextStyles.primaryMedium.copyWith(
+                    style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
-                      fontSize: (24 / Dimensions.designWidth).w,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 10),
@@ -161,7 +162,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 67),
+                  const SizeBox(height: 50),
                   Align(
                     alignment: Alignment.center,
                     child: SizedBox(
@@ -170,7 +171,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                       child: Image.asset(ImageConstants.passport),
                     ),
                   ),
-                  const SizeBox(height: 67),
+                  const SizeBox(height: 50),
                   Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -225,20 +226,22 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           svgAssetPath: ImageConstants.warning,
           title: labels[233]["labelText"],
           message: labels[234]["labelText"],
-          auxWidget: const SizeBox(),
-          actionWidget: Column(
+          auxWidget: Column(
             children: [
               GradientButton(
                 onTap: () {
-                  // TODO: call function to launch regula document scanner here
                   // Navigator.pushNamed(context, Routes.eidDetails);
-
+                  isEidChosen = false;
                   DocumentReader.showScanner();
                   Navigator.pop(context);
                 },
                 text: "Allow Access",
               ),
               const SizeBox(height: 15),
+            ],
+          ),
+          actionWidget: Column(
+            children: [
               SolidButton(
                 onTap: () {},
                 text: labels[235]["labelText"],

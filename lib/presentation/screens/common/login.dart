@@ -1,3 +1,5 @@
+// ! Deprecated Screen
+
 import 'package:dialup_mobile_app/bloc/emailExists/email_exists_bloc.dart';
 import 'package:dialup_mobile_app/bloc/emailExists/email_exists_event.dart';
 import 'package:dialup_mobile_app/bloc/emailExists/email_exists_state.dart';
@@ -52,7 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -252,7 +255,6 @@ class _LoginScreenState extends State<LoginScreen> {
           title: "Are you sure?",
           message:
               "Going to the previous screen will make you repeat this step.",
-          auxWidget: const SizeBox(),
           actionWidget: Column(
             children: [
               GradientButton(

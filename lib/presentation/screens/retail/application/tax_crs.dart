@@ -1,3 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:dialup_mobile_app/data/models/arguments/tax_crs.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+
 import 'package:dialup_mobile_app/bloc/applicationCRS/application_crs_bloc.dart';
 import 'package:dialup_mobile_app/bloc/applicationCRS/application_crs_event.dart';
 import 'package:dialup_mobile_app/bloc/applicationCRS/application_crs_state.dart';
@@ -11,12 +21,14 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/application/progress.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 
 class ApplicationTaxCRSScreen extends StatefulWidget {
-  const ApplicationTaxCRSScreen({Key? key}) : super(key: key);
+  const ApplicationTaxCRSScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<ApplicationTaxCRSScreen> createState() =>
@@ -38,18 +50,9 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
 
   int toggles = 0;
 
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
-
   String? selectedCountry;
+  int dhabiCountryIndex = -1;
+
   String? selectedReason;
 
   bool isCountrySelected = false;
@@ -63,9 +66,19 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
 
   final TextEditingController _tinController = TextEditingController();
 
+  bool isUploading = false;
+
+  late TaxCrsArgumentModel taxCrsArgument;
+
   @override
   void initState() {
     super.initState();
+    initializeArgument();
+  }
+
+  void initializeArgument() {
+    taxCrsArgument =
+        TaxCrsArgumentModel.fromMap(widget.argument as dynamic ?? {});
   }
 
   @override
@@ -78,7 +91,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: (22 / Dimensions.designWidth).w,
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
           children: [
@@ -106,19 +120,17 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                               Expanded(
                                 child: Text(
                                   labels[277]["labelText"],
-                                  style: TextStyles.primary.copyWith(
+                                  style: TextStyles.primaryBold.copyWith(
                                     color: AppColors.primary,
-                                    fontSize: (24 / Dimensions.designWidth).w,
+                                    fontSize: (16 / Dimensions.designWidth).w,
                                   ),
                                 ),
                               ),
-                              const SizeBox(width: 10),
-                              HelpSnippet(onTap: () {}),
                             ],
                           ),
                           const SizeBox(height: 20),
                           Text(
-                            "Do you hold a CRS reportable account?",
+                            labels[278]["labelText"],
                             style: TextStyles.primary.copyWith(
                               color: AppColors.black63,
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -148,7 +160,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                             builder: buildTINTextField,
                           ),
                           BlocBuilder<ApplicationCrsBloc, ApplicationCrsState>(
-                            builder: buildReasonDropdown,
+                            builder: buildNoTINReasonDropdown,
                           ),
                         ],
                       ),
@@ -267,12 +279,14 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           const SizeBox(height: 10),
           CustomDropDown(
             title: labels[264]["labelText"],
-            items: items,
+            items: dhabiCountryNames,
             value: selectedCountry,
             onChanged: (value) {
               toggles++;
               isCountrySelected = true;
               selectedCountry = value as String;
+              dhabiCountryIndex = dhabiCountryNames.indexOf(selectedCountry!);
+              log("dhabiCountryIndex -> $dhabiCountryIndex");
               isCountrySelected = true;
               showTinPrompt = true;
               applicationCrsBloc.add(
@@ -452,7 +466,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
     }
   }
 
-  Widget buildReasonDropdown(BuildContext context, ApplicationCrsState state) {
+  Widget buildNoTINReasonDropdown(
+      BuildContext context, ApplicationCrsState state) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     final ApplicationCrsBloc applicationCrsBloc =
         context.read<ApplicationCrsBloc>();
@@ -471,7 +486,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           const SizeBox(height: 9),
           CustomDropDown(
             title: "Reason",
-            items: items,
+            items: noTinReasonDDs,
             value: selectedReason,
             onChanged: (value) {
               toggles++;
@@ -513,12 +528,40 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           ),
           const SizeBox(height: 20),
           GradientButton(
-            onTap: () {
-              Navigator.pushNamed(context, Routes.applicationAccount);
+            onTap: () async {
+              final ShowButtonBloc showButtonBloc =
+                  context.read<ShowButtonBloc>();
+              isUploading = true;
+              showButtonBloc.add(ShowButtonEvent(show: isUploading));
+              // log("countryCode -> ${dhabiCountries[dhabiCountryIndex]["shortCode"]}");
+              log("noTINReason -> ${selectedReason ?? ""}");
+              var result =
+                  await MapCustomerTaxInformation.mapCustomerTaxInformation(
+                {
+                  "isUSFATCA": taxCrsArgument.isUSFATCA,
+                  "ustin": taxCrsArgument.ustin,
+                  "internationalTaxes": [
+                    {
+                      "countryCode": dhabiCountryIndex == -1
+                          ? "US"
+                          : dhabiCountries[dhabiCountryIndex]["shortCode"],
+                      "isTIN": isTinYes,
+                      "tin": _tinController.text,
+                      "noTINReason": selectedReason ?? ""
+                    }
+                  ]
+                },
+                token,
+              );
+              log("Tax Information API response -> $result");
+              if (context.mounted) {
+                Navigator.pushNamed(context, Routes.applicationAccount);
+              }
             },
             text: labels[127]["labelText"],
+            auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
-          const SizeBox(height: 20),
+          const SizeBox(height: PaddingConstants.bottomPadding),
         ],
       );
     } else {

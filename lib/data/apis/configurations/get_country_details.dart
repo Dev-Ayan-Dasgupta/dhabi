@@ -8,12 +8,8 @@ class GetCountryDetails {
       Map<String, dynamic> body) async {
     try {
       return http.post(
-        Uri.parse(
-          Environment().config.getCountryDetails,
-        ),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        Uri.parse(Environment().config.getCountryDetails),
+        headers: {'Content-Type': 'application/json; charset=UTF-8'},
         body: jsonEncode(body),
       );
     } catch (_) {

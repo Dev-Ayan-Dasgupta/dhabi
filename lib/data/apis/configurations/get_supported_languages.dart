@@ -5,9 +5,7 @@ class GetSupportedLanguages {
   static Future<http.Response> getSupportedLanguages() async {
     try {
       return http.post(
-        Uri.parse(
-          Environment().config.getSupportedLanguages,
-        ),
+        Uri.parse(Environment().config.getSupportedLanguages),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },

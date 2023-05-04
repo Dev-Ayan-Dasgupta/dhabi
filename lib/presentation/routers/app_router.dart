@@ -12,7 +12,7 @@ import 'package:dialup_mobile_app/presentation/screens/retail/insights.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/notifications/notifications.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/onboardingStatus/onboarding_status.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/profile/index.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/terms_and_conditions.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/accept_terms_and_conditions.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/transfer/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verification/face_compare.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/verification/index.dart';
@@ -42,7 +42,7 @@ class AppRouter {
         );
       case Routes.login:
         return MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
+          builder: (_) => const LoginScreen(), // Deprecated
         );
       case Routes.loginUserId:
         return MaterialPageRoute(
@@ -50,7 +50,9 @@ class AppRouter {
         );
       case Routes.loginPassword:
         return MaterialPageRoute(
-          builder: (_) => const LoginPasswordScreen(),
+          builder: (_) => LoginPasswordScreen(
+            argument: args,
+          ),
         );
       case Routes.selectAccountType:
         return MaterialPageRoute(
@@ -81,6 +83,10 @@ class AppRouter {
           builder: (_) => RetailOnboardingStatusScreen(
             argument: args,
           ),
+        );
+      case Routes.verificationInitializing:
+        return MaterialPageRoute(
+          builder: (_) => const VerificationInitializingScreen(),
         );
       case Routes.eidExplanation:
         return MaterialPageRoute(
@@ -165,15 +171,17 @@ class AppRouter {
         );
       case Routes.applicationTaxCRS:
         return MaterialPageRoute(
-          builder: (_) => const ApplicationTaxCRSScreen(),
+          builder: (_) => ApplicationTaxCRSScreen(
+            argument: args,
+          ),
         );
       case Routes.applicationAccount:
         return MaterialPageRoute(
           builder: (_) => const ApplicationAccountScreen(),
         );
-      case Routes.termsAndConditions:
+      case Routes.acceptTermsAndConditions:
         return MaterialPageRoute(
-          builder: (_) => TermsAndConditionsScreen(
+          builder: (_) => AcceptTermsAndConditionsScreen(
             argument: args,
           ),
         );
@@ -318,6 +326,14 @@ class AppRouter {
       case Routes.explore:
         return MaterialPageRoute(
           builder: (_) => const ExploreScreen(),
+        );
+      case Routes.termsAndConditions:
+        return MaterialPageRoute(
+          builder: (_) => const TermsAndConsitionsScreen(),
+        );
+      case Routes.privacyStatement:
+        return MaterialPageRoute(
+          builder: (_) => const PrivacyStatementScreen(),
         );
       case Routes.dormant:
         return MaterialPageRoute(

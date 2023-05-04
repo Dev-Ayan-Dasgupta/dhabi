@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
@@ -22,6 +24,18 @@ class SplashScreen extends StatefulWidget {
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
+
+String? deviceId;
+String deviceName = "";
+String deviceType = "";
+String appVersion = "";
+
+String token = "";
+
+List dhabiCountries = [];
+
+List uaeDetails = [];
+List<String> emirates = [];
 
 class _SplashScreenState extends State<SplashScreen> {
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
@@ -33,6 +47,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await getDeviceId();
+      await getPackageInfo();
       await initPlatformState();
       await initConfigurations();
       if (context.mounted) {
@@ -44,6 +60,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> initConfigurations() async {
     labels = await MapAppLabels.mapAppLabels({"languageCode": "en"});
     messages = await MapAppMessages.mapAppMessages({"languageCode": "en"});
+    dhabiCountries = await MapAllCountries.mapAllCountries();
+    getDhabiCountryNames();
     allDDs = await MapDropdownLists.mapDropdownLists({"languageCode": "en"});
     populateDD(serviceRequestDDs, 0);
     populateDD(statementFileDDs, 1);
@@ -53,6 +71,16 @@ class _SplashScreenState extends State<SplashScreen> {
     populateDD(sourceOfIncomeDDs, 5);
     populateDD(noTinReasonDDs, 6);
     populateDD(statementDurationDDs, 7);
+    populateEmirates();
+    getPolicies();
+  }
+
+  void getDhabiCountryNames() {
+    dhabiCountryNames.clear();
+    for (var country in dhabiCountries) {
+      dhabiCountryNames.add(country["countryName"]);
+    }
+    log("dhabiCountryNames -> $dhabiCountryNames");
   }
 
   void populateDD(List dropdownList, int dropdownIndex) {
@@ -63,20 +91,40 @@ class _SplashScreenState extends State<SplashScreen> {
     // print(dropdownList);
   }
 
-  // Future<void> initPlatformState() async {
-  //   String? deviceId;
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   try {
-  //     deviceId = await PlatformDeviceId.getDeviceId;
-  //   } on PlatformException {
-  //     deviceId = 'Failed to get deviceId.';
-  //   }
+  void populateEmirates() async {
+    uaeDetails =
+        await MapCountryDetails.mapCountryDetails({"countryShortCode": "AE"});
+    emirates.clear();
+    for (Map<String, dynamic> emirate in uaeDetails) {
+      emirates.add(emirate["city_Name"]);
+    }
+    log("Emirates -> $emirates");
+  }
 
-  //   if (!mounted) return;
+  void getPolicies() async {
+    terms = await MapTermsAndConditions.mapTermsAndConditions(
+        {"languageCode": "en"});
+    statement =
+        await MapPrivacyStatement.mapPrivacyStatement({"languageCode": "en"});
+    log("Terms -> $terms");
+    log("statement -> $statement");
+  }
 
-  //   _deviceId = deviceId;
-  //   debugPrint("deviceId -> $_deviceId");
-  // }
+  Future<void> getDeviceId() async {
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      deviceId = await PlatformDeviceId.getDeviceId;
+    } on PlatformException {
+      deviceId = 'Failed to get deviceId.';
+    }
+
+    if (!mounted) return;
+  }
+
+  Future<void> getPackageInfo() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    appVersion = packageInfo.version;
+  }
 
   Future<void> initPlatformState() async {
     var deviceData = <String, dynamic>{};
@@ -103,15 +151,26 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     _deviceData = deviceData;
-    log("_deviceData -> $_deviceData");
+    // log("_deviceData -> $_deviceData");
+
+    if (Platform.isAndroid) {
+      deviceType = "Android";
+    } else if (Platform.isIOS) {
+      deviceType = "iOS";
+      deviceName = _deviceData['name'];
+    }
+
+    log("deviceId -> $deviceId");
+    log("deviceName -> $deviceName");
+    log("deviceType -> $deviceType");
+    log("appVersion -> $appVersion");
   }
 
-  void navigate(BuildContext context) async {
-    await Future.delayed(const Duration(seconds: 3));
-    if (context.mounted) {
-      Navigator.pushReplacementNamed(context, Routes.onboarding,
-          arguments: OnboardingArgumentModel(isInitial: true).toMap());
-    }
+  void navigate(BuildContext context) {
+    // await Future.delayed(const Duration(seconds: 1));
+    // if (context.mounted) {}
+    Navigator.pushReplacementNamed(context, Routes.onboarding,
+        arguments: OnboardingArgumentModel(isInitial: true).toMap());
   }
 
   @override
