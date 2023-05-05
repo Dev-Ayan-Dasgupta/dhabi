@@ -303,18 +303,26 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      labels[276]["labelText"],
-                                      style: TextStyles.primary.copyWith(
-                                        color: AppColors.black63,
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          labels[276]["labelText"],
+                                          style: TextStyles.primary.copyWith(
+                                            color: AppColors.dark80,
+                                            fontSize:
+                                                (16 / Dimensions.designWidth).w,
+                                          ),
+                                        ),
+                                        const Asterisk(),
+                                      ],
                                     ),
                                     const SizeBox(height: 10),
                                     CustomTextField(
                                       controller: _tinssnController,
                                       keyboardType: TextInputType.number,
+                                      borderColor: !isTINvalid
+                                          ? AppColors.red100
+                                          : const Color(0xFFEEEEEE),
                                       onChanged: (p0) {
                                         if (_tinssnController.text.length ==
                                             9) {
@@ -350,17 +358,31 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                       hintText: "000000000",
                                     ),
                                     const SizeBox(height: 7),
-                                    isTINvalid
-                                        ? const SizeBox()
-                                        : Text(
+                                    Ternary(
+                                      condition: isTINvalid,
+                                      truthy: const SizeBox(),
+                                      falsy: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.error_rounded,
+                                            color: AppColors.red100,
+                                            size:
+                                                (13 / Dimensions.designWidth).w,
+                                          ),
+                                          const SizeBox(width: 5),
+                                          Text(
                                             "Must be 9 digits",
-                                            style: TextStyles.primary.copyWith(
-                                              color: AppColors.red,
+                                            style: TextStyles.primaryMedium
+                                                .copyWith(
+                                              color: AppColors.red100,
                                               fontSize:
-                                                  (16 / Dimensions.designWidth)
+                                                  (12 / Dimensions.designWidth)
                                                       .w,
                                             ),
                                           ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 );
                               } else {
@@ -403,7 +425,12 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                     ],
                   );
                 } else {
-                  return const SizeBox();
+                  return Column(
+                    children: [
+                      SolidButton(onTap: () {}, text: labels[127]["labelText"]),
+                      const SizeBox(height: PaddingConstants.bottomPadding),
+                    ],
+                  );
                 }
               },
             ),
@@ -433,12 +460,17 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Are you a U.S. citizen or resident for tax purposes?",
-          style: TextStyles.primary.copyWith(
-            color: AppColors.black63,
-            fontSize: (16 / Dimensions.designWidth).w,
-          ),
+        Row(
+          children: [
+            Text(
+              "Are you a U.S. citizen or resident for tax purposes?",
+              style: TextStyles.primary.copyWith(
+                color: AppColors.dark80,
+                fontSize: (16 / Dimensions.designWidth).w,
+              ),
+            ),
+            const Asterisk(),
+          ],
         ),
       ],
     );

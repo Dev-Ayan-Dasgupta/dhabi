@@ -127,14 +127,14 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                   onTap: promptUserLogout,
                   iconPath: ImageConstants.logout,
                   text: "Logout",
-                  fontColor: AppColors.red,
+                  fontColor: AppColors.red100,
                   highlightColor: const Color.fromRGBO(201, 69, 64, 0.1),
                 ),
                 const SizeBox(height: 20),
                 Text(
                   "App Version $version",
                   style: TextStyles.primaryMedium.copyWith(
-                    color: AppColors.black81,
+                    color: AppColors.dark50,
                     fontSize: (16 / Dimensions.designWidth).w,
                   ),
                 ),

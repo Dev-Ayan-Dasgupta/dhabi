@@ -241,7 +241,7 @@ class _RetailOnboardingStatusScreenState
                     },
                     text: labels[31]["labelText"],
                   ),
-                  const SizeBox(height: 20),
+                  const SizeBox(height: PaddingConstants.bottomPadding),
                 ],
               ),
             ),

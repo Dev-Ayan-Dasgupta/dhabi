@@ -44,9 +44,8 @@ class PasswordCriteria extends StatelessWidget {
           Text(
             labels[50]["labelText"],
             style: TextStyles.primaryBold.copyWith(
-              color: AppColors.primary,
+              color: AppColors.primaryDark,
               fontSize: (16 / Dimensions.designWidth).w,
-              fontWeight: FontWeight.w600,
             ),
           ),
           const SizeBox(height: 15),
@@ -56,8 +55,8 @@ class PasswordCriteria extends StatelessWidget {
               Text(
                 labels[51]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
-                  color: criteria1Color ?? AppColors.red,
-                  fontSize: (16 / Dimensions.designWidth).w,
+                  color: criteria1Color ?? AppColors.red100,
+                  fontSize: (14 / Dimensions.designWidth).w,
                 ),
               ),
               criteria1Widget ?? const SizeBox(),
@@ -70,8 +69,8 @@ class PasswordCriteria extends StatelessWidget {
               Text(
                 labels[52]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
-                  color: criteria2Color ?? AppColors.red,
-                  fontSize: (16 / Dimensions.designWidth).w,
+                  color: criteria2Color ?? AppColors.red100,
+                  fontSize: (14 / Dimensions.designWidth).w,
                 ),
               ),
               criteria2Widget ?? const SizeBox(),
@@ -84,8 +83,8 @@ class PasswordCriteria extends StatelessWidget {
               Text(
                 labels[53]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
-                  color: criteria3Color ?? AppColors.red,
-                  fontSize: (16 / Dimensions.designWidth).w,
+                  color: criteria3Color ?? AppColors.red100,
+                  fontSize: (14 / Dimensions.designWidth).w,
                 ),
               ),
               criteria3Widget ?? const SizeBox(),
@@ -98,8 +97,8 @@ class PasswordCriteria extends StatelessWidget {
               Text(
                 labels[54]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
-                  color: criteria4Color ?? AppColors.red,
-                  fontSize: (16 / Dimensions.designWidth).w,
+                  color: criteria4Color ?? AppColors.red100,
+                  fontSize: (14 / Dimensions.designWidth).w,
                 ),
               ),
               criteria4Widget ?? const SizeBox(),

@@ -138,7 +138,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   Text(
                     labels[219]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.black81,
+                      color: AppColors.dark50,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -150,18 +150,25 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                         children: [
                           RichText(
                             text: TextSpan(
-                              text: 'User ID ',
+                              text: 'User ID',
                               style: TextStyles.primary.copyWith(
                                 color: AppColors.black63,
-                                fontSize: (16 / Dimensions.designWidth).w,
+                                fontSize: (14 / Dimensions.designWidth).w,
                               ),
                               children: <TextSpan>[
+                                TextSpan(
+                                  text: ' * ',
+                                  style: TextStyles.primary.copyWith(
+                                    color: AppColors.red100,
+                                    fontSize: (14 / Dimensions.designWidth).w,
+                                  ),
+                                ),
                                 TextSpan(
                                   text: '(Email address)',
                                   style: TextStyles.primary.copyWith(
                                     color:
                                         const Color.fromRGBO(99, 99, 99, 0.5),
-                                    fontSize: (16 / Dimensions.designWidth).w,
+                                    fontSize: (14 / Dimensions.designWidth).w,
                                   ),
                                 ),
                               ],
@@ -172,41 +179,46 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             controller: _emailController,
                             enabled: false,
                             onChanged: (p0) {},
-                            color: AppColors.blackEE,
+                            color: AppColors.dark10,
                             fontColor: const Color.fromRGBO(37, 37, 37, 0.5),
                           ),
                           const SizeBox(height: 15),
-                          Text(
-                            labels[182]["labelText"],
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.black63,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                labels[182]["labelText"],
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
                           ),
                           const SizeBox(height: 9),
                           BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
                             builder: buildShowPassword,
                           ),
                           const SizeBox(height: 15),
-                          Text(
-                            labels[49]["labelText"],
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.black63,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                labels[49]["labelText"],
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
                           ),
                           const SizeBox(height: 9),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                                builder: buildShowConfirmPassword,
-                              ),
-                              BlocBuilder<MatchPasswordBloc,
-                                  MatchPasswordState>(
-                                builder: buildCheckCircle,
-                              )
-                            ],
+                          BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                            builder: buildShowConfirmPassword,
+                          ),
+                          const SizeBox(height: 9),
+                          BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
+                            builder: buildMatchMessage,
                           ),
                           const SizeBox(height: 15),
                           BlocBuilder<CriteriaBloc, CriteriaState>(
@@ -277,10 +289,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     ),
                   ],
                 ),
+                const SizeBox(height: 5),
                 BlocBuilder<CreatePasswordBloc, CreatePasswordState>(
                   builder: buildSubmitButton,
                 ),
-                const SizeBox(height: 20),
+                const SizeBox(height: PaddingConstants.bottomPadding),
               ],
             ),
           ],
@@ -380,7 +393,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         context.read<ShowPasswordBloc>();
     if (showConfirmPassword) {
       return CustomTextField(
-        width: 83.w,
+        // width: 83.w,
         controller: _confirmPasswordController,
         minLines: 1,
         maxLines: 1,
@@ -407,7 +420,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
       );
     } else {
       return CustomTextField(
-        width: 83.w,
+        // width: 83.w,
         controller: _confirmPasswordController,
         minLines: 1,
         maxLines: 1,
@@ -435,28 +448,56 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
     }
   }
 
-  Widget buildCheckCircle(BuildContext context, MatchPasswordState state) {
-    if (isMatch) {
-      return SvgPicture.asset(
-        ImageConstants.checkCircle,
-        width: (20 / Dimensions.designWidth).w,
-        height: (20 / Dimensions.designWidth).w,
-      );
-    } else {
-      return SvgPicture.asset(
-        ImageConstants.warningSmall,
-        width: (20 / Dimensions.designWidth).w,
-        height: (20 / Dimensions.designWidth).w,
-      );
-    }
+  // Widget buildCheckCircle(BuildContext context, MatchPasswordState state) {
+  //   if (isMatch) {
+  //     return SvgPicture.asset(
+  //       ImageConstants.checkCircle,
+  //       width: (20 / Dimensions.designWidth).w,
+  //       height: (20 / Dimensions.designWidth).w,
+  //     );
+  //   } else {
+  //     return SvgPicture.asset(
+  //       ImageConstants.warningSmall,
+  //       width: (20 / Dimensions.designWidth).w,
+  //       height: (20 / Dimensions.designWidth).w,
+  //     );
+  //   }
+  // }
+
+  Widget buildMatchMessage(BuildContext context, MatchPasswordState state) {
+    return Row(
+      children: [
+        Ternary(
+          condition: isMatch,
+          truthy: Icon(
+            Icons.check_circle_rounded,
+            color: AppColors.green100,
+            size: (13 / Dimensions.designWidth).w,
+          ),
+          falsy: Icon(
+            Icons.error,
+            color: AppColors.orange100,
+            size: (13 / Dimensions.designWidth).w,
+          ),
+        ),
+        const SizeBox(width: 5),
+        Text(
+          isMatch ? "Password is matching" : "Password is not matching",
+          style: TextStyles.primaryMedium.copyWith(
+            color: isMatch ? AppColors.green100 : AppColors.orange100,
+            fontSize: (12 / Dimensions.designWidth).w,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget buildCriteriaSection(BuildContext context, CriteriaState state) {
     return PasswordCriteria(
-      criteria1Color: hasMin8 ? AppColors.primary : AppColors.red,
-      criteria2Color: hasNumeric ? AppColors.primary : AppColors.red,
-      criteria3Color: hasUpperLower ? AppColors.primary : AppColors.red,
-      criteria4Color: hasSpecial ? AppColors.primary : AppColors.red,
+      criteria1Color: hasMin8 ? AppColors.primaryDark : AppColors.red100,
+      criteria2Color: hasNumeric ? AppColors.primaryDark : AppColors.red100,
+      criteria3Color: hasUpperLower ? AppColors.primaryDark : AppColors.red100,
+      criteria4Color: hasSpecial ? AppColors.primaryDark : AppColors.red100,
       criteria1Widget: hasMin8
           ? SvgPicture.asset(ImageConstants.checkSmall)
           : const SizeBox(),

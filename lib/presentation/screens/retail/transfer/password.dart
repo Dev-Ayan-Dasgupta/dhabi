@@ -73,7 +73,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                   Text(
                     "Password",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.red,
+                      color: AppColors.red100,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),

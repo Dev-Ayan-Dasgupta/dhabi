@@ -180,38 +180,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     });
   }
 
-  // Future<void> initPlatformState() async {
-  //   await DocumentReader.prepareDatabase("Full");
-  //   ByteData byteData = await rootBundle.load("assets/regula.license");
-  //   await DocumentReader.initializeReader({
-  //     "license": base64.encode(byteData.buffer
-  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
-  //     "delayedNNLoad": true
-  //   });
-  //   DocumentReader.setConfig({
-  //     "functionality": {
-  //       "showCaptureButton": true,
-  //       "showCaptureButtonDelayFromStart": 2,
-  //       "showCaptureButtonDelayFromDetect": 1,
-  //       "showCloseButton": true,
-  //       "showTorchButton": true,
-  //     },
-  //     "customization": {
-  //       "status": "Searching for document",
-  //       "showBackgroundMask": true,
-  //       "backgroundMaskAlpha": 0.6,
-  //     },
-  //     "processParams": {
-  //       "dateFormat": "dd/MM/yyyy",
-  //       "scenario": "MrzOrOcr",
-  //       "multipageProcessing": true
-  //     }
-  //   });
-  // }
-
   void handleEIDCompletion(DocumentReaderCompletion completion) async {
-    if (completion.action == DocReaderAction.COMPLETE ||
-        completion.action == DocReaderAction.TIMEOUT) {
+    if (completion.action == DocReaderAction.COMPLETE) {
       DocumentReaderResults? results = completion.results;
 
       fullName = await results
@@ -240,6 +210,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
 
+      // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
+
       if (context.mounted) {
         Navigator.pushNamed(
           context,
@@ -261,11 +233,112 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         );
       }
     }
+
+    log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
+    log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
+
+    // ? Check for expired
+    if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
+                DateFormat('dd MMMM yyyy')
+                    .parse(expiryDate ?? "1 January 1900")))
+            .difference(DateTime.now())
+            .inDays <
+        0) {
+      if (context.mounted) {
+        Navigator.pushNamed(
+          context,
+          Routes.errorSuccessScreen,
+          arguments: ErrorArgumentModel(
+            hasSecondaryButton: false,
+            iconPath: ImageConstants.errorOutlined,
+            title: messages[81]["messageText"],
+            message: messages[29]["messageText"],
+            buttonText: labels[1]["labelText"],
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Routes.registration, (route) => false);
+            },
+            buttonTextSecondary: "",
+            onTapSecondary: () {},
+          ).toMap(),
+        );
+      }
+    }
+
+    // ? Check for age
+    else if (DateTime.now()
+            .difference(DateTime.parse(DateFormat('yyyy-MM-dd')
+                .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000"))))
+            .inDays <
+        ((18 * 365) + 4)) {
+      if (context.mounted) {
+        Navigator.pushNamed(
+          context,
+          Routes.errorSuccessScreen,
+          arguments: ErrorArgumentModel(
+            hasSecondaryButton: false,
+            iconPath: ImageConstants.errorOutlined,
+            title: messages[80]["messageText"],
+            message: messages[33]["messageText"],
+            buttonText: labels[1]["labelText"],
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Routes.registration, (route) => false);
+            },
+            buttonTextSecondary: "",
+            onTapSecondary: () {},
+          ).toMap(),
+        );
+      }
+    } else {
+      if (context.mounted) {
+        Navigator.pushNamed(
+          context,
+          Routes.scannedDetails,
+          arguments: ScannedDetailsArgumentModel(
+            isEID: true,
+            fullName: fullName,
+            idNumber: eiDNumber,
+            nationality: nationality,
+            nationalityCode: nationalityCode,
+            expiryDate: expiryDate,
+            dob: dob,
+            gender: gender,
+            photo: photo,
+            docPhoto: docPhoto,
+            img1: img1,
+            image1: image1,
+          ).toMap(),
+        );
+      }
+    }
+
+    if (completion.action == DocReaderAction.TIMEOUT) {
+      if (context.mounted) {
+        Navigator.pushNamed(
+          context,
+          Routes.errorSuccessScreen,
+          arguments: ErrorArgumentModel(
+            hasSecondaryButton: false,
+            iconPath: ImageConstants.warningRed,
+            title: messages[73]["messageText"],
+            message: "Your time has run out. Please try again.",
+            // messages[35]["messageText"],
+            buttonText: labels[1]["labelText"],
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Routes.registration, (route) => false);
+            },
+            buttonTextSecondary: "",
+            onTapSecondary: () {},
+          ).toMap(),
+        );
+      }
+    }
   }
 
   void handlePassportCompletion(DocumentReaderCompletion completion) async {
-    if (completion.action == DocReaderAction.COMPLETE ||
-        completion.action == DocReaderAction.TIMEOUT) {
+    if (completion.action == DocReaderAction.COMPLETE) {
       DocumentReaderResults? results = completion.results;
       String? firstName =
           await results?.textFieldValueByType(EVisualFieldType.FT_GIVEN_NAMES);
@@ -300,23 +373,106 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
 
+      // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
+
+      log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
+      log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
+
+      // ? Check for expired
+      if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
+                  DateFormat('dd MMMM yyyy')
+                      .parse(expiryDate ?? "1 January 1900")))
+              .difference(DateTime.now())
+              .inDays <
+          0) {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.errorSuccessScreen,
+            arguments: ErrorArgumentModel(
+              hasSecondaryButton: false,
+              iconPath: ImageConstants.errorOutlined,
+              title: messages[81]["messageText"],
+              message: messages[29]["messageText"],
+              buttonText: labels[1]["labelText"],
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.registration, (route) => false);
+              },
+              buttonTextSecondary: "",
+              onTapSecondary: () {},
+            ).toMap(),
+          );
+        }
+      }
+
+      // ? Check for age
+      else if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
+                  DateFormat('dd MMMM yyyy').parse(dob ?? "1 January 1900")))
+              .difference(DateTime.now())
+              .inDays <
+          18 * 365) {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.errorSuccessScreen,
+            arguments: ErrorArgumentModel(
+              hasSecondaryButton: false,
+              iconPath: ImageConstants.errorOutlined,
+              title: messages[80]["messageText"],
+              message: messages[33]["messageText"],
+              buttonText: labels[1]["labelText"],
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.registration, (route) => false);
+              },
+              buttonTextSecondary: "",
+              onTapSecondary: () {},
+            ).toMap(),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.scannedDetails,
+            arguments: ScannedDetailsArgumentModel(
+              isEID: true,
+              fullName: fullName,
+              idNumber: eiDNumber,
+              nationality: nationality,
+              nationalityCode: nationalityCode,
+              expiryDate: expiryDate,
+              dob: dob,
+              gender: gender,
+              photo: photo,
+              docPhoto: docPhoto,
+              img1: img1,
+              image1: image1,
+            ).toMap(),
+          );
+        }
+      }
+    }
+
+    if (completion.action == DocReaderAction.TIMEOUT) {
       if (context.mounted) {
         Navigator.pushNamed(
           context,
-          Routes.scannedDetails,
-          arguments: ScannedDetailsArgumentModel(
-            isEID: false,
-            fullName: fullName,
-            idNumber: passportNumber,
-            nationality: nationality,
-            nationalityCode: nationalityCode,
-            expiryDate: expiryDate,
-            dob: dob,
-            gender: gender,
-            photo: photo,
-            docPhoto: docPhoto,
-            img1: img1,
-            image1: image1,
+          Routes.errorSuccessScreen,
+          arguments: ErrorArgumentModel(
+            hasSecondaryButton: false,
+            iconPath: ImageConstants.warningRed,
+            title: messages[73]["messageText"],
+            message: "Your time has run out. Please try again.",
+            // messages[35]["messageText"],
+            buttonText: labels[1]["labelText"],
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Routes.registration, (route) => false);
+            },
+            buttonTextSecondary: "",
+            onTapSecondary: () {},
           ).toMap(),
         );
       }
@@ -357,7 +513,6 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         );
       }
     } else {
-      // TODO: Show face match failed message in UI, take confirmation from FH team
       if (context.mounted) {
         showDialog(
           context: context,
@@ -512,7 +667,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                         ? labels[239]["labelText"]
                         : labels[256]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.black81,
+                      color: AppColors.dark50,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -541,7 +696,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                             ? labels[245]["labelText"]
                             : labels[259]["labelText"],
                         style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.black81,
+                          color: AppColors.dark50,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
                       ),
@@ -629,7 +784,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             color: AppColors.primaryBright17,
             fontColor: AppColors.primary,
           ),
-          const SizeBox(height: 20),
+          const SizeBox(height: PaddingConstants.bottomPadding),
         ],
       );
     } else {

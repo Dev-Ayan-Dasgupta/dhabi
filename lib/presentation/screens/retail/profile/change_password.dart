@@ -123,7 +123,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                           ),
                           const SizeBox(height: 15),
                           Text(
-                            "New Password",
+                            labels[48]["labelText"],
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.black63,
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -405,7 +405,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           Text(
             "Password incorrect",
             style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.red,
+              color: AppColors.red100,
               fontSize: (16 / Dimensions.designWidth).w,
             ),
           ),
@@ -489,7 +489,7 @@ class _ChangePasswordState extends State<ChangePassword> {
           Text(
             "Password does not meet the criteria",
             style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.red,
+              color: AppColors.red100,
               fontSize: (16 / Dimensions.designWidth).w,
             ),
           ),
@@ -605,10 +605,10 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   Widget buildCriteriaSection(BuildContext context, CriteriaState state) {
     return PasswordCriteria(
-      criteria1Color: hasMin8 ? AppColors.primary : AppColors.red,
-      criteria2Color: hasNumeric ? AppColors.primary : AppColors.red,
-      criteria3Color: hasUpperLower ? AppColors.primary : AppColors.red,
-      criteria4Color: hasSpecial ? AppColors.primary : AppColors.red,
+      criteria1Color: hasMin8 ? AppColors.primary : AppColors.red100,
+      criteria2Color: hasNumeric ? AppColors.primary : AppColors.red100,
+      criteria3Color: hasUpperLower ? AppColors.primary : AppColors.red100,
+      criteria4Color: hasSpecial ? AppColors.primary : AppColors.red100,
       criteria1Widget: hasMin8
           ? SvgPicture.asset(ImageConstants.checkSmall)
           : const SizeBox(),

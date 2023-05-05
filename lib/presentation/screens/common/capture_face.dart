@@ -313,8 +313,7 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
                       borderRadius: BorderRadius.all(
                         Radius.circular((5 / Dimensions.designWidth).w),
                       ),
-                      color:
-                          (hasSmiled) ? AppColors.primary : AppColors.blackD9,
+                      color: (hasSmiled) ? AppColors.primary : AppColors.dark30,
                     ),
                   ),
                   const SizeBox(
@@ -330,7 +329,7 @@ class _CaptureFaceScreenState extends State<CaptureFaceScreen> {
                         Radius.circular((5 / Dimensions.designWidth).w),
                       ),
                       color:
-                          (hasBlinked) ? AppColors.primary : AppColors.blackD9,
+                          (hasBlinked) ? AppColors.primary : AppColors.dark30,
                     ),
                   )
                 ],

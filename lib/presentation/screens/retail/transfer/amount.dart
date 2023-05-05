@@ -212,7 +212,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
               ? "Available to transfer AED 1000"
               : " Insufficient balance",
           style: TextStyles.primaryMedium.copyWith(
-            color: isShowButton ? AppColors.black81 : AppColors.red,
+            color: isShowButton ? AppColors.dark50 : AppColors.red100,
             fontSize: (15 / Dimensions.designWidth).w,
           ),
         ),

@@ -92,7 +92,7 @@ class RecentTransferTile extends StatelessWidget {
                 Text(
                   "**${cardNo.substring(cardNo.length - 4, cardNo.length)}",
                   style: TextStyles.primaryMedium.copyWith(
-                    color: AppColors.black81,
+                    color: AppColors.dark50,
                     fontSize: (14 / Dimensions.designWidth).w,
                   ),
                 ),

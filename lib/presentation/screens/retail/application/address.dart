@@ -96,23 +96,28 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
             const SizeBox(height: 30),
             Text(
               labels[28]["labelText"],
-              style: TextStyles.primary.copyWith(
+              style: TextStyles.primaryBold.copyWith(
                 color: AppColors.primary,
-                fontSize: (24 / Dimensions.designWidth).w,
+                fontSize: (16 / Dimensions.designWidth).w,
               ),
             ),
-            const SizeBox(height: 30),
+            const SizeBox(height: 20),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      labels[264]["labelText"],
-                      style: TextStyles.primary.copyWith(
-                        color: AppColors.black63,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          labels[264]["labelText"],
+                          style: TextStyles.primary.copyWith(
+                            color: AppColors.dark80,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const Asterisk(),
+                      ],
                     ),
                     const SizeBox(height: 9),
                     CustomTextField(
@@ -123,12 +128,17 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       fontColor: const Color(0xFFAAAAAA),
                     ),
                     const SizeBox(height: 20),
-                    Text(
-                      labels[265]["labelText"],
-                      style: TextStyles.primary.copyWith(
-                        color: AppColors.black63,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          labels[265]["labelText"],
+                          style: TextStyles.primary.copyWith(
+                            color: AppColors.dark80,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const Asterisk(),
+                      ],
                     ),
                     const SizeBox(height: 9),
                     CustomTextField(
@@ -156,7 +166,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     Text(
                       labels[266]["labelText"],
                       style: TextStyles.primary.copyWith(
-                        color: AppColors.black63,
+                        color: AppColors.dark80,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
@@ -208,12 +218,17 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     //   hintText: "State",
                     // ),
                     const SizeBox(height: 20),
-                    Text(
-                      "Emirate *",
-                      style: TextStyles.primary.copyWith(
-                        color: AppColors.black63,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          labels[267]["labelText"],
+                          style: TextStyles.primary.copyWith(
+                            color: AppColors.dark80,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const Asterisk(),
+                      ],
                     ),
                     const SizeBox(height: 9),
                     BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
@@ -242,9 +257,9 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     ),
                     const SizeBox(height: 20),
                     Text(
-                      "Zip/Postal Code",
+                      labels[269]["labelText"],
                       style: TextStyles.primary.copyWith(
-                        color: AppColors.black63,
+                        color: AppColors.dark80,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
@@ -332,7 +347,12 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     ],
                   );
                 } else {
-                  return const SizeBox();
+                  return Column(
+                    children: [
+                      SolidButton(onTap: () {}, text: labels[127]["labelText"]),
+                      const SizeBox(height: PaddingConstants.bottomPadding),
+                    ],
+                  );
                 }
               },
             ),

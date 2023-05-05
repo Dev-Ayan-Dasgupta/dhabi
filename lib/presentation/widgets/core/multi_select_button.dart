@@ -51,7 +51,7 @@ class MultiSelectButton extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppColors.blackD9,
+                  color: AppColors.dark30,
                   width: 1,
                 ),
               ),

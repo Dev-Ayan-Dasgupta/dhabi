@@ -62,7 +62,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                           Text(
                             "Currencies",
                             style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.red,
+                              color: AppColors.red100,
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
@@ -99,7 +99,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                                                   (100 / Dimensions.designWidth)
                                                       .w),
                                             ),
-                                            color: AppColors.blackD9,
+                                            color: AppColors.dark30,
                                           ),
                                         ),
                                         const SizeBox(height: 10),

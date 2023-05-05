@@ -116,14 +116,6 @@ class _AcceptTermsAndConditionsScreenState
                                   return SizedBox(
                                     width: 100.w,
                                     child: HtmlWidget(terms),
-                                    // Text(
-                                    //   tAndC,
-                                    //   style: TextStyles.primary.copyWith(
-                                    //     color: const Color(0XFF252525),
-                                    //     fontSize:
-                                    //         (16 / Dimensions.designWidth).w,
-                                    //   ),
-                                    // ),
                                   );
                                 },
                               ),

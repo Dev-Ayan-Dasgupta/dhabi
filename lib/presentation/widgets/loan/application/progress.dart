@@ -49,7 +49,7 @@ class ApplicationProgress extends StatelessWidget {
             Container(
               width: (94 / Dimensions.designWidth).w,
               height: (5 / Dimensions.designWidth).w,
-              color: progress > 1 ? AppColors.primary : AppColors.blackD9,
+              color: progress > 1 ? AppColors.primary : AppColors.dark30,
             ),
             Column(
               children: [
@@ -93,7 +93,7 @@ class ApplicationProgress extends StatelessWidget {
             Container(
               width: (94 / Dimensions.designWidth).w,
               height: (5 / Dimensions.designWidth).w,
-              color: progress > 2 ? AppColors.primary : AppColors.blackD9,
+              color: progress > 2 ? AppColors.primary : AppColors.dark30,
             ),
             Container(
               width: (24 / Dimensions.designWidth).w,
@@ -133,7 +133,7 @@ class ApplicationProgress extends StatelessWidget {
             Container(
               width: (94 / Dimensions.designWidth).w,
               height: (5 / Dimensions.designWidth).w,
-              color: progress > 3 ? AppColors.primary : AppColors.blackD9,
+              color: progress > 3 ? AppColors.primary : AppColors.dark30,
             ),
             Container(
               width: (24 / Dimensions.designWidth).w,
@@ -177,33 +177,33 @@ class ApplicationProgress extends StatelessWidget {
           children: [
             const SizeBox(width: 3),
             Text(
-              "Address",
+              labels[29]["labelText"],
               style: TextStyles.primary.copyWith(
-                color: const Color.fromRGBO(29, 29, 29, 0.5),
+                color: AppColors.dark50,
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
             const SizeBox(width: 78),
             Text(
-              "Income",
+              labels[262]["labelText"],
               style: TextStyles.primary.copyWith(
-                color: const Color.fromRGBO(29, 29, 29, 0.5),
+                color: AppColors.dark50,
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
             const SizeBox(width: 87),
             Text(
-              "Tax",
+              labels[263]["labelText"],
               style: TextStyles.primary.copyWith(
-                color: const Color.fromRGBO(29, 29, 29, 0.5),
+                color: AppColors.dark50,
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),
             const SizeBox(width: 85),
             Text(
-              "Account",
+              labels[78]["labelText"],
               style: TextStyles.primary.copyWith(
-                color: const Color.fromRGBO(29, 29, 29, 0.5),
+                color: AppColors.dark50,
                 fontSize: (12 / Dimensions.designWidth).w,
               ),
             ),

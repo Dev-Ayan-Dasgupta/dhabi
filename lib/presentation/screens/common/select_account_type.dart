@@ -77,7 +77,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                   Text(
                     labels[216]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.grey40,
+                      color: AppColors.dark50,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -98,7 +98,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: buildSubmitButton,
                   ),
-                  const SizeBox(height: 10),
+                  const SizeBox(height: 15),
                   InkWell(
                     onTap: () {
                       // TODO: Add biometricPrompt
@@ -125,7 +125,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                       ),
                     ),
                   ),
-                  const SizeBox(height: 20),
+                  const SizeBox(height: PaddingConstants.bottomPadding),
                 ],
               ),
             ),

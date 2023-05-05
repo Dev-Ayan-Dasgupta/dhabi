@@ -1,4 +1,5 @@
 import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/constants/textstyles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -47,13 +48,13 @@ class SolidButton extends StatelessWidget {
             Radius.circular(borderRadius ?? (10 / Dimensions.designWidth).w),
           ),
           boxShadow: boxShadow ?? [],
-          color: color ?? const Color.fromRGBO(85, 85, 85, 0.2),
+          color: color ?? AppColors.dark30,
         ),
         child: Center(
           child: Text(
             text,
             style: TextStyles.primaryBold.copyWith(
-              color: fontColor ?? Colors.white,
+              color: fontColor ?? AppColors.dark50,
               fontSize: fontSize ?? (20 / Dimensions.designWidth).w,
             ),
           ),

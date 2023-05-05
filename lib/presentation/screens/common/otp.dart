@@ -163,7 +163,7 @@ class _OTPScreenState extends State<OTPScreen> {
       return Text(
         labels[32]["labelText"],
         style: TextStyles.primaryMedium.copyWith(
-          color: const Color(0xFF252525),
+          color: AppColors.dark80,
           fontSize: (24 / Dimensions.designWidth).w,
         ),
       );
@@ -171,7 +171,7 @@ class _OTPScreenState extends State<OTPScreen> {
       return Text(
         "Oops!",
         style: TextStyles.primaryMedium.copyWith(
-          color: const Color(0xFF252525),
+          color: AppColors.dark80,
           fontSize: (24 / Dimensions.designWidth).w,
         ),
       );
@@ -184,8 +184,8 @@ class _OTPScreenState extends State<OTPScreen> {
         return Text(
           "${labels[41]["labelText"]} $obscuredEmail",
           style: TextStyles.primaryMedium.copyWith(
-            color: const Color(0xFF343434),
-            fontSize: (18 / Dimensions.designWidth).w,
+            color: AppColors.dark80,
+            fontSize: (16 / Dimensions.designWidth).w,
           ),
           textAlign: TextAlign.center,
         );
@@ -193,8 +193,8 @@ class _OTPScreenState extends State<OTPScreen> {
         return Text(
           "${labels[33]["labelText"]} $obscuredPhone",
           style: TextStyles.primaryMedium.copyWith(
-            color: const Color(0xFF343434),
-            fontSize: (18 / Dimensions.designWidth).w,
+            color: AppColors.dark80,
+            fontSize: (16 / Dimensions.designWidth).w,
           ),
           textAlign: TextAlign.center,
         );
@@ -395,7 +395,7 @@ class _OTPScreenState extends State<OTPScreen> {
               Text(
                 "${labels[34]["labelText"]} ",
                 style: TextStyles.primaryMedium.copyWith(
-                  color: const Color(0xFF636363),
+                  color: AppColors.dark50,
                   fontSize: (14 / Dimensions.designWidth).w,
                 ),
               ),
@@ -405,7 +405,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     return Text(
                       "${seconds ~/ 60}:0${seconds % 60}",
                       style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0xFFFF6D4F),
+                        color: AppColors.red100,
                         fontSize: (14 / Dimensions.designWidth).w,
                         fontWeight: FontWeight.w600,
                       ),
@@ -414,7 +414,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     return Text(
                       "${seconds ~/ 60}:${seconds % 60}",
                       style: TextStyles.primaryMedium.copyWith(
-                        color: const Color(0xFFFF6D4F),
+                        color: AppColors.red100,
                         fontSize: (14 / Dimensions.designWidth).w,
                         fontWeight: FontWeight.w600,
                       ),
@@ -433,11 +433,9 @@ class _OTPScreenState extends State<OTPScreen> {
                 splashColor: Colors.transparent,
                 child: Text(
                   labels[35]["labelText"],
-                  style: TextStyles.primaryMedium.copyWith(
-                    color: seconds == 0
-                        ? AppColors.primary
-                        : const Color(0xFFC6C6C6),
-                    fontSize: (18 / Dimensions.designWidth).w,
+                  style: TextStyles.primaryBold.copyWith(
+                    color: seconds == 0 ? AppColors.primary : AppColors.dark50,
+                    fontSize: (16 / Dimensions.designWidth).w,
                   ),
                 ),
               );

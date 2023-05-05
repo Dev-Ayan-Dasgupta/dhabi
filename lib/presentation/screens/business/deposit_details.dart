@@ -74,7 +74,7 @@ class _BusinessDepositDetailsScreenState
                       length: depositDetails.length,
                       details: depositDetails,
                       coloredIndex: depositDetails.length - 1,
-                      fontColor: AppColors.amber,
+                      fontColor: AppColors.orange100,
                     ),
                   ),
                 ],

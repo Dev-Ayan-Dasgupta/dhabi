@@ -7,14 +7,15 @@ class AppColors {
 
   static const green100 = Color(0XFF00B894);
 
-  static const red = Color(0XFFC94540);
-  static const amber = Color(0XFFF39C12);
+  static const red100 = Color(0XFFC94540);
+  static const orange100 = Color(0XFFF39C12);
 
   static const dark80 = Color(0XFF292929);
   static const black25 = Color(0XFF252525);
   static const black63 = Color(0XFF636363);
-  static const black81 = Color(0XFF818181);
-  static const blackD9 = Color(0XFFD9D9D9);
+  static const dark50 = Color(0XFF818181);
+  static const dark30 = Color(0XFFD9D9D9);
+  static const dark10 = Color(0XFFF4F4F4);
   static const blackEE = Color(0XFFEEEEEE);
 
   static const grey40 = Color.fromRGBO(0, 0, 0, 0.4);

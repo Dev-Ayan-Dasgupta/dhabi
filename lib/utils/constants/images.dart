@@ -21,6 +21,7 @@ class ImageConstants {
   static const String checkCircleOutlined =
       "${iconsRoot}check_circle_outlined.svg";
   static const String errorSolid = "${iconsRoot}error_solid.svg";
+  static const String errorOutlined = "${iconsRoot}error_outlined.svg";
   static const String deleteText = "${iconsRoot}delete_text.svg";
   static const String otp = "${iconsRoot}otp.svg";
   static const String warning = "${iconsRoot}warning.svg";
@@ -29,6 +30,7 @@ class ImageConstants {
   static const String uncheckedBox = "${iconsRoot}unchecked_box.svg";
   static const String warningSmall = "${iconsRoot}warning_small.svg";
   static const String warningBlue = "${iconsRoot}warning_blue.svg";
+  static const String warningRed = "${iconsRoot}warning_red.svg";
   static const String dhabiText = "${iconsRoot}dhabi_text.svg";
   static const String dhabiBusinessText = "${iconsRoot}dhabi_business_text.svg";
   static const String notifications = "${iconsRoot}notifications.svg";

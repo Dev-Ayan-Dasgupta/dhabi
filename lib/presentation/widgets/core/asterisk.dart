@@ -19,7 +19,7 @@ class Asterisk extends StatelessWidget {
     return Text(
       " *",
       style: TextStyles.primaryMedium.copyWith(
-        color: color ?? AppColors.red,
+        color: color ?? AppColors.red100,
         fontSize: ((fontSize ?? 16) / Dimensions.designWidth).w,
       ),
     );

@@ -379,7 +379,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
       return Text(
         errorMsg,
         style: TextStyles.primaryMedium.copyWith(
-          color: AppColors.red,
+          color: AppColors.red100,
           fontSize: (16 / Dimensions.designWidth).w,
         ),
       );

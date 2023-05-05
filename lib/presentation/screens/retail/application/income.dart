@@ -62,16 +62,16 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
                   const SizeBox(height: 30),
                   Text(
                     labels[270]["labelText"],
-                    style: TextStyles.primary.copyWith(
+                    style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
-                      fontSize: (24 / Dimensions.designWidth).w,
+                      fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 30),
+                  const SizeBox(height: 20),
                   Text(
                     labels[271]["labelText"],
                     style: TextStyles.primary.copyWith(
-                      color: AppColors.black63,
+                      color: AppColors.dark80,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -123,7 +123,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
               isUploading = true;
               showButtonBloc.add(DropdownSelectedEvent(
                   isDropdownSelected: isUploading, toggles: toggles));
-              // TODO: Call relevant API here...
+
               var result =
                   await MapAddOrUpdateIncomeSource.mapAddOrUpdateIncomeSource(
                 {"incomeSource": selectedValue},
@@ -141,7 +141,12 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
         ],
       );
     } else {
-      return const SizeBox();
+      return Column(
+        children: [
+          SolidButton(onTap: () {}, text: labels[127]["labelText"]),
+          const SizeBox(height: PaddingConstants.bottomPadding),
+        ],
+      );
     }
   }
 }

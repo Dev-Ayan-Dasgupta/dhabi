@@ -186,7 +186,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             text: labels[205]["labelText"],
                           ),
                         ),
-                        const SizeBox(height: 20),
+                        const SizeBox(height: 15),
                         Ternary(
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
@@ -194,19 +194,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               Navigator.pushNamed(
                                   context, Routes.exploreDashboard);
                               // Navigator.pushNamed(
-                              //     context, Routes.privacyStatement);
+                              //   context,
+                              //   Routes.applicationAccount,
+                              // );
                               // OAuthHelper.oAuth();
                             },
                             text: labels[208]["labelText"],
+                            color: const Color.fromRGBO(85, 85, 85, 0.2),
+                            fontColor: Colors.white,
                           ),
                           falsy: SolidButton(
                             onTap: () {
                               Navigator.pushNamed(context, Routes.registration);
                             },
                             text: "Register",
+                            color: const Color.fromRGBO(85, 85, 85, 0.2),
+                            fontColor: Colors.white,
                           ),
                         ),
-                        const SizeBox(height: 40),
+                        const SizeBox(height: PaddingConstants.bottomPadding),
                       ],
                     ),
                   ),

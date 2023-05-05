@@ -44,8 +44,8 @@ class _ErrorSuccessScreenState extends State<ErrorSuccessScreen> {
                 children: [
                   SvgPicture.asset(
                     errorArgumentModel.iconPath,
-                    width: (215 / Dimensions.designWidth).w,
-                    height: (215 / Dimensions.designWidth).w,
+                    width: (147 / Dimensions.designWidth).w,
+                    height: (147 / Dimensions.designWidth).w,
                   ),
                   const SizeBox(height: 30),
                   Text(

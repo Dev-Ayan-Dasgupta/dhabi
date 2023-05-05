@@ -96,7 +96,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
           helperStyle: TextStyles.primaryMedium.copyWith(
             color: widget.controller.text.length == widget.maxLength
-                ? AppColors.red
+                ? AppColors.red100
                 : widget.maxLength != null
                     ? widget.controller.text.length > (widget.maxLength! - 20)
                         ? Colors.orange

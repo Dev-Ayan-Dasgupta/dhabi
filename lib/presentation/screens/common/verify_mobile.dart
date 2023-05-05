@@ -158,7 +158,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
           Text(
             "Invalid mobile number",
             style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.red,
+              color: AppColors.red100,
               fontSize: (16 / Dimensions.designWidth).w,
             ),
           ),

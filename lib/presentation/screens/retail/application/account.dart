@@ -48,7 +48,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Application Details",
+                    labels[261]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -59,34 +59,49 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                   const SizeBox(height: 30),
                   Text(
                     labels[195]["labelText"],
-                    style: TextStyles.primary.copyWith(
+                    style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
-                      fontSize: (24 / Dimensions.designWidth).w,
+                      fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 30),
-                  Text(
-                    labels[285]["labelText"],
-                    style: TextStyles.primary.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (18 / Dimensions.designWidth).w,
-                    ),
-                  ),
-                  const SizeBox(height: 10),
-                  Text(
-                    labels[286]["labelText"],
-                    style: TextStyles.primary.copyWith(
-                      color: AppColors.black63,
-                      fontSize: (18 / Dimensions.designWidth).w,
-                    ),
+                  const SizeBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        labels[285]["labelText"],
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 20),
                   BlocBuilder<MultiSelectBloc, MultiSelectState>(
                     builder: buildCurrentButton,
                   ),
-                  const SizeBox(height: 20),
+                  const SizeBox(height: 15),
                   BlocBuilder<MultiSelectBloc, MultiSelectState>(
                     builder: buildSavingsButton,
+                  ),
+                  const SizeBox(height: 20),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.error_rounded,
+                        color: AppColors.dark50,
+                        size: (13 / Dimensions.designWidth).w,
+                      ),
+                      const SizeBox(width: 5),
+                      Text(
+                        labels[286]["labelText"],
+                        style: TextStyles.primary.copyWith(
+                          color: AppColors.dark50,
+                          fontSize: (12 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -205,7 +220,12 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
         ],
       );
     } else {
-      return const SizeBox();
+      return Column(
+        children: [
+          SolidButton(onTap: () {}, text: labels[127]["labelText"]),
+          const SizeBox(height: PaddingConstants.bottomPadding),
+        ],
+      );
     }
   }
 }

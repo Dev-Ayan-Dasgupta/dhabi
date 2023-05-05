@@ -101,7 +101,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: buildSubmitButton,
                   ),
-                  const SizeBox(height: 10),
+                  const SizeBox(height: 15),
                   InkWell(
                     onTap: () {
                       // TODO: Add biometricPrompt

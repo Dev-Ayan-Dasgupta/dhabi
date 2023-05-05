@@ -129,12 +129,17 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                             ],
                           ),
                           const SizeBox(height: 20),
-                          Text(
-                            labels[278]["labelText"],
-                            style: TextStyles.primary.copyWith(
-                              color: AppColors.black63,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                labels[278]["labelText"],
+                                style: TextStyles.primary.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
                           ),
                           const SizeBox(height: 10),
                           Row(
@@ -269,12 +274,17 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizeBox(height: 20),
-          Text(
-            "Select Country",
-            style: TextStyles.primary.copyWith(
-              color: AppColors.black63,
-              fontSize: (16 / Dimensions.designWidth).w,
-            ),
+          Row(
+            children: [
+              Text(
+                "Select Country",
+                style: TextStyles.primary.copyWith(
+                  color: AppColors.dark80,
+                  fontSize: (16 / Dimensions.designWidth).w,
+                ),
+              ),
+              const Asterisk(),
+            ],
           ),
           const SizeBox(height: 10),
           CustomDropDown(
@@ -321,12 +331,11 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
               Text(
                 labels[281]["labelText"],
                 style: TextStyles.primary.copyWith(
-                  color: AppColors.black63,
+                  color: AppColors.dark80,
                   fontSize: (16 / Dimensions.designWidth).w,
                 ),
               ),
-              const SizeBox(width: 10),
-              HelpSnippet(onTap: () {}),
+              const Asterisk(),
             ],
           ),
           const SizeBox(height: 10),
@@ -431,12 +440,17 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizeBox(height: 20),
-          Text(
-            "TIN",
-            style: TextStyles.primary.copyWith(
-              color: AppColors.black63,
-              fontSize: (16 / Dimensions.designWidth).w,
-            ),
+          Row(
+            children: [
+              Text(
+                "Please provide your Tax Identification Number",
+                style: TextStyles.primary.copyWith(
+                  color: AppColors.dark80,
+                  fontSize: (16 / Dimensions.designWidth).w,
+                ),
+              ),
+              const Asterisk(),
+            ],
           ),
           const SizeBox(height: 10),
           CustomTextField(
@@ -476,12 +490,17 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizeBox(height: 20),
-          Text(
-            labels[282]["labelText"],
-            style: TextStyles.primary.copyWith(
-              color: AppColors.black63,
-              fontSize: (16 / Dimensions.designWidth).w,
-            ),
+          Row(
+            children: [
+              Text(
+                labels[282]["labelText"],
+                style: TextStyles.primary.copyWith(
+                  color: AppColors.dark80,
+                  fontSize: (16 / Dimensions.designWidth).w,
+                ),
+              ),
+              const Asterisk(),
+            ],
           ),
           const SizeBox(height: 9),
           CustomDropDown(
@@ -526,7 +545,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             boxShadow: [BoxShadows.primary],
             fontColor: AppColors.primary,
           ),
-          const SizeBox(height: 20),
+          const SizeBox(height: 15),
           GradientButton(
             onTap: () async {
               final ShowButtonBloc showButtonBloc =
@@ -565,7 +584,12 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
         ],
       );
     } else {
-      return const SizeBox();
+      return Column(
+        children: [
+          SolidButton(onTap: () {}, text: labels[127]["labelText"]),
+          const SizeBox(height: PaddingConstants.bottomPadding),
+        ],
+      );
     }
   }
 

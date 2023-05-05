@@ -38,7 +38,7 @@ class NotificationsTile extends StatelessWidget {
           Text(
             message,
             style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.black81,
+              color: AppColors.dark50,
               fontSize: (16 / Dimensions.designWidth).w,
             ),
             maxLines: 3,

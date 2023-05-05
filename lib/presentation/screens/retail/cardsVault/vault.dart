@@ -112,7 +112,7 @@ class _VaultScreenState extends State<VaultScreen> {
                               Text(
                                 "Card Number",
                                 style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.black81,
+                                  color: AppColors.dark50,
                                   fontSize: (14 / Dimensions.designWidth).w,
                                 ),
                               ),
@@ -233,7 +233,7 @@ class _VaultScreenState extends State<VaultScreen> {
                             Text(
                               "Card Number",
                               style: TextStyles.primaryMedium.copyWith(
-                                color: AppColors.black81,
+                                color: AppColors.dark50,
                                 fontSize: (14 / Dimensions.designWidth).w,
                               ),
                             ),
@@ -272,7 +272,7 @@ class _VaultScreenState extends State<VaultScreen> {
                                     Text(
                                       "Expires",
                                       style: TextStyles.primaryMedium.copyWith(
-                                        color: AppColors.black81,
+                                        color: AppColors.dark50,
                                         fontSize:
                                             (14 / Dimensions.designWidth).w,
                                       ),
@@ -294,7 +294,7 @@ class _VaultScreenState extends State<VaultScreen> {
                                     Text(
                                       "CVV",
                                       style: TextStyles.primaryMedium.copyWith(
-                                        color: AppColors.black81,
+                                        color: AppColors.dark50,
                                         fontSize:
                                             (14 / Dimensions.designWidth).w,
                                       ),

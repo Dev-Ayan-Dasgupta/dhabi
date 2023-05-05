@@ -210,7 +210,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           Text(
             "Incorrect Password",
             style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.red,
+              color: AppColors.red100,
               fontSize: (12 / Dimensions.designWidth).w,
             ),
           ),

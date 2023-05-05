@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_face_api/face_api.dart' as regula;
+import 'package:intl/intl.dart';
 
 class PassportExplanationScreen extends StatefulWidget {
   const PassportExplanationScreen({Key? key}) : super(key: key);
@@ -68,8 +70,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   // }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
-    if (completion.action == DocReaderAction.COMPLETE ||
-        completion.action == DocReaderAction.TIMEOUT) {
+    // TODO: Remove Timeout condition for this screen
+    if (completion.action == DocReaderAction.COMPLETE) {
       DocumentReaderResults? results = completion.results;
       String? firstName =
           await results?.textFieldValueByType(EVisualFieldType.FT_GIVEN_NAMES);
@@ -105,23 +107,105 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
       // results?.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
 
+      // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
+
+      log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
+      log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
+
+      // ? Check for expired
+      if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
+                  DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")))
+              .difference(DateTime.now())
+              .inDays <
+          0) {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.errorSuccessScreen,
+            arguments: ErrorArgumentModel(
+              hasSecondaryButton: false,
+              iconPath: ImageConstants.errorOutlined,
+              title: messages[81]["messageText"],
+              message: messages[29]["messageText"],
+              buttonText: labels[1]["labelText"],
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.registration, (route) => false);
+              },
+              buttonTextSecondary: "",
+              onTapSecondary: () {},
+            ).toMap(),
+          );
+        }
+      }
+
+      // ? Check for age
+      else if (DateTime.now()
+              .difference(DateTime.parse(DateFormat('yyyy-MM-dd')
+                  .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000"))))
+              .inDays <
+          ((18 * 365) + 4)) {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.errorSuccessScreen,
+            arguments: ErrorArgumentModel(
+              hasSecondaryButton: false,
+              iconPath: ImageConstants.errorOutlined,
+              title: messages[80]["messageText"],
+              message: messages[33]["messageText"],
+              buttonText: labels[1]["labelText"],
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.registration, (route) => false);
+              },
+              buttonTextSecondary: "",
+              onTapSecondary: () {},
+            ).toMap(),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.scannedDetails,
+            arguments: ScannedDetailsArgumentModel(
+              isEID: true,
+              fullName: fullName,
+              idNumber: eiDNumber,
+              nationality: nationality,
+              nationalityCode: nationalityCode,
+              expiryDate: expiryDate,
+              dob: dob,
+              gender: gender,
+              photo: photo,
+              docPhoto: docPhoto,
+              img1: img1,
+              image1: image1,
+            ).toMap(),
+          );
+        }
+      }
+    }
+
+    if (completion.action == DocReaderAction.TIMEOUT) {
       if (context.mounted) {
         Navigator.pushNamed(
           context,
-          Routes.scannedDetails,
-          arguments: ScannedDetailsArgumentModel(
-            isEID: false,
-            fullName: fullName,
-            idNumber: passportNumber,
-            nationality: nationality,
-            nationalityCode: nationalityCode,
-            expiryDate: expiryDate,
-            dob: dob,
-            gender: gender,
-            photo: photo,
-            docPhoto: docPhoto,
-            img1: img1,
-            image1: image1,
+          Routes.errorSuccessScreen,
+          arguments: ErrorArgumentModel(
+            hasSecondaryButton: false,
+            iconPath: ImageConstants.warningRed,
+            title: messages[73]["messageText"],
+            message: "Your time has run out. Please try again.",
+            // messages[35]["messageText"],
+            buttonText: labels[1]["labelText"],
+            onTap: () {
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Routes.registration, (route) => false);
+            },
+            buttonTextSecondary: "",
+            onTapSecondary: () {},
           ).toMap(),
         );
       }
@@ -154,11 +238,11 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                       fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 10),
+                  const SizeBox(height: 20),
                   Text(
                     "Scan the first page of your passport.",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.black81,
+                      color: AppColors.dark50,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -177,9 +261,10 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                     child: Text(
                       labels[254]["labelText"],
                       style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.blackD9,
+                        color: AppColors.dark50,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ],
@@ -209,7 +294,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                   color: AppColors.primaryBright17,
                   fontColor: AppColors.primary,
                 ),
-                const SizeBox(height: 20),
+                const SizeBox(height: PaddingConstants.bottomPadding),
               ],
             ),
           ],
@@ -243,12 +328,14 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           actionWidget: Column(
             children: [
               SolidButton(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pop(context);
+                },
                 text: labels[235]["labelText"],
                 color: AppColors.primaryBright17,
                 fontColor: AppColors.primary,
               ),
-              const SizeBox(height: 20),
+              const SizeBox(height: PaddingConstants.bottomPadding),
             ],
           ),
         );

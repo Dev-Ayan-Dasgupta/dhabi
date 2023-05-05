@@ -172,7 +172,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
           Text(
             "Email ID does not exist",
             style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.red,
+              color: AppColors.red100,
               fontSize: (12 / Dimensions.designWidth).w,
             ),
           ),
