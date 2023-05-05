@@ -9,5 +9,6 @@ String? photo;
 String? docPhoto;
 String selfiePhoto = "";
 String? passportNumber;
+String? issuingStateCode;
 double photoMatchScore = 0;
 bool? isEidChosen;

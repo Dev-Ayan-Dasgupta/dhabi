@@ -38,11 +38,11 @@ class _VerificationInitializingScreenState
         .receiveBroadcastStream()
         .listen(
       (progress) {
-        setState(
-          () {
-            progressValue = progress;
-          },
-        );
+        // setState(
+        //   () {
+        //     progressValue = progress;
+        //   },
+        // );
       },
     );
   }

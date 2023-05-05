@@ -21,8 +21,8 @@ abstract class BaseConfig {
   String get verifyEmailOtp;
   String get validateEmail;
   String get registerUser;
-  String get uploadEid;
-  String get uploadPassport;
+  String get ifEidExists;
+  String get ifPassportExists;
   String get uploadPersonalDetails;
   String get sendMobileOtp;
   String get verifyMobileOtp;
@@ -30,4 +30,6 @@ abstract class BaseConfig {
   String get addOrUpdateIncomeSource;
   String get uploadCustomerTaxInformation;
   String get registerRetailCustomer;
+  String get uploadEid;
+  String get uploadPassport;
 }

@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -211,27 +212,6 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
-
-      if (context.mounted) {
-        Navigator.pushNamed(
-          context,
-          Routes.scannedDetails,
-          arguments: ScannedDetailsArgumentModel(
-            isEID: true,
-            fullName: fullName,
-            idNumber: eiDNumber,
-            nationality: nationality,
-            nationalityCode: nationalityCode,
-            expiryDate: expiryDate,
-            dob: dob,
-            gender: gender,
-            photo: photo,
-            docPhoto: docPhoto,
-            img1: img1,
-            image1: image1,
-          ).toMap(),
-        );
-      }
     }
 
     log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
@@ -353,8 +333,14 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       // print("passportNumber -> $passportNumber");
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
-      nationalityCode = await results
+      String? tempNationalityCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
+      nationalityCode = LongToShortCode.longToShortCode(tempNationalityCode!);
+      log("nationalityCode -> $nationalityCode");
+      String? tempIssuingStateCode = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_ISSUING_STATE_CODE);
+      issuingStateCode = LongToShortCode.longToShortCode(tempIssuingStateCode!);
+      log("issuingState -> $issuingStateCode");
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
       dob = await results
@@ -437,9 +423,9 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             context,
             Routes.scannedDetails,
             arguments: ScannedDetailsArgumentModel(
-              isEID: true,
+              isEID: false,
               fullName: fullName,
-              idNumber: eiDNumber,
+              idNumber: passportNumber,
               nationality: nationality,
               nationalityCode: nationalityCode,
               expiryDate: expiryDate,

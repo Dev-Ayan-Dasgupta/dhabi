@@ -77,8 +77,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void getDhabiCountryNames() {
     dhabiCountryNames.clear();
+    countryLongCodes.clear();
     for (var country in dhabiCountries) {
       dhabiCountryNames.add(country["countryName"]);
+      countryLongCodes.add(country["longCode"]);
     }
     log("dhabiCountryNames -> $dhabiCountryNames");
   }

@@ -210,6 +210,8 @@ class _AcceptTermsAndConditionsScreenState
                                       "selfiePhoto": selfiePhoto,
                                       "photoMatchScore": photoMatchScore,
                                       "passportNumber": passportNumber,
+                                      "passportIssuingCountryCode":
+                                          issuingStateCode,
                                       "fullName": fullName,
                                       "dateOfBirth": DateFormat('yyyy-MM-dd')
                                           .format(DateFormat('dd/MM/yyyy')

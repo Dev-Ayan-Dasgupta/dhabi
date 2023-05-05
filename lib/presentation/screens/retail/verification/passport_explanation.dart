@@ -5,6 +5,7 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/long_to_short_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
@@ -86,11 +87,14 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       // print("passportNumber -> $passportNumber");
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
-      nationalityCode = await results
+      String? tempNationalityCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
-      String? issuingState = await results
-          ?.textFieldValueByType(EVisualFieldType.FT_ISSUING_STATE_NAME);
-      log("issuingState -> $issuingState");
+      nationalityCode = LongToShortCode.longToShortCode(tempNationalityCode!);
+      // String?
+      String? tempIssuingStateCode = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_ISSUING_STATE_CODE);
+      issuingStateCode = LongToShortCode.longToShortCode(tempIssuingStateCode!);
+      log("issuingState -> $issuingStateCode");
       String? issuingPlace = await results
           ?.textFieldValueByType(EVisualFieldType.FT_PLACE_OF_ISSUE);
       log("issuingPlace -> $issuingPlace");
@@ -102,12 +106,9 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
-        setState(() {
-          image1.bitmap =
-              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
-          image1.imageType = regula.ImageType.PRINTED;
-          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
-        });
+        image1.bitmap = base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+        image1.imageType = regula.ImageType.PRINTED;
+        img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
       }
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
@@ -176,9 +177,9 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             context,
             Routes.scannedDetails,
             arguments: ScannedDetailsArgumentModel(
-              isEID: true,
+              isEID: false,
               fullName: fullName,
-              idNumber: eiDNumber,
+              idNumber: passportNumber,
               nationality: nationality,
               nationalityCode: nationalityCode,
               expiryDate: expiryDate,

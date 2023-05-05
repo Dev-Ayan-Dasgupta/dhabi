@@ -11,3 +11,5 @@ export './map_verify_email_otp.dart';
 export './map_verify_mobile_otp.dart';
 export './map_customer_tax_information.dart';
 export './map_add_or_update_income_source.dart';
+export './map_if_eid_exists.dart';
+export './map_if_passport_exists.dart';

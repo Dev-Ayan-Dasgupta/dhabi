@@ -86,28 +86,18 @@ class EnvConfig implements BaseConfig {
   }
 
   @override
-  String get uploadEid {
-    return dotenv.env['UPLOAD_EID'] ?? "";
+  String get ifEidExists {
+    return dotenv.env['IF_EID_EXISTS'] ?? "";
   }
 
   @override
-  String get uploadPassport {
-    return dotenv.env['UPLOAD_PASSPORT'] ?? "";
+  String get ifPassportExists {
+    return dotenv.env['IF_PASSPORT_EXISTS'] ?? "";
   }
 
   @override
   String get uploadPersonalDetails {
     return dotenv.env['UPLOAD_PERSONAL_DETAILS'] ?? "";
-  }
-
-  @override
-  String get sendMobileOtp {
-    return dotenv.env['SEND_MOBILE_OTP'] ?? "";
-  }
-
-  @override
-  String get verifyMobileOtp {
-    return dotenv.env['VERIFY_MOBILE_OTP'] ?? "";
   }
 
   @override
@@ -128,5 +118,25 @@ class EnvConfig implements BaseConfig {
   @override
   String get registerRetailCustomer {
     return dotenv.env['REGISTER_RETAIL_CUSTOMER'] ?? "";
+  }
+
+  @override
+  String get sendMobileOtp {
+    return dotenv.env['SEND_MOBILE_OTP'] ?? "";
+  }
+
+  @override
+  String get verifyMobileOtp {
+    return dotenv.env['VERIFY_MOBILE_OTP'] ?? "";
+  }
+
+  @override
+  String get uploadEid {
+    return dotenv.env['UPLOAD_EID'] ?? "";
+  }
+
+  @override
+  String get uploadPassport {
+    return dotenv.env['UPLOAD_PASSPORT'] ?? "";
   }
 }
