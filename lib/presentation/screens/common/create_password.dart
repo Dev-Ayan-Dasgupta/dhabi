@@ -13,6 +13,9 @@ import 'package:dialup_mobile_app/bloc/criteria/criteria_state.dart';
 import 'package:dialup_mobile_app/bloc/matchPassword/match_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/matchPassword/match_password_event.dart';
 import 'package:dialup_mobile_app/bloc/matchPassword/match_password_state.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
@@ -217,8 +220,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             builder: buildShowConfirmPassword,
                           ),
                           const SizeBox(height: 9),
-                          BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-                            builder: buildMatchMessage,
+                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: (context, state) {
+                              if (_confirmPasswordController.text.length < 8) {
+                                return const SizeBox();
+                              } else {
+                                return BlocBuilder<MatchPasswordBloc,
+                                    MatchPasswordState>(
+                                  builder: buildMatchMessage,
+                                );
+                              }
+                            },
                           ),
                           const SizeBox(height: 15),
                           BlocBuilder<CriteriaBloc, CriteriaState>(
@@ -391,6 +403,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
       BuildContext context, ShowPasswordState state) {
     final ShowPasswordBloc confirmPasswordBloc =
         context.read<ShowPasswordBloc>();
+    // final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     if (showConfirmPassword) {
       return CustomTextField(
         // width: 83.w,
@@ -415,6 +428,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         onChanged: (p0) {
           triggerPasswordMatchEvent();
           triggerAllTrueEvent();
+          // showButtonBloc.add(ShowButtonEvent(show: p0.length < 8));
         },
         obscureText: !showConfirmPassword,
       );
@@ -442,6 +456,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         onChanged: (p0) {
           triggerPasswordMatchEvent();
           triggerAllTrueEvent();
+          // showButtonBloc.add(ShowButtonEvent(show: p0.length < 8));
         },
         obscureText: !showConfirmPassword,
       );
@@ -465,31 +480,34 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   // }
 
   Widget buildMatchMessage(BuildContext context, MatchPasswordState state) {
-    return Row(
-      children: [
-        Ternary(
-          condition: isMatch,
-          truthy: Icon(
-            Icons.check_circle_rounded,
-            color: AppColors.green100,
-            size: (13 / Dimensions.designWidth).w,
+    return BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+        builder: (context, state) {
+      return Row(
+        children: [
+          Ternary(
+            condition: isMatch,
+            truthy: Icon(
+              Icons.check_circle_rounded,
+              color: AppColors.green100,
+              size: (13 / Dimensions.designWidth).w,
+            ),
+            falsy: Icon(
+              Icons.error,
+              color: AppColors.orange100,
+              size: (13 / Dimensions.designWidth).w,
+            ),
           ),
-          falsy: Icon(
-            Icons.error,
-            color: AppColors.orange100,
-            size: (13 / Dimensions.designWidth).w,
+          const SizeBox(width: 5),
+          Text(
+            isMatch ? "Password is matching" : "Password is not matching",
+            style: TextStyles.primaryMedium.copyWith(
+              color: isMatch ? AppColors.green100 : AppColors.orange100,
+              fontSize: (12 / Dimensions.designWidth).w,
+            ),
           ),
-        ),
-        const SizeBox(width: 5),
-        Text(
-          isMatch ? "Password is matching" : "Password is not matching",
-          style: TextStyles.primaryMedium.copyWith(
-            color: isMatch ? AppColors.green100 : AppColors.orange100,
-            fontSize: (12 / Dimensions.designWidth).w,
-          ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 
   Widget buildCriteriaSection(BuildContext context, CriteriaState state) {
@@ -643,7 +661,12 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         ],
       );
     } else {
-      return const SizeBox();
+      return Column(
+        children: [
+          const SizeBox(height: 10),
+          SolidButton(onTap: () {}, text: "Continue"),
+        ],
+      );
     }
   }
 
@@ -686,6 +709,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   void triggerPasswordMatchEvent() {
     final MatchPasswordBloc matchPasswordBloc =
         context.read<MatchPasswordBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     if (_passwordController.text == _confirmPasswordController.text) {
       isMatch = true;
       matchPasswordBloc.add(MatchPasswordEvent(isMatch: isMatch, count: 0));
@@ -693,6 +717,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
       isMatch = false;
       matchPasswordBloc.add(MatchPasswordEvent(isMatch: isMatch, count: 0));
     }
+    showButtonBloc
+        .add(ShowButtonEvent(show: _confirmPasswordController.text.length < 8));
   }
 
   void triggerCheckBoxEvent(bool isChecked) {

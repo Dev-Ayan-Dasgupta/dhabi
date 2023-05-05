@@ -80,7 +80,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       // fullName = await results
       //     ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
       fullName = "$firstName $surname";
-      String? passportNumber =
+      passportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
       // passportNumber = ppMrz!.substring(0, 9);
       // print("passportNumber -> $passportNumber");
@@ -88,6 +88,12 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
       nationalityCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
+      String? issuingState = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_ISSUING_STATE_NAME);
+      log("issuingState -> $issuingState");
+      String? issuingPlace = await results
+          ?.textFieldValueByType(EVisualFieldType.FT_PLACE_OF_ISSUE);
+      log("issuingPlace -> $issuingPlace");
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
       dob = await results
