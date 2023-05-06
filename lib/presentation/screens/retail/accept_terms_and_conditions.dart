@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
+import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
@@ -230,15 +231,17 @@ class _AcceptTermsAndConditionsScreenState
                                 }
                               }
 
+                              var responseAccount =
+                                  await MapCreateAccount.mapCreateAccount(
+                                      {"accountType": accountType}, token);
+                              log("Create Account API response -> $responseAccount");
+
                               // TODO: Use Navigator.pushNamedAndRemoveUntil
                               if (context.mounted) {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pushNamed(
+                                Navigator.pushNamedAndRemoveUntil(
                                   context,
                                   Routes.retailDashboard,
+                                  (route) => false,
                                   arguments: RetailDashboardArgumentModel(
                                     imgUrl:
                                         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",

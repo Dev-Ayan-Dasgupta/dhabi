@@ -9,6 +9,13 @@ class AllConfig {
 }
 
 class EnvConfig implements BaseConfig {
+  // ? Accounts APIs
+
+  @override
+  String get createAccount {
+    return dotenv.env['CREATE_ACCOUNT'] ?? "";
+  }
+
   // ? Authentication APIs
 
   @override

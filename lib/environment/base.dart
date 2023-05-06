@@ -1,6 +1,10 @@
 abstract class BaseConfig {
   // ? Authentication APIs
 
+  String get createAccount;
+
+  // ? Authentication APIs
+
   String get login;
   String get addNewDevice;
 

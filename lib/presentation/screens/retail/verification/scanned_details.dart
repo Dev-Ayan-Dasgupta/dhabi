@@ -8,7 +8,9 @@ import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -212,84 +214,108 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
-    }
 
-    log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
-    log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
+      bool result = await MapIfEidExists.mapIfEidExists(
+          {"passportNumber": eiDNumber}, token);
+      log("If Passport Exists API response -> $result");
 
-    // ? Check for expired
-    if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
-                DateFormat('dd MMMM yyyy')
-                    .parse(expiryDate ?? "1 January 1900")))
-            .difference(DateTime.now())
-            .inDays <
-        0) {
-      if (context.mounted) {
-        Navigator.pushNamed(
-          context,
-          Routes.errorSuccessScreen,
-          arguments: ErrorArgumentModel(
-            hasSecondaryButton: false,
-            iconPath: ImageConstants.errorOutlined,
-            title: messages[81]["messageText"],
-            message: messages[29]["messageText"],
-            buttonText: labels[1]["labelText"],
-            onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, Routes.registration, (route) => false);
-            },
-            buttonTextSecondary: "",
-            onTapSecondary: () {},
-          ).toMap(),
-        );
+      log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
+      log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
+
+      // ? Check for expired
+      if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
+                  DateFormat('dd MMMM yyyy')
+                      .parse(expiryDate ?? "1 January 1900")))
+              .difference(DateTime.now())
+              .inDays <
+          0) {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.errorSuccessScreen,
+            arguments: ErrorArgumentModel(
+              hasSecondaryButton: false,
+              iconPath: ImageConstants.errorOutlined,
+              title: messages[81]["messageText"],
+              message: messages[29]["messageText"],
+              buttonText: labels[1]["labelText"],
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.registration, (route) => false);
+              },
+              buttonTextSecondary: "",
+              onTapSecondary: () {},
+            ).toMap(),
+          );
+        }
       }
-    }
 
-    // ? Check for age
-    else if (DateTime.now()
-            .difference(DateTime.parse(DateFormat('yyyy-MM-dd')
-                .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000"))))
-            .inDays <
-        ((18 * 365) + 4)) {
-      if (context.mounted) {
-        Navigator.pushNamed(
-          context,
-          Routes.errorSuccessScreen,
-          arguments: ErrorArgumentModel(
-            hasSecondaryButton: false,
-            iconPath: ImageConstants.errorOutlined,
-            title: messages[80]["messageText"],
-            message: messages[33]["messageText"],
-            buttonText: labels[1]["labelText"],
-            onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                  context, Routes.registration, (route) => false);
-            },
-            buttonTextSecondary: "",
-            onTapSecondary: () {},
-          ).toMap(),
-        );
+      // ? Check for age
+      else if (DateTime.now()
+              .difference(DateTime.parse(DateFormat('yyyy-MM-dd')
+                  .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000"))))
+              .inDays <
+          ((18 * 365) + 4)) {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.errorSuccessScreen,
+            arguments: ErrorArgumentModel(
+              hasSecondaryButton: false,
+              iconPath: ImageConstants.errorOutlined,
+              title: messages[80]["messageText"],
+              message: messages[33]["messageText"],
+              buttonText: labels[1]["labelText"],
+              onTap: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.registration, (route) => false);
+              },
+              buttonTextSecondary: "",
+              onTapSecondary: () {},
+            ).toMap(),
+          );
+        }
       }
-    } else {
-      if (context.mounted) {
-        Navigator.pushNamed(
-          context,
-          Routes.scannedDetails,
-          arguments: ScannedDetailsArgumentModel(
-            isEID: true,
-            fullName: fullName,
-            idNumber: eiDNumber,
-            nationality: nationality,
-            nationalityCode: nationalityCode,
-            expiryDate: expiryDate,
-            dob: dob,
-            gender: gender,
-            photo: photo,
-            docPhoto: docPhoto,
-            img1: img1,
-            image1: image1,
-          ).toMap(),
-        );
+
+      // ? Check for previous existence
+      else if (result) {
+        if (context.mounted) {
+          Navigator.pushNamed(context, Routes.errorSuccessScreen,
+              arguments: ErrorArgumentModel(
+                hasSecondaryButton: false,
+                iconPath: ImageConstants.warningRed,
+                title: messages[76]["messageText"],
+                message: messages[23]["messageText"],
+                buttonText: labels[205]["labelText"],
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.loginUserId, (route) => false);
+                },
+                buttonTextSecondary: "",
+                onTapSecondary: () {},
+              ).toMap());
+        }
+      } else {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.scannedDetails,
+            arguments: ScannedDetailsArgumentModel(
+              isEID: true,
+              fullName: fullName,
+              idNumber: eiDNumber,
+              nationality: nationality,
+              nationalityCode: nationalityCode,
+              expiryDate: expiryDate,
+              dob: dob,
+              gender: gender,
+              photo: photo,
+              docPhoto: docPhoto,
+              img1: img1,
+              image1: image1,
+            ).toMap(),
+          );
+        }
       }
     }
 
@@ -361,6 +387,10 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
+      bool result = await MapIfPassportExists.mapIfPassportExists(
+          {"passportNumber": passportNumber}, token);
+      log("If Passport Exists API response -> $result");
+
       log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
       log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
 
@@ -416,6 +446,26 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               onTapSecondary: () {},
             ).toMap(),
           );
+        }
+      }
+
+      // ? Check for previous existence
+      else if (result) {
+        if (context.mounted) {
+          Navigator.pushNamed(context, Routes.errorSuccessScreen,
+              arguments: ErrorArgumentModel(
+                hasSecondaryButton: false,
+                iconPath: ImageConstants.warningRed,
+                title: messages[76]["messageText"],
+                message: messages[21]["messageText"],
+                buttonText: labels[205]["labelText"],
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.loginUserId, (route) => false);
+                },
+                buttonTextSecondary: "",
+                onTapSecondary: () {},
+              ).toMap());
         }
       } else {
         if (context.mounted) {

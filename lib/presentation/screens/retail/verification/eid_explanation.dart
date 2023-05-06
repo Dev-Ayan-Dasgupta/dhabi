@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +73,10 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
+      bool result = await MapIfEidExists.mapIfEidExists(
+          {"passportNumber": eiDNumber}, token);
+      log("If Passport Exists API response -> $result");
+
       log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
       log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
 
@@ -126,6 +132,26 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
               onTapSecondary: () {},
             ).toMap(),
           );
+        }
+      }
+
+      // ? Check for previous existence
+      else if (result) {
+        if (context.mounted) {
+          Navigator.pushNamed(context, Routes.errorSuccessScreen,
+              arguments: ErrorArgumentModel(
+                hasSecondaryButton: false,
+                iconPath: ImageConstants.warningRed,
+                title: messages[76]["messageText"],
+                message: messages[23]["messageText"],
+                buttonText: labels[205]["labelText"],
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.loginUserId, (route) => false);
+                },
+                buttonTextSecondary: "",
+                onTapSecondary: () {},
+              ).toMap());
         }
       } else {
         if (context.mounted) {

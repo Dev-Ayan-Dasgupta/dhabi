@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/long_to_short_code.dart';
@@ -119,6 +121,10 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
       log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
 
+      bool result = await MapIfPassportExists.mapIfPassportExists(
+          {"passportNumber": passportNumber}, token);
+      log("If Passport Exists API response -> $result");
+
       // ? Check for expired
       if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
                   DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")))
@@ -170,6 +176,26 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               onTapSecondary: () {},
             ).toMap(),
           );
+        }
+      }
+
+      // ? Check for previous existence
+      else if (result) {
+        if (context.mounted) {
+          Navigator.pushNamed(context, Routes.errorSuccessScreen,
+              arguments: ErrorArgumentModel(
+                hasSecondaryButton: false,
+                iconPath: ImageConstants.warningRed,
+                title: messages[76]["messageText"],
+                message: messages[21]["messageText"],
+                buttonText: labels[205]["labelText"],
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.loginUserId, (route) => false);
+                },
+                buttonTextSecondary: "",
+                onTapSecondary: () {},
+              ).toMap());
         }
       } else {
         if (context.mounted) {

@@ -234,46 +234,46 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
             }
           } else {
             // TODO: uncomment this after testing
-            // if (context.mounted) {
-            //   showDialog(
-            //     context: context,
-            //     builder: (context) {
-            //       return CustomDialog(
-            //         svgAssetPath: ImageConstants.warning,
-            //         title: "User already exists",
-            //         message: "Try logging in again.",
-            //         actionWidget: Column(
-            //           children: [
-            //             GradientButton(
-            //               onTap: () {
-            //                 Navigator.pushNamed(
-            //                   context,
-            //                   Routes.loginPassword,
-            //                   arguments: LoginPasswordArgumentModel(
-            //                     userId: createAccountArgumentModel.email,
-            //                   ).toMap(),
-            //                 );
-            //               },
-            //               text: "Login",
-            //             ),
-            //             const SizeBox(height: 20),
-            //           ],
-            //         ),
-            //       );
-            //     },
-            //   );
-            // }
-            // TODO: Comment/remove this after testing
             if (context.mounted) {
-              Navigator.pushReplacementNamed(
-                context,
-                Routes.createPassword,
-                arguments: CreateAccountArgumentModel(
-                  email: createAccountArgumentModel.email,
-                  isRetail: isPersonalFocussed ? true : false,
-                ).toMap(),
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return CustomDialog(
+                    svgAssetPath: ImageConstants.warning,
+                    title: "User already exists",
+                    message: "Try logging in again.",
+                    actionWidget: Column(
+                      children: [
+                        GradientButton(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              Routes.loginPassword,
+                              arguments: LoginPasswordArgumentModel(
+                                userId: createAccountArgumentModel.email,
+                              ).toMap(),
+                            );
+                          },
+                          text: "Login",
+                        ),
+                        const SizeBox(height: 20),
+                      ],
+                    ),
+                  );
+                },
               );
             }
+            // TODO: Comment/remove this after testing
+            // if (context.mounted) {
+            //   Navigator.pushReplacementNamed(
+            //     context,
+            //     Routes.createPassword,
+            //     arguments: CreateAccountArgumentModel(
+            //       email: createAccountArgumentModel.email,
+            //       isRetail: isPersonalFocussed ? true : false,
+            //     ).toMap(),
+            //   );
+            // }
           }
         },
         text: labels[31]["labelText"],

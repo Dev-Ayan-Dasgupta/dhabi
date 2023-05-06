@@ -142,6 +142,13 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
       ),
       onTap: () {
         isCurrentSelected = !isCurrentSelected;
+        accountType = isSavingsSelected
+            ? isCurrentSelected
+                ? 3
+                : 1
+            : isCurrentSelected
+                ? 2
+                : 0;
         multiSelectBloc.add(MultiSelectEvent(isSelected: isCurrentSelected));
         showButtonBloc
             .add(ShowButtonEvent(show: isCurrentSelected && isSavingsSelected));
@@ -176,6 +183,13 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
       ),
       onTap: () {
         isSavingsSelected = !isSavingsSelected;
+        accountType = isCurrentSelected
+            ? isSavingsSelected
+                ? 3
+                : 2
+            : isSavingsSelected
+                ? 1
+                : 0;
         multiSelectBloc.add(MultiSelectEvent(isSelected: isSavingsSelected));
         showButtonBloc
             .add(ShowButtonEvent(show: isCurrentSelected && isSavingsSelected));
