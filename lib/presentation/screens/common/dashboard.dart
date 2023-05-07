@@ -267,6 +267,7 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
   void promptUser() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.checkCircleOutlined,

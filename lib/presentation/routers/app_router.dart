@@ -116,16 +116,16 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const BasicCompanyDetailsScreen(),
         );
-      case Routes.captureFace:
-        return MaterialPageRoute(
-          builder: (_) => const CaptureFaceScreen(),
-        );
-      case Routes.finalImage:
-        return MaterialPageRoute(
-          builder: (_) => FinalFaceImageScreen(
-            argument: args,
-          ),
-        );
+      // case Routes.captureFace:
+      //   return MaterialPageRoute(
+      //     builder: (_) => const CaptureFaceScreen(), // Deprecated
+      //   );
+      // case Routes.finalImage:
+      //   return MaterialPageRoute(
+      //     builder: (_) => FinalFaceImageScreen( // Deprecated
+      //       argument: args,
+      //     ),
+      //   );
       case Routes.retailDashboard:
         return MaterialPageRoute(
           builder: (_) => RetailDashboardScreen(

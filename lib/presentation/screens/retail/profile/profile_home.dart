@@ -150,6 +150,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
   void promptUserContactUs() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.sentimentSatisfied,
@@ -175,6 +176,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
   void promptUserLogout() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,

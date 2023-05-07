@@ -339,6 +339,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   void promptUser() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,

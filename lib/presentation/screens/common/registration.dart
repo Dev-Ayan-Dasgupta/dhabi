@@ -140,6 +140,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void promptUser() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
@@ -211,7 +212,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     if (!_isEmailValid) {
-      return const SizeBox();
+      return SolidButton(onTap: () {}, text: "Proceed");
     } else {
       return GradientButton(
         onTap: () async {

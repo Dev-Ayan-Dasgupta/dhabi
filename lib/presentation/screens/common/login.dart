@@ -249,6 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void promptUser() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,

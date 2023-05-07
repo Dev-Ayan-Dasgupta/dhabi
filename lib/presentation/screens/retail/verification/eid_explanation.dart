@@ -294,6 +294,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
   void promptUser() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,

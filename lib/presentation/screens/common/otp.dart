@@ -258,6 +258,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   if (otpArgumentModel.isBusiness) {
                     showDialog(
                       context: context,
+                      barrierDismissible: false,
                       builder: (context) {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.checkCircleOutlined,
@@ -335,6 +336,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   if (otpArgumentModel.isBusiness) {
                     showDialog(
                       context: context,
+                      barrierDismissible: false,
                       builder: (context) {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.checkCircleOutlined,

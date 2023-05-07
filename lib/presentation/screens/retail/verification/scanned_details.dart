@@ -535,6 +535,13 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     isFaceScanning = false;
     showButtonBloc.add(ShowButtonEvent(show: isFaceScanning));
 
+    // if (context.mounted) {
+    //   Navigator.pushNamed(context, Routes.faceCompare,
+    //       arguments: FaceCompareArgumentModel(
+    //               image1: image1, img1: img1, image2: image2, img2: img2)
+    //           .toMap());
+    // }
+
     if (photoMatchScore > 80) {
       if (context.mounted) {
         Navigator.pushNamed(
@@ -552,6 +559,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       if (context.mounted) {
         showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (context) {
             return CustomDialog(
               svgAssetPath: ImageConstants.warning,
@@ -585,55 +593,6 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         );
       }
     }
-    // if (scannedDetailsArgument.isEID) {
-    //   isUploading = true;
-    //   showButtonBloc.add(ShowButtonEvent(show: isUploading));
-    //   // var response = await MapUploadEid.mapUploadEid(
-    //   //   {
-    //   //     "eidDocumentImage": docPhoto,
-    //   //     "eidUserPhoto": photo,
-    //   //     "selfiePhoto": selfiePhoto,
-    //   //     "photoMatchScore": photoMatchScore,
-    //   //     "eidNumber": eiDNumber,
-    //   //     "fullName": fullName,
-    //   //     "dateOfBirth": DateFormat('yyyy-MM-dd')
-    //   //         .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")),
-    //   //     "nationalityCountryCode": nationalityCode,
-    //   //     "genderId": gender == 'M' ? 1 : 2,
-    //   //     "expiresOn": DateFormat('yyyy-MM-dd').format(
-    //   //         DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")),
-    //   //     "isReKYC": false
-    //   //   },
-    //   //   token,
-    //   // );
-    //   // log("UploadEid API response -> $response");
-    //   isUploading = false;
-    //   showButtonBloc.add(ShowButtonEvent(show: isUploading));
-    // } else {
-    //   isUploading = true;
-    //   showButtonBloc.add(ShowButtonEvent(show: isUploading));
-    //   // var response = await MapUploadPassport.mapUploadPassport(
-    //   //   {
-    //   //     "passportDocumentImage": docPhoto,
-    //   //     "passportUserPhoto": photo,
-    //   //     "selfiePhoto": selfiePhoto,
-    //   //     "photoMatchScore": photoMatchScore,
-    //   //     "passportNumber": passportNumber,
-    //   //     "fullName": fullName,
-    //   //     "dateOfBirth": DateFormat('yyyy-MM-dd')
-    //   //         .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")),
-    //   //     "nationalityCountryCode": nationalityCode,
-    //   //     "genderId": gender == 'M' ? 1 : 2,
-    //   //     "expiresOn": DateFormat('yyyy-MM-dd').format(
-    //   //         DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")),
-    //   //     "isReKYC": false
-    //   //   },
-    //   //   token,
-    //   // );
-    //   // log("UploadPassport API response -> $response");
-    //   isUploading = false;
-    //   showButtonBloc.add(ShowButtonEvent(show: isUploading));
-    // }
   }
 
   matchfaces() async {
@@ -642,7 +601,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     var value = await regula.FaceSDK.matchFaces(jsonEncode(request));
     var response = regula.MatchFacesResponse.fromJson(json.decode(value));
     var str = await regula.FaceSDK.matchFacesSimilarityThresholdSplit(
-        jsonEncode(response!.results), 0.8);
+        jsonEncode(response!.results), 0.75);
     regula.MatchFacesSimilarityThresholdSplit? split =
         regula.MatchFacesSimilarityThresholdSplit.fromJson(json.decode(str));
 
@@ -824,7 +783,19 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         ],
       );
     } else {
-      return const SizeBox();
+      return Column(
+        children: [
+          SolidButton(onTap: () {}, text: labels[246]["labelText"]),
+          const SizeBox(height: 15),
+          SolidButton(
+            onTap: () {},
+            text: scannedDetailsArgument.isEID
+                ? labels[247]["labelText"]
+                : labels[260]["labelText"],
+          ),
+          const SizeBox(height: PaddingConstants.bottomPadding),
+        ],
+      );
     }
   }
 }

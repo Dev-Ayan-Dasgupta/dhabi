@@ -237,6 +237,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
             if (context.mounted) {
               showDialog(
                 context: context,
+                barrierDismissible: false,
                 builder: (context) {
                   return CustomDialog(
                     svgAssetPath: ImageConstants.warning,

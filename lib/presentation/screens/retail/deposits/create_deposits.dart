@@ -325,6 +325,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
   void promptUser() {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return Padding(
           padding: EdgeInsets.only(

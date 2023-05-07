@@ -92,6 +92,7 @@ class _BusinessDepositDetailsScreenState
                   fontColor: AppColors.primary,
                   onTap: () {
                     showDialog(
+                      barrierDismissible: false,
                       context: context,
                       builder: (context) {
                         final ShowButtonBloc showButtonBloc =
