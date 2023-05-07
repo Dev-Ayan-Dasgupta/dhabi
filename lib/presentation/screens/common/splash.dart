@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
       dhabiCountryNames.add(country["countryName"]);
       countryLongCodes.add(country["longCode"]);
     }
-    log("dhabiCountryNames -> $dhabiCountryNames");
+    // log("dhabiCountryNames -> $dhabiCountryNames");
   }
 
   void populateDD(List dropdownList, int dropdownIndex) {
@@ -100,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> {
     for (Map<String, dynamic> emirate in uaeDetails) {
       emirates.add(emirate["city_Name"]);
     }
-    log("Emirates -> $emirates");
+    // log("Emirates -> $emirates");
   }
 
   void getPolicies() async {
@@ -108,8 +108,8 @@ class _SplashScreenState extends State<SplashScreen> {
         {"languageCode": "en"});
     statement =
         await MapPrivacyStatement.mapPrivacyStatement({"languageCode": "en"});
-    log("Terms -> $terms");
-    log("statement -> $statement");
+    // log("Terms -> $terms");
+    // log("statement -> $statement");
   }
 
   Future<void> getDeviceId() async {

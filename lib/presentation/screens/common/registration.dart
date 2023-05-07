@@ -42,95 +42,97 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal:
-                (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      labels[211]["labelText"],
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 22),
-                    Text(
-                      labels[212]["labelText"],
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.grey40,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 30),
-                    Row(
-                      children: [
-                        Text(
-                          labels[39]["labelText"],
-                          style: TextStyles.primaryMedium.copyWith(
-                            color: const Color(0xFF636363),
-                            fontSize: (16 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                        const Asterisk(),
-                      ],
-                    ),
-                    const SizeBox(height: 9),
-                    CustomTextField(
-                      controller: _emailController,
-                      suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                        builder: buildCheckCircle,
-                      ),
-                      onChanged: emailValidation,
-                    ),
-                    const SizeBox(height: 9),
-                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                      builder: buildErrorMessage,
-                    ),
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: buildSubmitButton,
-                  ),
-                  const SizeBox(height: 15),
-                  InkWell(
-                    onTap: () {
-                      // TODO: Add biometricPrompt
-                      Navigator.pushNamed(context, Routes.loginUserId);
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: '${labels[213]["labelText"]} ',
-                        style: TextStyles.primary.copyWith(
+        body: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        labels[211]["labelText"],
+                        style: TextStyles.primaryBold.copyWith(
                           color: AppColors.primary,
+                          fontSize: (28 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const SizeBox(height: 22),
+                      Text(
+                        labels[212]["labelText"],
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.grey40,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Log in',
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.primary,
+                      ),
+                      const SizeBox(height: 30),
+                      Row(
+                        children: [
+                          Text(
+                            labels[39]["labelText"],
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: const Color(0xFF636363),
                               fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
                             ),
                           ),
+                          const Asterisk(),
                         ],
                       ),
-                    ),
+                      const SizeBox(height: 9),
+                      CustomTextField(
+                        controller: _emailController,
+                        suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                          builder: buildCheckCircle,
+                        ),
+                        onChanged: emailValidation,
+                      ),
+                      const SizeBox(height: 9),
+                      BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                        builder: buildErrorMessage,
+                      ),
+                    ],
                   ),
-                  const SizeBox(height: PaddingConstants.bottomPadding),
-                ],
-              ),
-            ],
+                ),
+                Column(
+                  children: [
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: buildSubmitButton,
+                    ),
+                    const SizeBox(height: 15),
+                    InkWell(
+                      onTap: () {
+                        // TODO: Add biometricPrompt
+                        Navigator.pushNamed(context, Routes.loginUserId);
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: '${labels[213]["labelText"]} ',
+                          style: TextStyles.primary.copyWith(
+                            color: AppColors.primary,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Log in',
+                              style: TextStyles.primaryBold.copyWith(
+                                color: AppColors.primary,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizeBox(height: PaddingConstants.bottomPadding),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
