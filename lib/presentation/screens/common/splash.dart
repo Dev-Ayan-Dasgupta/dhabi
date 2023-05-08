@@ -30,8 +30,6 @@ String deviceName = "";
 String deviceType = "";
 String appVersion = "";
 
-String token = "";
-
 List dhabiCountries = [];
 
 List uaeDetails = [];

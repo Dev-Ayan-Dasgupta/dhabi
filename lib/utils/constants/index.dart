@@ -10,3 +10,4 @@ export './verification.dart';
 export './padding.dart';
 export './legal.dart';
 export './accounts.dart';
+export './token.dart';

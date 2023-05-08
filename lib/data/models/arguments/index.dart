@@ -11,3 +11,4 @@ export './scanned_details.dart';
 export './face_compare.dart';
 export './tax_crs.dart';
 export './login_password.dart';
+export './registration.dart';

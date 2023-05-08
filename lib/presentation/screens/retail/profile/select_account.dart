@@ -29,7 +29,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Select an Account",
+              "Select an entity",
               style: TextStyles.primaryBold.copyWith(
                 color: AppColors.primary,
                 fontSize: (28 / Dimensions.designWidth).w,
@@ -37,7 +37,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
             ),
             const SizeBox(height: 20),
             Text(
-              "Please select from the company account you wish to reset the password",
+              "Please select the entity you want to login to",
               style: TextStyles.primaryMedium.copyWith(
                 color: AppColors.grey40,
                 fontSize: (16 / Dimensions.designWidth).w,
@@ -52,8 +52,9 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                     children: [
                       SolidButton(
                         onTap: () {
-                          Navigator.pushNamed(
-                              context, Routes.businessDashboard);
+                          // Navigator.pushNamed(
+                          //     context, Routes.businessDashboard);
+                          Navigator.pushNamed(context, Routes.setPassword);
                         },
                         text: "Company ${index + 1}",
                         color: Colors.white,

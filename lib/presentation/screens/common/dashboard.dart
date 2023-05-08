@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
@@ -45,7 +46,13 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
               fontSize: (16 / Dimensions.designWidth).w,
               borderRadius: (5 / Dimensions.designWidth).w,
               onTap: () {
-                Navigator.pushNamed(context, Routes.registration);
+                Navigator.pushNamed(
+                  context,
+                  Routes.registration,
+                  arguments: RegistrationArgumentModel(
+                    isInitial: true,
+                  ).toMap(),
+                );
               },
               text: "Register",
             ),
@@ -280,7 +287,13 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                   // Navigator.pop(context);
                   // Navigator.pop(context);
                   Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.registration, (route) => false);
+                    context,
+                    Routes.registration,
+                    (route) => false,
+                    arguments: RegistrationArgumentModel(
+                      isInitial: true,
+                    ).toMap(),
+                  );
                 },
                 text: "Register Now",
               ),

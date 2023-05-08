@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -73,16 +72,16 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
-      bool result = await MapIfEidExists.mapIfEidExists(
-          {"passportNumber": eiDNumber}, token);
-      log("If Passport Exists API response -> $result");
+      bool result =
+          await MapIfEidExists.mapIfEidExists({"eidNumber": eiDNumber}, token);
+      log("If EID Exists API response -> $result");
 
       log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
       log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
 
       // ? Check for expired
       if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
-                  DateFormat('dd MMMM yyyy')
+                  DateFormat('dd/MM/yyyy')
                       .parse(expiryDate ?? "1 January 1900")))
               .difference(DateTime.now())
               .inDays <
@@ -99,7 +98,16 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
               buttonText: labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.registration, (route) => false);
+                  context,
+                  Routes.retailOnboardingStatus,
+                  (route) => false,
+                  arguments: OnboardingStatusArgumentModel(
+                    stepsCompleted: 1,
+                    isFatca: false,
+                    isPassport: false,
+                    isRetail: true,
+                  ).toMap(),
+                );
               },
               buttonTextSecondary: "",
               onTapSecondary: () {},
@@ -126,7 +134,16 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
               buttonText: labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.registration, (route) => false);
+                  context,
+                  Routes.retailOnboardingStatus,
+                  (route) => false,
+                  arguments: OnboardingStatusArgumentModel(
+                    stepsCompleted: 1,
+                    isFatca: false,
+                    isPassport: false,
+                    isRetail: true,
+                  ).toMap(),
+                );
               },
               buttonTextSecondary: "",
               onTapSecondary: () {},
@@ -147,7 +164,16 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                 buttonText: labels[205]["labelText"],
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.loginUserId, (route) => false);
+                    context,
+                    Routes.retailOnboardingStatus,
+                    (route) => false,
+                    arguments: OnboardingStatusArgumentModel(
+                      stepsCompleted: 1,
+                      isFatca: false,
+                      isPassport: false,
+                      isRetail: true,
+                    ).toMap(),
+                  );
                 },
                 buttonTextSecondary: "",
                 onTapSecondary: () {},
@@ -191,7 +217,16 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
             buttonText: labels[1]["labelText"],
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, Routes.registration, (route) => false);
+                context,
+                Routes.retailOnboardingStatus,
+                (route) => false,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 1,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
+              );
             },
             buttonTextSecondary: "",
             onTapSecondary: () {},

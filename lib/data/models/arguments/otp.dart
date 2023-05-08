@@ -6,10 +6,12 @@ class OTPArgumentModel {
   final String emailOrPhone;
   final bool isEmail;
   final bool isBusiness;
+  final bool isInitial;
   OTPArgumentModel({
     required this.emailOrPhone,
     required this.isEmail,
     required this.isBusiness,
+    required this.isInitial,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +19,7 @@ class OTPArgumentModel {
       'emailOrPhone': emailOrPhone,
       'isEmail': isEmail,
       'isBusiness': isBusiness,
+      'isInitial': isInitial,
     };
   }
 
@@ -25,6 +28,7 @@ class OTPArgumentModel {
       emailOrPhone: map['emailOrPhone'] as String,
       isEmail: map['isEmail'] as bool,
       isBusiness: map['isBusiness'] as bool,
+      isInitial: map['isInitial'] as bool,
     );
   }
 
@@ -37,17 +41,20 @@ class OTPArgumentModel {
     String? emailOrPhone,
     bool? isEmail,
     bool? isBusiness,
+    bool? isInitial,
   }) {
     return OTPArgumentModel(
       emailOrPhone: emailOrPhone ?? this.emailOrPhone,
       isEmail: isEmail ?? this.isEmail,
       isBusiness: isBusiness ?? this.isBusiness,
+      isInitial: isInitial ?? this.isInitial,
     );
   }
 
   @override
-  String toString() =>
-      'OTPArgumentModel(emailOrPhone: $emailOrPhone, isEmail: $isEmail, isBusiness: $isBusiness)';
+  String toString() {
+    return 'OTPArgumentModel(emailOrPhone: $emailOrPhone, isEmail: $isEmail, isBusiness: $isBusiness, isInitial: $isInitial)';
+  }
 
   @override
   bool operator ==(covariant OTPArgumentModel other) {
@@ -55,10 +62,15 @@ class OTPArgumentModel {
 
     return other.emailOrPhone == emailOrPhone &&
         other.isEmail == isEmail &&
-        other.isBusiness == isBusiness;
+        other.isBusiness == isBusiness &&
+        other.isInitial == isInitial;
   }
 
   @override
-  int get hashCode =>
-      emailOrPhone.hashCode ^ isEmail.hashCode ^ isBusiness.hashCode;
+  int get hashCode {
+    return emailOrPhone.hashCode ^
+        isEmail.hashCode ^
+        isBusiness.hashCode ^
+        isInitial.hashCode;
+  }
 }

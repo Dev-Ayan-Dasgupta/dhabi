@@ -11,9 +11,10 @@ import 'package:dialup_mobile_app/bloc/otp/timer/timer_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
+import 'package:dialup_mobile_app/data/repositories/accounts/map_customer_details.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/obscure.dart';
@@ -225,78 +226,168 @@ class _OTPScreenState extends State<OTPScreen> {
       onChanged: (p0) async {
         if (_pinController.text.length == 6) {
           if (otpArgumentModel.isEmail) {
-            var result = await MapVerifyEmailOtp.mapVerifyEmailOtp(
-              {
-                "emailId": otpArgumentModel.emailOrPhone,
-                "otp": _pinController.text,
-              },
-            );
-            log("Verify Email OTP Response -> $result");
-
-            if (result["success"] == true) {
-              pinputErrorBloc.add(
-                PinputErrorEvent(
-                  isError: false,
-                  isComplete: true,
-                  errorCount: pinputErrorCount,
-                ),
+            if (otpArgumentModel.isInitial) {
+              var result = await MapVerifyEmailOtp.mapVerifyEmailOtp(
+                {
+                  "emailId": otpArgumentModel.emailOrPhone,
+                  "otp": _pinController.text,
+                },
               );
+              log("Verify Email OTP Response -> $result");
 
-              await Future.delayed(const Duration(milliseconds: 250));
-              if (context.mounted) {
-                if (otpArgumentModel.isEmail) {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(
-                    context,
-                    Routes.selectAccountType,
-                    arguments: CreateAccountArgumentModel(
-                      email: otpArgumentModel.emailOrPhone,
-                      isRetail: true,
-                    ).toMap(),
-                  );
-                } else {
-                  if (otpArgumentModel.isBusiness) {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) {
-                        return CustomDialog(
-                          svgAssetPath: ImageConstants.checkCircleOutlined,
-                          title: "Verified",
-                          message:
-                              "Your phone number has been verified.\nYou will receive email on the next steps.",
-                          actionWidget: Column(
-                            children: [
-                              GradientButton(
-                                onTap: () {},
-                                text: labels[31]["labelText"],
-                              ),
-                              const SizeBox(height: 20),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    Navigator.pushNamed(
+              if (result["success"] == true) {
+                pinputErrorBloc.add(
+                  PinputErrorEvent(
+                    isError: false,
+                    isComplete: true,
+                    errorCount: pinputErrorCount,
+                  ),
+                );
+
+                await Future.delayed(const Duration(milliseconds: 250));
+                if (context.mounted) {
+                  if (otpArgumentModel.isEmail) {
+                    Navigator.pop(context);
+                    Navigator.pushReplacementNamed(
                       context,
-                      Routes.retailOnboardingStatus,
-                      arguments: OnboardingStatusArgumentModel(
-                        stepsCompleted: 4,
-                        isFatca: false,
-                        isPassport: false,
-                        isRetail: !otpArgumentModel.isBusiness,
+                      Routes.selectAccountType,
+                      arguments: CreateAccountArgumentModel(
+                        email: otpArgumentModel.emailOrPhone,
+                        isRetail: true,
                       ).toMap(),
                     );
+                  } else {
+                    if (otpArgumentModel.isBusiness) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.checkCircleOutlined,
+                            title: "Verified",
+                            message:
+                                "Your phone number has been verified.\nYou will receive email on the next steps.",
+                            actionWidget: Column(
+                              children: [
+                                GradientButton(
+                                  onTap: () {},
+                                  text: labels[31]["labelText"],
+                                ),
+                                const SizeBox(height: 20),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.retailOnboardingStatus,
+                        arguments: OnboardingStatusArgumentModel(
+                          stepsCompleted: 4,
+                          isFatca: false,
+                          isPassport: false,
+                          isRetail: !otpArgumentModel.isBusiness,
+                        ).toMap(),
+                      );
+                    }
                   }
                 }
+              } else {
+                pinputErrorCount++;
+                pinputErrorBloc.add(PinputErrorEvent(
+                    isError: true,
+                    isComplete: true,
+                    errorCount: pinputErrorCount));
               }
             } else {
-              pinputErrorCount++;
-              pinputErrorBloc.add(PinputErrorEvent(
-                  isError: true,
-                  isComplete: true,
-                  errorCount: pinputErrorCount));
+              var result = await MapValidateEmailOtpForPassword
+                  .mapValidateEmailOtpForPassword(
+                {
+                  "emailId": otpArgumentModel.emailOrPhone,
+                  "otp": _pinController.text,
+                },
+              );
+              log("Verify Email OTP For Password Response -> $result");
+              tokenCP = result["token"];
+              log("tokenCP -> $tokenCP");
+
+              var getCustomerDetailsResponse =
+                  await MapCustomerDetails.mapCustomerDetails(tokenCP);
+              log("Get Customer Details API response -> $getCustomerDetailsResponse");
+              cif = getCustomerDetailsResponse["cIFDetails"][0]["cif"];
+
+              if (result["success"] == true) {
+                pinputErrorBloc.add(
+                  PinputErrorEvent(
+                    isError: false,
+                    isComplete: true,
+                    errorCount: pinputErrorCount,
+                  ),
+                );
+
+                await Future.delayed(const Duration(milliseconds: 250));
+                if (context.mounted) {
+                  if (otpArgumentModel.isEmail) {
+                    Navigator.pop(context);
+                    // TODO: Check for new device
+
+                    // TODO: if not new device, got to select entity screen
+                    Navigator.pushReplacementNamed(
+                      context,
+                      Routes.selectAccount,
+                      // arguments: CreateAccountArgumentModel(
+                      //   email: otpArgumentModel.emailOrPhone,
+                      //   isRetail: true,
+                      // ).toMap(),
+                    );
+                  } else {
+                    if (otpArgumentModel.isBusiness) {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.checkCircleOutlined,
+                            title: "Verified",
+                            message:
+                                "Your phone number has been verified.\nYou will receive email on the next steps.",
+                            actionWidget: Column(
+                              children: [
+                                GradientButton(
+                                  onTap: () {},
+                                  text: labels[31]["labelText"],
+                                ),
+                                const SizeBox(height: 20),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    } else {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.retailOnboardingStatus,
+                        arguments: OnboardingStatusArgumentModel(
+                          stepsCompleted: 4,
+                          isFatca: false,
+                          isPassport: false,
+                          isRetail: !otpArgumentModel.isBusiness,
+                        ).toMap(),
+                      );
+                    }
+                  }
+                }
+              } else {
+                pinputErrorCount++;
+                pinputErrorBloc.add(
+                  PinputErrorEvent(
+                    isError: true,
+                    isComplete: true,
+                    errorCount: pinputErrorCount,
+                  ),
+                );
+              }
             }
           } else {
             log("Phone no. -> ${otpArgumentModel.emailOrPhone}");

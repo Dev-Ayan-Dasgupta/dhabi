@@ -16,6 +16,11 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['CREATE_ACCOUNT'] ?? "";
   }
 
+  @override
+  String get getCustomerDetails {
+    return dotenv.env['GET_CUSTOMER_DETAILS'] ?? "";
+  }
+
   // ? Authentication APIs
 
   @override
@@ -26,6 +31,16 @@ class EnvConfig implements BaseConfig {
   @override
   String get addNewDevice {
     return dotenv.env['ADD_NEW_DEVICE'] ?? "";
+  }
+
+  @override
+  String get validateEmailOtpForPassword {
+    return dotenv.env['VALIDATE_EMAIL_OTP_FOR_PASSWORD'] ?? "";
+  }
+
+  @override
+  String get changePassword {
+    return dotenv.env['CHANGE_PASSWORD'] ?? "";
   }
 
   // ? Configuration APIs

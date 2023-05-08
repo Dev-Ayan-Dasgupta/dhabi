@@ -2,11 +2,14 @@ abstract class BaseConfig {
   // ? Authentication APIs
 
   String get createAccount;
+  String get getCustomerDetails;
 
   // ? Authentication APIs
 
   String get login;
   String get addNewDevice;
+  String get validateEmailOtpForPassword;
+  String get changePassword;
 
   // ? Configuration APIs
 

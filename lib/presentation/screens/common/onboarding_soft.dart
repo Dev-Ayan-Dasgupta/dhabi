@@ -96,7 +96,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
               Positioned(
-                top: kToolbarHeight + (20 / Dimensions.designHeight).h,
+                top: MediaQuery.of(context).padding.top +
+                    (10 / Dimensions.designWidth).w,
                 child: SizedBox(
                   width: 100.w,
                   child: Padding(
@@ -177,7 +178,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           condition: onboardingArgumentModel.isInitial,
                           truthy: GradientButton(
                             onTap: () {
-                              Navigator.pushNamed(context, Routes.registration);
+                              Navigator.pushNamed(
+                                context,
+                                Routes.registration,
+                                arguments: RegistrationArgumentModel(
+                                  isInitial: true,
+                                ).toMap(),
+                              );
                             },
                             text: labels[207]["labelText"],
                           ),
@@ -191,8 +198,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
                             onTap: () {
-                              Navigator.pushNamed(
-                                  context, Routes.exploreDashboard);
+                              // Navigator.pushNamed(
+                              //     context, Routes.exploreDashboard);
+                              Navigator.pushNamed(context, Routes.setPassword);
                               // Navigator.pushNamed(
                               //   context,
                               //   Routes.applicationAccount,
@@ -205,14 +213,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                           falsy: SolidButton(
                             onTap: () {
-                              Navigator.pushNamed(context, Routes.registration);
+                              Navigator.pushNamed(
+                                context,
+                                Routes.registration,
+                                arguments: RegistrationArgumentModel(
+                                  isInitial: true,
+                                ).toMap(),
+                              );
                             },
                             text: "Register",
                             color: const Color.fromRGBO(85, 85, 85, 0.2),
                             fontColor: Colors.white,
                           ),
                         ),
-                        const SizeBox(height: PaddingConstants.bottomPadding),
+                        SizeBox(
+                            height: PaddingConstants.bottomPadding +
+                                MediaQuery.of(context).padding.bottom),
                       ],
                     ),
                   ),

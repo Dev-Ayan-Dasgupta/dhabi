@@ -38,7 +38,9 @@ class AppRouter {
         );
       case Routes.registration:
         return MaterialPageRoute(
-          builder: (_) => const RegistrationScreen(),
+          builder: (_) => RegistrationScreen(
+            arguments: args,
+          ),
         );
       case Routes.login:
         return MaterialPageRoute(
@@ -334,6 +336,10 @@ class AppRouter {
       case Routes.privacyStatement:
         return MaterialPageRoute(
           builder: (_) => const PrivacyStatementScreen(),
+        );
+      case Routes.setPassword:
+        return MaterialPageRoute(
+          builder: (_) => const SetPasswordScreen(),
         );
       case Routes.dormant:
         return MaterialPageRoute(

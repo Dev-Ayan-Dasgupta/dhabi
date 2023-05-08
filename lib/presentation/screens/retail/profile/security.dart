@@ -80,7 +80,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Change Password",
+                  labels[45]["labelText"],
                   style: TextStyles.primary.copyWith(
                     color: const Color(0XFF1A3C40),
                     fontSize: (16 / Dimensions.designWidth).w,

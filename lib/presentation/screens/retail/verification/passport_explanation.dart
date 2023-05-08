@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/long_to_short_code.dart';
@@ -42,35 +41,6 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           ),
         );
   }
-
-  // Future<void> initPlatformState() async {
-  //   await DocumentReader.prepareDatabase("Full");
-  //   ByteData byteData = await rootBundle.load("assets/regula.license");
-  //   await DocumentReader.initializeReader({
-  //     "license": base64.encode(byteData.buffer
-  //         .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes)),
-  //     "delayedNNLoad": true
-  //   });
-  //   DocumentReader.setConfig({
-  //     "functionality": {
-  //       "showCaptureButton": true,
-  //       "showCaptureButtonDelayFromStart": 2,
-  //       "showCaptureButtonDelayFromDetect": 1,
-  //       "showCloseButton": true,
-  //       "showTorchButton": true,
-  //     },
-  //     "customization": {
-  //       "status": "Searching for document",
-  //       "showBackgroundMask": true,
-  //       "backgroundMaskAlpha": 0.6,
-  //     },
-  //     "processParams": {
-  //       "dateFormat": "dd/MM/yyyy",
-  //       "scenario": "MrzOrOcr",
-  //       "multipageProcessing": true
-  //     }
-  //   });
-  // }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
     // TODO: Remove Timeout condition for this screen
@@ -143,7 +113,16 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               buttonText: labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.registration, (route) => false);
+                  context,
+                  Routes.retailOnboardingStatus,
+                  (route) => false,
+                  arguments: OnboardingStatusArgumentModel(
+                    stepsCompleted: 1,
+                    isFatca: false,
+                    isPassport: false,
+                    isRetail: true,
+                  ).toMap(),
+                );
               },
               buttonTextSecondary: "",
               onTapSecondary: () {},
@@ -170,7 +149,16 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               buttonText: labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
-                    context, Routes.registration, (route) => false);
+                  context,
+                  Routes.retailOnboardingStatus,
+                  (route) => false,
+                  arguments: OnboardingStatusArgumentModel(
+                    stepsCompleted: 1,
+                    isFatca: false,
+                    isPassport: false,
+                    isRetail: true,
+                  ).toMap(),
+                );
               },
               buttonTextSecondary: "",
               onTapSecondary: () {},
@@ -191,7 +179,16 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                 buttonText: labels[205]["labelText"],
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.loginUserId, (route) => false);
+                    context,
+                    Routes.loginUserId,
+                    (route) => false,
+                    arguments: OnboardingStatusArgumentModel(
+                      stepsCompleted: 1,
+                      isFatca: false,
+                      isPassport: false,
+                      isRetail: true,
+                    ).toMap(),
+                  );
                 },
                 buttonTextSecondary: "",
                 onTapSecondary: () {},
@@ -235,7 +232,16 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             buttonText: labels[1]["labelText"],
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
-                  context, Routes.registration, (route) => false);
+                context,
+                Routes.retailOnboardingStatus,
+                (route) => false,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 1,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
+              );
             },
             buttonTextSecondary: "",
             onTapSecondary: () {},

@@ -69,6 +69,7 @@ class Routes {
   static const String finalImage = 'final-image';
   static const String termsAndConditions = 'terms-and-conditions';
   static const String privacyStatement = 'privacy-statement';
+  static const String setPassword = 'set-password';
 
   static const String faceCompare = 'face-compare';
 }

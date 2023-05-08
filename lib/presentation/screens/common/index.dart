@@ -15,3 +15,4 @@ export './login_userid.dart';
 export './login_password.dart';
 export './terms_and_conditions.dart';
 export './privacy_statement.dart';
+export './set_password.dart';
