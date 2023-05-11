@@ -51,8 +51,13 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // systemOverlayStyle: const SystemUiOverlayStyle(
+        //   statusBarColor: Colors.white,
+        //   statusBarIconBrightness: Brightness.dark,
+        //   statusBarBrightness: Brightness.light,
+        // ),
         leading: const AppBarLeading(),
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: Padding(
@@ -107,7 +112,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                     },
                     child: RichText(
                       text: TextSpan(
-                        text: 'Already have an Account? ',
+                        text: labels[213]["labelText"],
                         style: TextStyles.primary.copyWith(
                           color: AppColors.primary,
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -125,7 +130,10 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                       ),
                     ),
                   ),
-                  const SizeBox(height: PaddingConstants.bottomPadding),
+                  SizeBox(
+                    height: PaddingConstants.bottomPadding +
+                        MediaQuery.of(context).padding.bottom,
+                  ),
                 ],
               ),
             ),
@@ -234,54 +242,54 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
             }
           } else {
             // TODO: uncomment this after testing
-            // if (context.mounted) {
-            //   showDialog(
-            //     context: context,
-            //     barrierDismissible: false,
-            //     builder: (context) {
-            //       return CustomDialog(
-            //         svgAssetPath: ImageConstants.warning,
-            //         title: "User already exists",
-            //         message: "Try logging in again.",
-            //         actionWidget: Column(
-            //           children: [
-            //             GradientButton(
-            //               onTap: () {
-            //                 Navigator.pushNamed(
-            //                   context,
-            //                   Routes.loginPassword,
-            //                   arguments: LoginPasswordArgumentModel(
-            //                     userId: createAccountArgumentModel.email,
-            //                   ).toMap(),
-            //                 );
-            //               },
-            //               text: "Login",
-            //             ),
-            //             const SizeBox(height: 20),
-            //           ],
-            //         ),
-            //       );
-            //     },
-            //   );
-            // }
-            // TODO: Comment/remove this after testing
             if (context.mounted) {
-              Navigator.pushReplacementNamed(
-                context,
-                Routes.createPassword,
-                arguments: CreateAccountArgumentModel(
-                  email: createAccountArgumentModel.email,
-                  isRetail: isPersonalFocussed ? true : false,
-                ).toMap(),
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return CustomDialog(
+                    svgAssetPath: ImageConstants.warning,
+                    title: "User already exists",
+                    message: "Try logging in again.",
+                    actionWidget: Column(
+                      children: [
+                        GradientButton(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              Routes.loginPassword,
+                              arguments: LoginPasswordArgumentModel(
+                                userId: createAccountArgumentModel.email,
+                              ).toMap(),
+                            );
+                          },
+                          text: "Login",
+                        ),
+                        const SizeBox(height: 20),
+                      ],
+                    ),
+                  );
+                },
               );
             }
+            // TODO: Comment/remove this after testing
+            // if (context.mounted) {
+            //   Navigator.pushReplacementNamed(
+            //     context,
+            //     Routes.createPassword,
+            //     arguments: CreateAccountArgumentModel(
+            //       email: createAccountArgumentModel.email,
+            //       isRetail: isPersonalFocussed ? true : false,
+            //     ).toMap(),
+            //   );
+            // }
           }
         },
         text: labels[31]["labelText"],
         auxWidget: isValidating ? const LoaderRow() : const SizeBox(),
       );
     } else {
-      return const SizeBox();
+      return SolidButton(onTap: () {}, text: labels[31]["labelText"]);
     }
   }
 }

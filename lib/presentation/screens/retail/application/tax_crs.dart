@@ -297,7 +297,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
               selectedCountry = value as String;
               dhabiCountryIndex = dhabiCountryNames.indexOf(selectedCountry!);
               log("dhabiCountryIndex -> $dhabiCountryIndex");
-              isCountrySelected = true;
+              // isCountrySelected = true;
               showTinPrompt = true;
               applicationCrsBloc.add(
                 ApplicationCrsEvent(

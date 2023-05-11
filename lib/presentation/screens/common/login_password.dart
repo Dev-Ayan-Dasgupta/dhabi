@@ -1,4 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -37,6 +41,8 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
   int matchPasswordErrorCount = 0;
   int toggle = 0;
 
+  bool isLoading = false;
+
   late LoginPasswordArgumentModel loginPasswordArgument;
 
   @override
@@ -60,48 +66,66 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Log in",
-              style: TextStyles.primaryBold.copyWith(
-                color: AppColors.primary,
-                fontSize: (28 / Dimensions.designWidth).w,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    labels[214]["labelText"],
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        "Enter Password",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.black63,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
+                  ),
+                  const SizeBox(height: 10),
+                  BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                    builder: buildShowHidePassword,
+                  ),
+                  const SizeBox(height: 7),
+                  BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
+                    builder: buildErrorMessage,
+                  ),
+                ],
               ),
             ),
-            const SizeBox(height: 20),
-            Text(
-              "Enter Password",
-              style: TextStyles.primaryMedium.copyWith(
-                color: AppColors.black63,
-                fontSize: (16 / Dimensions.designWidth).w,
-              ),
-            ),
-            const SizeBox(height: 10),
-            BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-              builder: buildShowHidePassword,
-            ),
-            const SizeBox(height: 7),
-            BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-              builder: buildErrorMessage,
-            ),
-            const SizeBox(height: 15),
-            BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-              builder: buildLoginButton,
-            ),
-            const SizeBox(height: 10),
-            Align(
-              alignment: Alignment.centerRight,
-              child: InkWell(
-                onTap: onForgotEmailPwd,
-                child: Text(
-                  "Forgot password?",
-                  style: TextStyles.primaryMedium.copyWith(
-                    color: AppColors.primaryBright50,
-                    fontSize: (16 / Dimensions.designWidth).w,
+            Column(
+              children: [
+                BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
+                  builder: buildLoginButton,
+                ),
+                const SizeBox(height: 15),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                    onTap: onForgotEmailPwd,
+                    child: Text(
+                      labels[47]["labelText"],
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.primaryBright50,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.of(context).padding.bottom,
+                ),
+              ],
             ),
           ],
         ),
@@ -179,27 +203,59 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     }
   }
 
-  void onSubmit() {
+  void onSubmit() async {
     final MatchPasswordBloc matchPasswordBloc =
         context.read<MatchPasswordBloc>();
     // TODO: Use API to conduct validation, for now testing with mock static data
-    if (_passwordController.text != "AyanDg16@#") {
-      matchPasswordErrorCount++;
-      isMatch = false;
-      matchPasswordBloc.add(
-          MatchPasswordEvent(isMatch: isMatch, count: matchPasswordErrorCount));
-    } else {
-      // TODO: Call Navigation to next page, testing for now, API later
-      Navigator.pushNamed(
-        context,
-        Routes.retailDashboard,
-        arguments: RetailDashboardArgumentModel(
-          imgUrl:
-              "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-          name: "ADasgupta@aspire-infotech.net",
-        ).toMap(),
-      );
+    isLoading = true;
+    matchPasswordBloc
+        .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
+    var result = await MapLogin.mapLogin({
+      "emailId": emailAddress,
+      "userTypeId": 1,
+      "userId": 60, // TODO: get this value from flutter_secure_storage
+      "companyId": 0,
+      "password": _passwordController.text,
+      "deviceId": deviceId,
+      "registerDevice": false,
+      "deviceName": deviceName,
+      "deviceType": deviceType,
+      "appVersion": appVersion
+    });
+    log("Login API Response -> $result");
+    token = result["token"];
+    log("token -> $token");
+    if (result["success"]) {
+      if (context.mounted) {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Routes.retailDashboard,
+          (route) => false,
+          arguments: RetailDashboardArgumentModel(
+            imgUrl:
+                "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+            name: emailAddress,
+          ).toMap(),
+        );
+      }
     }
+    // if (_passwordController.text != "AyanDg16@#") {
+    //   matchPasswordErrorCount++;
+    //   isMatch = false;
+    //   matchPasswordBloc.add(
+    //       MatchPasswordEvent(isMatch: isMatch, count: matchPasswordErrorCount));
+    // } else {
+    //   // TODO: Call Navigation to next page, testing for now, API later
+    //   Navigator.pushNamed(
+    //     context,
+    //     Routes.retailDashboard,
+    //     arguments: RetailDashboardArgumentModel(
+    //       imgUrl:
+    //           "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+    //       name: "ADasgupta@aspire-infotech.net",
+    //     ).toMap(),
+    //   );
+    // }
   }
 
   Widget buildErrorMessage(BuildContext context, MatchPasswordState state) {
@@ -227,9 +283,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
             falsy: Ternary(
               condition: matchPasswordErrorCount == 0,
               truthy: const SizeBox(),
-              falsy: const LoginAttempt(
-                message:
-                    "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials",
+              falsy: LoginAttempt(
+                message: messages[68]["messageText"],
+                // "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials",
               ),
             ),
           )
@@ -245,14 +301,17 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       return GradientButton(
         onTap: onSubmit,
         text: labels[205]["labelText"],
+        auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
       );
     } else {
-      return const SizeBox();
+      return SolidButton(onTap: () {}, text: labels[205]["labelText"]);
     }
   }
 
   void onForgotEmailPwd() {
-    // TODO: call API
+    // TODO: navigate to Forgot Password screen
+    Navigator.pushNamed(context, Routes.registration,
+        arguments: RegistrationArgumentModel(isInitial: false).toMap());
   }
 
   @override

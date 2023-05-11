@@ -93,9 +93,12 @@ class _TransferConfirmationScreenState
               children: [
                 GradientButton(
                   onTap: biometricPrompt,
-                  text: "Transfer",
+                  text: labels[170]["labelText"],
                 ),
-                const SizeBox(height: 20),
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.of(context).padding.bottom,
+                ),
               ],
             ),
           ],

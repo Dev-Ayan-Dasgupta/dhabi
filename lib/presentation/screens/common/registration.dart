@@ -20,10 +20,10 @@ import 'package:dialup_mobile_app/utils/helpers/input_validator.dart';
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({
     Key? key,
-    this.arguments,
+    this.argument,
   }) : super(key: key);
 
-  final Object? arguments;
+  final Object? argument;
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -43,7 +43,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void initState() {
     super.initState();
     registrationArgument =
-        RegistrationArgumentModel.fromMap(widget.arguments as dynamic ?? {});
+        RegistrationArgumentModel.fromMap(widget.argument as dynamic ?? {});
   }
 
   @override
@@ -61,7 +61,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             statusBarBrightness: Brightness.light,
           ),
           leading: AppBarLeading(onTap: promptUser),
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           elevation: 0,
         ),
         body: Padding(
@@ -143,31 +143,39 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: buildSubmitButton,
                   ),
-                  const SizeBox(height: 15),
-                  InkWell(
-                    onTap: () {
-                      // TODO: Add biometricPrompt
-                      Navigator.pushNamed(context, Routes.loginUserId);
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: '${labels[213]["labelText"]} ',
-                        style: TextStyles.primary.copyWith(
-                          color: AppColors.primary,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Log in',
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
+                  Ternary(
+                    condition: registrationArgument.isInitial,
+                    truthy: Column(
+                      children: [
+                        const SizeBox(height: 15),
+                        InkWell(
+                          onTap: () {
+                            // TODO: Add biometricPrompt
+                            Navigator.pushNamed(context, Routes.loginUserId);
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: '${labels[213]["labelText"]} ',
+                              style: TextStyles.primary.copyWith(
+                                color: AppColors.primary,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Log in',
+                                  style: TextStyles.primaryBold.copyWith(
+                                    color: AppColors.primary,
+                                    fontSize: (16 / Dimensions.designWidth).w,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                    falsy: const SizeBox(),
                   ),
                   SizeBox(
                       height: PaddingConstants.bottomPadding +

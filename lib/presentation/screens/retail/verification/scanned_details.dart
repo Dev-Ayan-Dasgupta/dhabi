@@ -126,11 +126,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         key: scannedDetailsArgument.isEID ? "EID No." : "Passport No.",
         value: scannedDetailsArgument.isEID
             ? scannedDetailsArgument.idNumber ?? "null"
-            : scannedDetailsArgument.idNumber
-                    ?.split("\n")
-                    .last
-                    .substring(0, 8) ??
-                "null",
+            : scannedDetailsArgument.idNumber ?? "null",
       ),
       DetailsTileModel(
           key: "Nationality",
@@ -388,10 +384,10 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       // fullName = await results
       //     ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
       fullName = "$firstName $surname";
-      passportNumber =
+      String? tempPassportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
-      // passportNumber = ppMrz!.substring(0, 9);
-      // print("passportNumber -> $passportNumber");
+      passportNumber = tempPassportNumber?.split("\n").last.substring(0, 8);
+
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
       String? tempNationalityCode = await results
@@ -672,7 +668,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     var value = await regula.FaceSDK.matchFaces(jsonEncode(request));
     var response = regula.MatchFacesResponse.fromJson(json.decode(value));
     var str = await regula.FaceSDK.matchFacesSimilarityThresholdSplit(
-        jsonEncode(response!.results), 0.75);
+        jsonEncode(response!.results), 0.8);
     regula.MatchFacesSimilarityThresholdSplit? split =
         regula.MatchFacesSimilarityThresholdSplit.fromJson(json.decode(str));
 

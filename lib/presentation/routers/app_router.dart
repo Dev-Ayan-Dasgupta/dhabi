@@ -39,7 +39,7 @@ class AppRouter {
       case Routes.registration:
         return MaterialPageRoute(
           builder: (_) => RegistrationScreen(
-            arguments: args,
+            argument: args,
           ),
         );
       case Routes.login:
@@ -112,7 +112,9 @@ class AppRouter {
         );
       case Routes.businessOnboardingStatus:
         return MaterialPageRoute(
-          builder: (_) => const BusinessOnboardingStatusScreen(),
+          builder: (_) => BusinessOnboardingStatusScreen(
+            argument: args,
+          ),
         );
       case Routes.basicCompanyDetails:
         return MaterialPageRoute(
@@ -295,7 +297,9 @@ class AppRouter {
         );
       case Routes.selectAccount:
         return MaterialPageRoute(
-          builder: (_) => const SelectAccountScreen(),
+          builder: (_) => SelectAccountScreen(
+            argument: args,
+          ),
         );
       case Routes.security:
         return MaterialPageRoute(

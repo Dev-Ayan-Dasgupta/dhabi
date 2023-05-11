@@ -33,6 +33,8 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
   final TextEditingController _phoneController = TextEditingController();
   bool _isPhoneValid = false;
 
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -172,6 +174,9 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
     } else {
       return GradientButton(
         onTap: () async {
+          isLoading = true;
+          final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+          showButtonBloc.add(ShowButtonEvent(show: isLoading));
           // TODO: Call Send Mobile OTP API here
           var result = await MapSendMobileOtp.mapSendMobileOtp(
               {"mobileNo": "+971${_phoneController.text}"}, token);
@@ -190,6 +195,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
           }
         },
         text: labels[31]["labelText"],
+        auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
       );
     }
   }

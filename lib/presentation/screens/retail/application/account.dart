@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/multiSelect/multi_select_bloc.dart';
 import 'package:dialup_mobile_app/bloc/multiSelect/multi_select_event.dart';
 import 'package:dialup_mobile_app/bloc/multiSelect/multi_select_state.dart';
@@ -149,6 +151,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
             : isCurrentSelected
                 ? 2
                 : 0;
+        log("accountType -> $accountType");
         multiSelectBloc.add(MultiSelectEvent(isSelected: isCurrentSelected));
         showButtonBloc
             .add(ShowButtonEvent(show: isCurrentSelected && isSavingsSelected));
@@ -190,6 +193,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
             : isSavingsSelected
                 ? 1
                 : 0;
+        log("accountType -> $accountType");
         multiSelectBloc.add(MultiSelectEvent(isSelected: isSavingsSelected));
         showButtonBloc
             .add(ShowButtonEvent(show: isCurrentSelected && isSavingsSelected));

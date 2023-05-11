@@ -183,7 +183,7 @@ class _RetailOnboardingStatusScreenState
                       ),
                     ],
                   ),
-                  const SizeBox(height: 10),
+                  const SizeBox(height: 15),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
                       if (isChecked) {
@@ -202,11 +202,23 @@ class _RetailOnboardingStatusScreenState
                               },
                               text: labels[288]["labelText"],
                             ),
-                            const SizeBox(height: 20),
+                            SizeBox(
+                              height: PaddingConstants.bottomPadding +
+                                  MediaQuery.of(context).padding.bottom,
+                            ),
                           ],
                         );
                       } else {
-                        return const SizeBox();
+                        return Column(
+                          children: [
+                            SolidButton(
+                                onTap: () {}, text: labels[288]["labelText"]),
+                            SizeBox(
+                              height: PaddingConstants.bottomPadding +
+                                  MediaQuery.of(context).padding.bottom,
+                            ),
+                          ],
+                        );
                       }
                     },
                   ),
@@ -218,8 +230,6 @@ class _RetailOnboardingStatusScreenState
                     onTap: () {
                       switch (onboardingStatusArgument.stepsCompleted) {
                         case 1:
-                          // Navigator.pushNamed(context, Routes.captureFace);
-                          // Navigator.pushNamed(context, Routes.eidExplanation);
                           Navigator.pushNamed(
                               context, Routes.verificationInitializing);
                           break;
@@ -241,7 +251,10 @@ class _RetailOnboardingStatusScreenState
                     },
                     text: labels[31]["labelText"],
                   ),
-                  const SizeBox(height: PaddingConstants.bottomPadding),
+                  SizeBox(
+                    height: PaddingConstants.bottomPadding +
+                        MediaQuery.of(context).padding.bottom,
+                  ),
                 ],
               ),
             ),

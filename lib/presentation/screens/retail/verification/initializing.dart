@@ -19,7 +19,7 @@ class _VerificationInitializingScreenState
     extends State<VerificationInitializingScreen> {
   String status = "Downloading Database";
 
-  double progressValue = 0;
+  dynamic progressValue = 0;
 
   @override
   void initState() {
@@ -38,11 +38,12 @@ class _VerificationInitializingScreenState
         .receiveBroadcastStream()
         .listen(
       (progress) {
-        // setState(
-        //   () {
-        //     progressValue = progress;
-        //   },
-        // );
+        log("DB Progress -> $progress");
+        setState(
+          () {
+            progressValue = progress;
+          },
+        );
       },
     );
   }
@@ -111,6 +112,7 @@ class _VerificationInitializingScreenState
                 ),
               ],
             ),
+            Text("Database download progress -> $progressValue%"),
           ],
         ),
       ),

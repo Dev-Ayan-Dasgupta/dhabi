@@ -202,6 +202,25 @@ class _AcceptTermsAndConditionsScreenState
 
                                   log("UploadEid API response -> $response");
                                 } else {
+                                  // log("Request body -> ${{
+                                  //   "passportDocumentImage": docPhoto,
+                                  //   "passportUserPhoto": photo,
+                                  //   "selfiePhoto": selfiePhoto,
+                                  //   "photoMatchScore": photoMatchScore,
+                                  //   "passportNumber": passportNumber,
+                                  //   "passportIssuingCountryCode":
+                                  //       issuingStateCode,
+                                  //   "fullName": fullName,
+                                  //   "dateOfBirth": DateFormat('yyyy-MM-dd')
+                                  //       .format(DateFormat('dd/MM/yyyy')
+                                  //           .parse(dob ?? "00/00/0000")),
+                                  //   "nationalityCountryCode": nationalityCode,
+                                  //   "genderId": gender == 'M' ? 1 : 2,
+                                  //   "expiresOn": DateFormat('yyyy-MM-dd')
+                                  //       .format(DateFormat('dd/MM/yyyy')
+                                  //           .parse(expiryDate ?? "00/00/0000")),
+                                  //   "isReKYC": false
+                                  // }}");
                                   var response =
                                       await MapUploadPassport.mapUploadPassport(
                                     {
@@ -255,11 +274,14 @@ class _AcceptTermsAndConditionsScreenState
                                 : const SizeBox(),
                           );
                         } else {
-                          return const SizeBox();
+                          return SolidButton(onTap: () {}, text: "I agree");
                         }
                       },
                     ),
-                    const SizeBox(height: 10),
+                    SizeBox(
+                      height: PaddingConstants.bottomPadding +
+                          MediaQuery.of(context).padding.bottom,
+                    ),
                   ],
                 ),
               ],

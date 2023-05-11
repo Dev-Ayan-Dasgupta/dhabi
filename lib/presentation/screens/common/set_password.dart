@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_event.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_state.dart';
@@ -14,7 +16,9 @@ import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -48,9 +52,9 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
 
   bool isMatch = false;
 
-  // bool isCorrect = false;
-
   bool allTrue = false;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +164,10 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                 BlocBuilder<CreatePasswordBloc, CreatePasswordState>(
                   builder: buildSubmitButton,
                 ),
-                const SizeBox(height: 20),
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.of(context).padding.bottom,
+                ),
               ],
             ),
           ],
@@ -372,29 +379,50 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
         children: [
           const SizeBox(height: 15),
           GradientButton(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                Routes.errorSuccessScreen,
-                arguments: ErrorArgumentModel(
-                  hasSecondaryButton: false,
-                  iconPath: ImageConstants.checkCircleOutlined,
-                  title: "Password Changed!",
-                  message:
-                      "Your password updated successfully.\nPlease log in again with your new password.",
-                  buttonText: labels[205]["labelText"],
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, Routes.loginUserId);
-                  },
-                  buttonTextSecondary: "",
-                  onTapSecondary: () {},
-                ).toMap(),
+            onTap: () async {
+              isLoading = true;
+              final CreatePasswordBloc createPasswordBloc =
+                  context.read<CreatePasswordBloc>();
+              createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+              var result = await MapChangePassword.mapChangePassword(
+                {
+                  "cif": cif,
+                  "password": _newPasswordController.text,
+                },
+                tokenCP,
               );
+              log("Change Password API response -> $result");
+              if (context.mounted) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.errorSuccessScreen,
+                  // (route) => false,
+                  arguments: ErrorArgumentModel(
+                    hasSecondaryButton: false,
+                    iconPath: ImageConstants.checkCircleOutlined,
+                    title: "Password Set Successfully!",
+                    message:
+                        "Your password updated successfully.\nPlease log in again with your new password.",
+                    buttonText: labels[205]["labelText"],
+                    onTap: () {
+                      // TODO: change this to loginUserId after testing
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.loginPassword,
+                        (route) => false,
+                        arguments: LoginPasswordArgumentModel(
+                          userId: emailAddress,
+                        ).toMap(),
+                      );
+                    },
+                    buttonTextSecondary: "",
+                    onTapSecondary: () {},
+                  ).toMap(),
+                );
+              }
             },
             text: "Save",
+            auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
           ),
         ],
       );

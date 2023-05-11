@@ -41,74 +41,75 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
               (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Log in",
-              style: TextStyles.primaryBold.copyWith(
-                color: AppColors.primary,
-                fontSize: (28 / Dimensions.designWidth).w,
-              ),
-            ),
-            const SizeBox(height: 20),
-            RichText(
-              text: TextSpan(
-                text: 'User ID ',
-                style: TextStyles.primary.copyWith(
-                  color: const Color(0xFF636363),
-                  fontSize: (16 / Dimensions.designWidth).w,
-                ),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: '(Email address)',
-                    style: TextStyles.primary.copyWith(
-                      color: const Color.fromRGBO(99, 99, 99, 0.5),
-                      fontSize: (16 / Dimensions.designWidth).w,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    labels[214]["labelText"],
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
+                  const SizeBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        "Enter User ID",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                      Text(
+                        "(Email address)",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark50,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizeBox(height: 10),
+                  CustomTextField(
+                    controller: _emailController,
+                    suffix: Padding(
+                      padding: EdgeInsets.only(
+                          left: (10 / Dimensions.designWidth).w),
+                      child: InkWell(
+                        onTap: () {
+                          _emailController.clear();
+                        },
+                        child: SvgPicture.asset(
+                          ImageConstants.deleteText,
+                          width: (17.5 / Dimensions.designWidth).w,
+                          height: (17.5 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                    ),
+                    onChanged: emailValidation,
+                  ),
+                  BlocBuilder<EmailExistsBloc, EmailExistsState>(
+                    builder: buildErrorMessage,
+                  ),
+                  const SizeBox(height: 15),
                 ],
               ),
             ),
-            const SizeBox(height: 10),
-            CustomTextField(
-              controller: _emailController,
-              suffix: Padding(
-                padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-                child: InkWell(
-                  onTap: () {
-                    _emailController.clear();
-                  },
-                  child: SvgPicture.asset(
-                    ImageConstants.deleteText,
-                    width: (17.5 / Dimensions.designWidth).w,
-                    height: (17.5 / Dimensions.designWidth).w,
-                  ),
+            Column(
+              children: [
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: buildProceedButton,
                 ),
-              ),
-              onChanged: emailValidation,
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.of(context).padding.bottom,
+                ),
+              ],
             ),
-
-            BlocBuilder<EmailExistsBloc, EmailExistsState>(
-              builder: buildErrorMessage,
-            ),
-            const SizeBox(height: 15),
-            BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: buildProceedButton,
-            ),
-            // const SizeBox(height: 10),
-            // Align(
-            //   alignment: Alignment.centerRight,
-            //   child: InkWell(
-            //     onTap: onForgotEmailPwd,
-            //     child: Text(
-            //       "Forgot your email ID or password?",
-            //       style: TextStyles.primaryMedium.copyWith(
-            //         color: const Color.fromRGBO(34, 97, 105, 0.5),
-            //         fontSize: (16 / Dimensions.designWidth).w,
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -199,13 +200,9 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
         text: labels[31]["labelText"],
       );
     } else {
-      return const SizeBox();
+      return SolidButton(onTap: () {}, text: labels[31]["labelText"]);
     }
   }
-
-  // void onForgotEmailPwd() {
-  //   // TODO: call API
-  // }
 
   @override
   void dispose() {

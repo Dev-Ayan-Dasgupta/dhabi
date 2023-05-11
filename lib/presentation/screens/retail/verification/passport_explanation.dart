@@ -53,8 +53,10 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       // fullName = await results
       //     ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
       fullName = "$firstName $surname";
-      passportNumber =
+
+      String? tempPassportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
+      passportNumber = tempPassportNumber?.split("\n").last.substring(0, 8);
       // passportNumber = ppMrz!.substring(0, 9);
       // print("passportNumber -> $passportNumber");
       nationality =

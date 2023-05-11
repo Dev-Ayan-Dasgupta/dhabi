@@ -113,10 +113,15 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // systemOverlayStyle: const SystemUiOverlayStyle(
+        //   statusBarColor: Colors.white,
+        //   statusBarIconBrightness: Brightness.dark,
+        //   statusBarBrightness: Brightness.light,
+        // ),
         leading: AppBarLeading(
           onTap: promptUser,
         ),
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.white,
         elevation: 0,
       ),
       body: Padding(
@@ -305,7 +310,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 BlocBuilder<CreatePasswordBloc, CreatePasswordState>(
                   builder: buildSubmitButton,
                 ),
-                const SizeBox(height: PaddingConstants.bottomPadding),
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.of(context).padding.bottom,
+                ),
               ],
             ),
           ],
@@ -585,13 +593,16 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 });
                 log("Create User API Response -> $result1");
 
+                userId = result1["userId"];
+
                 var result = await MapLogin.mapLogin({
                   "emailId": createAccountArgumentModel.email,
                   "userTypeId": 1,
+                  "userId": userId,
                   "companyId": 0,
                   "password": _confirmPasswordController.text,
                   "deviceId": deviceId,
-                  "registerDevice": true,
+                  "registerDevice": false,
                   "deviceName": deviceName,
                   "deviceType": deviceType,
                   "appVersion": appVersion
@@ -619,20 +630,27 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   "userType": 2,
                   "emailId": createAccountArgumentModel.email,
                   "password": _confirmPasswordController.text,
-                  "deviceId": deviceId,
+                  "deviceId":
+                      "${deviceId}abcde", // TODO: change this to deviceId ater testing
                   "deviceName": deviceName,
                   "deviceType": deviceType,
                   "appVersion": appVersion
                 });
                 log("Create User API Response -> $result1");
 
+                userId = result1["userId"];
+                log("userId -> $userId");
+                log("userId runtimeType -> ${userId.runtimeType}");
+
                 var result = await MapLogin.mapLogin({
                   "emailId": createAccountArgumentModel.email,
                   "userTypeId": 2,
+                  "userId": userId,
                   "companyId": 1,
                   "password": _confirmPasswordController.text,
-                  "deviceId": deviceId,
-                  "registerDevice": true,
+                  "deviceId":
+                      "${deviceId}abcde", // TODO: change this to deviceId ater testing
+                  "registerDevice": false,
                   "deviceName": deviceName,
                   "deviceType": deviceType,
                   "appVersion": appVersion
@@ -653,7 +671,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     ).toMap(),
                   );
                 }
-                // Navigator.pushNamed(context, Routes.businessOnboardingStatus);
               }
             },
             text: labels[222]["labelText"],

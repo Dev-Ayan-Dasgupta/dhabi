@@ -16,7 +16,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
-import 'package:dialup_mobile_app/data/models/arguments/error.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
@@ -98,17 +98,26 @@ class _ChangePasswordState extends State<ChangePassword> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "Current Password",
+                                labels[46]["labelText"],
                                 style: TextStyles.primaryMedium.copyWith(
                                   color: AppColors.black63,
                                   fontSize: (16 / Dimensions.designWidth).w,
                                 ),
                               ),
-                              Text(
-                                "Forgot Password?",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: const Color.fromRGBO(34, 97, 105, 0.5),
-                                  fontSize: (16 / Dimensions.designWidth).w,
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.registration,
+                                      arguments: RegistrationArgumentModel(
+                                          isInitial: false));
+                                },
+                                child: Text(
+                                  labels[47]["labelText"],
+                                  style: TextStyles.primaryMedium.copyWith(
+                                    color:
+                                        const Color.fromRGBO(34, 97, 105, 0.5),
+                                    fontSize: (16 / Dimensions.designWidth).w,
+                                  ),
                                 ),
                               )
                             ],

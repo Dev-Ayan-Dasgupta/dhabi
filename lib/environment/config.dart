@@ -161,4 +161,16 @@ class EnvConfig implements BaseConfig {
   String get uploadPassport {
     return dotenv.env['UPLOAD_PASSPORT'] ?? "";
   }
+
+  // ? Corporate Onboarding APIs
+
+  @override
+  String get checkIfTradeLicenseExists {
+    return dotenv.env['CHECK_IF_TRADE_LICENSE_EXISTS'] ?? "";
+  }
+
+  @override
+  String get register {
+    return dotenv.env['REGISTER'] ?? "";
+  }
 }

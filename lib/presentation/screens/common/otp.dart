@@ -8,9 +8,11 @@ import 'package:dialup_mobile_app/bloc/otp/pinput/error_state.dart';
 import 'package:dialup_mobile_app/bloc/otp/timer/timer_bloc.dart';
 import 'package:dialup_mobile_app/bloc/otp/timer/timer_event.dart';
 import 'package:dialup_mobile_app/bloc/otp/timer/timer_state.dart';
-import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
-import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
-import 'package:dialup_mobile_app/data/models/arguments/otp.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/map_customer_details.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
@@ -46,6 +48,8 @@ class _OTPScreenState extends State<OTPScreen> {
 
   late int seconds;
 
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -60,8 +64,7 @@ class _OTPScreenState extends State<OTPScreen> {
     if (otpArgumentModel.isEmail) {
       obscuredEmail = ObscureHelper.obscureEmail(otpArgumentModel.emailOrPhone);
     } else {
-      obscuredPhone =
-          ObscureHelper.obscurePhone("+971${otpArgumentModel.emailOrPhone}");
+      obscuredPhone = ObscureHelper.obscurePhone(otpArgumentModel.emailOrPhone);
     }
   }
 
@@ -269,9 +272,40 @@ class _OTPScreenState extends State<OTPScreen> {
                                 "Your phone number has been verified.\nYou will receive email on the next steps.",
                             actionWidget: Column(
                               children: [
-                                GradientButton(
-                                  onTap: () {},
-                                  text: labels[31]["labelText"],
+                                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                  builder: (context, state) {
+                                    return GradientButton(
+                                      onTap: () async {
+                                        isLoading = true;
+                                        final ShowButtonBloc showButtonBloc =
+                                            context.read<ShowButtonBloc>();
+                                        showButtonBloc.add(
+                                            ShowButtonEvent(show: isLoading));
+                                        var getCustomerDetailsResponse =
+                                            await MapCustomerDetails
+                                                .mapCustomerDetails(token);
+                                        log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                        List cifDetails =
+                                            getCustomerDetailsResponse[
+                                                "cifDetails"];
+                                        if (context.mounted) {
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.selectAccount,
+                                            arguments:
+                                                SelectAccountArgumentModel(
+                                              cifDetails: cifDetails,
+                                              isPwChange: false,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      },
+                                      text: labels[31]["labelText"],
+                                      auxWidget: isLoading
+                                          ? const LoaderRow()
+                                          : const SizeBox(),
+                                    );
+                                  },
                                 ),
                                 const SizeBox(height: 20),
                               ],
@@ -308,14 +342,9 @@ class _OTPScreenState extends State<OTPScreen> {
                   "otp": _pinController.text,
                 },
               );
-              log("Verify Email OTP For Password Response -> $result");
+              log("Validate Email OTP For Password Response -> $result");
               tokenCP = result["token"];
               log("tokenCP -> $tokenCP");
-
-              var getCustomerDetailsResponse =
-                  await MapCustomerDetails.mapCustomerDetails(tokenCP);
-              log("Get Customer Details API response -> $getCustomerDetailsResponse");
-              cif = getCustomerDetailsResponse["cIFDetails"][0]["cif"];
 
               if (result["success"] == true) {
                 pinputErrorBloc.add(
@@ -326,21 +355,36 @@ class _OTPScreenState extends State<OTPScreen> {
                   ),
                 );
 
-                await Future.delayed(const Duration(milliseconds: 250));
+                // await Future.delayed(const Duration(milliseconds: 250));
                 if (context.mounted) {
                   if (otpArgumentModel.isEmail) {
-                    Navigator.pop(context);
+                    // Navigator.pop(context);
                     // TODO: Check for new device
 
-                    // TODO: if not new device, got to select entity screen
-                    Navigator.pushReplacementNamed(
-                      context,
-                      Routes.selectAccount,
-                      // arguments: CreateAccountArgumentModel(
-                      //   email: otpArgumentModel.emailOrPhone,
-                      //   isRetail: true,
-                      // ).toMap(),
-                    );
+                    // TODO: if not new device, go to select entity screen
+                    var getCustomerDetailsResponse =
+                        await MapCustomerDetails.mapCustomerDetails(tokenCP);
+                    log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                    List cifDetails = getCustomerDetailsResponse["cifDetails"];
+
+                    if (cifDetails.length == 1) {
+                      if (context.mounted) {
+                        cif =
+                            getCustomerDetailsResponse["cifDetails"][0]["cif"];
+                        Navigator.pushNamed(context, Routes.setPassword);
+                      }
+                    } else {
+                      if (context.mounted) {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.selectAccount,
+                          arguments: SelectAccountArgumentModel(
+                            cifDetails: cifDetails,
+                            isPwChange: true,
+                          ).toMap(),
+                        );
+                      }
+                    }
                   } else {
                     if (otpArgumentModel.isBusiness) {
                       showDialog(
@@ -354,9 +398,40 @@ class _OTPScreenState extends State<OTPScreen> {
                                 "Your phone number has been verified.\nYou will receive email on the next steps.",
                             actionWidget: Column(
                               children: [
-                                GradientButton(
-                                  onTap: () {},
-                                  text: labels[31]["labelText"],
+                                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                  builder: (context, state) {
+                                    return GradientButton(
+                                      onTap: () async {
+                                        isLoading = true;
+                                        final ShowButtonBloc showButtonBloc =
+                                            context.read<ShowButtonBloc>();
+                                        showButtonBloc.add(
+                                            ShowButtonEvent(show: isLoading));
+                                        var getCustomerDetailsResponse =
+                                            await MapCustomerDetails
+                                                .mapCustomerDetails(token);
+                                        log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                        List cifDetails =
+                                            getCustomerDetailsResponse[
+                                                "cifDetails"];
+                                        if (context.mounted) {
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.selectAccount,
+                                            arguments:
+                                                SelectAccountArgumentModel(
+                                              cifDetails: cifDetails,
+                                              isPwChange: false,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      },
+                                      text: labels[31]["labelText"],
+                                      auxWidget: isLoading
+                                          ? const LoaderRow()
+                                          : const SizeBox(),
+                                    );
+                                  },
                                 ),
                                 const SizeBox(height: 20),
                               ],
@@ -436,9 +511,39 @@ class _OTPScreenState extends State<OTPScreen> {
                               "Your phone number has been verified.\nYou will receive email on the next steps.",
                           actionWidget: Column(
                             children: [
-                              GradientButton(
-                                onTap: () {},
-                                text: labels[31]["labelText"],
+                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                builder: (context, state) {
+                                  return GradientButton(
+                                    onTap: () async {
+                                      isLoading = true;
+                                      final ShowButtonBloc showButtonBloc =
+                                          context.read<ShowButtonBloc>();
+                                      showButtonBloc.add(
+                                          ShowButtonEvent(show: isLoading));
+                                      var getCustomerDetailsResponse =
+                                          await MapCustomerDetails
+                                              .mapCustomerDetails(token);
+                                      log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                      List cifDetails =
+                                          getCustomerDetailsResponse[
+                                              "cifDetails"];
+                                      if (context.mounted) {
+                                        Navigator.pushNamed(
+                                          context,
+                                          Routes.selectAccount,
+                                          arguments: SelectAccountArgumentModel(
+                                            cifDetails: cifDetails,
+                                            isPwChange: false,
+                                          ).toMap(),
+                                        );
+                                      }
+                                    },
+                                    text: labels[31]["labelText"],
+                                    auxWidget: isLoading
+                                        ? const LoaderRow()
+                                        : const SizeBox(),
+                                  );
+                                },
                               ),
                               const SizeBox(height: 20),
                             ],
@@ -559,8 +664,15 @@ class _OTPScreenState extends State<OTPScreen> {
       final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
       otpTimerBloc.add(OTPTimerEvent(seconds: seconds));
     }
-    await MapSendEmailOtp.mapSendEmailOtp(
-        {"emailID": otpArgumentModel.emailOrPhone});
+    if (otpArgumentModel.isEmail) {
+      await MapSendEmailOtp.mapSendEmailOtp(
+          {"emailID": otpArgumentModel.emailOrPhone});
+    } else {
+      await MapSendMobileOtp.mapSendMobileOtp(
+        {"mobileNo": otpArgumentModel.emailOrPhone},
+        token,
+      );
+    }
   }
 
   @override

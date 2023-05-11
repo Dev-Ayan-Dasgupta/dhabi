@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
@@ -5,7 +7,9 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/corporateOnboarding/map_if_trade_license_exists.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -26,22 +30,14 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
 
   int toggles = 0;
 
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8'
-  ];
-
   String? selectedCountry;
+  int dhabiCountryIndex = -1;
 
   bool isCompany = false;
   bool isCountrySelected = false;
   bool isTradeLicense = false;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -74,19 +70,24 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                   ),
                   const SizeBox(height: 20),
                   Text(
-                    "Please provide your basic company details to proceed with the onboarding",
+                    labels[295]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.grey40,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 20),
-                  Text(
-                    "Company Name",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.black63,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        "Company Name",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.black63,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 7),
                   CustomTextField(
@@ -106,24 +107,32 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                     },
                   ),
                   const SizeBox(height: 10),
-                  Text(
-                    labels[297]["labelText"],
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.black63,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        labels[297]["labelText"],
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.black63,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 7),
                   BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
                     builder: (context, state) {
                       return CustomDropDown(
                         title: "Select a Country",
-                        items: items,
+                        items: dhabiCountryNames,
                         value: selectedCountry,
                         onChanged: (value) {
                           toggles++;
                           isCountrySelected = true;
                           selectedCountry = value as String;
+                          dhabiCountryIndex =
+                              dhabiCountryNames.indexOf(selectedCountry!);
+                          log("dhabiCountryIndex -> $dhabiCountryIndex");
                           countrySelectedBloc.add(
                             DropdownSelectedEvent(
                               isDropdownSelected: isCountrySelected,
@@ -142,12 +151,17 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                     },
                   ),
                   const SizeBox(height: 10),
-                  Text(
-                    "Trade License Number",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.black63,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        "Trade License Number",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.black63,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 7),
                   CustomTextField(
@@ -175,22 +189,106 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                   return Column(
                     children: [
                       GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.verifyMobile,
-                            arguments:
-                                VerifyMobileArgumentModel(isBusiness: true)
-                                    .toMap(),
+                        onTap: () async {
+                          final ShowButtonBloc showButtonBloc =
+                              context.read<ShowButtonBloc>();
+                          isLoading = true;
+                          showButtonBloc.add(ShowButtonEvent(show: isLoading));
+
+                          var tLResult = await MapIfTradeLicenseExists
+                              .mapIfTradeLicenseExists(
+                            {
+                              "tradeLicenseNumber":
+                                  _tradeLicenseController.text,
+                              "countryOfRegistrationShortCode":
+                                  dhabiCountryIndex == -1
+                                      ? "US"
+                                      : dhabiCountries[dhabiCountryIndex]
+                                          ["shortCode"],
+                            },
+                            token,
                           );
+                          log("Trade License API resonse -> $tLResult");
+                          if (tLResult) {
+                            if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomDialog(
+                                    svgAssetPath: ImageConstants.warning,
+                                    title: "Trade license exists",
+                                    message:
+                                        "The given trade license number already exist in your database",
+                                    auxWidget: Column(
+                                      children: [
+                                        SolidButton(
+                                          onTap: () {},
+                                          text: "Close",
+                                          color: AppColors.primaryBright17,
+                                          fontColor: AppColors.primary,
+                                        ),
+                                        const SizeBox(height: 15),
+                                      ],
+                                    ),
+                                    actionWidget: Column(
+                                      children: [
+                                        GradientButton(
+                                          onTap: () {
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              Routes.loginUserId,
+                                            );
+                                          },
+                                          text: "Try Log In",
+                                        ),
+                                        const SizeBox(
+                                          height:
+                                              PaddingConstants.bottomPadding,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          } else {
+                            if (context.mounted) {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.businessOnboardingStatus,
+                                arguments: OnboardingStatusArgumentModel(
+                                  stepsCompleted: 2,
+                                  isFatca: false,
+                                  isPassport: false,
+                                  isRetail: false,
+                                ).toMap(),
+                              );
+                            }
+                          }
                         },
                         text: labels[31]["labelText"],
+                        auxWidget:
+                            isLoading ? const LoaderRow() : const SizeBox(),
                       ),
-                      const SizeBox(height: 20),
+                      SizeBox(
+                        height: PaddingConstants.bottomPadding +
+                            MediaQuery.of(context).padding.bottom,
+                      ),
                     ],
                   );
                 } else {
-                  return const SizeBox();
+                  return Column(
+                    children: [
+                      SolidButton(
+                        onTap: () {},
+                        text: labels[31]["labelText"],
+                      ),
+                      SizeBox(
+                        height: PaddingConstants.bottomPadding +
+                            MediaQuery.of(context).padding.bottom,
+                      ),
+                    ],
+                  );
                 }
               },
             ),

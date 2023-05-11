@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:dialup_mobile_app/data/apis/authentication/index.dart';
@@ -7,7 +8,8 @@ class MapValidateEmailOtpForPassword {
   static Future<Map<String, dynamic>> mapValidateEmailOtpForPassword(
       Map<String, dynamic> body) async {
     try {
-      http.Response response = await Login.login(body);
+      http.Response response =
+          await ValidateEmailOtpForPassword.validateEmailOtpForPassword(body);
       return jsonDecode(response.body);
     } catch (_) {
       rethrow;

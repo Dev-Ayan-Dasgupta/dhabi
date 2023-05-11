@@ -39,4 +39,9 @@ abstract class BaseConfig {
   String get registerRetailCustomer;
   String get uploadEid;
   String get uploadPassport;
+
+  // ? Corporate Onboarding APIs
+
+  String get checkIfTradeLicenseExists;
+  String get register;
 }
