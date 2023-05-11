@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:local_auth/local_auth.dart';
@@ -243,6 +245,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   void biometricPrompt() async {
     bool isBiometricSupported = await LocalAuthentication().isDeviceSupported();
+    log("isBiometricSupported -> $isBiometricSupported");
+
+    if (deviceId == "bf8e43a90970f33c") {
+      if (context.mounted) {
+        Navigator.pushNamed(context, Routes.loginUserId);
+      }
+    }
 
     if (!isBiometricSupported) {
       if (context.mounted) {

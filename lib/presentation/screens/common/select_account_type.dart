@@ -259,11 +259,14 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                               context,
                               Routes.loginPassword,
                               arguments: LoginPasswordArgumentModel(
-                                userId: createAccountArgumentModel.email,
+                                emailId: createAccountArgumentModel.email,
+                                userId: 0,
+                                userTypeId: isPersonalFocussed ? 1 : 2,
+                                companyId: isPersonalFocussed ? 0 : 1,
                               ).toMap(),
                             );
                           },
-                          text: "Login",
+                          text: labels[205]["labelText"],
                         ),
                         const SizeBox(height: 20),
                       ],

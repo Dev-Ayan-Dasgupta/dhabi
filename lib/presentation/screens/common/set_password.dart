@@ -408,10 +408,13 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                       // TODO: change this to loginUserId after testing
                       Navigator.pushNamedAndRemoveUntil(
                         context,
-                        Routes.loginPassword,
+                        Routes.loginUserId,
                         (route) => false,
                         arguments: LoginPasswordArgumentModel(
-                          userId: emailAddress,
+                          emailId: emailAddress,
+                          userId: 0,
+                          userTypeId: 1,
+                          companyId: 0,
                         ).toMap(),
                       );
                     },

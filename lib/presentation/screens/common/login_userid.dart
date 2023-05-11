@@ -1,10 +1,13 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/emailExists/email_exists_bloc.dart';
-import 'package:dialup_mobile_app/bloc/emailExists/email_exists_event.dart';
 import 'package:dialup_mobile_app/bloc/emailExists/email_exists_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/index.dart';
+import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -25,7 +28,9 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
   final TextEditingController _emailController = TextEditingController();
 
   bool isEmailValid = false;
-  bool emailExists = false;
+  // bool emailExists = false;
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -144,25 +149,25 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
   }
 
   void emailValidation(String p0) {
-    final EmailExistsBloc emailExistsBloc = context.read<EmailExistsBloc>();
+    // final EmailExistsBloc emailExistsBloc = context.read<EmailExistsBloc>();
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     if (InputValidator.isEmailValid(p0)) {
       if (p0 != "ADasgupta@aspire-infotech.net") {
-        emailExists = false;
+        // emailExists = false;
         isEmailValid = true;
-        emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
-        showButtonBloc.add(ShowButtonEvent(show: emailExists && isEmailValid));
+        // emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
+        showButtonBloc.add(ShowButtonEvent(show: isEmailValid));
       } else {
-        emailExists = true;
+        // emailExists = true;
         isEmailValid = true;
-        emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
-        showButtonBloc.add(ShowButtonEvent(show: emailExists && isEmailValid));
+        // emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
+        showButtonBloc.add(ShowButtonEvent(show: isEmailValid));
       }
     } else {
-      emailExists = false;
+      // emailExists = false;
       isEmailValid = false;
-      emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
-      showButtonBloc.add(ShowButtonEvent(show: emailExists && isEmailValid));
+      // emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
+      showButtonBloc.add(ShowButtonEvent(show: isEmailValid));
     }
   }
 
@@ -186,18 +191,53 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
   }
 
   Widget buildProceedButton(BuildContext context, ShowButtonState state) {
-    if (emailExists && isEmailValid) {
+    if (isEmailValid) {
       return GradientButton(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            Routes.loginPassword,
-            arguments: LoginPasswordArgumentModel(
-              userId: _emailController.text,
-            ).toMap(),
-          );
+        onTap: () async {
+          isLoading = true;
+          final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+          showButtonBloc.add(ShowButtonEvent(show: isLoading));
+
+          // check if single cif exists
+          var singleCifResult = await MapCustomerSingleCif.mapCustomerSingleCif(
+              {"emailId": _emailController.text});
+          log("singleCifResult -> $singleCifResult");
+
+          // if only one cif
+          if (singleCifResult["hasSingleCIF"]) {
+            if (context.mounted) {
+              Navigator.pushNamed(
+                context,
+                Routes.loginPassword,
+                arguments: LoginPasswordArgumentModel(
+                  emailId: _emailController.text,
+                  userId: 0,
+                  userTypeId: singleCifResult["userType"],
+                  companyId: singleCifResult["cid"],
+                ).toMap(),
+              );
+            }
+          } else {
+            var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
+                {"emailID": _emailController.text});
+            log("sendEmailOtpResult -> $sendEmailOtpResult");
+            if (context.mounted) {
+              Navigator.pushNamed(
+                context,
+                Routes.otp,
+                arguments: OTPArgumentModel(
+                  emailOrPhone: _emailController.text,
+                  isEmail: true,
+                  isBusiness: false,
+                  isInitial: false,
+                  isLogin: true,
+                ).toMap(),
+              );
+            }
+          }
         },
         text: labels[31]["labelText"],
+        auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
       );
     } else {
       return SolidButton(onTap: () {}, text: labels[31]["labelText"]);

@@ -7,7 +7,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
-import 'package:dialup_mobile_app/data/repositories/corporateOnboarding/map_if_trade_license_exists.dart';
+import 'package:dialup_mobile_app/data/repositories/corporateOnboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -166,6 +166,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                   const SizeBox(height: 7),
                   CustomTextField(
                     controller: _tradeLicenseController,
+                    // keyboardType: TextInputType.number,
                     onChanged: (p0) {
                       if (p0.isEmpty) {
                         isTradeLicense = false;
@@ -252,6 +253,20 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                               );
                             }
                           } else {
+                            var regResult = await MapRegister.mapRegister(
+                              {
+                                "companyName": _companyNameController.text,
+                                "tradeLicenseNumber":
+                                    _tradeLicenseController.text,
+                                "countryOfRegistrationShortCode":
+                                    dhabiCountryIndex == -1
+                                        ? "US"
+                                        : dhabiCountries[dhabiCountryIndex]
+                                            ["shortCode"],
+                              },
+                              token,
+                            );
+                            log("regResult -> $regResult");
                             if (context.mounted) {
                               Navigator.pushNamed(
                                 context,

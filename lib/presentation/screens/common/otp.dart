@@ -229,16 +229,16 @@ class _OTPScreenState extends State<OTPScreen> {
       onChanged: (p0) async {
         if (_pinController.text.length == 6) {
           if (otpArgumentModel.isEmail) {
-            if (otpArgumentModel.isInitial) {
-              var result = await MapVerifyEmailOtp.mapVerifyEmailOtp(
-                {
-                  "emailId": otpArgumentModel.emailOrPhone,
-                  "otp": _pinController.text,
-                },
-              );
-              log("Verify Email OTP Response -> $result");
-
-              if (result["success"] == true) {
+            if (otpArgumentModel.isLogin) {
+              var result = await MapValidateEmailOtpForPassword
+                  .mapValidateEmailOtpForPassword({
+                "emailId": otpArgumentModel.emailOrPhone,
+                "otp": _pinController.text,
+              });
+              log("result -> $result");
+              tokenCP = result["token"];
+              log("tokenCP -> $tokenCP");
+              if (result["success"]) {
                 pinputErrorBloc.add(
                   PinputErrorEvent(
                     isError: false,
@@ -246,222 +246,279 @@ class _OTPScreenState extends State<OTPScreen> {
                     errorCount: pinputErrorCount,
                   ),
                 );
+                // TODO: Call API for getCustomer details and navigate to SelectAccountScreen
+                var getCustomerDetailsResponse =
+                    await MapCustomerDetails.mapCustomerDetails(tokenCP);
+                log("Get Customer Details API response -> $getCustomerDetailsResponse");
 
-                await Future.delayed(const Duration(milliseconds: 250));
+                List cifDetails = getCustomerDetailsResponse["cifDetails"];
+
                 if (context.mounted) {
-                  if (otpArgumentModel.isEmail) {
-                    Navigator.pop(context);
-                    Navigator.pushReplacementNamed(
-                      context,
-                      Routes.selectAccountType,
-                      arguments: CreateAccountArgumentModel(
-                        email: otpArgumentModel.emailOrPhone,
-                        isRetail: true,
-                      ).toMap(),
-                    );
-                  } else {
-                    if (otpArgumentModel.isBusiness) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) {
-                          return CustomDialog(
-                            svgAssetPath: ImageConstants.checkCircleOutlined,
-                            title: "Verified",
-                            message:
-                                "Your phone number has been verified.\nYou will receive email on the next steps.",
-                            actionWidget: Column(
-                              children: [
-                                BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                                  builder: (context, state) {
-                                    return GradientButton(
-                                      onTap: () async {
-                                        isLoading = true;
-                                        final ShowButtonBloc showButtonBloc =
-                                            context.read<ShowButtonBloc>();
-                                        showButtonBloc.add(
-                                            ShowButtonEvent(show: isLoading));
-                                        var getCustomerDetailsResponse =
-                                            await MapCustomerDetails
-                                                .mapCustomerDetails(token);
-                                        log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                                        List cifDetails =
-                                            getCustomerDetailsResponse[
-                                                "cifDetails"];
-                                        if (context.mounted) {
-                                          Navigator.pushNamed(
-                                            context,
-                                            Routes.selectAccount,
-                                            arguments:
-                                                SelectAccountArgumentModel(
-                                              cifDetails: cifDetails,
-                                              isPwChange: false,
-                                            ).toMap(),
-                                          );
-                                        }
-                                      },
-                                      text: labels[31]["labelText"],
-                                      auxWidget: isLoading
-                                          ? const LoaderRow()
-                                          : const SizeBox(),
-                                    );
-                                  },
-                                ),
-                                const SizeBox(height: 20),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.retailOnboardingStatus,
-                        arguments: OnboardingStatusArgumentModel(
-                          stepsCompleted: 4,
-                          isFatca: false,
-                          isPassport: false,
-                          isRetail: !otpArgumentModel.isBusiness,
-                        ).toMap(),
-                      );
-                    }
-                  }
+                  Navigator.pushReplacementNamed(
+                    context,
+                    Routes.selectAccount,
+                    arguments: SelectAccountArgumentModel(
+                      emailId: otpArgumentModel.emailOrPhone,
+                      cifDetails: cifDetails,
+                      isPwChange: false,
+                      isLogin: true,
+                    ).toMap(),
+                  );
                 }
               } else {
                 pinputErrorCount++;
-                pinputErrorBloc.add(PinputErrorEvent(
-                    isError: true,
-                    isComplete: true,
-                    errorCount: pinputErrorCount));
-              }
-            } else {
-              var result = await MapValidateEmailOtpForPassword
-                  .mapValidateEmailOtpForPassword(
-                {
-                  "emailId": otpArgumentModel.emailOrPhone,
-                  "otp": _pinController.text,
-                },
-              );
-              log("Validate Email OTP For Password Response -> $result");
-              tokenCP = result["token"];
-              log("tokenCP -> $tokenCP");
-
-              if (result["success"] == true) {
                 pinputErrorBloc.add(
                   PinputErrorEvent(
-                    isError: false,
+                    isError: true,
                     isComplete: true,
                     errorCount: pinputErrorCount,
                   ),
                 );
+              }
+            } else {
+              if (otpArgumentModel.isInitial) {
+                var result = await MapVerifyEmailOtp.mapVerifyEmailOtp(
+                  {
+                    "emailId": otpArgumentModel.emailOrPhone,
+                    "otp": _pinController.text,
+                  },
+                );
+                log("Verify Email OTP Response -> $result");
 
-                // await Future.delayed(const Duration(milliseconds: 250));
-                if (context.mounted) {
-                  if (otpArgumentModel.isEmail) {
-                    // Navigator.pop(context);
-                    // TODO: Check for new device
+                if (result["success"] == true) {
+                  pinputErrorBloc.add(
+                    PinputErrorEvent(
+                      isError: false,
+                      isComplete: true,
+                      errorCount: pinputErrorCount,
+                    ),
+                  );
 
-                    // TODO: if not new device, go to select entity screen
-                    var getCustomerDetailsResponse =
-                        await MapCustomerDetails.mapCustomerDetails(tokenCP);
-                    log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                    List cifDetails = getCustomerDetailsResponse["cifDetails"];
-
-                    if (cifDetails.length == 1) {
-                      if (context.mounted) {
-                        cif =
-                            getCustomerDetailsResponse["cifDetails"][0]["cif"];
-                        Navigator.pushNamed(context, Routes.setPassword);
-                      }
+                  await Future.delayed(const Duration(milliseconds: 250));
+                  if (context.mounted) {
+                    if (otpArgumentModel.isEmail) {
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(
+                        context,
+                        Routes.selectAccountType,
+                        arguments: CreateAccountArgumentModel(
+                          email: otpArgumentModel.emailOrPhone,
+                          isRetail: true,
+                        ).toMap(),
+                      );
                     } else {
-                      if (context.mounted) {
-                        Navigator.pushReplacementNamed(
+                      if (otpArgumentModel.isBusiness) {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return CustomDialog(
+                              svgAssetPath: ImageConstants.checkCircleOutlined,
+                              title: "Verified",
+                              message:
+                                  "Your phone number has been verified.\nYou will receive email on the next steps.",
+                              actionWidget: Column(
+                                children: [
+                                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                    builder: (context, state) {
+                                      return GradientButton(
+                                        onTap: () async {
+                                          isLoading = true;
+                                          final ShowButtonBloc showButtonBloc =
+                                              context.read<ShowButtonBloc>();
+                                          showButtonBloc.add(
+                                              ShowButtonEvent(show: isLoading));
+                                          var getCustomerDetailsResponse =
+                                              await MapCustomerDetails
+                                                  .mapCustomerDetails(token);
+                                          log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                          List cifDetails =
+                                              getCustomerDetailsResponse[
+                                                  "cifDetails"];
+                                          if (context.mounted) {
+                                            Navigator.pushNamed(
+                                              context,
+                                              Routes.selectAccount,
+                                              arguments:
+                                                  SelectAccountArgumentModel(
+                                                emailId: otpArgumentModel
+                                                    .emailOrPhone,
+                                                cifDetails: cifDetails,
+                                                isPwChange: false,
+                                                isLogin: false,
+                                              ).toMap(),
+                                            );
+                                          }
+                                        },
+                                        text: labels[31]["labelText"],
+                                        auxWidget: isLoading
+                                            ? const LoaderRow()
+                                            : const SizeBox(),
+                                      );
+                                    },
+                                  ),
+                                  const SizeBox(height: 20),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        Navigator.pushNamed(
                           context,
-                          Routes.selectAccount,
-                          arguments: SelectAccountArgumentModel(
-                            cifDetails: cifDetails,
-                            isPwChange: true,
+                          Routes.retailOnboardingStatus,
+                          arguments: OnboardingStatusArgumentModel(
+                            stepsCompleted: 4,
+                            isFatca: false,
+                            isPassport: false,
+                            isRetail: !otpArgumentModel.isBusiness,
                           ).toMap(),
                         );
                       }
                     }
-                  } else {
-                    if (otpArgumentModel.isBusiness) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) {
-                          return CustomDialog(
-                            svgAssetPath: ImageConstants.checkCircleOutlined,
-                            title: "Verified",
-                            message:
-                                "Your phone number has been verified.\nYou will receive email on the next steps.",
-                            actionWidget: Column(
-                              children: [
-                                BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                                  builder: (context, state) {
-                                    return GradientButton(
-                                      onTap: () async {
-                                        isLoading = true;
-                                        final ShowButtonBloc showButtonBloc =
-                                            context.read<ShowButtonBloc>();
-                                        showButtonBloc.add(
-                                            ShowButtonEvent(show: isLoading));
-                                        var getCustomerDetailsResponse =
-                                            await MapCustomerDetails
-                                                .mapCustomerDetails(token);
-                                        log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                                        List cifDetails =
-                                            getCustomerDetailsResponse[
-                                                "cifDetails"];
-                                        if (context.mounted) {
-                                          Navigator.pushNamed(
-                                            context,
-                                            Routes.selectAccount,
-                                            arguments:
-                                                SelectAccountArgumentModel(
-                                              cifDetails: cifDetails,
-                                              isPwChange: false,
-                                            ).toMap(),
-                                          );
-                                        }
-                                      },
-                                      text: labels[31]["labelText"],
-                                      auxWidget: isLoading
-                                          ? const LoaderRow()
-                                          : const SizeBox(),
-                                    );
-                                  },
-                                ),
-                                const SizeBox(height: 20),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.retailOnboardingStatus,
-                        arguments: OnboardingStatusArgumentModel(
-                          stepsCompleted: 4,
-                          isFatca: false,
-                          isPassport: false,
-                          isRetail: !otpArgumentModel.isBusiness,
-                        ).toMap(),
-                      );
-                    }
                   }
+                } else {
+                  pinputErrorCount++;
+                  pinputErrorBloc.add(PinputErrorEvent(
+                      isError: true,
+                      isComplete: true,
+                      errorCount: pinputErrorCount));
                 }
               } else {
-                pinputErrorCount++;
-                pinputErrorBloc.add(
-                  PinputErrorEvent(
-                    isError: true,
-                    isComplete: true,
-                    errorCount: pinputErrorCount,
-                  ),
+                var result = await MapValidateEmailOtpForPassword
+                    .mapValidateEmailOtpForPassword(
+                  {
+                    "emailId": otpArgumentModel.emailOrPhone,
+                    "otp": _pinController.text,
+                  },
                 );
+                log("Validate Email OTP For Password Response -> $result");
+                tokenCP = result["token"];
+                log("tokenCP -> $tokenCP");
+
+                if (result["success"] == true) {
+                  pinputErrorBloc.add(
+                    PinputErrorEvent(
+                      isError: false,
+                      isComplete: true,
+                      errorCount: pinputErrorCount,
+                    ),
+                  );
+
+                  // await Future.delayed(const Duration(milliseconds: 250));
+                  if (context.mounted) {
+                    if (otpArgumentModel.isEmail) {
+                      // Navigator.pop(context);
+                      // TODO: Check for new device
+
+                      // TODO: if not new device, go to select entity screen
+                      var getCustomerDetailsResponse =
+                          await MapCustomerDetails.mapCustomerDetails(tokenCP);
+                      log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                      List cifDetails =
+                          getCustomerDetailsResponse["cifDetails"];
+
+                      if (cifDetails.length == 1) {
+                        if (context.mounted) {
+                          cif = getCustomerDetailsResponse["cifDetails"][0]
+                              ["cif"];
+                          Navigator.pushNamed(context, Routes.setPassword);
+                        }
+                      } else {
+                        if (context.mounted) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            Routes.selectAccount,
+                            arguments: SelectAccountArgumentModel(
+                              emailId: otpArgumentModel.emailOrPhone,
+                              cifDetails: cifDetails,
+                              isPwChange: true,
+                              isLogin: false,
+                            ).toMap(),
+                          );
+                        }
+                      }
+                    } else {
+                      if (otpArgumentModel.isBusiness) {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return CustomDialog(
+                              svgAssetPath: ImageConstants.checkCircleOutlined,
+                              title: "Verified",
+                              message:
+                                  "Your phone number has been verified.\nYou will receive email on the next steps.",
+                              actionWidget: Column(
+                                children: [
+                                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                    builder: (context, state) {
+                                      return GradientButton(
+                                        onTap: () async {
+                                          isLoading = true;
+                                          final ShowButtonBloc showButtonBloc =
+                                              context.read<ShowButtonBloc>();
+                                          showButtonBloc.add(
+                                              ShowButtonEvent(show: isLoading));
+                                          var getCustomerDetailsResponse =
+                                              await MapCustomerDetails
+                                                  .mapCustomerDetails(token);
+                                          log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                          List cifDetails =
+                                              getCustomerDetailsResponse[
+                                                  "cifDetails"];
+                                          if (context.mounted) {
+                                            Navigator.pushNamed(
+                                              context,
+                                              Routes.selectAccount,
+                                              arguments:
+                                                  SelectAccountArgumentModel(
+                                                emailId: otpArgumentModel
+                                                    .emailOrPhone,
+                                                cifDetails: cifDetails,
+                                                isPwChange: false,
+                                                isLogin: false,
+                                              ).toMap(),
+                                            );
+                                          }
+                                        },
+                                        text: labels[31]["labelText"],
+                                        auxWidget: isLoading
+                                            ? const LoaderRow()
+                                            : const SizeBox(),
+                                      );
+                                    },
+                                  ),
+                                  const SizeBox(height: 20),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.retailOnboardingStatus,
+                          arguments: OnboardingStatusArgumentModel(
+                            stepsCompleted: 4,
+                            isFatca: false,
+                            isPassport: false,
+                            isRetail: !otpArgumentModel.isBusiness,
+                          ).toMap(),
+                        );
+                      }
+                    }
+                  }
+                } else {
+                  pinputErrorCount++;
+                  pinputErrorBloc.add(
+                    PinputErrorEvent(
+                      isError: true,
+                      isComplete: true,
+                      errorCount: pinputErrorCount,
+                    ),
+                  );
+                }
               }
             }
           } else {
@@ -532,8 +589,11 @@ class _OTPScreenState extends State<OTPScreen> {
                                           context,
                                           Routes.selectAccount,
                                           arguments: SelectAccountArgumentModel(
+                                            emailId:
+                                                otpArgumentModel.emailOrPhone,
                                             cifDetails: cifDetails,
                                             isPwChange: false,
+                                            isLogin: false,
                                           ).toMap(),
                                         );
                                       }

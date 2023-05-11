@@ -285,6 +285,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 isEmail: true,
                 isBusiness: false,
                 isInitial: registrationArgument.isInitial,
+                isLogin: false,
               ).toMap(),
             );
           }

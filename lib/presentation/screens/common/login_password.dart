@@ -204,6 +204,8 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
   }
 
   void onSubmit() async {
+    log("companyID -> ${loginPasswordArgument.companyId}");
+    log("userTypeId -> ${loginPasswordArgument.userTypeId}");
     final MatchPasswordBloc matchPasswordBloc =
         context.read<MatchPasswordBloc>();
     // TODO: Use API to conduct validation, for now testing with mock static data
@@ -211,10 +213,10 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     matchPasswordBloc
         .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
     var result = await MapLogin.mapLogin({
-      "emailId": emailAddress,
-      "userTypeId": 1,
-      "userId": 60, // TODO: get this value from flutter_secure_storage
-      "companyId": 0,
+      "emailId": loginPasswordArgument.emailId,
+      "userTypeId": loginPasswordArgument.userTypeId,
+      "userId": loginPasswordArgument.userId,
+      "companyId": loginPasswordArgument.companyId,
       "password": _passwordController.text,
       "deviceId": deviceId,
       "registerDevice": false,
@@ -227,16 +229,21 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     log("token -> $token");
     if (result["success"]) {
       if (context.mounted) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          Routes.retailDashboard,
-          (route) => false,
-          arguments: RetailDashboardArgumentModel(
-            imgUrl:
-                "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-            name: emailAddress,
-          ).toMap(),
-        );
+        if (loginPasswordArgument.userTypeId == 1) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.retailDashboard,
+            (route) => false,
+            arguments: RetailDashboardArgumentModel(
+              imgUrl:
+                  "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+              name: emailAddress,
+            ).toMap(),
+          );
+        } else {
+          Navigator.pushNamedAndRemoveUntil(
+              context, Routes.businessDashboard, (route) => false);
+        }
       }
     }
     // if (_passwordController.text != "AyanDg16@#") {

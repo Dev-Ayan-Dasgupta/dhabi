@@ -3,4 +3,4 @@ String tokenCP = "";
 
 int userId = 0;
 
-String cif = "";
+String? cif;
