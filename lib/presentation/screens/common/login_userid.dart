@@ -128,7 +128,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
-          title: "Are you sure?",
+          title: labels[250]["labelText"],
           message:
               "Going to the previous screen will make you repeat this step.",
           actionWidget: Column(

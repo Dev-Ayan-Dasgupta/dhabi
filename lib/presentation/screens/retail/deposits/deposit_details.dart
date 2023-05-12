@@ -114,7 +114,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
-          title: "Are you sure?",
+          title: labels[250]["labelText"],
           message: "Penalty rate will apply in case of premature withdrawal.",
           actionWidget: Column(
             children: [

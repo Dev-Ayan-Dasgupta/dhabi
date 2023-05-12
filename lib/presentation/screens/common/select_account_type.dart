@@ -112,14 +112,14 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                     },
                     child: RichText(
                       text: TextSpan(
-                        text: labels[213]["labelText"],
+                        text: '${labels[213]["labelText"]} ',
                         style: TextStyles.primary.copyWith(
                           color: AppColors.primary,
                           fontSize: (16 / Dimensions.designWidth).w,
                         ),
                         children: <TextSpan>[
                           TextSpan(
-                            text: 'Log in',
+                            text: labels[214]["labelText"],
                             style: TextStyles.primaryBold.copyWith(
                               color: AppColors.primary,
                               fontSize: (16 / Dimensions.designWidth).w,

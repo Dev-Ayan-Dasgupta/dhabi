@@ -486,8 +486,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           !hasOnboarded
               ? const SizeBox(height: 265)
               : DraggableScrollableSheet(
-                  initialChildSize: 0.4,
-                  minChildSize: 0.4,
+                  initialChildSize: 0.39,
+                  minChildSize: 0.39,
                   maxChildSize: 1,
                   builder: (context, scrollController) {
                     return Stack(
@@ -499,8 +499,11 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                             horizontal: (10 / Dimensions.designWidth).w,
                           ),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular((20 / Dimensions.designWidth).w),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(
+                                  (20 / Dimensions.designWidth).w),
+                              topRight: Radius.circular(
+                                  (20 / Dimensions.designWidth).w),
                             ),
                             boxShadow: [BoxShadows.primary],
                             color: Colors.white,

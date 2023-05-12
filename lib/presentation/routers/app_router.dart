@@ -42,10 +42,10 @@ class AppRouter {
             argument: args,
           ),
         );
-      case Routes.login:
-        return MaterialPageRoute(
-          builder: (_) => const LoginScreen(), // Deprecated
-        );
+      // case Routes.login:
+      //   return MaterialPageRoute(
+      //     builder: (_) => const LoginScreen(), // Deprecated
+      //   );
       case Routes.loginUserId:
         return MaterialPageRoute(
           builder: (_) => const LoginUserIdScreen(),

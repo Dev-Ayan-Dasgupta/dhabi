@@ -180,7 +180,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
-          title: "Are you sure?",
+          title: labels[250]["labelText"],
           message: "If you log out you would need to re-login again",
           actionWidget: Column(
             children: [

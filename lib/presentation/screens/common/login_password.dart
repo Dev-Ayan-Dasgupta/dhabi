@@ -109,13 +109,13 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                 ),
                 const SizeBox(height: 15),
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.center,
                   child: InkWell(
                     onTap: onForgotEmailPwd,
                     child: Text(
                       labels[47]["labelText"],
                       style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.primaryBright50,
+                        color: AppColors.primaryLighter,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
@@ -208,7 +208,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     log("userTypeId -> ${loginPasswordArgument.userTypeId}");
     final MatchPasswordBloc matchPasswordBloc =
         context.read<MatchPasswordBloc>();
-    // TODO: Use API to conduct validation, for now testing with mock static data
+
     isLoading = true;
     matchPasswordBloc
         .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
@@ -245,24 +245,122 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               context, Routes.businessDashboard, (route) => false);
         }
       }
+    } else {
+      if (context.mounted) {
+        switch (result["reasonCode"]) {
+          case 1:
+            // promptWrongCredentials();
+            break;
+          case 2:
+            promptWrongCredentials();
+            break;
+          case 3:
+            promptWrongCredentials();
+            break;
+          case 4:
+            promptWrongCredentials();
+            break;
+          case 5:
+            promptWrongCredentials();
+            break;
+          case 6:
+            promptKycExpired();
+            break;
+          case 7:
+            verifySession();
+            break;
+          default:
+        }
+      }
     }
-    // if (_passwordController.text != "AyanDg16@#") {
-    //   matchPasswordErrorCount++;
-    //   isMatch = false;
-    //   matchPasswordBloc.add(
-    //       MatchPasswordEvent(isMatch: isMatch, count: matchPasswordErrorCount));
-    // } else {
-    //   // TODO: Call Navigation to next page, testing for now, API later
-    //   Navigator.pushNamed(
-    //     context,
-    //     Routes.retailDashboard,
-    //     arguments: RetailDashboardArgumentModel(
-    //       imgUrl:
-    //           "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-    //       name: "ADasgupta@aspire-infotech.net",
-    //     ).toMap(),
-    //   );
-    // }
+  }
+
+  void promptWrongCredentials() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Wrong Credentials",
+          message: "You have entered invalid username or password",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[88]["labelText"],
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void verifySession() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Verify this session",
+          message: messages[66]["messageText"],
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () async {
+                  var result = await MapLogin.mapLogin({
+                    "emailId": loginPasswordArgument.emailId,
+                    "userTypeId": loginPasswordArgument.userTypeId,
+                    "userId": loginPasswordArgument.userId,
+                    "companyId": loginPasswordArgument.companyId,
+                    "password": _passwordController.text,
+                    "deviceId": deviceId,
+                    "registerDevice": true,
+                    "deviceName": deviceName,
+                    "deviceType": deviceType,
+                    "appVersion": appVersion
+                  });
+                  log("Login API Response -> $result");
+                  token = result["token"];
+                  log("token -> $token");
+                },
+                text: labels[31]["labelText"],
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void promptKycExpired() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "KYC Expired",
+          message:
+              "Your KYC Documents have expired. Please verify your documents again.",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.verificationInitializing);
+                },
+                text: "Verify",
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget buildErrorMessage(BuildContext context, MatchPasswordState state) {
@@ -316,7 +414,6 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
   }
 
   void onForgotEmailPwd() {
-    // TODO: navigate to Forgot Password screen
     Navigator.pushNamed(context, Routes.registration,
         arguments: RegistrationArgumentModel(isInitial: false).toMap());
   }

@@ -36,6 +36,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
   int companyId = 0;
   int userTypeId = 0;
 
+  bool isCompany = false;
   bool isCompanyRegistered = false;
 
   @override
@@ -102,8 +103,10 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                               // log("isLogin -> ${selectAccountArgument.isLogin}");
                               log("isPwChange -> ${selectAccountArgument.isPwChange}");
                               if (selectAccountArgument.isPwChange) {
-                                isCompanyRegistered = (selectAccountArgument
-                                    .cifDetails[index]["isCompanyRegistered"]);
+                                isCompany = selectAccountArgument
+                                    .cifDetails[index]["isCompany"];
+                                isCompanyRegistered = selectAccountArgument
+                                    .cifDetails[index]["isCompanyRegistered"];
                               } else {
                                 if (selectAccountArgument.isLogin) {
                                   userTypeId = selectAccountArgument
@@ -144,7 +147,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                       return GradientButton(
                         onTap: () {
                           if (selectAccountArgument.isPwChange) {
-                            if (isCompanyRegistered) {
+                            if (!isCompany || isCompanyRegistered) {
                               Navigator.pushNamed(context, Routes.setPassword);
                             } else {
                               // TODO: show dialog box which Samit sir will share
