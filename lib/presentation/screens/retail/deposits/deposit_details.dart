@@ -110,7 +110,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
   void promptUser() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      // barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,

@@ -176,7 +176,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
   void promptUserLogout() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      // barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,

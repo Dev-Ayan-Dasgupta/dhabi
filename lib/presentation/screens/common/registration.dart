@@ -192,7 +192,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void promptUser() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      // barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,

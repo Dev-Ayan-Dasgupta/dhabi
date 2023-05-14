@@ -327,7 +327,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   void promptUser() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      // barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
