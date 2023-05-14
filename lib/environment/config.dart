@@ -26,6 +26,11 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['HAS_CUSTOMER_SINGLE_CIF'] ?? "";
   }
 
+  @override
+  String get getCustomerAccountDetails {
+    return dotenv.env['GET_CUSTOMER_ACOUNT_DETAILS'] ?? "";
+  }
+
   // ? Authentication APIs
 
   @override

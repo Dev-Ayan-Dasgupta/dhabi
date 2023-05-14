@@ -4,6 +4,7 @@ abstract class BaseConfig {
   String get createAccount;
   String get getCustomerDetails;
   String get hasCustomerSingleCif;
+  String get getCustomerAccountDetails;
 
   // ? Authentication APIs
 
