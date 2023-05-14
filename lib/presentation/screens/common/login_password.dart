@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
@@ -218,7 +221,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       "userId": loginPasswordArgument.userId,
       "companyId": loginPasswordArgument.companyId,
       "password": _passwordController.text,
-      "deviceId": deviceId,
+      "deviceId": "${deviceId}1",
       "registerDevice": false,
       "deviceName": deviceName,
       "deviceType": deviceType,
@@ -302,6 +305,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
   }
 
   void promptVerifySession() {
+    bool isLoading = false;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -312,25 +316,81 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           message: messages[66]["messageText"],
           actionWidget: Column(
             children: [
-              GradientButton(
-                onTap: () async {
-                  var result = await MapLogin.mapLogin({
-                    "emailId": loginPasswordArgument.emailId,
-                    "userTypeId": loginPasswordArgument.userTypeId,
-                    "userId": loginPasswordArgument.userId,
-                    "companyId": loginPasswordArgument.companyId,
-                    "password": _passwordController.text,
-                    "deviceId": deviceId,
-                    "registerDevice": true,
-                    "deviceName": deviceName,
-                    "deviceType": deviceType,
-                    "appVersion": appVersion
-                  });
-                  log("Login API Response -> $result");
-                  token = result["token"];
-                  log("token -> $token");
+              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                builder: (context, state) {
+                  return GradientButton(
+                    onTap: () async {
+                      isLoading = true;
+                      final ShowButtonBloc showButtonBloc =
+                          context.read<ShowButtonBloc>();
+                      showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                      var result = await MapLogin.mapLogin({
+                        "emailId": loginPasswordArgument.emailId,
+                        "userTypeId": loginPasswordArgument.userTypeId,
+                        "userId": loginPasswordArgument.userId,
+                        "companyId": loginPasswordArgument.companyId,
+                        "password": _passwordController.text,
+                        "deviceId": "${deviceId}1",
+                        "registerDevice": true,
+                        "deviceName": deviceName,
+                        "deviceType": deviceType,
+                        "appVersion": appVersion
+                      });
+                      log("Login API Response -> $result");
+                      token = result["token"];
+                      log("token -> $token");
+                      if (result["success"]) {
+                        if (context.mounted) {
+                          if (loginPasswordArgument.userTypeId == 1) {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.retailDashboard,
+                              (route) => false,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl:
+                                    "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                name: emailAddress,
+                              ).toMap(),
+                            );
+                          } else {
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                Routes.businessDashboard, (route) => false);
+                          }
+                        }
+                      } else {
+                        log("Reason Code -> ${result["reasonCode"]}");
+                        if (context.mounted) {
+                          switch (result["reasonCode"]) {
+                            case 1:
+                              // promptWrongCredentials();
+                              break;
+                            case 2:
+                              promptWrongCredentials();
+                              break;
+                            case 3:
+                              promptWrongCredentials();
+                              break;
+                            case 4:
+                              promptWrongCredentials();
+                              break;
+                            case 5:
+                              promptWrongCredentials();
+                              break;
+                            case 6:
+                              promptKycExpired();
+                              break;
+                            case 7:
+                              promptVerifySession();
+                              break;
+                            default:
+                          }
+                        }
+                      }
+                    },
+                    text: labels[31]["labelText"],
+                    auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
+                  );
                 },
-                text: labels[31]["labelText"],
               ),
               const SizeBox(height: 20),
             ],
