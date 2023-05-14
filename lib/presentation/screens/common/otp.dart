@@ -92,47 +92,53 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const AppBarLeading(),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal:
-              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+    return WillPopScope(
+      onWillPop: () async {
+        promptUser();
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: AppBarLeading(onTap: promptUser),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: Column(
-                  children: [
-                    const SizeBox(height: 30),
-                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                      builder: buildIcon,
-                    ),
-                    const SizeBox(height: 20),
-                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                      builder: buildTitle,
-                    ),
-                    const SizeBox(height: 15),
-                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                      builder: buildDescription,
-                    ),
-                    const SizeBox(height: 25),
-                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                      builder: buildPinput,
-                    ),
-                    BlocBuilder<PinputErrorBloc, PinputErrorState>(
-                      builder: buildTimer,
-                    ),
-                  ],
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal:
+                (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Center(
+                  child: Column(
+                    children: [
+                      const SizeBox(height: 30),
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                        builder: buildIcon,
+                      ),
+                      const SizeBox(height: 20),
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                        builder: buildTitle,
+                      ),
+                      const SizeBox(height: 15),
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                        builder: buildDescription,
+                      ),
+                      const SizeBox(height: 25),
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                        builder: buildPinput,
+                      ),
+                      BlocBuilder<PinputErrorBloc, PinputErrorState>(
+                        builder: buildTimer,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -213,6 +219,33 @@ class _OTPScreenState extends State<OTPScreen> {
         textAlign: TextAlign.center,
       );
     }
+  }
+
+  void promptUser() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: labels[250]["labelText"],
+          message:
+              "Going to the previous screen will make you repeat this step.",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                text: "Go Back",
+              ),
+              const SizeBox(height: 22),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Widget buildPinput(BuildContext context, PinputErrorState state) {

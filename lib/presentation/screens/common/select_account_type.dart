@@ -37,6 +37,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
   int toggles = 0;
 
   bool isValidating = false;
+  bool isInvalid = false;
 
   late CreateAccountArgumentModel createAccountArgumentModel;
 
@@ -49,95 +50,99 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // systemOverlayStyle: const SystemUiOverlayStyle(
-        //   statusBarColor: Colors.white,
-        //   statusBarIconBrightness: Brightness.dark,
-        //   statusBarBrightness: Brightness.light,
-        // ),
-        leading: const AppBarLeading(),
-        // backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-            horizontal:
-                (PaddingConstants.horizontalPadding / Dimensions.designWidth)
-                    .w),
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    labels[215]["labelText"],
-                    style: TextStyles.primaryBold.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (28 / Dimensions.designWidth).w,
-                    ),
-                  ),
-                  const SizeBox(height: 22),
-                  Text(
-                    labels[216]["labelText"],
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.dark50,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
-                  ),
-                  const SizeBox(height: 30),
-                  BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
-                    builder: buildPersonalButton,
-                  ),
-                  const SizeBox(height: 30),
-                  BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
-                    builder: buildBusinessButton,
-                  ),
-                ],
-              ),
-            ),
-            Center(
-              child: Column(
-                children: [
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: buildSubmitButton,
-                  ),
-                  const SizeBox(height: 15),
-                  InkWell(
-                    onTap: () {
-                      // TODO: Add biometricPrompt
-                      Navigator.pushReplacementNamed(
-                          context, Routes.loginUserId);
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: '${labels[213]["labelText"]} ',
-                        style: TextStyles.primary.copyWith(
-                          color: AppColors.primary,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: labels[214]["labelText"],
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ],
+    return WillPopScope(
+      onWillPop: () async {
+        if (isInvalid) {
+          Navigator.pop(context);
+        }
+        Navigator.pushNamed(context, Routes.registration,
+            arguments: RegistrationArgumentModel(isInitial: true).toMap());
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: const AppBarLeading(),
+          elevation: 0,
+        ),
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal:
+                  (PaddingConstants.horizontalPadding / Dimensions.designWidth)
+                      .w),
+          child: Column(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      labels[215]["labelText"],
+                      style: TextStyles.primaryBold.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (28 / Dimensions.designWidth).w,
                       ),
                     ),
-                  ),
-                  SizeBox(
-                    height: PaddingConstants.bottomPadding +
-                        MediaQuery.of(context).padding.bottom,
-                  ),
-                ],
+                    const SizeBox(height: 22),
+                    Text(
+                      labels[216]["labelText"],
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.dark50,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                    const SizeBox(height: 30),
+                    BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
+                      builder: buildPersonalButton,
+                    ),
+                    const SizeBox(height: 30),
+                    BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
+                      builder: buildBusinessButton,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              Center(
+                child: Column(
+                  children: [
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: buildSubmitButton,
+                    ),
+                    const SizeBox(height: 15),
+                    InkWell(
+                      onTap: () {
+                        // TODO: Add biometricPrompt
+                        Navigator.pushReplacementNamed(
+                            context, Routes.loginUserId);
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: '${labels[213]["labelText"]} ',
+                          style: TextStyles.primary.copyWith(
+                            color: AppColors.primary,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: labels[214]["labelText"],
+                              style: TextStyles.primaryBold.copyWith(
+                                color: AppColors.primary,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizeBox(
+                      height: PaddingConstants.bottomPadding +
+                          MediaQuery.of(context).padding.bottom,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -243,6 +248,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
               );
             }
           } else {
+            isInvalid = true;
             // TODO: uncomment this after testing
             if (context.mounted) {
               showDialog(
