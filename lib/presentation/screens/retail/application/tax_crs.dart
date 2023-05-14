@@ -576,6 +576,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
               if (context.mounted) {
                 Navigator.pushNamed(context, Routes.applicationAccount);
               }
+              isUploading = false;
+              showButtonBloc.add(ShowButtonEvent(show: isUploading));
             },
             text: labels[127]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),

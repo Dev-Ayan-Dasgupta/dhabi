@@ -230,6 +230,8 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                   isRetail: true,
                 ).toMap(),
               );
+              isUploading = false;
+              showButtonBloc.add(ShowButtonEvent(show: isUploading));
             },
             text: labels[288]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),

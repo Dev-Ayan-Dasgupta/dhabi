@@ -132,6 +132,9 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
               if (context.mounted) {
                 Navigator.pushNamed(context, Routes.applicationTaxFATCA);
               }
+              isUploading = false;
+              showButtonBloc.add(DropdownSelectedEvent(
+                  isDropdownSelected: isUploading, toggles: toggles));
             },
             text: labels[127]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),

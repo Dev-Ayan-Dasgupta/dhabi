@@ -287,6 +287,8 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
             //   );
             // }
           }
+          isValidating = false;
+          showButtonBloc.add(ShowButtonEvent(show: isValidating));
         },
         text: labels[31]["labelText"],
         auxWidget: isValidating ? const LoaderRow() : const SizeBox(),

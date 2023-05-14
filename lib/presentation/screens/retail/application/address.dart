@@ -338,6 +338,13 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                             Navigator.pushNamed(
                                 context, Routes.applicationIncome);
                           }
+                          isUploading = false;
+                          showButtonBloc.add(
+                            DropdownSelectedEvent(
+                              isDropdownSelected: isUploading,
+                              toggles: toggles,
+                            ),
+                          );
                         },
                         text: labels[127]["labelText"],
                         auxWidget:

@@ -268,6 +268,9 @@ class _AcceptTermsAndConditionsScreenState
                                   ).toMap(),
                                 );
                               }
+                              isUploading = false;
+                              showButtonBloc
+                                  .add(ShowButtonEvent(show: isUploading));
                             },
                             text: "I Agree",
                             auxWidget: isUploading
