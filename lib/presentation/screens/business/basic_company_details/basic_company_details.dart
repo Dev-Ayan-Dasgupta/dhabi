@@ -207,7 +207,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                                       : dhabiCountries[dhabiCountryIndex]
                                           ["shortCode"],
                             },
-                            token,
+                            token ?? "",
                           );
                           log("Trade License API resonse -> $tLResult");
                           if (tLResult) {
@@ -264,7 +264,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                                         : dhabiCountries[dhabiCountryIndex]
                                             ["shortCode"],
                               },
-                              token,
+                              token ?? "",
                             );
                             log("regResult -> $regResult");
                             if (context.mounted) {

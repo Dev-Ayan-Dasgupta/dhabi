@@ -126,7 +126,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
               var result =
                   await MapAddOrUpdateIncomeSource.mapAddOrUpdateIncomeSource(
                 {"incomeSource": selectedValue},
-                token,
+                token ?? "",
               );
               log("Income Source API response -> $result");
               if (context.mounted) {

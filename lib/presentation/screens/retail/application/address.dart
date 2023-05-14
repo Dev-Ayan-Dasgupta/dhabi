@@ -332,7 +332,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                             "stateId": 1,
                             "countryId": 1,
                             "pinCode": _zipController.text
-                          }, token);
+                          }, token ?? "");
                           log("RegisterRetailCustomerAddress API Response -> $result");
                           if (context.mounted) {
                             Navigator.pushNamed(

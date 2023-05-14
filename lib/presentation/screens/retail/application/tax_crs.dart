@@ -570,7 +570,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                     }
                   ]
                 },
-                token,
+                token ?? "",
               );
               log("Tax Information API response -> $result");
               if (context.mounted) {

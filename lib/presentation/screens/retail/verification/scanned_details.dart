@@ -210,8 +210,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
-      bool result =
-          await MapIfEidExists.mapIfEidExists({"eidNumber": eiDNumber}, token);
+      bool result = await MapIfEidExists.mapIfEidExists(
+          {"eidNumber": eiDNumber}, token ?? "");
       log("If EID Exists API response -> $result");
 
       log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
@@ -419,7 +419,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
       bool result = await MapIfPassportExists.mapIfPassportExists(
-          {"passportNumber": passportNumber}, token);
+          {"passportNumber": passportNumber}, token ?? "");
       log("If Passport Exists API response -> $result");
 
       log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");

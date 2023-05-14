@@ -94,7 +94,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
 
       bool result = await MapIfPassportExists.mapIfPassportExists(
-          {"passportNumber": passportNumber}, token);
+          {"passportNumber": passportNumber}, token ?? "");
       log("If Passport Exists API response -> $result");
 
       // ? Check for expired

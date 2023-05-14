@@ -197,7 +197,7 @@ class _AcceptTermsAndConditionsScreenState
                                                   "1 January 1900")),
                                       "isReKYC": false
                                     },
-                                    token,
+                                    token ?? "",
                                   );
 
                                   log("UploadEid API response -> $response");
@@ -243,7 +243,7 @@ class _AcceptTermsAndConditionsScreenState
                                                   expiryDate ?? "00/00/0000")),
                                       "isReKYC": false
                                     },
-                                    token,
+                                    token ?? "",
                                   );
                                   log("UploadPassport API response -> $response");
                                 }
@@ -251,7 +251,8 @@ class _AcceptTermsAndConditionsScreenState
 
                               var responseAccount =
                                   await MapCreateAccount.mapCreateAccount(
-                                      {"accountType": accountType}, token);
+                                      {"accountType": accountType},
+                                      token ?? "");
                               log("Create Account API response -> $responseAccount");
 
                               // TODO: Use Navigator.pushNamedAndRemoveUntil

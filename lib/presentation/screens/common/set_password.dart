@@ -389,7 +389,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   "cif": cif,
                   "password": _newPasswordController.text,
                 },
-                tokenCP,
+                tokenCP ?? "",
               );
               log("Change Password API response -> $result");
               if (context.mounted) {

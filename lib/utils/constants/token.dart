@@ -1,5 +1,5 @@
-String token = "";
-String tokenCP = "";
+String? token;
+String? tokenCP;
 
 int userId = 0;
 

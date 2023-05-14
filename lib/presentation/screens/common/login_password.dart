@@ -227,6 +227,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     log("Login API Response -> $result");
     token = result["token"];
     log("token -> $token");
+
     if (result["success"]) {
       if (context.mounted) {
         if (loginPasswordArgument.userTypeId == 1) {
@@ -246,6 +247,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         }
       }
     } else {
+      log("Reason Code -> ${result["reasonCode"]}");
       if (context.mounted) {
         switch (result["reasonCode"]) {
           case 1:
@@ -267,7 +269,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
             promptKycExpired();
             break;
           case 7:
-            verifySession();
+            promptVerifySession();
             break;
           default:
         }
@@ -299,7 +301,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     );
   }
 
-  void verifySession() {
+  void promptVerifySession() {
     showDialog(
       context: context,
       barrierDismissible: false,

@@ -179,7 +179,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
           showButtonBloc.add(ShowButtonEvent(show: isLoading));
           // TODO: Call Send Mobile OTP API here
           var result = await MapSendMobileOtp.mapSendMobileOtp(
-              {"mobileNo": "+971${_phoneController.text}"}, token);
+              {"mobileNo": "+971${_phoneController.text}"}, token ?? "");
           log("Send Mobile OTP API response -> $result");
           if (context.mounted) {
             Navigator.pushNamed(

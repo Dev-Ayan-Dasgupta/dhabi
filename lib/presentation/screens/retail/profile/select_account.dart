@@ -125,7 +125,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                             },
                             text: selectAccountArgument.cifDetails[index]
                                     ["companyName"] ??
-                                "Personal",
+                                "Personal Account",
                             color: Colors.white,
                             boxShadow: [BoxShadows.primary],
                             fontColor: AppColors.primary,

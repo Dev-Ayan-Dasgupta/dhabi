@@ -248,7 +248,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 );
                 // TODO: Call API for getCustomer details and navigate to SelectAccountScreen
                 var getCustomerDetailsResponse =
-                    await MapCustomerDetails.mapCustomerDetails(tokenCP);
+                    await MapCustomerDetails.mapCustomerDetails(tokenCP ?? "");
                 log("Get Customer Details API response -> $getCustomerDetailsResponse");
 
                 List cifDetails = getCustomerDetailsResponse["cifDetails"];
@@ -330,7 +330,8 @@ class _OTPScreenState extends State<OTPScreen> {
                                               ShowButtonEvent(show: isLoading));
                                           var getCustomerDetailsResponse =
                                               await MapCustomerDetails
-                                                  .mapCustomerDetails(token);
+                                                  .mapCustomerDetails(
+                                                      token ?? "");
                                           log("Get Customer Details API response -> $getCustomerDetailsResponse");
                                           List cifDetails =
                                               getCustomerDetailsResponse[
@@ -413,7 +414,8 @@ class _OTPScreenState extends State<OTPScreen> {
 
                       // TODO: if not new device, go to select entity screen
                       var getCustomerDetailsResponse =
-                          await MapCustomerDetails.mapCustomerDetails(tokenCP);
+                          await MapCustomerDetails.mapCustomerDetails(
+                              tokenCP ?? "");
                       log("Get Customer Details API response -> $getCustomerDetailsResponse");
                       List cifDetails =
                           getCustomerDetailsResponse["cifDetails"];
@@ -462,7 +464,8 @@ class _OTPScreenState extends State<OTPScreen> {
                                               ShowButtonEvent(show: isLoading));
                                           var getCustomerDetailsResponse =
                                               await MapCustomerDetails
-                                                  .mapCustomerDetails(token);
+                                                  .mapCustomerDetails(
+                                                      token ?? "");
                                           log("Get Customer Details API response -> $getCustomerDetailsResponse");
                                           List cifDetails =
                                               getCustomerDetailsResponse[
@@ -528,7 +531,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 "mobileNo": otpArgumentModel.emailOrPhone,
                 "otp": _pinController.text,
               },
-              token,
+              token ?? "",
             );
             log("Verify Mobile OTP Response -> $result");
 
@@ -579,7 +582,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                           ShowButtonEvent(show: isLoading));
                                       var getCustomerDetailsResponse =
                                           await MapCustomerDetails
-                                              .mapCustomerDetails(token);
+                                              .mapCustomerDetails(token ?? "");
                                       log("Get Customer Details API response -> $getCustomerDetailsResponse");
                                       List cifDetails =
                                           getCustomerDetailsResponse[
@@ -730,7 +733,7 @@ class _OTPScreenState extends State<OTPScreen> {
     } else {
       await MapSendMobileOtp.mapSendMobileOtp(
         {"mobileNo": otpArgumentModel.emailOrPhone},
-        token,
+        token ?? "",
       );
     }
   }
