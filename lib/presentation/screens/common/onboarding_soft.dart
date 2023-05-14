@@ -200,13 +200,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
                             onTap: () {
-                              // Navigator.pushNamed(
-                              //     context, Routes.exploreDashboard);
-                              Navigator.pushNamed(context, Routes.setPassword);
-                              // Navigator.pushNamed(
-                              //   context,
-                              //   Routes.applicationAccount,
-                              // );
+                              Navigator.pushNamed(
+                                  context, Routes.exploreDashboard);
+                              // Navigator.pushNamed(context, Routes.setPassword);
+
                               // OAuthHelper.oAuth();
                             },
                             text: labels[208]["labelText"],
