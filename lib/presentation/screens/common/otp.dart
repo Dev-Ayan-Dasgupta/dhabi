@@ -304,6 +304,8 @@ class _OTPScreenState extends State<OTPScreen> {
                         arguments: CreateAccountArgumentModel(
                           email: otpArgumentModel.emailOrPhone,
                           isRetail: true,
+                          userTypeId: 1,
+                          companyId: 0,
                         ).toMap(),
                       );
                     } else {

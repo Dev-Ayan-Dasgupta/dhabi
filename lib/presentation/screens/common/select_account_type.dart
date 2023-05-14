@@ -237,6 +237,8 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                 arguments: CreateAccountArgumentModel(
                   email: createAccountArgumentModel.email,
                   isRetail: isPersonalFocussed ? true : false,
+                  userTypeId: isPersonalFocussed ? 1 : 2,
+                  companyId: isPersonalFocussed ? 0 : 1,
                 ).toMap(),
               );
             }

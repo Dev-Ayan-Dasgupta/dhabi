@@ -21,6 +21,7 @@ import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -659,19 +660,51 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 token = result["token"];
                 log("token -> $token");
 
-                if (context.mounted) {
-                  Navigator.pushNamed(
-                    context,
-                    Routes.businessOnboardingStatus,
-                    arguments: OnboardingStatusArgumentModel(
-                      stepsCompleted: 1,
-                      isFatca: false,
-                      isPassport: false,
-                      isRetail: createAccountArgumentModel.isRetail,
-                    ).toMap(),
-                  );
+                if (result["success"]) {
+                  if (context.mounted) {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.businessOnboardingStatus,
+                      arguments: OnboardingStatusArgumentModel(
+                        stepsCompleted: 1,
+                        isFatca: false,
+                        isPassport: false,
+                        isRetail: createAccountArgumentModel.isRetail,
+                      ).toMap(),
+                    );
+                  }
+                } else {
+                  log("Reason Code -> ${result["reasonCode"]}");
+                  if (context.mounted) {
+                    switch (result["reasonCode"]) {
+                      case 1:
+                        // promptWrongCredentials();
+                        break;
+                      case 2:
+                        promptWrongCredentials();
+                        break;
+                      case 3:
+                        promptWrongCredentials();
+                        break;
+                      case 4:
+                        promptWrongCredentials();
+                        break;
+                      case 5:
+                        promptWrongCredentials();
+                        break;
+                      case 6:
+                        promptKycExpired();
+                        break;
+                      case 7:
+                        promptVerifySession();
+                        break;
+                      default:
+                    }
+                  }
                 }
               }
+              isRegistering = false;
+              createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
             },
             text: labels[222]["labelText"],
             auxWidget: isRegistering ? const LoaderRow() : const SizeBox(),
@@ -686,6 +719,153 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         ],
       );
     }
+  }
+
+  void promptWrongCredentials() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Wrong Credentials",
+          message: "You have entered invalid username or password",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[88]["labelText"],
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void promptVerifySession() {
+    bool isLoading = false;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Verify this session",
+          message: messages[66]["messageText"],
+          actionWidget: Column(
+            children: [
+              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                builder: (context, state) {
+                  return GradientButton(
+                    onTap: () async {
+                      isLoading = true;
+                      final ShowButtonBloc showButtonBloc =
+                          context.read<ShowButtonBloc>();
+                      showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                      var result = await MapLogin.mapLogin({
+                        "emailId": createAccountArgumentModel.email,
+                        "userTypeId": createAccountArgumentModel.userTypeId,
+                        "userId": userId,
+                        "companyId": createAccountArgumentModel.companyId,
+                        "password": _passwordController.text,
+                        "deviceId": deviceId,
+                        "registerDevice": true,
+                        "deviceName": deviceName,
+                        "deviceType": deviceType,
+                        "appVersion": appVersion
+                      });
+                      log("Login API Response -> $result");
+                      token = result["token"];
+                      log("token -> $token");
+                      if (result["success"]) {
+                        if (context.mounted) {
+                          if (createAccountArgumentModel.userTypeId == 1) {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.retailDashboard,
+                              (route) => false,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl:
+                                    "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                name: emailAddress,
+                              ).toMap(),
+                            );
+                          } else {
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                Routes.businessDashboard, (route) => false);
+                          }
+                        }
+                      } else {
+                        log("Reason Code -> ${result["reasonCode"]}");
+                        if (context.mounted) {
+                          switch (result["reasonCode"]) {
+                            case 1:
+                              // promptWrongCredentials();
+                              break;
+                            case 2:
+                              promptWrongCredentials();
+                              break;
+                            case 3:
+                              promptWrongCredentials();
+                              break;
+                            case 4:
+                              promptWrongCredentials();
+                              break;
+                            case 5:
+                              promptWrongCredentials();
+                              break;
+                            case 6:
+                              promptKycExpired();
+                              break;
+                            case 7:
+                              promptVerifySession();
+                              break;
+                            default:
+                          }
+                        }
+                      }
+                      isLoading = false;
+                      showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                    },
+                    text: labels[31]["labelText"],
+                    auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
+                  );
+                },
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void promptKycExpired() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "KYC Expired",
+          message:
+              "Your KYC Documents have expired. Please verify your documents again.",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.verificationInitializing);
+                },
+                text: "Verify",
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   void triggerCriteriaEvent(String p0) {

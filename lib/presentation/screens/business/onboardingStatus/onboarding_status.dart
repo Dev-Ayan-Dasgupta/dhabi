@@ -173,6 +173,8 @@ class _BusinessOnboardingStatusScreenState
                                   arguments: CreateAccountArgumentModel(
                                     email: emailAddress,
                                     isRetail: true,
+                                    userTypeId: 1,
+                                    companyId: 0,
                                   ).toMap(),
                                 );
                               },
