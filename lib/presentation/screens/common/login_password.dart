@@ -278,6 +278,10 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         }
       }
     }
+
+    isLoading = false;
+    matchPasswordBloc
+        .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
   }
 
   void promptWrongCredentials() {
@@ -386,6 +390,8 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                           }
                         }
                       }
+                      isLoading = false;
+                      showButtonBloc.add(ShowButtonEvent(show: isLoading));
                     },
                     text: labels[31]["labelText"],
                     auxWidget: isLoading ? const LoaderRow() : const SizeBox(),

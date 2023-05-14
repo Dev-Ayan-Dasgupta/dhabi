@@ -280,6 +280,9 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                               );
                             }
                           }
+
+                          isLoading = false;
+                          showButtonBloc.add(ShowButtonEvent(show: isLoading));
                         },
                         text: labels[31]["labelText"],
                         auxWidget:

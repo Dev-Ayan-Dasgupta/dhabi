@@ -235,6 +235,8 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
               );
             }
           }
+          isLoading = false;
+          showButtonBloc.add(ShowButtonEvent(show: isLoading));
         },
         text: labels[31]["labelText"],
         auxWidget: isLoading ? const LoaderRow() : const SizeBox(),

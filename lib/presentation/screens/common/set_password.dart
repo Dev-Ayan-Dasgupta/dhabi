@@ -423,6 +423,8 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                   ).toMap(),
                 );
               }
+              isLoading = false;
+              createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
             },
             text: "Save",
             auxWidget: isLoading ? const LoaderRow() : const SizeBox(),

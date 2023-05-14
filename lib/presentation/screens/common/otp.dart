@@ -350,6 +350,9 @@ class _OTPScreenState extends State<OTPScreen> {
                                               ).toMap(),
                                             );
                                           }
+                                          isLoading = false;
+                                          showButtonBloc.add(
+                                              ShowButtonEvent(show: isLoading));
                                         },
                                         text: labels[31]["labelText"],
                                         auxWidget: isLoading
@@ -484,6 +487,9 @@ class _OTPScreenState extends State<OTPScreen> {
                                               ).toMap(),
                                             );
                                           }
+                                          isLoading = false;
+                                          showButtonBloc.add(
+                                              ShowButtonEvent(show: isLoading));
                                         },
                                         text: labels[31]["labelText"],
                                         auxWidget: isLoading
@@ -600,6 +606,9 @@ class _OTPScreenState extends State<OTPScreen> {
                                           ).toMap(),
                                         );
                                       }
+                                      isLoading = false;
+                                      showButtonBloc.add(
+                                          ShowButtonEvent(show: isLoading));
                                     },
                                     text: labels[31]["labelText"],
                                     auxWidget: isLoading

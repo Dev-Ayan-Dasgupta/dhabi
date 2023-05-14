@@ -289,6 +289,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ).toMap(),
             );
           }
+          _isLoading = false;
+          showButtonBloc.add(ShowButtonEvent(show: _isLoading));
         },
         text: labels[31]["labelText"],
         auxWidget: Ternary(

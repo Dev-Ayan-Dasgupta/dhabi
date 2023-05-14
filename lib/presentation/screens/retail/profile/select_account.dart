@@ -28,7 +28,7 @@ class SelectAccountScreen extends StatefulWidget {
 class _SelectAccountScreenState extends State<SelectAccountScreen> {
   late SelectAccountArgumentModel selectAccountArgument;
 
-  bool isLoading = false;
+  // bool isLoading = false;
   bool isSelected = false;
 
   int selectedIndex = -1;
@@ -171,8 +171,8 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                           }
                         },
                         text: labels[127]["labelText"],
-                        auxWidget:
-                            isLoading ? const LoaderRow() : const SizeBox(),
+                        // auxWidget:
+                        //     isLoading ? const LoaderRow() : const SizeBox(),
                       );
                     } else {
                       return SolidButton(
