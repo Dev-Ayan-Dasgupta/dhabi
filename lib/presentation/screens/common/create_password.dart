@@ -19,8 +19,6 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
-import 'package:dialup_mobile_app/data/models/arguments/create_account.dart';
-import 'package:dialup_mobile_app/data/models/arguments/onboarding_status.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
@@ -474,22 +472,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
     }
   }
 
-  // Widget buildCheckCircle(BuildContext context, MatchPasswordState state) {
-  //   if (isMatch) {
-  //     return SvgPicture.asset(
-  //       ImageConstants.checkCircle,
-  //       width: (20 / Dimensions.designWidth).w,
-  //       height: (20 / Dimensions.designWidth).w,
-  //     );
-  //   } else {
-  //     return SvgPicture.asset(
-  //       ImageConstants.warningSmall,
-  //       width: (20 / Dimensions.designWidth).w,
-  //       height: (20 / Dimensions.designWidth).w,
-  //     );
-  //   }
-  // }
-
   Widget buildMatchMessage(BuildContext context, MatchPasswordState state) {
     return BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
         builder: (context, state) {
@@ -613,17 +595,48 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 token = result["token"];
                 log("token -> $token");
 
-                if (context.mounted) {
-                  Navigator.pushNamed(
-                    context,
-                    Routes.retailOnboardingStatus,
-                    arguments: OnboardingStatusArgumentModel(
-                      stepsCompleted: 1,
-                      isFatca: false,
-                      isPassport: false,
-                      isRetail: createAccountArgumentModel.isRetail,
-                    ).toMap(),
-                  );
+                if (result["success"]) {
+                  if (context.mounted) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.retailOnboardingStatus,
+                      (routes) => false,
+                      arguments: OnboardingStatusArgumentModel(
+                        stepsCompleted: 1,
+                        isFatca: false,
+                        isPassport: false,
+                        isRetail: createAccountArgumentModel.isRetail,
+                      ).toMap(),
+                    );
+                  }
+                } else {
+                  log("Reason Code -> ${result["reasonCode"]}");
+                  if (context.mounted) {
+                    switch (result["reasonCode"]) {
+                      case 1:
+                        // promptWrongCredentials();
+                        break;
+                      case 2:
+                        promptWrongCredentials();
+                        break;
+                      case 3:
+                        promptWrongCredentials();
+                        break;
+                      case 4:
+                        promptWrongCredentials();
+                        break;
+                      case 5:
+                        promptWrongCredentials();
+                        break;
+                      case 6:
+                        promptKycExpired();
+                        break;
+                      case 7:
+                        promptVerifySession();
+                        break;
+                      default:
+                    }
+                  }
                 }
               } else {
                 isRegistering = true;
@@ -663,9 +676,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
                 if (result["success"]) {
                   if (context.mounted) {
-                    Navigator.pushNamed(
+                    Navigator.pushNamedAndRemoveUntil(
                       context,
                       Routes.businessOnboardingStatus,
+                      (routes) => false,
                       arguments: OnboardingStatusArgumentModel(
                         stepsCompleted: 1,
                         isFatca: false,

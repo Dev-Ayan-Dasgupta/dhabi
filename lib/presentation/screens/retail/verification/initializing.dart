@@ -83,7 +83,7 @@ class _VerificationInitializingScreenState
         "timeout": 60.0,
         "timeoutFromFirstDetect": 45.0,
         "timeoutFromFirstDocType": 35.0,
-        "multipageProcessing": false
+        "multipageProcessing": true
       }
     });
 

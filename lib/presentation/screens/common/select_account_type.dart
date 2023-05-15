@@ -37,7 +37,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
   int toggles = 0;
 
   bool isValidating = false;
-  bool isInvalid = false;
+  // bool isInvalid = false;
 
   late CreateAccountArgumentModel createAccountArgumentModel;
 
@@ -52,16 +52,19 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (isInvalid) {
-          Navigator.pop(context);
-        }
-        Navigator.pushNamed(context, Routes.registration,
+        Navigator.pushReplacementNamed(context, Routes.registration,
             arguments: RegistrationArgumentModel(isInitial: true).toMap());
         return true;
       },
       child: Scaffold(
         appBar: AppBar(
-          leading: const AppBarLeading(),
+          leading: AppBarLeading(
+            onTap: () {
+              Navigator.pushReplacementNamed(context, Routes.registration,
+                  arguments:
+                      RegistrationArgumentModel(isInitial: true).toMap());
+            },
+          ),
           elevation: 0,
         ),
         body: Padding(
@@ -236,7 +239,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
           }
           if (result["success"]) {
             if (context.mounted) {
-              Navigator.pushReplacementNamed(
+              Navigator.pushNamed(
                 context,
                 Routes.createPassword,
                 arguments: CreateAccountArgumentModel(
@@ -248,7 +251,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
               );
             }
           } else {
-            isInvalid = true;
+            // isInvalid = true;
             // TODO: uncomment this after testing
             if (context.mounted) {
               showDialog(

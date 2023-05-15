@@ -6,7 +6,6 @@ import 'package:dialup_mobile_app/bloc/tabBar/tabbar_bloc.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_event.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
-import 'package:dialup_mobile_app/data/models/arguments/verify_mobile.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
@@ -460,114 +459,123 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                 ),
               ),
               const SizeBox(height: 15),
-              hasOnboarded
-                  ? const SizeBox(height: 265)
-                  : RetailDashboardOnboarding(
-                      progress: (1 / 3),
-                      stage1: true,
-                      stage2: false,
-                      stage3: false,
-                      onTap1: () {
-                        Navigator.pushNamed(
-                          context,
-                          Routes.verifyMobile,
-                          arguments:
-                              VerifyMobileArgumentModel(isBusiness: false)
-                                  .toMap(),
-                        );
-                      },
-                      onTap2: () {},
-                      onTap3: () {
-                        Navigator.pushNamed(context, Routes.applicationAddress);
-                      },
-                    ),
+              const SizeBox(height: 265)
+              // hasOnboarded
+              //     ? const SizeBox(height: 265)
+              //     : RetailDashboardOnboarding(
+              //         progress: (1 / 3),
+              //         stage1: true,
+              //         stage2: false,
+              //         stage3: false,
+              //         onTap1: () {
+              //           Navigator.pushNamed(
+              //             context,
+              //             Routes.verifyMobile,
+              //             arguments:
+              //                 VerifyMobileArgumentModel(isBusiness: false)
+              //                     .toMap(),
+              //           );
+              //         },
+              //         onTap2: () {},
+              //         onTap3: () {
+              //           Navigator.pushNamed(context, Routes.applicationAddress);
+              //         },
+              //       ),
             ],
           ),
-          !hasOnboarded
-              ? const SizeBox(height: 265)
-              : DraggableScrollableSheet(
-                  initialChildSize: 0.39,
-                  minChildSize: 0.39,
-                  maxChildSize: 1,
-                  builder: (context, scrollController) {
-                    return Stack(
+          // !hasOnboarded
+          //     ? const SizeBox(height: 265)
+          //     :
+          DraggableScrollableSheet(
+            initialChildSize: 0.39,
+            minChildSize: 0.39,
+            maxChildSize: 1,
+            builder: (context, scrollController) {
+              return Container(
+                height: 85.h,
+                width: 100.w,
+                padding: EdgeInsets.symmetric(
+                  horizontal: (PaddingConstants.horizontalPadding /
+                          Dimensions.designWidth)
+                      .w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular((20 / Dimensions.designWidth).w),
+                    topRight: Radius.circular((20 / Dimensions.designWidth).w),
+                  ),
+                  boxShadow: [BoxShadows.primary],
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    const SizeBox(height: 15),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: (10 / Dimensions.designWidth).w,
+                      ),
+                      height: (7 / Dimensions.designWidth).w,
+                      width: (50 / Dimensions.designWidth).w,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular((10 / Dimensions.designWidth).w),
+                        ),
+                        color: const Color(0xFFD9D9D9),
+                      ),
+                    ),
+                    const SizeBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          height: 85.h,
-                          width: 100.w,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: (10 / Dimensions.designWidth).w,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(
-                                  (20 / Dimensions.designWidth).w),
-                              topRight: Radius.circular(
-                                  (20 / Dimensions.designWidth).w),
-                            ),
-                            boxShadow: [BoxShadows.primary],
-                            color: Colors.white,
-                          ),
-                          child: ListView.builder(
-                            controller: scrollController,
-                            itemCount: 51,
-                            itemBuilder: (context, index) {
-                              if (index == 0) {
-                                return const SizeBox(height: 50);
-                              }
-                              return DashboardTransactionListTile(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.transferDetails);
-                                },
-                                isCredit: true,
-                                title:
-                                    "Tax non filer debit Tax non filer debit",
-                                name: "Alexander Doe",
-                                amount: 50.23,
-                                currency: "AED",
-                                date: "Tue, Apr 1 2022",
-                              );
-                            },
+                        Text(
+                          labels[10]["labelText"],
+                          style: TextStyles.primary.copyWith(
+                            color: AppColors.dark50,
+                            fontSize: (16 / Dimensions.designWidth).w,
                           ),
                         ),
-                        Positioned(
-                          left: 44.w,
-                          top: (10 / Dimensions.designWidth).w,
-                          child: IgnorePointer(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: (10 / Dimensions.designWidth).w,
-                              ),
-                              height: (7 / Dimensions.designWidth).w,
-                              width: (50 / Dimensions.designWidth).w,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      (10 / Dimensions.designWidth).w),
-                                ),
-                                color: const Color(0xFFD9D9D9),
-                              ),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              ImageConstants.add,
+                              width: (15 / Dimensions.designWidth).w,
+                              height: (15 / Dimensions.designWidth).w,
                             ),
-                          ),
-                        ),
-                        Positioned(
-                          left: (22 / Dimensions.designWidth).w,
-                          top: (25 / Dimensions.designWidth).w,
-                          child: IgnorePointer(
-                            child: Text(
-                              "Recent Transactions",
+                            const SizeBox(width: 10),
+                            Text(
+                              labels[89]["labelText"],
                               style: TextStyles.primary.copyWith(
-                                color: const Color.fromRGBO(9, 9, 9, 0.4),
+                                color: AppColors.dark50,
                                 fontSize: (16 / Dimensions.designWidth).w,
                               ),
                             ),
-                          ),
-                        )
+                          ],
+                        ),
                       ],
-                    );
-                  },
+                    ),
+                    const SizeBox(height: 15),
+                    Expanded(
+                      child: ListView.builder(
+                        controller: scrollController,
+                        itemCount: 50,
+                        itemBuilder: (context, index) {
+                          return DashboardTransactionListTile(
+                            onTap: () {},
+                            isCredit: true,
+                            title: "Tax non filer debit Tax non filer debit",
+                            name: "Alexander Doe",
+                            amount: 50.23,
+                            currency: "AED",
+                            date: "Tue, Apr 1 2022",
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
+              );
+            },
+          ),
         ],
       ),
     );

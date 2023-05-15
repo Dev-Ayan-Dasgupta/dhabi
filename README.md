@@ -1,16 +1,10 @@
 # dialup_mobile_app
 
-A new Flutter project.
+Digital Banking Application for Dhabi
 
-## Getting Started
+## Release notes - 1.0.0 (5)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Changed multipage processing to true for EID - FHDHABI-120
+- Changed navigation stack for explore dashboard, register account and OTP screen. - FHDHABI-107, FH-DHABI-116
+- Fixed loading indicator to reset to no loading once user navigates back to a particular screen - FHDHABI-109
+- Displaying error relevant messages via pop-ups for Login API calls - FHDHABI-106

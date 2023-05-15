@@ -34,7 +34,7 @@ class DashboardTransactionListTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: (padding ?? 15 / Dimensions.designWidth).w,
+          horizontal: (padding ?? 0 / Dimensions.designWidth).w,
           vertical: (5 / Dimensions.designWidth).w,
         ),
         child: Row(

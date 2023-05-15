@@ -285,11 +285,11 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
               GradientButton(
                 onTap: () {
                   // Navigator.pop(context);
-                  // Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(
+                  Navigator.pop(context);
+                  Navigator.pushNamed(
                     context,
                     Routes.registration,
-                    (route) => false,
+                    // (route) => false,
                     arguments: RegistrationArgumentModel(
                       isInitial: true,
                     ).toMap(),

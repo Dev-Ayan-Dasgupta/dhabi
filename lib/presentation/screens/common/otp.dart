@@ -43,6 +43,7 @@ class _OTPScreenState extends State<OTPScreen> {
   late OTPArgumentModel otpArgumentModel;
 
   int pinputErrorCount = 0;
+
   late final String obscuredEmail;
   late final String obscuredPhone;
 
@@ -145,7 +146,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Widget buildIcon(BuildContext context, PinputErrorState state) {
-    if (pinputErrorCount < 3) {
+    if (pinputErrorCount < 3 || !isOtpFrozen) {
       if (otpArgumentModel.isEmail) {
         return SvgPicture.asset(
           ImageConstants.otp,
@@ -169,7 +170,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Widget buildTitle(BuildContext context, PinputErrorState state) {
-    if (pinputErrorCount < 3) {
+    if (pinputErrorCount < 3 || !isOtpFrozen) {
       return Text(
         labels[32]["labelText"],
         style: TextStyles.primaryMedium.copyWith(
@@ -189,7 +190,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Widget buildDescription(BuildContext context, PinputErrorState state) {
-    if (pinputErrorCount < 3) {
+    if (pinputErrorCount < 3 || !isOtpFrozen) {
       if (otpArgumentModel.isEmail) {
         return Text(
           "${labels[41]["labelText"]} $obscuredEmail",
@@ -224,7 +225,7 @@ class _OTPScreenState extends State<OTPScreen> {
   void promptUser() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      // barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
@@ -690,7 +691,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Widget buildTimer(BuildContext context, PinputErrorState state) {
-    if (pinputErrorCount < 3) {
+    if (pinputErrorCount < 3 || !isOtpFrozen) {
       return Column(
         children: [
           const SizeBox(height: 30),
