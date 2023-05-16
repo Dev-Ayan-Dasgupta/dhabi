@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dialup_mobile_app/data/models/arguments/onboarding_soft.dart';
 import 'package:dialup_mobile_app/data/repositories/configurations/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/index.dart';
@@ -49,6 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await getPackageInfo();
       await initPlatformState();
       await initConfigurations();
+      await initLocalStorageData();
       if (context.mounted) {
         navigate(context);
       }
@@ -56,6 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> initConfigurations() async {
+    log("Init conf started");
     labels = await MapAppLabels.mapAppLabels({"languageCode": "en"});
     messages = await MapAppMessages.mapAppMessages({"languageCode": "en"});
     dhabiCountries = await MapAllCountries.mapAllCountries();
@@ -71,6 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
     populateDD(statementDurationDDs, 7);
     populateEmirates();
     getPolicies();
+    log("Init conf ended");
   }
 
   void getDhabiCountryNames() {
@@ -164,6 +168,91 @@ class _SplashScreenState extends State<SplashScreen> {
     log("deviceName -> $deviceName");
     log("deviceType -> $deviceType");
     log("appVersion -> $appVersion");
+  }
+
+  Future<void> initLocalStorageData() async {
+    log("init LS started");
+    try {
+      storageEmail = await storage.read(key: "emailAddress");
+      log("storageEmail -> $storageEmail");
+      storagePassword = await storage.read(key: "password");
+      log("storagePassword -> $storagePassword");
+      storageUserId = int.parse(await storage.read(key: "userId") ?? "0");
+      log("storageUserId -> $storageUserId");
+      storageUserTypeId =
+          int.parse(await storage.read(key: "userTypeId") ?? "1");
+      log("storageUserTypeId -> $storageUserTypeId");
+      storageCompanyId = int.parse(await storage.read(key: "companyId") ?? "0");
+      log("storageCompanyId -> $storageCompanyId");
+
+      storageStepsCompleted = 0;
+      // int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+      log("storageStepsCompleted -> $storageStepsCompleted");
+
+      storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
+      log("storageIsEid -> $storageIsEid");
+      storageFullName = await storage.read(key: "fullName");
+      log("storageFullName -> $storageFullName");
+      storageEidNumber = await storage.read(key: "eiDNumber");
+      log("storageEidNumber -> $storageEidNumber");
+      storagePassportNumber = await storage.read(key: "passportNumber");
+      log("storagePassportNumber -> $storagePassportNumber");
+      storageNationality = await storage.read(key: "nationality");
+      log("storageNationality -> $storageNationality");
+      storageNationalityCode = await storage.read(key: "nationalityCode");
+      log("storageNationalityCode -> $storageNationalityCode");
+      storageIssuingStateCode = await storage.read(key: "issuingStateCode");
+      log("storageIssuingStateCode -> $storageIssuingStateCode");
+      storageExpiryDate = await storage.read(key: "expiryDate");
+      log("storageExpiryDate -> $storageExpiryDate");
+      storageDob = await storage.read(key: "dob");
+      log("storageDob -> $storageDob");
+      storageGender = await storage.read(key: "gender");
+      log("storageGender -> $storageGender");
+      storagePhoto = await storage.read(key: "photo");
+      log("storagePhoto -> $storagePhoto");
+      storageDocPhoto = await storage.read(key: "docPhoto");
+      log("storageDocPhoto -> $storageDocPhoto");
+      storageSelfiePhoto = await storage.read(key: "selfiePhoto");
+      log("storageSelfiePhoto -> $storageSelfiePhoto");
+      storagePhotoMatchScore =
+          double.parse(await storage.read(key: "photoMatchScore") ?? "0");
+      log("storagePhotoMatchScore -> $storagePhotoMatchScore");
+
+      storageAddressCountry = await storage.read(key: "addressCountry");
+      log("storageAddressCountry -> $storageAddressCountry");
+      storageAddressLine1 = await storage.read(key: "addressLine1");
+      log("storageAddressLine1 -> $storageAddressLine1");
+      storageAddressLine2 = await storage.read(key: "addressLine2");
+      log("storageAddressLine2 -> $storageAddressLine2");
+      storageAddressEmirate = await storage.read(key: "addressEmirate");
+      log("storageAddressEmirate -> $storageAddressEmirate");
+      storageAddressPoBox = await storage.read(key: "poBox");
+      log("storageAddressPoBox -> $storageAddressPoBox");
+
+      storageIncomeSource = await storage.read(key: "incomeSource");
+      log("storageIncomeSource -> $storageIncomeSource");
+
+      storageIsUSFATCA = await storage.read(key: "incomeSource") == "true";
+      log("storageIsUSFATCA -> $storageIsUSFATCA");
+      storageUsTin = await storage.read(key: "usTin");
+      log("storageUsTin -> $storageUsTin");
+
+      storageIsTinYes = await storage.read(key: "isTinYes") == "true";
+      log("storageIsTinYes -> $storageIsTinYes");
+      storageCrsTin = await storage.read(key: "crsTin");
+      log("storageCrsTin -> $storageCrsTin");
+      storageNoTinReason = await storage.read(key: "noTinReason");
+      log("storageNoTinReason -> $storageNoTinReason");
+
+      storageAccountType =
+          int.parse(await storage.read(key: "accountType") ?? "1");
+      log("storageAccountType -> $storageAccountType");
+    } catch (e) {
+      log("Init LS Exception -> $e");
+    }
+
+    log("init LS ended");
   }
 
   void navigate(BuildContext context) {

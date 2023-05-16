@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/arguments/tax_crs.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -554,11 +555,19 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
               showButtonBloc.add(ShowButtonEvent(show: isUploading));
               // log("countryCode -> ${dhabiCountries[dhabiCountryIndex]["shortCode"]}");
               log("noTINReason -> ${selectedReason ?? ""}");
+
+              await storage.write(key: "isTinYes", value: isTinYes.toString());
+              storageIsTinYes = await storage.read(key: "isTinYes") == "true";
+              await storage.write(key: "crsTin", value: _tinController.text);
+              storageCrsTin = await storage.read(key: "crsTin");
+              await storage.write(key: "noTinReason", value: selectedReason);
+              storageNoTinReason = await storage.read(key: "noTinReason");
+
               var result =
                   await MapCustomerTaxInformation.mapCustomerTaxInformation(
                 {
-                  "isUSFATCA": taxCrsArgument.isUSFATCA,
-                  "ustin": taxCrsArgument.ustin,
+                  "isUSFATCA": storageIsUSFATCA,
+                  "ustin": storageUsTin,
                   "internationalTaxes": [
                     {
                       "countryCode": dhabiCountryIndex == -1
@@ -578,6 +587,10 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
               }
               isUploading = false;
               showButtonBloc.add(ShowButtonEvent(show: isUploading));
+
+              await storage.write(key: "stepsCompleted", value: 8.toString());
+              storageStepsCompleted =
+                  int.parse(await storage.read(key: "stepsCompleted") ?? "0");
             },
             text: labels[127]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),

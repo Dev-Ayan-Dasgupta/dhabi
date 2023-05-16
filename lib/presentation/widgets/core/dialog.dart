@@ -30,7 +30,8 @@ class CustomDialog extends StatelessWidget {
           left: (22 / Dimensions.designWidth).w,
           right: (22 / Dimensions.designWidth).w,
           bottom: (22 / Dimensions.designWidth).w,
-          top: ((auxWidget == null ? 500 : 440) / Dimensions.designWidth).w,
+          top: ((auxWidget == null ? 500 : 440) / Dimensions.designHeight)
+              .h, // TODO: might have to change these to 1051 : 925 (500 : 440)
         ),
         child: Container(
           width: 100.w,

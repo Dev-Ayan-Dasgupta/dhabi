@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:dialup_mobile_app/presentation/routers/app_router.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 class MyHttpOverrides extends HttpOverrides {
@@ -16,6 +17,8 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 List<CameraDescription> cameras = [];
+
+const storage = FlutterSecureStorage();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

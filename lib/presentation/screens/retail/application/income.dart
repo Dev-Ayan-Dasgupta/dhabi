@@ -4,6 +4,7 @@ import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/application/progress.dart';
@@ -122,7 +123,8 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
               isUploading = true;
               showButtonBloc.add(DropdownSelectedEvent(
                   isDropdownSelected: isUploading, toggles: toggles));
-
+              await storage.write(key: "incomeSource", value: selectedValue);
+              storageIncomeSource = await storage.read(key: "incomeSource");
               var result =
                   await MapAddOrUpdateIncomeSource.mapAddOrUpdateIncomeSource(
                 {"incomeSource": selectedValue},
@@ -135,6 +137,10 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
               isUploading = false;
               showButtonBloc.add(DropdownSelectedEvent(
                   isDropdownSelected: isUploading, toggles: toggles));
+
+              await storage.write(key: "stepsCompleted", value: 6.toString());
+              storageStepsCompleted =
+                  int.parse(await storage.read(key: "stepsCompleted") ?? "0");
             },
             text: labels[127]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),

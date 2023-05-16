@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -268,6 +269,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     } else {
       return GradientButton(
         onTap: () async {
+          await storage.write(
+              key: "emailAddress", value: _emailController.text);
           emailAddress = _emailController.text;
           _isLoading = true;
           showButtonBloc.add(ShowButtonEvent(show: _isLoading));

@@ -2,9 +2,14 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:local_auth/local_auth.dart';
 
@@ -38,6 +43,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   int page = 0;
   int time = 0;
+
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -178,17 +185,160 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       children: [
                         Ternary(
                           condition: onboardingArgumentModel.isInitial,
-                          truthy: GradientButton(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                Routes.registration,
-                                arguments: RegistrationArgumentModel(
-                                  isInitial: true,
-                                ).toMap(),
+                          truthy: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: (context, state) {
+                              return GradientButton(
+                                onTap: () async {
+                                  // Navigator.pushNamed(
+                                  //   context,
+                                  //   Routes.registration,
+                                  //   arguments: RegistrationArgumentModel(
+                                  //     isInitial: true,
+                                  //   ).toMap(),
+                                  // );
+
+                                  log("storageStepsCompleted -> $storageStepsCompleted");
+                                  switch (storageStepsCompleted) {
+                                    case 0:
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.registration,
+                                        arguments: RegistrationArgumentModel(
+                                          isInitial: true,
+                                        ).toMap(),
+                                      );
+                                      break;
+                                    case 1:
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.createPassword,
+                                        arguments: CreateAccountArgumentModel(
+                                          email: storageEmail ?? "",
+                                          isRetail: storageUserTypeId == 1
+                                              ? true
+                                              : false,
+                                          userTypeId: storageUserTypeId ?? 1,
+                                          companyId: storageCompanyId ?? 0,
+                                        ).toMap(),
+                                      );
+                                      break;
+                                    case 2:
+                                      callLoginApi();
+                                      if (storageUserTypeId == 1) {
+                                        Navigator.pushNamed(
+                                          context,
+                                          Routes.retailOnboardingStatus,
+                                          arguments:
+                                              OnboardingStatusArgumentModel(
+                                            stepsCompleted: 1,
+                                            isFatca: false,
+                                            isPassport: false,
+                                            isRetail: true,
+                                          ).toMap(),
+                                        );
+                                      } else {
+                                        Navigator.pushNamed(
+                                          context,
+                                          Routes.businessOnboardingStatus,
+                                          arguments:
+                                              OnboardingStatusArgumentModel(
+                                            stepsCompleted: 1,
+                                            isFatca: false,
+                                            isPassport: false,
+                                            isRetail: false,
+                                          ).toMap(),
+                                        );
+                                      }
+                                      break;
+                                    case 3:
+                                      callLoginApi();
+                                      Navigator.pushNamed(context,
+                                          Routes.verificationInitializing);
+                                      break;
+                                    case 4:
+                                      callLoginApi();
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.retailOnboardingStatus,
+                                        arguments:
+                                            OnboardingStatusArgumentModel(
+                                          stepsCompleted: 2,
+                                          isFatca: false,
+                                          isPassport: false,
+                                          isRetail: true,
+                                        ).toMap(),
+                                      );
+                                      break;
+                                    case 5:
+                                      callLoginApi();
+                                      Navigator.pushNamed(
+                                          context, Routes.applicationIncome);
+                                      break;
+                                    case 6:
+                                      callLoginApi();
+                                      Navigator.pushNamed(
+                                          context, Routes.applicationTaxFATCA);
+                                      break;
+                                    case 7:
+                                      callLoginApi();
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.applicationTaxCRS,
+                                        arguments: TaxCrsArgumentModel(
+                                          isUSFATCA: storageIsUSFATCA ?? true,
+                                          ustin: storageUsTin ?? "",
+                                        ).toMap(),
+                                      );
+                                      break;
+                                    case 8:
+                                      callLoginApi();
+                                      Navigator.pushNamed(
+                                          context, Routes.applicationAccount);
+                                      break;
+                                    case 9:
+                                      callLoginApi();
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.retailOnboardingStatus,
+                                        arguments:
+                                            OnboardingStatusArgumentModel(
+                                          stepsCompleted: 3,
+                                          isFatca: false,
+                                          isPassport: false,
+                                          isRetail: true,
+                                        ).toMap(),
+                                      );
+                                      break;
+                                    case 10:
+                                      callLoginApi();
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.retailOnboardingStatus,
+                                        arguments:
+                                            OnboardingStatusArgumentModel(
+                                          stepsCompleted: 4,
+                                          isFatca: false,
+                                          isPassport: false,
+                                          isRetail: true,
+                                        ).toMap(),
+                                      );
+                                      break;
+                                    default:
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.registration,
+                                        arguments: RegistrationArgumentModel(
+                                          isInitial: true,
+                                        ).toMap(),
+                                      );
+                                  }
+                                },
+                                text: labels[207]["labelText"],
+                                auxWidget: isLoading
+                                    ? const LoaderRow()
+                                    : const SizeBox(),
                               );
                             },
-                            text: labels[207]["labelText"],
                           ),
                           falsy: GradientButton(
                             onTap: biometricPrompt,
@@ -240,31 +390,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
+  void callLoginApi() async {
+    isLoading = true;
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    showButtonBloc.add(ShowButtonEvent(show: isLoading));
+    var result = await MapLogin.mapLogin({
+      "emailId": storageEmail,
+      "userTypeId": storageUserTypeId,
+      "userId": storageUserId,
+      "companyId": storageCompanyId,
+      "password": storagePassword,
+      "deviceId": deviceId,
+      "registerDevice": false,
+      "deviceName": deviceName,
+      "deviceType": deviceType,
+      "appVersion": appVersion
+    });
+    log("Login API Response -> $result");
+    token = result["token"];
+    log("token -> $token");
+    isLoading = false;
+    showButtonBloc.add(ShowButtonEvent(show: isLoading));
+  }
+
   void biometricPrompt() async {
-    bool isBiometricSupported = await LocalAuthentication().isDeviceSupported();
-    log("isBiometricSupported -> $isBiometricSupported");
+    if (checkBiometric) {
+      bool isBiometricSupported =
+          await LocalAuthentication().isDeviceSupported();
+      log("isBiometricSupported -> $isBiometricSupported");
 
-    if (deviceId == "bf8e43a90970f33c") {
-      if (context.mounted) {
-        Navigator.pushNamed(context, Routes.loginUserId);
+      if (deviceId == "bf8e43a90970f33c") {
+        if (context.mounted) {
+          Navigator.pushNamed(context, Routes.loginUserId);
+        }
       }
-    }
 
-    if (!isBiometricSupported) {
-      if (context.mounted) {
-        Navigator.pushNamed(context, Routes.loginUserId);
-      }
-    } else {
-      bool isAuthenticated = await BiometricHelper.authenticateUser();
-
-      if (isAuthenticated) {
+      if (!isBiometricSupported) {
         if (context.mounted) {
           Navigator.pushNamed(context, Routes.loginUserId);
         }
       } else {
-        // TODO: Verify from client if they want a dialog box to enable biometric
-        OpenSettings.openBiometricEnrollSetting();
+        bool isAuthenticated = await BiometricHelper.authenticateUser();
+
+        if (isAuthenticated) {
+          if (context.mounted) {
+            Navigator.pushNamed(context, Routes.loginUserId);
+          }
+        } else {
+          // TODO: Verify from client if they want a dialog box to enable biometric
+          OpenSettings.openBiometricEnrollSetting();
+        }
       }
-    }
+    } else {}
   }
 }

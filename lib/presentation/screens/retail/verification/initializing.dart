@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,28 @@ class _VerificationInitializingScreenState
     });
 
     if (context.mounted) {
-      Navigator.pushReplacementNamed(context, Routes.eidExplanation);
+      if (storageStepsCompleted == 2) {
+        Navigator.pushReplacementNamed(context, Routes.eidExplanation);
+      } else {
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.scannedDetails,
+          arguments: ScannedDetailsArgumentModel(
+            isEID: storageIsEid! ? true : false,
+            fullName: storageFullName,
+            idNumber: storageIsEid! ? storageEidNumber : storagePassportNumber,
+            nationality: storageNationality,
+            nationalityCode: storageNationalityCode,
+            expiryDate: storageExpiryDate,
+            dob: storageDob,
+            gender: storageGender,
+            photo: storagePhoto,
+            docPhoto: storageDocPhoto,
+            // img1: img1,
+            // image1: image1,
+          ).toMap(),
+        );
+      }
     }
   }
 

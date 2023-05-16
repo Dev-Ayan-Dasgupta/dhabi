@@ -11,3 +11,4 @@ export './padding.dart';
 export './legal.dart';
 export './accounts.dart';
 export './token.dart';
+export './local_storage.dart';

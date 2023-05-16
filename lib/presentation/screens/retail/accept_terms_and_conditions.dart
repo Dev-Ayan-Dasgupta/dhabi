@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -175,102 +176,94 @@ class _AcceptTermsAndConditionsScreenState
                               isUploading = true;
                               showButtonBloc
                                   .add(ShowButtonEvent(show: isUploading));
-                              if (isEidChosen != null) {
-                                if (isEidChosen == true) {
-                                  var response =
-                                      await MapUploadEid.mapUploadEid(
-                                    {
-                                      "eidDocumentImage": docPhoto,
-                                      "eidUserPhoto": photo,
-                                      "selfiePhoto": selfiePhoto,
-                                      "photoMatchScore": photoMatchScore,
-                                      "eidNumber": eiDNumber,
-                                      "fullName": fullName,
-                                      "dateOfBirth": DateFormat('yyyy-MM-dd')
-                                          .format(DateFormat('dd MMMM yyyy')
-                                              .parse(dob ?? "1 January 1900")),
-                                      "nationalityCountryCode": nationalityCode,
-                                      "genderId": gender == 'M' ? 1 : 2,
-                                      "expiresOn": DateFormat('yyyy-MM-dd')
-                                          .format(DateFormat('dd MMMM yyyy')
-                                              .parse(expiryDate ??
-                                                  "1 January 1900")),
-                                      "isReKYC": false
-                                    },
-                                    token ?? "",
-                                  );
 
-                                  log("UploadEid API response -> $response");
-                                } else {
-                                  // log("Request body -> ${{
-                                  //   "passportDocumentImage": docPhoto,
-                                  //   "passportUserPhoto": photo,
-                                  //   "selfiePhoto": selfiePhoto,
-                                  //   "photoMatchScore": photoMatchScore,
-                                  //   "passportNumber": passportNumber,
-                                  //   "passportIssuingCountryCode":
-                                  //       issuingStateCode,
-                                  //   "fullName": fullName,
-                                  //   "dateOfBirth": DateFormat('yyyy-MM-dd')
-                                  //       .format(DateFormat('dd/MM/yyyy')
-                                  //           .parse(dob ?? "00/00/0000")),
-                                  //   "nationalityCountryCode": nationalityCode,
-                                  //   "genderId": gender == 'M' ? 1 : 2,
-                                  //   "expiresOn": DateFormat('yyyy-MM-dd')
-                                  //       .format(DateFormat('dd/MM/yyyy')
-                                  //           .parse(expiryDate ?? "00/00/0000")),
-                                  //   "isReKYC": false
-                                  // }}");
-                                  var response =
-                                      await MapUploadPassport.mapUploadPassport(
-                                    {
-                                      "passportDocumentImage": docPhoto,
-                                      "passportUserPhoto": photo,
-                                      "selfiePhoto": selfiePhoto,
-                                      "photoMatchScore": photoMatchScore,
-                                      "passportNumber": passportNumber,
-                                      "passportIssuingCountryCode":
-                                          issuingStateCode,
-                                      "fullName": fullName,
-                                      "dateOfBirth": DateFormat('yyyy-MM-dd')
-                                          .format(DateFormat('dd/MM/yyyy')
-                                              .parse(dob ?? "00/00/0000")),
-                                      "nationalityCountryCode": nationalityCode,
-                                      "genderId": gender == 'M' ? 1 : 2,
-                                      "expiresOn": DateFormat('yyyy-MM-dd')
-                                          .format(DateFormat('dd/MM/yyyy')
-                                              .parse(
-                                                  expiryDate ?? "00/00/0000")),
-                                      "isReKYC": false
-                                    },
-                                    token ?? "",
-                                  );
-                                  log("UploadPassport API response -> $response");
-                                }
+                              if (storageIsEid == true) {
+                                var response = await MapUploadEid.mapUploadEid(
+                                  {
+                                    "eidDocumentImage": storageDocPhoto,
+                                    "eidUserPhoto": storagePhoto,
+                                    "selfiePhoto": storageSelfiePhoto,
+                                    "photoMatchScore": storagePhotoMatchScore,
+                                    "eidNumber": storageEidNumber,
+                                    "fullName": storageFullName,
+                                    "dateOfBirth": DateFormat('yyyy-MM-dd')
+                                        .format(DateFormat('dd MMMM yyyy')
+                                            .parse(storageDob ??
+                                                "1 January 1900")),
+                                    "nationalityCountryCode":
+                                        storageNationalityCode,
+                                    "genderId": storageGender == 'M' ? 1 : 2,
+                                    "expiresOn": DateFormat('yyyy-MM-dd')
+                                        .format(DateFormat('dd MMMM yyyy')
+                                            .parse(storageExpiryDate ??
+                                                "1 January 1900")),
+                                    "isReKYC": false
+                                  },
+                                  token ?? "",
+                                );
+
+                                log("UploadEid API response -> $response");
+                              } else {
+                                var response =
+                                    await MapUploadPassport.mapUploadPassport(
+                                  {
+                                    "passportDocumentImage": storageDocPhoto,
+                                    "passportUserPhoto": storagePhoto,
+                                    "selfiePhoto": storageSelfiePhoto,
+                                    "photoMatchScore": storagePhotoMatchScore,
+                                    "passportNumber": storagePassportNumber,
+                                    "passportIssuingCountryCode":
+                                        storageIssuingStateCode,
+                                    "fullName": storageFullName,
+                                    "dateOfBirth": DateFormat('yyyy-MM-dd')
+                                        .format(DateFormat('dd/MM/yyyy')
+                                            .parse(storageDob ?? "00/00/0000")),
+                                    "nationalityCountryCode":
+                                        storageNationalityCode,
+                                    "genderId": storageGender == 'M' ? 1 : 2,
+                                    "expiresOn": DateFormat('yyyy-MM-dd')
+                                        .format(DateFormat('dd/MM/yyyy').parse(
+                                            storageExpiryDate ?? "00/00/0000")),
+                                    "isReKYC": false
+                                  },
+                                  token ?? "",
+                                );
+                                log("UploadPassport API response -> $response");
                               }
 
                               var responseAccount =
                                   await MapCreateAccount.mapCreateAccount(
-                                      {"accountType": accountType},
+                                      {"accountType": storageAccountType},
                                       token ?? "");
                               log("Create Account API response -> $responseAccount");
 
                               // TODO: Use Navigator.pushNamedAndRemoveUntil
-                              if (context.mounted) {
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  Routes.retailDashboard,
-                                  (route) => false,
-                                  arguments: RetailDashboardArgumentModel(
-                                    imgUrl:
-                                        "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                    name: createAccountArgumentModel.email,
-                                  ).toMap(),
-                                );
+                              if (responseAccount["success"]) {
+                                if (context.mounted) {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    Routes.retailDashboard,
+                                    (route) => false,
+                                    arguments: RetailDashboardArgumentModel(
+                                      imgUrl:
+                                          "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                                      name: storageEmail ?? "",
+                                      // createAccountArgumentModel.email,
+                                      isFirst: true,
+                                    ).toMap(),
+                                  );
+                                }
                               }
+
                               isUploading = false;
                               showButtonBloc
                                   .add(ShowButtonEvent(show: isUploading));
+
+                              await storage.write(
+                                  key: "stepsCompleted", value: 0.toString());
+                              storageStepsCompleted = int.parse(
+                                  await storage.read(key: "stepsCompleted") ??
+                                      "0");
                             },
                             text: "I Agree",
                             auxWidget: isUploading
@@ -278,7 +271,7 @@ class _AcceptTermsAndConditionsScreenState
                                 : const SizeBox(),
                           );
                         } else {
-                          return SolidButton(onTap: () {}, text: "I agree");
+                          return SolidButton(onTap: () {}, text: "I Agree");
                         }
                       },
                     ),
@@ -310,7 +303,6 @@ class _AcceptTermsAndConditionsScreenState
                           scrollDown = true;
                           scrollDirectionBloc.add(
                               ScrollDirectionEvent(scrollDown: scrollDown));
-                          // setState(() {});
                         }
                       } else {
                         if (_scrollController.hasClients) {
@@ -319,7 +311,7 @@ class _AcceptTermsAndConditionsScreenState
                             duration: const Duration(seconds: 1),
                             curve: Curves.fastOutSlowIn,
                           );
-                          // setState(() {});
+
                           scrollDown = false;
                           scrollDirectionBloc.add(
                               ScrollDirectionEvent(scrollDown: scrollDown));

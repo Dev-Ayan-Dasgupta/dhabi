@@ -6,3 +6,5 @@ int userId = 0;
 String? cif;
 
 bool isOtpFrozen = false;
+
+bool checkBiometric = false;

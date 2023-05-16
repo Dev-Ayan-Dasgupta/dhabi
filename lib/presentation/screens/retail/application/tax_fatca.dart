@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/tax_crs.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -404,7 +405,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                     children: [
                       const SizeBox(height: 20),
                       GradientButton(
-                        onTap: () {
+                        onTap: () async {
                           if (isEmirateID || isUSCitizen) {
                             Navigator.pushNamed(
                                 context, Routes.applicationAccount);
@@ -418,6 +419,18 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                               ).toMap(),
                             );
                           }
+                          await storage.write(
+                              key: "isUSFatca", value: isUSCitizen.toString());
+                          storageIsUSFATCA =
+                              await storage.read(key: "incomeSource") == "true";
+                          await storage.write(
+                              key: "usTin", value: _tinssnController.text);
+                          storageUsTin = await storage.read(key: "usTin");
+
+                          await storage.write(
+                              key: "stepsCompleted", value: 7.toString());
+                          storageStepsCompleted = int.parse(
+                              await storage.read(key: "stepsCompleted") ?? "0");
                         },
                         text: labels[127]["labelText"],
                       ),

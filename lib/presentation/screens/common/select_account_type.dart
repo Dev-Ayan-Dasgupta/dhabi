@@ -6,6 +6,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -229,15 +230,24 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
           showButtonBloc.add(ShowButtonEvent(show: isValidating));
           Map<String, dynamic> result;
           if (isPersonalFocussed && !isBusinessFocussed) {
+            await storage.write(key: "userTypeId", value: 1.toString());
+            storageUserTypeId =
+                int.parse(await storage.read(key: "userTypeId") ?? "");
             result = await MapValidateEmail.mapValidateEmail(
                 {"emailId": createAccountArgumentModel.email, "userTypeId": 1});
             log("Validate Email (Retail) response -> $result");
           } else {
+            await storage.write(key: "userTypeId", value: 2.toString());
+            storageUserTypeId =
+                int.parse(await storage.read(key: "userTypeId") ?? "");
             result = await MapValidateEmail.mapValidateEmail(
                 {"emailId": createAccountArgumentModel.email, "userTypeId": 2});
             log("Validate Email (Business) response -> $result");
           }
           if (result["success"]) {
+            await storage.write(key: "stepsCompleted", value: 1.toString());
+            storageStepsCompleted =
+                int.parse(await storage.read(key: "stepsCompleted") ?? "0");
             if (context.mounted) {
               Navigator.pushNamed(
                 context,
@@ -265,17 +275,24 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                     actionWidget: Column(
                       children: [
                         GradientButton(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              Routes.loginPassword,
-                              arguments: LoginPasswordArgumentModel(
-                                emailId: createAccountArgumentModel.email,
-                                userId: 0,
-                                userTypeId: isPersonalFocussed ? 1 : 2,
-                                companyId: isPersonalFocussed ? 0 : 1,
-                              ).toMap(),
-                            );
+                          onTap: () async {
+                            await storage.write(
+                                key: "stepsCompleted", value: 0.toString());
+                            storageStepsCompleted = int.parse(
+                                await storage.read(key: "stepsCompleted") ??
+                                    "0");
+                            if (context.mounted) {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.loginPassword,
+                                arguments: LoginPasswordArgumentModel(
+                                  emailId: createAccountArgumentModel.email,
+                                  userId: 0,
+                                  userTypeId: isPersonalFocussed ? 1 : 2,
+                                  companyId: isPersonalFocussed ? 0 : 1,
+                                ).toMap(),
+                              );
+                            }
                           },
                           text: labels[205]["labelText"],
                         ),

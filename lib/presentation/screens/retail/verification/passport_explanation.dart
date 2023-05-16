@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -25,7 +26,7 @@ class PassportExplanationScreen extends StatefulWidget {
 class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   regula.MatchFacesImage image1 = regula.MatchFacesImage();
 
-  Image img1 = Image.asset(ImageConstants.eidFront);
+  Image img1 = Image.asset(ImageConstants.passport);
 
   @override
   void initState() {
@@ -53,30 +54,53 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       // fullName = await results
       //     ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
       fullName = "$firstName $surname";
+      await storage.write(key: "fullName", value: fullName);
+      storageFullName = await storage.read(key: "fullName");
 
       String? tempPassportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
       passportNumber = tempPassportNumber?.split("\n").last.substring(0, 8);
       // passportNumber = ppMrz!.substring(0, 9);
       // print("passportNumber -> $passportNumber");
+      await storage.write(key: "passportNumber", value: passportNumber);
+      storagePassportNumber = await storage.read(key: "passportNumber");
+
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      await storage.write(key: "nationality", value: nationality);
+      storageNationality = await storage.read(key: "nationality");
+
       String? tempNationalityCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       nationalityCode = LongToShortCode.longToShortCode(tempNationalityCode!);
-      // String?
+      await storage.write(key: "nationalityCode", value: nationalityCode);
+      storageNationalityCode = await storage.read(key: "nationalityCode");
+
       String? tempIssuingStateCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_ISSUING_STATE_CODE);
       issuingStateCode = LongToShortCode.longToShortCode(tempIssuingStateCode!);
       log("issuingState -> $issuingStateCode");
+      await storage.write(key: "issuingStateCode", value: issuingStateCode);
+      storageIssuingStateCode = await storage.read(key: "issuingStateCode");
+
       String? issuingPlace = await results
           ?.textFieldValueByType(EVisualFieldType.FT_PLACE_OF_ISSUE);
       log("issuingPlace -> $issuingPlace");
+
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
+      await storage.write(key: "expiryDate", value: expiryDate);
+      storageExpiryDate = await storage.read(key: "expiryDate");
+
       dob = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);
+      await storage.write(key: "dob", value: dob);
+      storageDob = await storage.read(key: "dob");
+
       gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
+      await storage.write(key: "gender", value: gender);
+      storageGender = await storage.read(key: "gender");
+
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
@@ -84,9 +108,13 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
         image1.imageType = regula.ImageType.PRINTED;
         img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
       }
+      await storage.write(key: "photo", value: photo);
+      storagePhoto = await storage.read(key: "photo");
+
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
-      // results?.graphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+      await storage.write(key: "docPhoto", value: docPhoto);
+      storageDocPhoto = await storage.read(key: "docPhoto");
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
@@ -197,6 +225,12 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               ).toMap());
         }
       } else {
+        await storage.write(key: "isEid", value: false.toString());
+        // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
+        storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
+        await storage.write(key: "stepsCompleted", value: 3.toString());
+        storageStepsCompleted =
+            int.parse(await storage.read(key: "stepsCompleted") ?? "0");
         if (context.mounted) {
           Navigator.pushNamed(
             context,
@@ -212,8 +246,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               gender: gender,
               photo: photo,
               docPhoto: docPhoto,
-              img1: img1,
-              image1: image1,
+              // img1: img1,
+              // image1: image1,
             ).toMap(),
           );
         }

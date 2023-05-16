@@ -22,6 +22,7 @@ import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -563,6 +564,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             onTap: () async {
               final CreatePasswordBloc createPasswordBloc =
                   context.read<CreatePasswordBloc>();
+              await storage.write(
+                  key: "password", value: _confirmPasswordController.text);
               if (createAccountArgumentModel.isRetail) {
                 isRegistering = true;
                 createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
@@ -578,12 +581,22 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 log("Create User API Response -> $result1");
 
                 userId = result1["userId"];
+                await storage.write(key: "userId", value: userId.toString());
+                await storage.write(key: "userTypeId", value: 1.toString());
+                await storage.write(key: "companyId", value: 0.toString());
+
+                storageUserId =
+                    int.parse(await storage.read(key: "userId") ?? "");
+                storageUserTypeId =
+                    int.parse(await storage.read(key: "userTypeId") ?? "");
+                storageCompanyId =
+                    int.parse(await storage.read(key: "companyId") ?? "");
 
                 var result = await MapLogin.mapLogin({
                   "emailId": createAccountArgumentModel.email,
-                  "userTypeId": 1,
-                  "userId": userId,
-                  "companyId": 0,
+                  "userTypeId": storageUserTypeId,
+                  "userId": storageUserId,
+                  "companyId": storageCompanyId,
                   "password": _confirmPasswordController.text,
                   "deviceId": deviceId,
                   "registerDevice": false,
@@ -596,6 +609,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 log("token -> $token");
 
                 if (result["success"]) {
+                  await storage.write(
+                      key: "stepsCompleted", value: 2.toString());
+                  storageStepsCompleted = int.parse(
+                      await storage.read(key: "stepsCompleted") ?? "0");
                   if (context.mounted) {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
@@ -657,11 +674,22 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 log("userId -> $userId");
                 log("userId runtimeType -> ${userId.runtimeType}");
 
+                await storage.write(key: "userId", value: userId.toString());
+                await storage.write(key: "userTypeId", value: 2.toString());
+                await storage.write(key: "companyId", value: 1.toString());
+
+                storageUserId =
+                    int.parse(await storage.read(key: "userId") ?? "");
+                storageUserTypeId =
+                    int.parse(await storage.read(key: "userTypeId") ?? "");
+                storageCompanyId =
+                    int.parse(await storage.read(key: "companyId") ?? "");
+
                 var result = await MapLogin.mapLogin({
                   "emailId": createAccountArgumentModel.email,
-                  "userTypeId": 2,
-                  "userId": userId,
-                  "companyId": 1,
+                  "userTypeId": storageUserTypeId,
+                  "userId": storageUserId,
+                  "companyId": storageCompanyId,
                   "password": _confirmPasswordController.text,
                   "deviceId":
                       "${deviceId}xyz1", // TODO: change this to deviceId ater testing
@@ -675,6 +703,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 log("token -> $token");
 
                 if (result["success"]) {
+                  await storage.write(
+                      key: "stepsCompleted", value: 2.toString());
+                  storageStepsCompleted = int.parse(
+                      await storage.read(key: "stepsCompleted") ?? "0");
                   if (context.mounted) {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
@@ -782,10 +814,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                       showButtonBloc.add(ShowButtonEvent(show: isLoading));
                       var result = await MapLogin.mapLogin({
                         "emailId": createAccountArgumentModel.email,
-                        "userTypeId": createAccountArgumentModel.userTypeId,
-                        "userId": userId,
-                        "companyId": createAccountArgumentModel.companyId,
-                        "password": _passwordController.text,
+                        "userTypeId": storageUserTypeId,
+                        "userId": storageUserId,
+                        "companyId": storageCompanyId,
+                        "password": _confirmPasswordController.text,
                         "deviceId": deviceId,
                         "registerDevice": true,
                         "deviceName": deviceName,
@@ -796,6 +828,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                       token = result["token"];
                       log("token -> $token");
                       if (result["success"]) {
+                        await storage.write(
+                            key: "stepsCompleted", value: 2.toString());
+                        storageStepsCompleted = int.parse(
+                            await storage.read(key: "stepsCompleted") ?? "0");
                         if (context.mounted) {
                           if (createAccountArgumentModel.userTypeId == 1) {
                             Navigator.pushNamedAndRemoveUntil(
@@ -805,7 +841,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               arguments: RetailDashboardArgumentModel(
                                 imgUrl:
                                     "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                name: emailAddress,
+                                name: storageEmail ?? "",
+                                isFirst: false,
                               ).toMap(),
                             );
                           } else {

@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/application/progress.dart';
@@ -34,7 +35,18 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBarLeading(),
+        leading: AppBarLeading(
+          onTap: () {
+            // Navigator.pushNamed(
+            //   context,
+            //   Routes.applicationTaxCRS,
+            //   arguments: TaxCrsArgumentModel(
+            //     isUSFATCA: storageIsUSFATCA ?? true,
+            //     ustin: storageUsTin ?? "",
+            //   ).toMap(),
+            // );
+          },
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -219,6 +231,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                   context.read<ShowButtonBloc>();
               isUploading = true;
               showButtonBloc.add(ShowButtonEvent(show: isUploading));
+
               // TODO: Call relevant API
               Navigator.pushNamed(
                 context,
@@ -230,8 +243,18 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                   isRetail: true,
                 ).toMap(),
               );
+
+              await storage.write(
+                  key: "accountType", value: accountType.toString());
+              storageAccountType =
+                  int.parse(await storage.read(key: "accountType") ?? "1");
+
               isUploading = false;
               showButtonBloc.add(ShowButtonEvent(show: isUploading));
+
+              await storage.write(key: "stepsCompleted", value: 9.toString());
+              storageStepsCompleted =
+                  int.parse(await storage.read(key: "stepsCompleted") ?? "0");
             },
             text: labels[288]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),

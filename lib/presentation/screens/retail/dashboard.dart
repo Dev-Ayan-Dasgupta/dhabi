@@ -44,8 +44,44 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   @override
   void initState() {
     super.initState();
+    argumentInitialization();
+
+    tabbarInitialization();
+    // if (retailDashboardArgumentModel.isFirst) {
+    //   promptBiometricSettings();
+    // }
+  }
+
+  void argumentInitialization() {
     retailDashboardArgumentModel =
         RetailDashboardArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
+  void promptBiometricSettings() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: messages[99]["messageText"],
+          message: messages[58]["messageText"],
+          auxWidget: SolidButton(
+            onTap: () {},
+            text: labels[127]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
+          ),
+          actionWidget: GradientButton(
+            onTap: () {},
+            text: "Enable Now",
+          ),
+        );
+      },
+    );
+  }
+
+  void tabbarInitialization() {
     final TabbarBloc tabbarBloc = context.read<TabbarBloc>();
     tabController = TabController(length: 3, vsync: this);
     tabController.animation!.addListener(() {

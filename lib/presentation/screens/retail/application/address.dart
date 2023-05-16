@@ -4,6 +4,7 @@ import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -322,6 +323,29 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                               toggles: toggles,
                             ),
                           );
+                          await storage.write(
+                              key: "addressCountry",
+                              value: _countryController.text);
+                          storageAddressCountry =
+                              await storage.read(key: "addressCountry");
+                          await storage.write(
+                              key: "addressLine1",
+                              value: _address1Controller.text);
+                          storageAddressLine1 =
+                              await storage.read(key: "addressLine1");
+                          await storage.write(
+                              key: "addressLine2",
+                              value: _address2Controller.text);
+                          storageAddressLine2 =
+                              await storage.read(key: "addressLine2");
+                          await storage.write(
+                              key: "addressEmirate", value: selectedValue);
+                          storageAddressEmirate =
+                              await storage.read(key: "addressEmirate");
+                          await storage.write(
+                              key: "poBox", value: _zipController.text);
+                          storageAddressPoBox =
+                              await storage.read(key: "poBox");
                           var result = await MapRegisterRetailCustomerAddress
                               .mapRegisterRetailCustomerAddress({
                             "addressLine_1": _address1Controller.text,
@@ -345,6 +369,10 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                               toggles: toggles,
                             ),
                           );
+                          await storage.write(
+                              key: "stepsCompleted", value: 5.toString());
+                          storageStepsCompleted = int.parse(
+                              await storage.read(key: "stepsCompleted") ?? "0");
                         },
                         text: labels[127]["labelText"],
                         auxWidget:

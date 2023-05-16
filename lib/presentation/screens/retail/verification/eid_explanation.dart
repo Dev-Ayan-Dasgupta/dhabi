@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -49,17 +50,38 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
 
       fullName = await results
           ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      await storage.write(key: "fullName", value: fullName);
+      storageFullName = await storage.read(key: "fullName");
+
       eiDNumber = await results
           ?.textFieldValueByType(EVisualFieldType.FT_IDENTITY_CARD_NUMBER);
+      await storage.write(key: "eiDNumber", value: eiDNumber);
+      storageEidNumber = await storage.read(key: "eiDNumber");
+
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      await storage.write(key: "nationality", value: nationality);
+      storageNationality = await storage.read(key: "nationality");
+
       nationalityCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
+      await storage.write(key: "nationalityCode", value: nationalityCode);
+      storageNationalityCode = await storage.read(key: "nationalityCode");
+
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
+      await storage.write(key: "expiryDate", value: expiryDate);
+      storageExpiryDate = await storage.read(key: "expiryDate");
+
       dob = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);
+      await storage.write(key: "dob", value: dob);
+      storageDob = await storage.read(key: "dob");
+
       gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
+      await storage.write(key: "gender", value: gender);
+      storageGender = await storage.read(key: "gender");
+
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
@@ -67,8 +89,13 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
         image1.imageType = regula.ImageType.PRINTED;
         img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
       }
+      await storage.write(key: "photo", value: photo);
+      storagePhoto = await storage.read(key: "photo");
+
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
+      await storage.write(key: "docPhoto", value: docPhoto);
+      storageDocPhoto = await storage.read(key: "docPhoto");
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
@@ -180,6 +207,12 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
               ).toMap());
         }
       } else {
+        await storage.write(key: "isEid", value: true.toString());
+        // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
+        storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
+        await storage.write(key: "stepsCompleted", value: 3.toString());
+        storageStepsCompleted =
+            int.parse(await storage.read(key: "stepsCompleted") ?? "0");
         if (context.mounted) {
           Navigator.pushNamed(
             context,
@@ -195,8 +228,8 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
               gender: gender,
               photo: photo,
               docPhoto: docPhoto,
-              img1: img1,
-              image1: image1,
+              // img1: img1,
+              // image1: image1,
             ).toMap(),
           );
         }

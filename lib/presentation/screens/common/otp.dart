@@ -16,6 +16,7 @@ import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/map_customer_details.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -251,6 +252,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   Widget buildPinput(BuildContext context, PinputErrorState state) {
     final PinputErrorBloc pinputErrorBloc = context.read<PinputErrorBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return CustomPinput(
       pinController: _pinController,
       pinColor: (!state.isError)
@@ -301,6 +303,8 @@ class _OTPScreenState extends State<OTPScreen> {
                 }
               } else {
                 pinputErrorCount++;
+                seconds = 0;
+                showButtonBloc.add(const ShowButtonEvent(show: true));
                 pinputErrorBloc.add(
                   PinputErrorEvent(
                     isError: true,
@@ -419,6 +423,8 @@ class _OTPScreenState extends State<OTPScreen> {
                   }
                 } else {
                   pinputErrorCount++;
+                  seconds = 0;
+                  showButtonBloc.add(const ShowButtonEvent(show: true));
                   pinputErrorBloc.add(PinputErrorEvent(
                       isError: true,
                       isComplete: true,
@@ -556,6 +562,8 @@ class _OTPScreenState extends State<OTPScreen> {
                   }
                 } else {
                   pinputErrorCount++;
+                  seconds = 0;
+                  showButtonBloc.add(const ShowButtonEvent(show: true));
                   pinputErrorBloc.add(
                     PinputErrorEvent(
                       isError: true,
@@ -670,11 +678,17 @@ class _OTPScreenState extends State<OTPScreen> {
                         isRetail: !otpArgumentModel.isBusiness,
                       ).toMap(),
                     );
+                    await storage.write(
+                        key: "stepsCompleted", value: 10.toString());
+                    storageStepsCompleted = int.parse(
+                        await storage.read(key: "stepsCompleted") ?? "0");
                   }
                 }
               }
             } else {
               pinputErrorCount++;
+              seconds = 0;
+              showButtonBloc.add(const ShowButtonEvent(show: true));
               pinputErrorBloc.add(PinputErrorEvent(
                   isError: true,
                   isComplete: true,
@@ -695,40 +709,55 @@ class _OTPScreenState extends State<OTPScreen> {
       return Column(
         children: [
           const SizeBox(height: 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "${labels[34]["labelText"]} ",
-                style: TextStyles.primaryMedium.copyWith(
-                  color: AppColors.dark50,
-                  fontSize: (14 / Dimensions.designWidth).w,
+          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+            builder: (context, state) {
+              return Ternary(
+                condition: pinputErrorCount == 0,
+                truthy: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${labels[34]["labelText"]} ",
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.dark50,
+                        fontSize: (14 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                    BlocBuilder<OTPTimerBloc, OTPTimerState>(
+                      builder: (context, state) {
+                        if (seconds % 60 < 10) {
+                          return Text(
+                            "${seconds ~/ 60}:0${seconds % 60}",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.red100,
+                              fontSize: (14 / Dimensions.designWidth).w,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        } else {
+                          return Text(
+                            "${seconds ~/ 60}:${seconds % 60}",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.red100,
+                              fontSize: (14 / Dimensions.designWidth).w,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              BlocBuilder<OTPTimerBloc, OTPTimerState>(
-                builder: (context, state) {
-                  if (seconds % 60 < 10) {
-                    return Text(
-                      "${seconds ~/ 60}:0${seconds % 60}",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.red100,
-                        fontSize: (14 / Dimensions.designWidth).w,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    );
-                  } else {
-                    return Text(
-                      "${seconds ~/ 60}:${seconds % 60}",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.red100,
-                        fontSize: (14 / Dimensions.designWidth).w,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    );
-                  }
-                },
-              ),
-            ],
+                falsy: Text(
+                  messages[7]["messageText"],
+                  style: TextStyles.primaryMedium.copyWith(
+                    color: AppColors.red100,
+                    fontSize: (14 / Dimensions.designWidth).w,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              );
+            },
           ),
           const SizeBox(height: 25),
           BlocBuilder<OTPTimerBloc, OTPTimerState>(
@@ -740,7 +769,9 @@ class _OTPScreenState extends State<OTPScreen> {
                 child: Text(
                   labels[35]["labelText"],
                   style: TextStyles.primaryBold.copyWith(
-                    color: seconds == 0 ? AppColors.primary : AppColors.dark50,
+                    color: seconds == 0 || pinputErrorCount > 0
+                        ? AppColors.primary
+                        : AppColors.dark50,
                     fontSize: (16 / Dimensions.designWidth).w,
                   ),
                 ),
@@ -754,7 +785,7 @@ class _OTPScreenState extends State<OTPScreen> {
         children: [
           const SizeBox(height: 20),
           Text(
-            "OTP Frozen",
+            labels[36]["labelText"],
             style: TextStyles.primaryMedium.copyWith(
               color: const Color(0xFF636363),
               fontSize: (14 / Dimensions.designWidth).w,
@@ -766,8 +797,13 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   void resendOTP() async {
-    if (seconds == 0) {
-      seconds = 30;
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    if (seconds == 0 || pinputErrorCount > 0) {
+      if (otpArgumentModel.isEmail) {
+        seconds = 300;
+      } else {
+        seconds = 90;
+      }
       startTimer();
       final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
       otpTimerBloc.add(OTPTimerEvent(seconds: seconds));
@@ -781,6 +817,8 @@ class _OTPScreenState extends State<OTPScreen> {
         token ?? "",
       );
     }
+    pinputErrorCount = 0;
+    showButtonBloc.add(const ShowButtonEvent(show: true));
   }
 
   @override

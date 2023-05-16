@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
@@ -43,10 +44,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
   bool isChecked = false;
 
-  late regula.MatchFacesImage image1;
+  // late regula.MatchFacesImage image1;
+  regula.MatchFacesImage image1 = regula.MatchFacesImage();
   regula.MatchFacesImage image2 = regula.MatchFacesImage();
 
-  late Image img1;
+  // late Image img1;
+  Image img1 = Image.memory(base64Decode(storagePhoto!.replaceAll("\n", "")));
   Image img2 = Image.asset(ImageConstants.eidFront);
 
   bool isFaceScanning = false;
@@ -85,8 +88,11 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     scannedDetailsArgument =
         ScannedDetailsArgumentModel.fromMap(widget.argument as dynamic ?? {});
 
-    image1 = scannedDetailsArgument.image1;
-    img1 = scannedDetailsArgument.img1;
+    // image1 = scannedDetailsArgument.image1;
+    // img1 = scannedDetailsArgument.img1;
+    image1.bitmap =
+        base64Encode(base64Decode(storagePhoto!.replaceAll("\n", "")));
+    image1.imageType = regula.ImageType.PRINTED;
 
     fullName = scannedDetailsArgument.fullName;
     log("Full Name -> $fullName");
@@ -184,17 +190,38 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
       fullName = await results
           ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      await storage.write(key: "fullName", value: fullName);
+      storageFullName = await storage.read(key: "fullName");
+
       eiDNumber = await results
           ?.textFieldValueByType(EVisualFieldType.FT_IDENTITY_CARD_NUMBER);
+      await storage.write(key: "eiDNumber", value: eiDNumber);
+      storageEidNumber = await storage.read(key: "eiDNumber");
+
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      await storage.write(key: "nationality", value: nationality);
+      storageNationality = await storage.read(key: "nationality");
+
       nationalityCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
+      await storage.write(key: "nationalityCode", value: nationalityCode);
+      storageNationalityCode = await storage.read(key: "nationalityCode");
+
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
+      await storage.write(key: "expiryDate", value: expiryDate);
+      storageExpiryDate = await storage.read(key: "expiryDate");
+
       dob = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);
+      await storage.write(key: "dob", value: dob);
+      storageDob = await storage.read(key: "dob");
+
       gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
+      await storage.write(key: "gender", value: gender);
+      storageGender = await storage.read(key: "gender");
+
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
@@ -205,8 +232,13 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
         });
       }
+      await storage.write(key: "photo", value: photo);
+      storagePhoto = await storage.read(key: "photo");
+
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
+      await storage.write(key: "docPhoto", value: docPhoto);
+      storageDocPhoto = await storage.read(key: "docPhoto");
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
@@ -318,6 +350,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               ).toMap());
         }
       } else {
+        await storage.write(key: "isEid", value: true.toString());
+        // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
+        storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
+        await storage.write(key: "stepsCompleted", value: 3.toString());
+        storageStepsCompleted =
+            int.parse(await storage.read(key: "stepsCompleted") ?? "0");
         if (context.mounted) {
           Navigator.pushNamed(
             context,
@@ -333,8 +371,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               gender: gender,
               photo: photo,
               docPhoto: docPhoto,
-              img1: img1,
-              image1: image1,
+              // img1: img1,
+              // image1: image1,
             ).toMap(),
           );
         }
@@ -384,25 +422,49 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       // fullName = await results
       //     ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
       fullName = "$firstName $surname";
+      fullName = "$firstName $surname";
+      await storage.write(key: "fullName", value: fullName);
+      storageFullName = await storage.read(key: "fullName");
+
       String? tempPassportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
       passportNumber = tempPassportNumber?.split("\n").last.substring(0, 8);
+      await storage.write(key: "passportNumber", value: passportNumber);
+      storagePassportNumber = await storage.read(key: "passportNumber");
 
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      await storage.write(key: "nationality", value: nationality);
+      storageNationality = await storage.read(key: "nationality");
+
       String? tempNationalityCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       nationalityCode = LongToShortCode.longToShortCode(tempNationalityCode!);
       log("nationalityCode -> $nationalityCode");
+      await storage.write(key: "nationalityCode", value: nationalityCode);
+      storageNationalityCode = await storage.read(key: "nationalityCode");
+
       String? tempIssuingStateCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_ISSUING_STATE_CODE);
       issuingStateCode = LongToShortCode.longToShortCode(tempIssuingStateCode!);
       log("issuingState -> $issuingStateCode");
+      await storage.write(key: "issuingStateCode", value: issuingStateCode);
+      storageIssuingStateCode = await storage.read(key: "issuingStateCode");
+
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
+      await storage.write(key: "expiryDate", value: expiryDate);
+      storageExpiryDate = await storage.read(key: "expiryDate");
+
       dob = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);
+      await storage.write(key: "dob", value: dob);
+      storageDob = await storage.read(key: "dob");
+
       gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
+      await storage.write(key: "gender", value: gender);
+      storageGender = await storage.read(key: "gender");
+
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
@@ -413,8 +475,13 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
         });
       }
+      await storage.write(key: "photo", value: photo);
+      storagePhoto = await storage.read(key: "photo");
+
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
+      await storage.write(key: "docPhoto", value: docPhoto);
+      storageDocPhoto = await storage.read(key: "docPhoto");
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
@@ -427,8 +494,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
       // ? Check for expired
       if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
-                  DateFormat('dd MMMM yyyy')
-                      .parse(expiryDate ?? "1 January 1900")))
+                  DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")))
               .difference(DateTime.now())
               .inDays <
           0) {
@@ -463,11 +529,11 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       }
 
       // ? Check for age
-      else if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
-                  DateFormat('dd MMMM yyyy').parse(dob ?? "1 January 1900")))
-              .difference(DateTime.now())
+      else if (DateTime.now()
+              .difference(DateTime.parse(DateFormat('yyyy-MM-dd')
+                  .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000"))))
               .inDays <
-          18 * 365) {
+          ((18 * 365) + 4)) {
         if (context.mounted) {
           Navigator.pushNamed(
             context,
@@ -526,6 +592,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               ).toMap());
         }
       } else {
+        await storage.write(key: "isEid", value: false.toString());
+        // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
+        storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
+        await storage.write(key: "stepsCompleted", value: 3.toString());
+        storageStepsCompleted =
+            int.parse(await storage.read(key: "stepsCompleted") ?? "0");
         if (context.mounted) {
           Navigator.pushNamed(
             context,
@@ -541,8 +613,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               gender: gender,
               photo: photo,
               docPhoto: docPhoto,
-              img1: img1,
-              image1: image1,
+              // img1: img1,
+              // image1: image1,
             ).toMap(),
           );
         }
@@ -591,6 +663,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     var value = await regula.FaceSDK.startLiveness();
     var result = regula.LivenessResponse.fromJson(json.decode(value));
     selfiePhoto = result!.bitmap!.replaceAll("\n", "");
+    await storage.write(key: "selfiePhoto", value: selfiePhoto);
+    storageSelfiePhoto = await storage.read(key: "selfiePhoto");
     image2.bitmap = base64Encode(base64Decode(selfiePhoto));
     image2.imageType = regula.ImageType.LIVE;
 
@@ -610,6 +684,9 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     // }
 
     if (photoMatchScore > 80) {
+      await storage.write(key: "stepsCompleted", value: 4.toString());
+      storageStepsCompleted =
+          int.parse(await storage.read(key: "stepsCompleted") ?? "0");
       if (context.mounted) {
         Navigator.pushNamed(
           context,
@@ -675,8 +752,13 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     photoMatchScore = split!.matchedFaces.isNotEmpty
         ? (split.matchedFaces[0]!.similarity! * 100)
         : 0;
+    await storage.write(
+        key: "photoMatchScore", value: photoMatchScore.toString());
+    storagePhotoMatchScore =
+        double.parse(await storage.read(key: "photoMatchScore") ?? "");
 
     log("photoMatchScore -> $photoMatchScore");
+    log("storagePhotoMatchScore -> $storagePhotoMatchScore");
   }
 
   @override

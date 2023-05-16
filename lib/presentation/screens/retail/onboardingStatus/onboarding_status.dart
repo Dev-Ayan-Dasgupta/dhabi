@@ -6,7 +6,6 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -195,7 +194,7 @@ class _RetailOnboardingStatusScreenState
                                   context,
                                   Routes.acceptTermsAndConditions,
                                   arguments: CreateAccountArgumentModel(
-                                    email: emailAddress,
+                                    email: storageEmail ?? "",
                                     isRetail: true,
                                     userTypeId: 1,
                                     companyId: 0,
