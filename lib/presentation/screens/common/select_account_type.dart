@@ -53,18 +53,13 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushReplacementNamed(context, Routes.registration,
-            arguments: RegistrationArgumentModel(isInitial: true).toMap());
-        return true;
+        promptUser();
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(
           leading: AppBarLeading(
-            onTap: () {
-              Navigator.pushReplacementNamed(context, Routes.registration,
-                  arguments:
-                      RegistrationArgumentModel(isInitial: true).toMap());
-            },
+            onTap: promptUser,
           ),
           elevation: 0,
         ),
@@ -324,5 +319,38 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
     } else {
       return SolidButton(onTap: () {}, text: labels[31]["labelText"]);
     }
+  }
+
+  void promptUser() {
+    showDialog(
+      context: context,
+      // barrierDismissible: false,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: labels[250]["labelText"],
+          message:
+              "Going to the previous screen will make you repeat this step.",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  // Navigator.pop(context);
+                  Navigator.pushReplacementNamed(
+                    context,
+                    Routes.registration,
+                    arguments:
+                        RegistrationArgumentModel(isInitial: true).toMap(),
+                  );
+                },
+                text: "Go Back",
+              ),
+              const SizeBox(height: 22),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

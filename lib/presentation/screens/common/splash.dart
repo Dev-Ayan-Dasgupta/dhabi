@@ -185,8 +185,8 @@ class _SplashScreenState extends State<SplashScreen> {
       storageCompanyId = int.parse(await storage.read(key: "companyId") ?? "0");
       log("storageCompanyId -> $storageCompanyId");
 
-      storageStepsCompleted = 0;
-      // int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+      storageStepsCompleted =
+          int.parse(await storage.read(key: "stepsCompleted") ?? "0");
       log("storageStepsCompleted -> $storageStepsCompleted");
 
       storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
