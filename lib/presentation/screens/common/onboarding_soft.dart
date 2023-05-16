@@ -127,6 +127,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               condition: onboardingArgumentModel.isInitial,
                               truthy: InkWell(
                                 onTap: biometricPrompt,
+                                // () {
+                                //   Navigator.pushNamed(
+                                //       context, Routes.loginUserId);
+                                // },
                                 child: Text(
                                   labels[205]["labelText"],
                                   style: TextStyles.primaryBold.copyWith(
@@ -323,6 +327,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                         ).toMap(),
                                       );
                                       break;
+                                    case 11:
+                                      callLoginApi();
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.businessOnboardingStatus,
+                                        arguments:
+                                            OnboardingStatusArgumentModel(
+                                          stepsCompleted: 2,
+                                          isFatca: false,
+                                          isPassport: false,
+                                          isRetail: false,
+                                        ).toMap(),
+                                      );
+                                      break;
                                     default:
                                       Navigator.pushNamed(
                                         context,
@@ -441,6 +459,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           OpenSettings.openBiometricEnrollSetting();
         }
       }
-    } else {}
+    } else {
+      Navigator.pushNamed(context, Routes.loginUserId);
+    }
   }
 }

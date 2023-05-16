@@ -663,7 +663,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   "emailId": createAccountArgumentModel.email,
                   "password": _confirmPasswordController.text,
                   "deviceId":
-                      "${deviceId}xyz1", // TODO: change this to deviceId ater testing
+                      deviceId, // TODO: change this to deviceId ater testing
                   "deviceName": deviceName,
                   "deviceType": deviceType,
                   "appVersion": appVersion
@@ -692,7 +692,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   "companyId": storageCompanyId,
                   "password": _confirmPasswordController.text,
                   "deviceId":
-                      "${deviceId}xyz1", // TODO: change this to deviceId ater testing
+                      deviceId, // TODO: change this to deviceId ater testing
                   "registerDevice": false,
                   "deviceName": deviceName,
                   "deviceType": deviceType,

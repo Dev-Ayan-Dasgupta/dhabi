@@ -43,3 +43,6 @@ String? storageCrsTin;
 String? storageNoTinReason;
 
 int? storageAccountType;
+
+String? storageCompanyCountry;
+String? storageTradeLicenseNumber;

@@ -638,21 +638,45 @@ class _OTPScreenState extends State<OTPScreen> {
                                           getCustomerDetailsResponse[
                                               "cifDetails"];
                                       if (context.mounted) {
-                                        Navigator.pushNamed(
-                                          context,
-                                          Routes.selectAccount,
-                                          arguments: SelectAccountArgumentModel(
-                                            emailId:
-                                                otpArgumentModel.emailOrPhone,
-                                            cifDetails: cifDetails,
-                                            isPwChange: false,
-                                            isLogin: false,
-                                          ).toMap(),
-                                        );
+                                        if (cifDetails.length == 1) {
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            Routes.loginPassword,
+                                            arguments:
+                                                LoginPasswordArgumentModel(
+                                              emailId: storageEmail ?? "",
+                                              userId: storageUserId ?? 0,
+                                              userTypeId:
+                                                  storageUserTypeId ?? 2,
+                                              companyId: storageCompanyId ?? 0,
+                                            ).toMap(),
+                                          );
+                                        } else {
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            Routes.selectAccount,
+                                            arguments:
+                                                SelectAccountArgumentModel(
+                                              emailId:
+                                                  otpArgumentModel.emailOrPhone,
+                                              cifDetails: cifDetails,
+                                              isPwChange: false,
+                                              isLogin: false,
+                                            ).toMap(),
+                                          );
+                                        }
                                       }
                                       isLoading = false;
                                       showButtonBloc.add(
                                           ShowButtonEvent(show: isLoading));
+
+                                      await storage.write(
+                                          key: "stepsCompleted",
+                                          value: 0.toString());
+                                      storageStepsCompleted = int.parse(
+                                          await storage.read(
+                                                  key: "stepsCompleted") ??
+                                              "0");
                                     },
                                     text: labels[31]["labelText"],
                                     auxWidget: isLoading

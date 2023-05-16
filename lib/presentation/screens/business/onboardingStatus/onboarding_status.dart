@@ -86,7 +86,7 @@ class _BusinessOnboardingStatusScreenState
                     iconPath: ImageConstants.building,
                     iconWidth: 10,
                     iconHeight: 14,
-                    text: "Basic Company Details",
+                    text: labels[294]["labelText"],
                     dividerHeight: 24,
                   ),
                   OnboardingStatusRow(

@@ -8,6 +8,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/corporateOnboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -62,7 +63,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Basic Company Details",
+                    labels[294]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -80,7 +81,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                   Row(
                     children: [
                       Text(
-                        "Company Name",
+                        labels[296]["labelText"],
                         style: TextStyles.primaryMedium.copyWith(
                           color: AppColors.black63,
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -196,6 +197,8 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                           isLoading = true;
                           showButtonBloc.add(ShowButtonEvent(show: isLoading));
 
+                          log("Country short code -> ${dhabiCountries[dhabiCountryIndex]["shortCode"]}");
+
                           var tLResult = await MapIfTradeLicenseExists
                               .mapIfTradeLicenseExists(
                             {
@@ -279,6 +282,12 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                                 ).toMap(),
                               );
                             }
+
+                            await storage.write(
+                                key: "stepsCompleted", value: 11.toString());
+                            storageStepsCompleted = int.parse(
+                                await storage.read(key: "stepsCompleted") ??
+                                    "0");
                           }
 
                           isLoading = false;
