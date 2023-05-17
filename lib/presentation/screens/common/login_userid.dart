@@ -1,7 +1,5 @@
 import 'dart:developer';
 
-import 'package:dialup_mobile_app/bloc/emailExists/email_exists_bloc.dart';
-import 'package:dialup_mobile_app/bloc/emailExists/email_exists_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
@@ -80,25 +78,33 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                     ],
                   ),
                   const SizeBox(height: 10),
-                  CustomTextField(
-                    controller: _emailController,
-                    suffix: Padding(
-                      padding: EdgeInsets.only(
-                          left: (10 / Dimensions.designWidth).w),
-                      child: InkWell(
-                        onTap: () {
-                          _emailController.clear();
-                        },
-                        child: SvgPicture.asset(
-                          ImageConstants.deleteText,
-                          width: (17.5 / Dimensions.designWidth).w,
-                          height: (17.5 / Dimensions.designWidth).w,
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      return CustomTextField(
+                        controller: _emailController,
+                        borderColor: isEmailValid
+                            ? const Color(0xFFEEEEEE)
+                            : AppColors.red100,
+                        suffix: Padding(
+                          padding: EdgeInsets.only(
+                              left: (10 / Dimensions.designWidth).w),
+                          child: InkWell(
+                            onTap: () {
+                              _emailController.clear();
+                            },
+                            child: SvgPicture.asset(
+                              ImageConstants.deleteText,
+                              width: (17.5 / Dimensions.designWidth).w,
+                              height: (17.5 / Dimensions.designWidth).w,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    onChanged: emailValidation,
+                        onChanged: emailValidation,
+                      );
+                    },
                   ),
-                  BlocBuilder<EmailExistsBloc, EmailExistsState>(
+                  const SizeBox(height: 7),
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: buildErrorMessage,
                   ),
                   const SizeBox(height: 15),
@@ -163,44 +169,37 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
   }
 
   void emailValidation(String p0) {
-    // final EmailExistsBloc emailExistsBloc = context.read<EmailExistsBloc>();
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     if (InputValidator.isEmailValid(p0)) {
-      if (p0 != "ADasgupta@aspire-infotech.net") {
-        // emailExists = false;
-        isEmailValid = true;
-        // emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
-        showButtonBloc.add(ShowButtonEvent(show: isEmailValid));
-      } else {
-        // emailExists = true;
-        isEmailValid = true;
-        // emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
-        showButtonBloc.add(ShowButtonEvent(show: isEmailValid));
-      }
+      isEmailValid = true;
+      showButtonBloc.add(ShowButtonEvent(show: isEmailValid));
     } else {
-      // emailExists = false;
       isEmailValid = false;
-      // emailExistsBloc.add(EmailExistsEvent(emailExists: emailExists));
       showButtonBloc.add(ShowButtonEvent(show: isEmailValid));
     }
   }
 
-  Widget buildErrorMessage(BuildContext context, EmailExistsState state) {
-    if (state.emailExists == false) {
-      return Column(
+  Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
+    if (isEmailValid) {
+      return const SizeBox();
+    } else {
+      return Row(
         children: [
-          const SizeBox(height: 7),
+          SvgPicture.asset(
+            ImageConstants.errorSolid,
+            width: (10 / Dimensions.designWidth).w,
+            height: (10 / Dimensions.designWidth).w,
+          ),
+          const SizeBox(width: 5),
           Text(
-            "Email ID does not exist",
+            "Invalid email address",
             style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.red100,
+              color: const Color(0xFFC94540),
               fontSize: (12 / Dimensions.designWidth).w,
             ),
           ),
         ],
       );
-    } else {
-      return const SizeBox();
     }
   }
 

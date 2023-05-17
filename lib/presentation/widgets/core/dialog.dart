@@ -43,8 +43,10 @@ class CustomDialog extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: (22 / Dimensions.designWidth).w),
+              padding: EdgeInsets.only(
+                  left: (22 / Dimensions.designWidth).w,
+                  right: (22 / Dimensions.designWidth).w,
+                  top: (22 / Dimensions.designHeight).h),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -55,10 +57,10 @@ class CustomDialog extends StatelessWidget {
                         children: [
                           SvgPicture.asset(
                             svgAssetPath,
-                            width: (111 / Dimensions.designWidth).w,
-                            height: (111 / Dimensions.designWidth).w,
+                            width: (111 / Dimensions.designHeight).h,
+                            height: (111 / Dimensions.designHeight).h,
                           ),
-                          const SizeBox(height: 40),
+                          const SizeBox(height: 30),
                           Text(
                             title,
                             style: TextStyles.primaryBold.copyWith(
@@ -75,6 +77,7 @@ class CustomDialog extends StatelessWidget {
                             ),
                             textAlign: TextAlign.center,
                           ),
+                          const SizeBox(height: 20),
                         ],
                       ),
                     ),

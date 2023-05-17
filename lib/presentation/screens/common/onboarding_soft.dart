@@ -363,7 +363,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             onTap: () {
                               Navigator.pushNamed(
                                   context, Routes.exploreDashboard);
-
+                              // Navigator.pushNamed(context, Routes.loginUserId);
                               // Navigator.pushNamed(
                               //   context,
                               //   Routes.retailDashboard,
