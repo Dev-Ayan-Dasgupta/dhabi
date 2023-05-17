@@ -266,7 +266,8 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                   return CustomDialog(
                     svgAssetPath: ImageConstants.warning,
                     title: storageUserTypeId == 1
-                        ? messages[71]["messageText"]
+                        ? "Sorry"
+                        // messages[71]["messageText"]
                         : "Application approval pending",
                     message: storageUserTypeId == 1
                         ? messages[70]["messageText"]
