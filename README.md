@@ -2,8 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (7)
+## Release notes - 1.0.0 (8)
 
-- Implemented biometric - FHDHABI-105 and FHDHABI-134
-- Implemented state persistence ofor business onboarding process - FHDHABI-122
-- Fixed Submit button enabling without address selection - FHDHABI-130
+- Deleting local storage data uponuninstall
+- Removed submit button in select entity screen

@@ -112,11 +112,13 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                       true) {
                                 showDialog(
                                   context: context,
+                                  barrierDismissible: false,
                                   builder: (context) {
                                     return CustomDialog(
                                       svgAssetPath: ImageConstants.warning,
                                       title: "Application approval pending",
-                                      message: messages[2]["messageText"],
+                                      message:
+                                          "You already have a registration pending. Please contact Dhabi support.",
                                       actionWidget: Column(
                                         children: [
                                           GradientButton(
@@ -131,38 +133,60 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                     );
                                   },
                                 );
-                              }
-
-                              if (selectAccountArgument.isPwChange) {
-                                isCompany = selectAccountArgument
-                                    .cifDetails[index]["isCompany"];
-                                isCompanyRegistered = selectAccountArgument
-                                    .cifDetails[index]["isCompanyRegistered"];
                               } else {
-                                if (selectAccountArgument.isLogin) {
-                                  userTypeId = selectAccountArgument
-                                              .cifDetails[index]["companyId"] ==
-                                          0
-                                      ? 1
-                                      : 2;
-                                  await storage.write(
-                                      key: "userTypeId",
-                                      value: userTypeId.toString());
-                                  storageUserTypeId = int.parse(
-                                      await storage.read(key: "userTypeId") ??
-                                          "");
-                                  companyId = selectAccountArgument
-                                      .cifDetails[index]["companyId"];
-                                  await storage.write(
-                                      key: "companyId",
-                                      value: companyId.toString());
-                                  storageCompanyId = int.parse(
-                                      await storage.read(key: "companyId") ??
-                                          "");
-                                  log("userTypeId -> $userTypeId");
-                                  log("companyId -> $companyId");
+                                if (selectAccountArgument.isPwChange) {
+                                  isCompany = selectAccountArgument
+                                      .cifDetails[index]["isCompany"];
+                                  isCompanyRegistered = selectAccountArgument
+                                      .cifDetails[index]["isCompanyRegistered"];
+                                  if (!isCompany || isCompanyRegistered) {
+                                    Navigator.pushNamed(
+                                        context, Routes.setPassword);
+                                  } else {
+                                    // TODO: show dialog box which Samit sir will share
+                                  }
                                 } else {
-                                  // TODO: Navigate to dashboard
+                                  if (selectAccountArgument.isLogin) {
+                                    userTypeId =
+                                        selectAccountArgument.cifDetails[index]
+                                                    ["companyId"] ==
+                                                0
+                                            ? 1
+                                            : 2;
+                                    await storage.write(
+                                        key: "userTypeId",
+                                        value: userTypeId.toString());
+                                    storageUserTypeId = int.parse(
+                                        await storage.read(key: "userTypeId") ??
+                                            "");
+                                    companyId = selectAccountArgument
+                                        .cifDetails[index]["companyId"];
+                                    await storage.write(
+                                        key: "companyId",
+                                        value: companyId.toString());
+                                    storageCompanyId = int.parse(
+                                        await storage.read(key: "companyId") ??
+                                            "");
+                                    log("userTypeId -> $userTypeId");
+                                    log("companyId -> $companyId");
+                                    if (context.mounted) {
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.loginPassword,
+                                        arguments: LoginPasswordArgumentModel(
+                                          emailId:
+                                              selectAccountArgument.emailId,
+                                          userId: 0,
+                                          userTypeId: userTypeId,
+                                          companyId: companyId,
+                                        ).toMap(),
+                                      );
+                                    }
+                                  } else {
+                                    // TODO: Navigate to dashboard
+                                    Navigator.pushNamed(
+                                        context, Routes.loginUserId);
+                                  }
                                 }
                               }
                             },
@@ -189,56 +213,40 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                 },
               ),
             ),
-            Column(
-              children: [
-                const SizeBox(height: 30),
-                BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                  builder: (context, state) {
-                    if (isSelected) {
-                      return GradientButton(
-                        onTap: () {
-                          if (selectAccountArgument.isPwChange) {
-                            if (!isCompany || isCompanyRegistered) {
-                              Navigator.pushNamed(context, Routes.setPassword);
-                            } else {
-                              // TODO: show dialog box which Samit sir will share
-                            }
-                          } else {
-                            if (selectAccountArgument.isLogin) {
-                              Navigator.pushNamed(
-                                context,
-                                Routes.loginPassword,
-                                arguments: LoginPasswordArgumentModel(
-                                  emailId: selectAccountArgument.emailId,
-                                  userId: 0,
-                                  userTypeId: userTypeId,
-                                  companyId: companyId,
-                                ).toMap(),
-                              );
-                            } else {
-                              // TODO: Navigate to dashboard
-                              Navigator.pushNamed(context, Routes.loginUserId);
-                            }
-                          }
-                        },
-                        text: labels[127]["labelText"],
-                        // auxWidget:
-                        //     isLoading ? const LoaderRow() : const SizeBox(),
-                      );
-                    } else {
-                      return SolidButton(
-                        onTap: () {},
-                        text: labels[127]["labelText"],
-                      );
-                    }
-                  },
-                ),
-                SizeBox(
-                  height: PaddingConstants.bottomPadding +
-                      MediaQuery.of(context).padding.bottom,
-                ),
-              ],
-            ),
+            // Column(
+            //   children: [
+            //     const SizeBox(height: 30),
+            //     BlocBuilder<ShowButtonBloc, ShowButtonState>(
+            //       builder: (context, state) {
+            //         if (isSelected) {
+            //           return GradientButton(
+            //             onTap: () {
+            //               if (selectAccountArgument.isPwChange) {
+            //               } else {
+            //                 if (selectAccountArgument.isLogin) {
+            //                 } else {
+            //                   // TODO: Navigate to dashboard
+            //                 }
+            //               }
+            //             },
+            //             text: labels[127]["labelText"],
+            //             // auxWidget:
+            //             //     isLoading ? const LoaderRow() : const SizeBox(),
+            //           );
+            //         } else {
+            //           return SolidButton(
+            //             onTap: () {},
+            //             text: labels[127]["labelText"],
+            //           );
+            //         }
+            //       },
+            //     ),
+            //     SizeBox(
+            //       height: PaddingConstants.bottomPadding +
+            //           MediaQuery.of(context).padding.bottom,
+            //     ),
+            //   ],
+            // ),
             // Column(
             //   crossAxisAlignment: CrossAxisAlignment.start,
             //   children: [

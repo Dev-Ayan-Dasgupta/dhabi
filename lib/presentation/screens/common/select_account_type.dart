@@ -270,7 +270,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                         : "Application approval pending",
                     message: storageUserTypeId == 1
                         ? "Try logging in again."
-                        : messages[2]["messageText"],
+                        : result["message"],
                     actionWidget: Column(
                       children: [
                         GradientButton(

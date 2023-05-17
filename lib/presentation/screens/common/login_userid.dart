@@ -8,6 +8,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -197,6 +198,10 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
           isLoading = true;
           final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
           showButtonBloc.add(ShowButtonEvent(show: isLoading));
+
+          await storage.write(
+              key: "emailAddress", value: _emailController.text);
+          storageEmail = await storage.read(key: "emailAddress");
 
           // check if single cif exists
           var singleCifResult = await MapCustomerSingleCif.mapCustomerSingleCif(

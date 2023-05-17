@@ -16,6 +16,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
@@ -171,6 +172,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> initLocalStorageData() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('first_run') ?? true) {
+      await storage.deleteAll();
+      prefs.setBool('first_run', false);
+    }
     log("init LS started");
     try {
       storageEmail = await storage.read(key: "emailAddress");
