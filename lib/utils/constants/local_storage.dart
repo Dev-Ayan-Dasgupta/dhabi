@@ -38,6 +38,7 @@ String? storageIncomeSource;
 bool? storageIsUSFATCA;
 String? storageUsTin;
 
+String? storageTaxCountry;
 bool? storageIsTinYes;
 String? storageCrsTin;
 String? storageNoTinReason;

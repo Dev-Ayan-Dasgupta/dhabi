@@ -228,7 +228,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                                       children: [
                                         SolidButton(
                                           onTap: () {},
-                                          text: "Close",
+                                          text: labels[293]["labelText"],
                                           color: AppColors.primaryBright17,
                                           fontColor: AppColors.primary,
                                         ),

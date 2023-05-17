@@ -46,6 +46,9 @@ PODS:
   - platform_device_id_macos (0.0.1):
     - FlutterMacOS
   - PromisesObjC (2.2.0)
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - smart_auth (0.0.1):
     - FlutterMacOS
   - sqflite (0.0.2):
@@ -68,6 +71,7 @@ DEPENDENCIES:
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - platform_device_id (from `Flutter/ephemeral/.symlinks/plugins/platform_device_id/macos`)
   - platform_device_id_macos (from `Flutter/ephemeral/.symlinks/plugins/platform_device_id_macos/macos`)
+  - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
   - smart_auth (from `Flutter/ephemeral/.symlinks/plugins/smart_auth/macos`)
   - sqflite (from `Flutter/ephemeral/.symlinks/plugins/sqflite/macos`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
@@ -106,6 +110,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/platform_device_id/macos
   platform_device_id_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/platform_device_id_macos/macos
+  shared_preferences_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
   smart_auth:
     :path: Flutter/ephemeral/.symlinks/plugins/smart_auth/macos
   sqflite:
@@ -134,6 +140,7 @@ SPEC CHECKSUMS:
   platform_device_id: 3e414428f45df149bbbfb623e2c0ca27c545b763
   platform_device_id_macos: f763bb55f088be804d61b96eb4710b8ab6598e94
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
+  shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
   smart_auth: b38e3ab4bfe089eacb1e233aca1a2340f96c28e9
   sqflite: a5789cceda41d54d23f31d6de539d65bb14100ea
   url_launcher_macos: 5335912b679c073563f29d89d33d10d459f95451

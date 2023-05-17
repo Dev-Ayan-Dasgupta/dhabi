@@ -2,8 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (9)
+## Release notes - 1.0.0 (10)
 
-- Deleting local storage data uponuninstall
-- Removed submit button in select entity screen
-- fixed issue involving cif based login
+- Adding back button behaviour for onboarding section's address/tax - FHDHABI-133
+- adding aux buttons for pop-ups involving cancel actions -

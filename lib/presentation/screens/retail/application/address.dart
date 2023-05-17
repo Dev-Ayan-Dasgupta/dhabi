@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
-import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
@@ -69,9 +66,9 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
       appBar: AppBar(
         leading: AppBarLeading(
           onTap: () {
-            residenceSelectedBloc.add(DropdownSelectedEvent(
-                isDropdownSelected: false, toggles: toggles));
-            Navigator.pop(context);
+            // residenceSelectedBloc.add(DropdownSelectedEvent(
+            //     isDropdownSelected: false, toggles: toggles));
+            // Navigator.pop(context);
           },
         ),
         backgroundColor: Colors.transparent,
@@ -346,18 +343,18 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                               key: "poBox", value: _zipController.text);
                           storageAddressPoBox =
                               await storage.read(key: "poBox");
-                          var result = await MapRegisterRetailCustomerAddress
-                              .mapRegisterRetailCustomerAddress({
-                            "addressLine_1": _address1Controller.text,
-                            "addressLine_2": _address2Controller.text,
-                            "areaId": uaeDetails[emirateIndex]["areas"][0]
-                                ["area_Id"],
-                            "cityId": uaeDetails[emirateIndex]["city_Id"],
-                            "stateId": 1,
-                            "countryId": 1,
-                            "pinCode": _zipController.text
-                          }, token ?? "");
-                          log("RegisterRetailCustomerAddress API Response -> $result");
+                          // var result = await MapRegisterRetailCustomerAddress
+                          //     .mapRegisterRetailCustomerAddress({
+                          //   "addressLine_1": _address1Controller.text,
+                          //   "addressLine_2": _address2Controller.text,
+                          //   "areaId": uaeDetails[emirateIndex]["areas"][0]
+                          //       ["area_Id"],
+                          //   "cityId": uaeDetails[emirateIndex]["city_Id"],
+                          //   "stateId": 1,
+                          //   "countryId": 1,
+                          //   "pinCode": _zipController.text
+                          // }, token ?? "");
+                          // log("RegisterRetailCustomerAddress API Response -> $result");
                           if (context.mounted) {
                             Navigator.pushNamed(
                                 context, Routes.applicationIncome);

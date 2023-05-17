@@ -59,395 +59,419 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     final ButtonFocussedBloc buttonFocussedBloc =
         context.read<ButtonFocussedBloc>();
-    return Scaffold(
-      appBar: AppBar(
-        leading: const AppBarLeading(),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal:
-              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacementNamed(context, Routes.applicationIncome);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: AppBarLeading(
+            onTap: () {
+              Navigator.pushReplacementNamed(context, Routes.applicationIncome);
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    labels[261]["labelText"],
-                    style: TextStyles.primaryBold.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (28 / Dimensions.designWidth).w,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal:
+                (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      labels[261]["labelText"],
+                      style: TextStyles.primaryBold.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (28 / Dimensions.designWidth).w,
+                      ),
                     ),
-                  ),
-                  const SizeBox(height: 30),
-                  ApplicationProgress(progress: progress),
-                  const SizeBox(height: 30),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                labels[273]["labelText"],
-                                style: TextStyles.primaryBold.copyWith(
-                                  color: AppColors.primary,
-                                  fontSize: (16 / Dimensions.designWidth).w,
+                    const SizeBox(height: 30),
+                    ApplicationProgress(progress: progress),
+                    const SizeBox(height: 30),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  labels[273]["labelText"],
+                                  style: TextStyles.primaryBold.copyWith(
+                                    color: AppColors.primary,
+                                    fontSize: (16 / Dimensions.designWidth).w,
+                                  ),
                                 ),
-                              ),
-                              // const SizeBox(width: 10),
-                              // BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                              //   builder: buildTitleTooltip,
-                              // ),
-                            ],
-                          ),
-                          const SizeBox(height: 20),
-                          BlocBuilder<ApplicationTaxBloc, ApplicationTaxState>(
-                            builder: buildQuestion1,
-                            // if (isUSCitizen) {
-                            //   return Column(
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //     children: [
-                            //       Text(
-                            //         "Are you a U.S. citizen or resident for tax purposes?",
-                            //         style: TextStyles.primary.copyWith(
-                            //           color: AppColors.black63,
-                            //           fontSize:
-                            //               (16 / Dimensions.designWidth).w,
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   );
-                            // } else {
-                            //   return Column(
-                            //     crossAxisAlignment: CrossAxisAlignment.start,
-                            //     children: [
-                            //       RichText(
-                            //         text: TextSpan(
-                            //           text: 'Press ',
-                            //           style: TextStyles.primary.copyWith(
-                            //             color: AppColors.black63,
-                            //             fontSize:
-                            //                 (15 / Dimensions.designWidth).w,
-                            //           ),
-                            //           children: <TextSpan>[
-                            //             TextSpan(
-                            //               text: 'Yes',
-                            //               style:
-                            //                   TextStyles.primaryBold.copyWith(
-                            //                 color: AppColors.black63,
-                            //                 fontSize:
-                            //                     (15 / Dimensions.designWidth)
-                            //                         .w,
-                            //               ),
-                            //             ),
-                            //             TextSpan(
-                            //               text: ' if:',
-                            //               style: TextStyles.primary.copyWith(
-                            //                 color: AppColors.black63,
-                            //                 fontSize:
-                            //                     (15 / Dimensions.designWidth)
-                            //                         .w,
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //       const SizeBox(height: 10),
-                            //       Text(
-                            //         "You are a U.S. Citizen or Resident?",
-                            //         style: TextStyles.primary.copyWith(
-                            //           color: AppColors.black63,
-                            //           fontSize:
-                            //               (16 / Dimensions.designWidth).w,
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   );
-                            // }
-                            // },
-                          ),
-                          BlocBuilder<ApplicationTaxBloc, ApplicationTaxState>(
-                            builder: (context, state) {
-                              if (isUSCitizen) {
-                                return const SizeBox(height: 10);
-                              } else {
-                                return const SizeBox(height: 10);
-                              }
-                            },
-                          ),
-                          BlocBuilder<ApplicationTaxBloc, ApplicationTaxState>(
-                            builder: (context, state) {
-                              if (isUSCitizen) {
-                                return const SizeBox();
-                              } else {
-                                return Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        BlocBuilder<ButtonFocussedBloc,
-                                            ButtonFocussedState>(
-                                          builder: (context, state) {
-                                            return SolidButton(
-                                              width:
-                                                  (185 / Dimensions.designWidth)
-                                                      .w,
-                                              color: Colors.white,
-                                              fontColor: AppColors.primary,
-                                              boxShadow: [BoxShadows.primary],
-                                              borderColor: usResidentYes
-                                                  ? const Color.fromRGBO(
-                                                      0, 184, 148, 0.21)
-                                                  : Colors.transparent,
-                                              onTap: () {
-                                                isUSResident = true;
-                                                applicationTaxBloc.add(
-                                                  ApplicationTaxEvent(
-                                                    isUSCitizen: isUSCitizen,
-                                                    isUSResident: isUSResident,
-                                                    isPPonly: isPPonly,
-                                                    isTINvalid: isTINvalid,
-                                                    isCRS: isCRS,
-                                                    hasTIN: hasTIN,
-                                                  ),
-                                                );
-                                                usResidentYes = true;
-                                                usResidentNo = false;
-                                                buttonFocussedBloc.add(
-                                                  ButtonFocussedEvent(
-                                                    isFocussed: usResidentNo,
-                                                    toggles: ++toggles,
-                                                  ),
-                                                );
-                                                if (!isTINvalid) {
-                                                  isShowButton = false;
+                                // const SizeBox(width: 10),
+                                // BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                //   builder: buildTitleTooltip,
+                                // ),
+                              ],
+                            ),
+                            const SizeBox(height: 20),
+                            BlocBuilder<ApplicationTaxBloc,
+                                ApplicationTaxState>(
+                              builder: buildQuestion1,
+                              // if (isUSCitizen) {
+                              //   return Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       Text(
+                              //         "Are you a U.S. citizen or resident for tax purposes?",
+                              //         style: TextStyles.primary.copyWith(
+                              //           color: AppColors.black63,
+                              //           fontSize:
+                              //               (16 / Dimensions.designWidth).w,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   );
+                              // } else {
+                              //   return Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       RichText(
+                              //         text: TextSpan(
+                              //           text: 'Press ',
+                              //           style: TextStyles.primary.copyWith(
+                              //             color: AppColors.black63,
+                              //             fontSize:
+                              //                 (15 / Dimensions.designWidth).w,
+                              //           ),
+                              //           children: <TextSpan>[
+                              //             TextSpan(
+                              //               text: 'Yes',
+                              //               style:
+                              //                   TextStyles.primaryBold.copyWith(
+                              //                 color: AppColors.black63,
+                              //                 fontSize:
+                              //                     (15 / Dimensions.designWidth)
+                              //                         .w,
+                              //               ),
+                              //             ),
+                              //             TextSpan(
+                              //               text: ' if:',
+                              //               style: TextStyles.primary.copyWith(
+                              //                 color: AppColors.black63,
+                              //                 fontSize:
+                              //                     (15 / Dimensions.designWidth)
+                              //                         .w,
+                              //               ),
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       ),
+                              //       const SizeBox(height: 10),
+                              //       Text(
+                              //         "You are a U.S. Citizen or Resident?",
+                              //         style: TextStyles.primary.copyWith(
+                              //           color: AppColors.black63,
+                              //           fontSize:
+                              //               (16 / Dimensions.designWidth).w,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   );
+                              // }
+                              // },
+                            ),
+                            BlocBuilder<ApplicationTaxBloc,
+                                ApplicationTaxState>(
+                              builder: (context, state) {
+                                if (isUSCitizen) {
+                                  return const SizeBox(height: 10);
+                                } else {
+                                  return const SizeBox(height: 10);
+                                }
+                              },
+                            ),
+                            BlocBuilder<ApplicationTaxBloc,
+                                ApplicationTaxState>(
+                              builder: (context, state) {
+                                if (isUSCitizen) {
+                                  return const SizeBox();
+                                } else {
+                                  return Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          BlocBuilder<ButtonFocussedBloc,
+                                              ButtonFocussedState>(
+                                            builder: (context, state) {
+                                              return SolidButton(
+                                                width: (185 /
+                                                        Dimensions.designWidth)
+                                                    .w,
+                                                color: Colors.white,
+                                                fontColor: AppColors.primary,
+                                                boxShadow: [BoxShadows.primary],
+                                                borderColor: usResidentYes
+                                                    ? const Color.fromRGBO(
+                                                        0, 184, 148, 0.21)
+                                                    : Colors.transparent,
+                                                onTap: () {
+                                                  isUSResident = true;
+                                                  applicationTaxBloc.add(
+                                                    ApplicationTaxEvent(
+                                                      isUSCitizen: isUSCitizen,
+                                                      isUSResident:
+                                                          isUSResident,
+                                                      isPPonly: isPPonly,
+                                                      isTINvalid: isTINvalid,
+                                                      isCRS: isCRS,
+                                                      hasTIN: hasTIN,
+                                                    ),
+                                                  );
+                                                  usResidentYes = true;
+                                                  usResidentNo = false;
+                                                  buttonFocussedBloc.add(
+                                                    ButtonFocussedEvent(
+                                                      isFocussed: usResidentNo,
+                                                      toggles: ++toggles,
+                                                    ),
+                                                  );
+                                                  if (!isTINvalid) {
+                                                    isShowButton = false;
+                                                    showButtonBloc.add(
+                                                      ShowButtonEvent(
+                                                          show: isShowButton),
+                                                    );
+                                                  }
+                                                },
+                                                text: "Yes",
+                                              );
+                                            },
+                                          ),
+                                          BlocBuilder<ButtonFocussedBloc,
+                                              ButtonFocussedState>(
+                                            builder: (context, state) {
+                                              return SolidButton(
+                                                width: (185 /
+                                                        Dimensions.designWidth)
+                                                    .w,
+                                                color: Colors.white,
+                                                fontColor: AppColors.primary,
+                                                boxShadow: [BoxShadows.primary],
+                                                borderColor: usResidentNo
+                                                    ? const Color.fromRGBO(
+                                                        0, 184, 148, 0.21)
+                                                    : Colors.transparent,
+                                                onTap: () {
+                                                  isUSResident = false;
+                                                  applicationTaxBloc.add(
+                                                    ApplicationTaxEvent(
+                                                      isUSCitizen: isUSCitizen,
+                                                      isUSResident:
+                                                          isUSResident,
+                                                      isPPonly: isPPonly,
+                                                      isTINvalid: isTINvalid,
+                                                      isCRS: isCRS,
+                                                      hasTIN: hasTIN,
+                                                    ),
+                                                  );
+                                                  usResidentYes = false;
+                                                  usResidentNo = true;
+                                                  buttonFocussedBloc.add(
+                                                    ButtonFocussedEvent(
+                                                      isFocussed: usResidentNo,
+                                                      toggles: ++toggles,
+                                                    ),
+                                                  );
+                                                  isShowButton = true;
                                                   showButtonBloc.add(
                                                     ShowButtonEvent(
                                                         show: isShowButton),
                                                   );
-                                                }
-                                              },
-                                              text: "Yes",
-                                            );
-                                          },
-                                        ),
-                                        BlocBuilder<ButtonFocussedBloc,
-                                            ButtonFocussedState>(
-                                          builder: (context, state) {
-                                            return SolidButton(
-                                              width:
-                                                  (185 / Dimensions.designWidth)
-                                                      .w,
-                                              color: Colors.white,
-                                              fontColor: AppColors.primary,
-                                              boxShadow: [BoxShadows.primary],
-                                              borderColor: usResidentNo
-                                                  ? const Color.fromRGBO(
-                                                      0, 184, 148, 0.21)
-                                                  : Colors.transparent,
-                                              onTap: () {
-                                                isUSResident = false;
-                                                applicationTaxBloc.add(
-                                                  ApplicationTaxEvent(
-                                                    isUSCitizen: isUSCitizen,
-                                                    isUSResident: isUSResident,
-                                                    isPPonly: isPPonly,
-                                                    isTINvalid: isTINvalid,
-                                                    isCRS: isCRS,
-                                                    hasTIN: hasTIN,
-                                                  ),
-                                                );
-                                                usResidentYes = false;
-                                                usResidentNo = true;
-                                                buttonFocussedBloc.add(
-                                                  ButtonFocussedEvent(
-                                                    isFocussed: usResidentNo,
-                                                    toggles: ++toggles,
-                                                  ),
-                                                );
-                                                isShowButton = true;
-                                                showButtonBloc.add(
-                                                  ShowButtonEvent(
-                                                      show: isShowButton),
-                                                );
-                                              },
-                                              text: "No",
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              }
-                            },
-                          ),
-                          BlocBuilder<ApplicationTaxBloc, ApplicationTaxState>(
-                            builder: (context, state) {
-                              if (isUSCitizen) {
-                                return const SizeBox(height: 0);
-                              } else {
-                                return const SizeBox(height: 20);
-                              }
-                            },
-                          ),
-                          BlocBuilder<ApplicationTaxBloc, ApplicationTaxState>(
-                            builder: (context, state) {
-                              if (isUSCitizen || isUSResident) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          labels[276]["labelText"],
-                                          style: TextStyles.primary.copyWith(
-                                            color: AppColors.dark80,
-                                            fontSize:
-                                                (16 / Dimensions.designWidth).w,
-                                          ),
-                                        ),
-                                        const Asterisk(),
-                                      ],
-                                    ),
-                                    const SizeBox(height: 10),
-                                    CustomTextField(
-                                      controller: _tinssnController,
-                                      keyboardType: TextInputType.number,
-                                      borderColor: !isTINvalid
-                                          ? AppColors.red100
-                                          : const Color(0xFFEEEEEE),
-                                      onChanged: (p0) {
-                                        if (_tinssnController.text.length ==
-                                            9) {
-                                          isTINvalid = true;
-                                          applicationTaxBloc.add(
-                                            ApplicationTaxEvent(
-                                                isUSCitizen: isUSCitizen,
-                                                isUSResident: isUSResident,
-                                                isPPonly: isPPonly,
-                                                isTINvalid: isTINvalid,
-                                                isCRS: isCRS,
-                                                hasTIN: hasTIN),
-                                          );
-                                          isShowButton = true;
-                                          showButtonBloc.add(ShowButtonEvent(
-                                              show: isShowButton));
-                                        } else {
-                                          isTINvalid = false;
-                                          applicationTaxBloc.add(
-                                            ApplicationTaxEvent(
-                                                isUSCitizen: isUSCitizen,
-                                                isUSResident: isUSResident,
-                                                isPPonly: isPPonly,
-                                                isTINvalid: isTINvalid,
-                                                isCRS: isCRS,
-                                                hasTIN: hasTIN),
-                                          );
-                                          isShowButton = false;
-                                          showButtonBloc.add(ShowButtonEvent(
-                                              show: isShowButton));
-                                        }
-                                      },
-                                      hintText: "000000000",
-                                    ),
-                                    const SizeBox(height: 7),
-                                    Ternary(
-                                      condition: isTINvalid,
-                                      truthy: const SizeBox(),
-                                      falsy: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.error_rounded,
-                                            color: AppColors.red100,
-                                            size:
-                                                (13 / Dimensions.designWidth).w,
-                                          ),
-                                          const SizeBox(width: 5),
-                                          Text(
-                                            "Must be 9 digits",
-                                            style: TextStyles.primaryMedium
-                                                .copyWith(
-                                              color: AppColors.red100,
-                                              fontSize:
-                                                  (12 / Dimensions.designWidth)
-                                                      .w,
-                                            ),
+                                                },
+                                                text: "No",
+                                              );
+                                            },
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                );
-                              } else {
-                                return const SizeBox();
-                              }
-                            },
-                          ),
-                        ],
+                                    ],
+                                  );
+                                }
+                              },
+                            ),
+                            BlocBuilder<ApplicationTaxBloc,
+                                ApplicationTaxState>(
+                              builder: (context, state) {
+                                if (isUSCitizen) {
+                                  return const SizeBox(height: 0);
+                                } else {
+                                  return const SizeBox(height: 20);
+                                }
+                              },
+                            ),
+                            BlocBuilder<ApplicationTaxBloc,
+                                ApplicationTaxState>(
+                              builder: (context, state) {
+                                if (isUSCitizen || isUSResident) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            labels[276]["labelText"],
+                                            style: TextStyles.primary.copyWith(
+                                              color: AppColors.dark80,
+                                              fontSize:
+                                                  (16 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                          ),
+                                          const Asterisk(),
+                                        ],
+                                      ),
+                                      const SizeBox(height: 10),
+                                      CustomTextField(
+                                        controller: _tinssnController,
+                                        keyboardType: TextInputType.number,
+                                        borderColor: !isTINvalid
+                                            ? AppColors.red100
+                                            : const Color(0xFFEEEEEE),
+                                        onChanged: (p0) {
+                                          if (_tinssnController.text.length ==
+                                              9) {
+                                            isTINvalid = true;
+                                            applicationTaxBloc.add(
+                                              ApplicationTaxEvent(
+                                                  isUSCitizen: isUSCitizen,
+                                                  isUSResident: isUSResident,
+                                                  isPPonly: isPPonly,
+                                                  isTINvalid: isTINvalid,
+                                                  isCRS: isCRS,
+                                                  hasTIN: hasTIN),
+                                            );
+                                            isShowButton = true;
+                                            showButtonBloc.add(ShowButtonEvent(
+                                                show: isShowButton));
+                                          } else {
+                                            isTINvalid = false;
+                                            applicationTaxBloc.add(
+                                              ApplicationTaxEvent(
+                                                  isUSCitizen: isUSCitizen,
+                                                  isUSResident: isUSResident,
+                                                  isPPonly: isPPonly,
+                                                  isTINvalid: isTINvalid,
+                                                  isCRS: isCRS,
+                                                  hasTIN: hasTIN),
+                                            );
+                                            isShowButton = false;
+                                            showButtonBloc.add(ShowButtonEvent(
+                                                show: isShowButton));
+                                          }
+                                        },
+                                        hintText: "000000000",
+                                      ),
+                                      const SizeBox(height: 7),
+                                      Ternary(
+                                        condition: isTINvalid,
+                                        truthy: const SizeBox(),
+                                        falsy: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.error_rounded,
+                                              color: AppColors.red100,
+                                              size:
+                                                  (13 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                            const SizeBox(width: 5),
+                                            Text(
+                                              "Must be 9 digits",
+                                              style: TextStyles.primaryMedium
+                                                  .copyWith(
+                                                color: AppColors.red100,
+                                                fontSize: (12 /
+                                                        Dimensions.designWidth)
+                                                    .w,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return const SizeBox();
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: (context, state) {
-                if (isShowButton) {
-                  return Column(
-                    children: [
-                      const SizeBox(height: 20),
-                      GradientButton(
-                        onTap: () async {
-                          if (isEmirateID || isUSCitizen) {
-                            Navigator.pushNamed(
-                                context, Routes.applicationAccount);
-                          } else {
-                            Navigator.pushNamed(
-                              context,
-                              Routes.applicationTaxCRS,
-                              arguments: TaxCrsArgumentModel(
-                                isUSFATCA: isUSCitizen,
-                                ustin: _tinssnController.text,
-                              ).toMap(),
-                            );
-                          }
-                          await storage.write(
-                              key: "isUSFatca", value: isUSCitizen.toString());
-                          storageIsUSFATCA =
-                              await storage.read(key: "incomeSource") == "true";
-                          await storage.write(
-                              key: "usTin", value: _tinssnController.text);
-                          storageUsTin = await storage.read(key: "usTin");
+              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                builder: (context, state) {
+                  if (isShowButton) {
+                    return Column(
+                      children: [
+                        const SizeBox(height: 20),
+                        GradientButton(
+                          onTap: () async {
+                            if (isEmirateID || isUSCitizen) {
+                              Navigator.pushNamed(
+                                  context, Routes.applicationAccount);
+                            } else {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.applicationTaxCRS,
+                                arguments: TaxCrsArgumentModel(
+                                  isUSFATCA: isUSCitizen,
+                                  ustin: _tinssnController.text,
+                                ).toMap(),
+                              );
+                            }
+                            await storage.write(
+                                key: "isUSFatca",
+                                value: isUSCitizen.toString());
+                            storageIsUSFATCA =
+                                await storage.read(key: "incomeSource") ==
+                                    "true";
+                            await storage.write(
+                                key: "usTin", value: _tinssnController.text);
+                            storageUsTin = await storage.read(key: "usTin");
 
-                          await storage.write(
-                              key: "stepsCompleted", value: 7.toString());
-                          storageStepsCompleted = int.parse(
-                              await storage.read(key: "stepsCompleted") ?? "0");
-                        },
-                        text: labels[127]["labelText"],
-                      ),
-                      const SizeBox(height: PaddingConstants.bottomPadding),
-                    ],
-                  );
-                } else {
-                  return Column(
-                    children: [
-                      SolidButton(onTap: () {}, text: labels[127]["labelText"]),
-                      const SizeBox(height: PaddingConstants.bottomPadding),
-                    ],
-                  );
-                }
-              },
-            ),
-          ],
+                            await storage.write(
+                                key: "stepsCompleted", value: 7.toString());
+                            storageStepsCompleted = int.parse(
+                                await storage.read(key: "stepsCompleted") ??
+                                    "0");
+                          },
+                          text: labels[127]["labelText"],
+                        ),
+                        const SizeBox(height: PaddingConstants.bottomPadding),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      children: [
+                        SolidButton(
+                            onTap: () {}, text: labels[127]["labelText"]),
+                        const SizeBox(height: PaddingConstants.bottomPadding),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

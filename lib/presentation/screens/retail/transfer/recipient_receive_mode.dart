@@ -27,7 +27,7 @@ class _RecipientReceiveModeScreenState
               top: (20 / Dimensions.designWidth).w,
             ),
             child: Text(
-              "Cancel",
+              labels[166]["labelText"],
               style: TextStyles.primary.copyWith(
                 color: const Color.fromRGBO(65, 65, 65, 0.5),
                 fontSize: (16 / Dimensions.designWidth).w,

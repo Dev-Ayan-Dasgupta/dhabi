@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
-import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -33,59 +30,70 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const AppBarLeading(),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal:
-              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacementNamed(context, Routes.applicationAddress);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: AppBarLeading(
+            onTap: () {
+              Navigator.pushReplacementNamed(
+                  context, Routes.applicationAddress);
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    labels[261]["labelText"],
-                    style: TextStyles.primaryBold.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (28 / Dimensions.designWidth).w,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal:
+                (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      labels[261]["labelText"],
+                      style: TextStyles.primaryBold.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (28 / Dimensions.designWidth).w,
+                      ),
                     ),
-                  ),
-                  const SizeBox(height: 30),
-                  ApplicationProgress(progress: progress),
-                  const SizeBox(height: 30),
-                  Text(
-                    labels[270]["labelText"],
-                    style: TextStyles.primaryBold.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (16 / Dimensions.designWidth).w,
+                    const SizeBox(height: 30),
+                    ApplicationProgress(progress: progress),
+                    const SizeBox(height: 30),
+                    Text(
+                      labels[270]["labelText"],
+                      style: TextStyles.primaryBold.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
                     ),
-                  ),
-                  const SizeBox(height: 20),
-                  Text(
-                    labels[271]["labelText"],
-                    style: TextStyles.primary.copyWith(
-                      color: AppColors.dark80,
-                      fontSize: (16 / Dimensions.designWidth).w,
+                    const SizeBox(height: 20),
+                    Text(
+                      labels[271]["labelText"],
+                      style: TextStyles.primary.copyWith(
+                        color: AppColors.dark80,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
                     ),
-                  ),
-                  const SizeBox(height: 9),
-                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                    builder: buildDropdown,
-                  ),
-                ],
+                    const SizeBox(height: 9),
+                    BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                      builder: buildDropdown,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-              builder: buildSubmitButton,
-            ),
-          ],
+              BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                builder: buildSubmitButton,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -125,12 +133,12 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
                   isDropdownSelected: isUploading, toggles: toggles));
               await storage.write(key: "incomeSource", value: selectedValue);
               storageIncomeSource = await storage.read(key: "incomeSource");
-              var result =
-                  await MapAddOrUpdateIncomeSource.mapAddOrUpdateIncomeSource(
-                {"incomeSource": selectedValue},
-                token ?? "",
-              );
-              log("Income Source API response -> $result");
+              // var result =
+              //     await MapAddOrUpdateIncomeSource.mapAddOrUpdateIncomeSource(
+              //   {"incomeSource": selectedValue},
+              //   token ?? "",
+              // );
+              // log("Income Source API response -> $result");
               if (context.mounted) {
                 Navigator.pushNamed(context, Routes.applicationTaxFATCA);
               }

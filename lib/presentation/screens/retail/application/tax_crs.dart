@@ -2,9 +2,7 @@
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/arguments/tax_crs.dart';
-import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -84,101 +82,116 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const AppBarLeading(),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal:
-              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacementNamed(context, Routes.applicationTaxFATCA);
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: AppBarLeading(
+            onTap: () {
+              Navigator.pushReplacementNamed(
+                  context, Routes.applicationTaxFATCA);
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    labels[261]["labelText"],
-                    style: TextStyles.primaryBold.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (28 / Dimensions.designWidth).w,
+        body: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal:
+                (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      labels[261]["labelText"],
+                      style: TextStyles.primaryBold.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (28 / Dimensions.designWidth).w,
+                      ),
                     ),
-                  ),
-                  const SizeBox(height: 30),
-                  ApplicationProgress(progress: progress),
-                  const SizeBox(height: 20),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  labels[277]["labelText"],
-                                  style: TextStyles.primaryBold.copyWith(
-                                    color: AppColors.primary,
+                    const SizeBox(height: 30),
+                    ApplicationProgress(progress: progress),
+                    const SizeBox(height: 20),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    labels[277]["labelText"],
+                                    style: TextStyles.primaryBold.copyWith(
+                                      color: AppColors.primary,
+                                      fontSize: (16 / Dimensions.designWidth).w,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizeBox(height: 20),
+                            Row(
+                              children: [
+                                Text(
+                                  labels[278]["labelText"],
+                                  style: TextStyles.primary.copyWith(
+                                    color: AppColors.dark80,
                                     fontSize: (16 / Dimensions.designWidth).w,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizeBox(height: 20),
-                          Row(
-                            children: [
-                              Text(
-                                labels[278]["labelText"],
-                                style: TextStyles.primary.copyWith(
-                                  color: AppColors.dark80,
-                                  fontSize: (16 / Dimensions.designWidth).w,
+                                const Asterisk(),
+                              ],
+                            ),
+                            const SizeBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                BlocBuilder<ButtonFocussedBloc,
+                                    ButtonFocussedState>(
+                                  builder: buildResidentYes,
                                 ),
-                              ),
-                              const Asterisk(),
-                            ],
-                          ),
-                          const SizeBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              BlocBuilder<ButtonFocussedBloc,
-                                  ButtonFocussedState>(
-                                builder: buildResidentYes,
-                              ),
-                              BlocBuilder<ButtonFocussedBloc,
-                                  ButtonFocussedState>(
-                                builder: buildResidentNo,
-                              ),
-                            ],
-                          ),
-                          BlocBuilder<ApplicationCrsBloc, ApplicationCrsState>(
-                            builder: buildCountryDropdown,
-                          ),
-                          BlocBuilder<ApplicationCrsBloc, ApplicationCrsState>(
-                            builder: buildTINSection,
-                          ),
-                          BlocBuilder<ApplicationCrsBloc, ApplicationCrsState>(
-                            builder: buildTINTextField,
-                          ),
-                          BlocBuilder<ApplicationCrsBloc, ApplicationCrsState>(
-                            builder: buildNoTINReasonDropdown,
-                          ),
-                        ],
+                                BlocBuilder<ButtonFocussedBloc,
+                                    ButtonFocussedState>(
+                                  builder: buildResidentNo,
+                                ),
+                              ],
+                            ),
+                            BlocBuilder<ApplicationCrsBloc,
+                                ApplicationCrsState>(
+                              builder: buildCountryDropdown,
+                            ),
+                            BlocBuilder<ApplicationCrsBloc,
+                                ApplicationCrsState>(
+                              builder: buildTINSection,
+                            ),
+                            BlocBuilder<ApplicationCrsBloc,
+                                ApplicationCrsState>(
+                              builder: buildTINTextField,
+                            ),
+                            BlocBuilder<ApplicationCrsBloc,
+                                ApplicationCrsState>(
+                              builder: buildNoTINReasonDropdown,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: buildSubmitButton,
-            ),
-          ],
+              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                builder: buildSubmitButton,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -556,6 +569,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
               // log("countryCode -> ${dhabiCountries[dhabiCountryIndex]["shortCode"]}");
               log("noTINReason -> ${selectedReason ?? ""}");
 
+              await storage.write(key: "taxCountry", value: selectedCountry);
+              storageTaxCountry = await storage.read(key: "taxCountry");
               await storage.write(key: "isTinYes", value: isTinYes.toString());
               storageIsTinYes = await storage.read(key: "isTinYes") == "true";
               await storage.write(key: "crsTin", value: _tinController.text);
@@ -563,25 +578,25 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
               await storage.write(key: "noTinReason", value: selectedReason);
               storageNoTinReason = await storage.read(key: "noTinReason");
 
-              var result =
-                  await MapCustomerTaxInformation.mapCustomerTaxInformation(
-                {
-                  "isUSFATCA": storageIsUSFATCA,
-                  "ustin": storageUsTin,
-                  "internationalTaxes": [
-                    {
-                      "countryCode": dhabiCountryIndex == -1
-                          ? "US"
-                          : dhabiCountries[dhabiCountryIndex]["shortCode"],
-                      "isTIN": isTinYes,
-                      "tin": _tinController.text,
-                      "noTINReason": selectedReason ?? ""
-                    }
-                  ]
-                },
-                token ?? "",
-              );
-              log("Tax Information API response -> $result");
+              // var result =
+              //     await MapCustomerTaxInformation.mapCustomerTaxInformation(
+              //   {
+              //     "isUSFATCA": storageIsUSFATCA,
+              //     "ustin": storageUsTin,
+              //     "internationalTaxes": [
+              //       {
+              //         "countryCode": dhabiCountryIndex == -1
+              //             ? "US"
+              //             : dhabiCountries[dhabiCountryIndex]["shortCode"],
+              //         "isTIN": isTinYes,
+              //         "tin": _tinController.text,
+              //         "noTINReason": selectedReason ?? ""
+              //       }
+              //     ]
+              //   },
+              //   token ?? "",
+              // );
+              // log("Tax Information API response -> $result");
               if (context.mounted) {
                 Navigator.pushNamed(context, Routes.applicationAccount);
               }

@@ -92,11 +92,37 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                       await storage.read(key: "persistBiometric") == "true";
                   if (context.mounted) {
                     Navigator.pop(context);
+                    showBiometricSuccess();
                   }
                 },
                 text: "Enable Now",
               ),
               const SizeBox(height: 15),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void showBiometricSuccess() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.checkCircleOutlined,
+          title: "Successful",
+          message:
+              "Enjoy the added convenience and security in using the app with biometric authentication.",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[293]["labelText"],
+              ),
+              const SizeBox(height: 20),
             ],
           ),
         );

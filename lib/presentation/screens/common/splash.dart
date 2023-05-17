@@ -194,8 +194,8 @@ class _SplashScreenState extends State<SplashScreen> {
       persistBiometric = await storage.read(key: "persistBiometric") == "true";
       log("persistBiometric -> $persistBiometric");
 
-      storageStepsCompleted =
-          int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+      storageStepsCompleted = 0;
+      // int.parse(await storage.read(key: "stepsCompleted") ?? "0");
       log("storageStepsCompleted -> $storageStepsCompleted");
 
       storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
@@ -247,6 +247,8 @@ class _SplashScreenState extends State<SplashScreen> {
       storageUsTin = await storage.read(key: "usTin");
       log("storageUsTin -> $storageUsTin");
 
+      storageTaxCountry = await storage.read(key: "taxCountry");
+      log("storageTaxCountry -> $storageTaxCountry");
       storageIsTinYes = await storage.read(key: "isTinYes") == "true";
       log("storageIsTinYes -> $storageIsTinYes");
       storageCrsTin = await storage.read(key: "crsTin");
@@ -273,8 +275,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigate(BuildContext context) {
-    // await Future.delayed(const Duration(seconds: 1));
-    // if (context.mounted) {}
     Navigator.pushReplacementNamed(context, Routes.onboarding,
         arguments: OnboardingArgumentModel(isInitial: true).toMap());
   }
