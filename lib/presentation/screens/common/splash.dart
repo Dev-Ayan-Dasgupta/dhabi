@@ -257,6 +257,14 @@ class _SplashScreenState extends State<SplashScreen> {
       storageAccountType =
           int.parse(await storage.read(key: "accountType") ?? "1");
       log("storageAccountType -> $storageAccountType");
+
+      storageCif = await storage.read(key: "cif");
+      log("storageCif -> $storageCif");
+      storageIsCompany = await storage.read(key: "isCompany") == "true";
+      log("storageIsCompany -> $storageIsCompany");
+      storageisCompanyRegistered =
+          await storage.read(key: "isCompanyRegistered") == "true";
+      log("storageisCompanyRegistered -> $storageisCompanyRegistered");
     } catch (e) {
       log("Init LS Exception -> $e");
     }

@@ -46,3 +46,7 @@ int? storageAccountType;
 
 String? storageCompanyCountry;
 String? storageTradeLicenseNumber;
+
+String? storageCif;
+bool? storageIsCompany;
+bool? storageisCompanyRegistered;

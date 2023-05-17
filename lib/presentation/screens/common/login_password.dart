@@ -5,6 +5,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
@@ -290,6 +291,19 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               context, Routes.businessDashboard, (route) => false);
         }
       }
+      await storage.write(key: "cif", value: cif.toString());
+      storageCif = await storage.read(key: "cif");
+      log("storageCif -> $storageCif");
+
+      await storage.write(key: "isCompany", value: isCompany.toString());
+      storageIsCompany = await storage.read(key: "isCompany") == "true";
+      log("storageIsCompany -> $storageIsCompany");
+
+      await storage.write(
+          key: "isCompanyRegistered", value: isCompanyRegistered.toString());
+      storageisCompanyRegistered =
+          await storage.read(key: "isCompanyRegistered") == "true";
+      log("storageisCompanyRegistered -> $storageisCompanyRegistered");
     } else {
       log("Reason Code -> ${result["reasonCode"]}");
       if (context.mounted) {

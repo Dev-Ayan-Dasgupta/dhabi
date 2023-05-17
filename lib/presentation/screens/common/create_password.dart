@@ -586,11 +586,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 await storage.write(key: "companyId", value: 0.toString());
 
                 storageUserId =
-                    int.parse(await storage.read(key: "userId") ?? "");
+                    int.parse(await storage.read(key: "userId") ?? "0");
                 storageUserTypeId =
-                    int.parse(await storage.read(key: "userTypeId") ?? "");
+                    int.parse(await storage.read(key: "userTypeId") ?? "0");
                 storageCompanyId =
-                    int.parse(await storage.read(key: "companyId") ?? "");
+                    int.parse(await storage.read(key: "companyId") ?? "0");
 
                 var result = await MapLogin.mapLogin({
                   "emailId": createAccountArgumentModel.email,

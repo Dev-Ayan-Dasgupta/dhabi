@@ -37,9 +37,6 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
   int companyId = 0;
   int userTypeId = 0;
 
-  bool isCompany = false;
-  bool isCompanyRegistered = false;
-
   @override
   void initState() {
     super.initState();
@@ -101,6 +98,34 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                               cif = selectAccountArgument.cifDetails[index]
                                   ["cif"];
                               log("cif -> $cif");
+                              log("cif RTT -> ${cif.runtimeType}");
+                              // await storage.write(
+                              //     key: "cif", value: cif.toString());
+                              // storageCif = await storage.read(key: "cif");
+                              // log("storageCif -> $storageCif");
+
+                              isCompany = selectAccountArgument
+                                  .cifDetails[index]["isCompany"];
+                              log("isCompany -> $isCompany");
+                              // await storage.write(
+                              //     key: "isCompany",
+                              //     value: isCompany.toString());
+                              // storageIsCompany =
+                              //     await storage.read(key: "isCompany") ==
+                              //         "true";
+                              // log("storageIsCompany -> $storageIsCompany");
+
+                              isCompanyRegistered = selectAccountArgument
+                                  .cifDetails[index]["isCompanyRegistered"];
+                              log("isCompanyRegistered -> $isCompanyRegistered");
+                              // await storage.write(
+                              //     key: "isCompanyRegistered",
+                              //     value: isCompanyRegistered.toString());
+                              // storageisCompanyRegistered = await storage.read(
+                              //         key: "isCompanyRegistered") ==
+                              //     "true";
+                              // log("storageisCompanyRegistered -> $storageisCompanyRegistered");
+
                               log("isLogin -> ${selectAccountArgument.isLogin}");
                               log("isPwChange -> ${selectAccountArgument.isPwChange}");
 
@@ -110,38 +135,38 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                   selectAccountArgument.cifDetails[index]
                                           ["isCompany"] ==
                                       true) {
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) {
-                                    return CustomDialog(
-                                      svgAssetPath: ImageConstants.warning,
-                                      title: "Application approval pending",
-                                      message:
-                                          "You already have a registration pending. Please contact Dhabi support.",
-                                      actionWidget: Column(
-                                        children: [
-                                          GradientButton(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            text: "Go Back",
-                                          ),
-                                          const SizeBox(height: 20),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
+                                if (context.mounted) {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return CustomDialog(
+                                        svgAssetPath: ImageConstants.warning,
+                                        title: "Application approval pending",
+                                        message:
+                                            "You already have a registration pending. Please contact Dhabi support.",
+                                        actionWidget: Column(
+                                          children: [
+                                            GradientButton(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              text: "Go Back",
+                                            ),
+                                            const SizeBox(height: 20),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
                               } else {
                                 if (selectAccountArgument.isPwChange) {
-                                  isCompany = selectAccountArgument
-                                      .cifDetails[index]["isCompany"];
-                                  isCompanyRegistered = selectAccountArgument
-                                      .cifDetails[index]["isCompanyRegistered"];
                                   if (!isCompany || isCompanyRegistered) {
-                                    Navigator.pushNamed(
-                                        context, Routes.setPassword);
+                                    if (context.mounted) {
+                                      Navigator.pushNamed(
+                                          context, Routes.setPassword);
+                                    }
                                   } else {
                                     // TODO: show dialog box which Samit sir will share
                                   }

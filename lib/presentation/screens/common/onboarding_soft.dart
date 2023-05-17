@@ -433,19 +433,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void loginMethod() {
-    if (storageEmail == null) {
+    if (storageCif == "null" || storageCif == null) {
       Navigator.pushNamed(context, Routes.loginUserId);
     } else {
-      Navigator.pushNamed(
-        context,
-        Routes.loginPassword,
-        arguments: LoginPasswordArgumentModel(
-          emailId: storageEmail ?? "",
-          userId: storageUserId ?? 0,
-          userTypeId: storageUserTypeId ?? 1,
-          companyId: storageCompanyId ?? 0,
-        ).toMap(),
-      );
+      if (storageIsCompany == true) {
+        if (storageisCompanyRegistered == false) {
+          Navigator.pushNamed(context, Routes.loginUserId);
+        } else {
+          Navigator.pushNamed(
+            context,
+            Routes.loginPassword,
+            arguments: LoginPasswordArgumentModel(
+              emailId: storageEmail ?? "",
+              userId: storageUserId ?? 0,
+              userTypeId: storageUserTypeId ?? 1,
+              companyId: storageCompanyId ?? 0,
+            ).toMap(),
+          );
+        }
+      } else {
+        Navigator.pushNamed(
+          context,
+          Routes.loginPassword,
+          arguments: LoginPasswordArgumentModel(
+            emailId: storageEmail ?? "",
+            userId: storageUserId ?? 0,
+            userTypeId: storageUserTypeId ?? 1,
+            companyId: storageCompanyId ?? 0,
+          ).toMap(),
+        );
+      }
     }
     // if (persistBiometric!) {
     //   bool isBiometricSupported =
