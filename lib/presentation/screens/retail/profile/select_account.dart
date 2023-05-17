@@ -5,6 +5,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -90,7 +91,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                             borderColor: selectedIndex == index
                                 ? const Color.fromRGBO(0, 184, 148, 0.21)
                                 : Colors.transparent,
-                            onTap: () {
+                            onTap: () async {
                               isSelected = true;
                               selectedIndex = index;
                               final ShowButtonBloc showButtonBloc =
@@ -100,8 +101,38 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                               cif = selectAccountArgument.cifDetails[index]
                                   ["cif"];
                               log("cif -> $cif");
-                              // log("isLogin -> ${selectAccountArgument.isLogin}");
+                              log("isLogin -> ${selectAccountArgument.isLogin}");
                               log("isPwChange -> ${selectAccountArgument.isPwChange}");
+
+                              if (selectAccountArgument.cifDetails[index]
+                                          ["isCompanyRegistered"] ==
+                                      false &&
+                                  selectAccountArgument.cifDetails[index]
+                                          ["isCompany"] ==
+                                      true) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomDialog(
+                                      svgAssetPath: ImageConstants.warning,
+                                      title: "Application approval pending",
+                                      message: messages[2]["messageText"],
+                                      actionWidget: Column(
+                                        children: [
+                                          GradientButton(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            text: "Go Back",
+                                          ),
+                                          const SizeBox(height: 20),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+
                               if (selectAccountArgument.isPwChange) {
                                 isCompany = selectAccountArgument
                                     .cifDetails[index]["isCompany"];
@@ -114,8 +145,20 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                           0
                                       ? 1
                                       : 2;
+                                  await storage.write(
+                                      key: "userTypeId",
+                                      value: userTypeId.toString());
+                                  storageUserTypeId = int.parse(
+                                      await storage.read(key: "userTypeId") ??
+                                          "");
                                   companyId = selectAccountArgument
                                       .cifDetails[index]["companyId"];
+                                  await storage.write(
+                                      key: "companyId",
+                                      value: companyId.toString());
+                                  storageCompanyId = int.parse(
+                                      await storage.read(key: "companyId") ??
+                                          "");
                                   log("userTypeId -> $userTypeId");
                                   log("companyId -> $companyId");
                                 } else {
@@ -126,6 +169,14 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                             text: selectAccountArgument.cifDetails[index]
                                     ["companyName"] ??
                                 "Personal Account",
+                            subtitle: (selectAccountArgument.cifDetails[index]
+                                            ["isCompanyRegistered"] ==
+                                        false &&
+                                    selectAccountArgument.cifDetails[index]
+                                            ["isCompany"] ==
+                                        true)
+                                ? "Request Pending"
+                                : null,
                             color: Colors.white,
                             boxShadow: [BoxShadows.primary],
                             fontColor: AppColors.primary,

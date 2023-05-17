@@ -185,6 +185,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                 ],
               ),
             ),
+            const SizeBox(height: 15),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
               builder: (context, state) {
                 if (isCompany && isCountrySelected && isTradeLicense) {

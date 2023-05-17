@@ -309,7 +309,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
             const SizeBox(height: 20),
             BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
               builder: (context, state) {
-                if (isEmirateSelected) {
+                if (isEmirateSelected && isAddress1Entered) {
                   return Column(
                     children: [
                       GradientButton(

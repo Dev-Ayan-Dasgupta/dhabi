@@ -6,6 +6,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -21,6 +22,8 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/login/attempts.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:open_settings/open_settings.dart';
 
 class LoginPasswordScreen extends StatefulWidget {
   const LoginPasswordScreen({
@@ -51,8 +54,45 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
   @override
   void initState() {
     super.initState();
+    argumentInitialization();
+    biometricPrompt();
+  }
+
+  void argumentInitialization() {
     loginPasswordArgument =
         LoginPasswordArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
+  void biometricPrompt() async {
+    if (persistBiometric!) {
+      bool isBiometricSupported =
+          await LocalAuthentication().isDeviceSupported();
+      log("isBiometricSupported -> $isBiometricSupported");
+
+      if (deviceId == "bf8e43a90970f33c") {
+        if (context.mounted) {
+          Navigator.pushNamed(context, Routes.loginUserId);
+        }
+      }
+
+      if (!isBiometricSupported) {
+        // if (context.mounted) {
+        //   Navigator.pushNamed(context, Routes.loginUserId);
+        // }
+      } else {
+        bool isAuthenticated = await BiometricHelper.authenticateUser();
+
+        if (isAuthenticated) {
+          if (context.mounted) {
+            // Navigator.pushNamed(context, Routes.loginUserId);
+            onSubmit(storagePassword ?? "");
+          }
+        } else {
+          // TODO: Verify from client if they want a dialog box to enable biometric
+          OpenSettings.openBiometricEnrollSetting();
+        }
+      }
+    }
   }
 
   @override
@@ -206,7 +246,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     }
   }
 
-  void onSubmit() async {
+  void onSubmit(String password) async {
     log("companyID -> ${loginPasswordArgument.companyId}");
     log("userTypeId -> ${loginPasswordArgument.userTypeId}");
     final MatchPasswordBloc matchPasswordBloc =
@@ -220,7 +260,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       "userTypeId": loginPasswordArgument.userTypeId,
       "userId": loginPasswordArgument.userId,
       "companyId": loginPasswordArgument.companyId,
-      "password": _passwordController.text,
+      "password": password,
       "deviceId": deviceId,
       "registerDevice": false,
       "deviceName": deviceName,
@@ -474,7 +514,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
   Widget buildLoginButton(BuildContext context, MatchPasswordState state) {
     if (matchPasswordErrorCount < 3) {
       return GradientButton(
-        onTap: onSubmit,
+        onTap: () {
+          onSubmit(_passwordController.text);
+        },
         text: labels[205]["labelText"],
         auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
       );

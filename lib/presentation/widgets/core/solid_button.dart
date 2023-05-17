@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -13,6 +14,7 @@ class SolidButton extends StatelessWidget {
     this.boxShadow,
     this.color,
     required this.text,
+    this.subtitle,
     this.fontColor,
     this.fontFamily,
     this.fontSize,
@@ -27,6 +29,7 @@ class SolidButton extends StatelessWidget {
   final List<BoxShadow>? boxShadow;
   final Color? color;
   final String text;
+  final String? subtitle;
   final Color? fontColor;
   final String? fontFamily;
   final double? fontSize;
@@ -48,14 +51,29 @@ class SolidButton extends StatelessWidget {
           boxShadow: boxShadow ?? [],
           color: color ?? AppColors.dark30,
         ),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyles.primaryBold.copyWith(
-              color: fontColor ?? AppColors.dark50,
-              fontSize: fontSize ?? (20 / Dimensions.designWidth).w,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              text,
+              style: TextStyles.primaryBold.copyWith(
+                color: fontColor ?? AppColors.dark50,
+                fontSize: fontSize ?? (20 / Dimensions.designWidth).w,
+              ),
             ),
-          ),
+            SizeBox(height: subtitle != null ? 3 : 0),
+            Ternary(
+              condition: subtitle != null,
+              truthy: Text(
+                subtitle ?? "",
+                style: TextStyles.primaryMedium.copyWith(
+                  color: AppColors.dark50,
+                  fontSize: fontSize ?? (12 / Dimensions.designWidth).w,
+                ),
+              ),
+              falsy: const SizeBox(),
+            ),
+          ],
         ),
       ),
     );

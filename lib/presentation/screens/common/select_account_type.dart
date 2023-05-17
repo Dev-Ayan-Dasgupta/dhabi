@@ -265,8 +265,12 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                 builder: (context) {
                   return CustomDialog(
                     svgAssetPath: ImageConstants.warning,
-                    title: "User already exists",
-                    message: "Try logging in again.",
+                    title: storageUserTypeId == 1
+                        ? "User already exists"
+                        : "Application approval pending",
+                    message: storageUserTypeId == 1
+                        ? "Try logging in again."
+                        : messages[2]["messageText"],
                     actionWidget: Column(
                       children: [
                         GradientButton(
@@ -277,19 +281,27 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                                 await storage.read(key: "stepsCompleted") ??
                                     "0");
                             if (context.mounted) {
-                              Navigator.pushNamed(
+                              Navigator.pushReplacementNamed(
                                 context,
-                                Routes.loginPassword,
-                                arguments: LoginPasswordArgumentModel(
-                                  emailId: createAccountArgumentModel.email,
-                                  userId: 0,
-                                  userTypeId: isPersonalFocussed ? 1 : 2,
-                                  companyId: isPersonalFocussed ? 0 : 1,
-                                ).toMap(),
+                                storageUserTypeId == 1
+                                    ? Routes.loginPassword
+                                    : Routes.registration,
+                                arguments: storageUserTypeId == 1
+                                    ? LoginPasswordArgumentModel(
+                                        emailId:
+                                            createAccountArgumentModel.email,
+                                        userId: 0,
+                                        userTypeId: isPersonalFocussed ? 1 : 2,
+                                        companyId: isPersonalFocussed ? 0 : 1,
+                                      ).toMap()
+                                    : RegistrationArgumentModel(isInitial: true)
+                                        .toMap(),
                               );
                             }
                           },
-                          text: labels[205]["labelText"],
+                          text: storageUserTypeId == 1
+                              ? labels[205]["labelText"]
+                              : "Register",
                         ),
                         const SizeBox(height: 20),
                       ],

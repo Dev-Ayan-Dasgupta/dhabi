@@ -2,7 +2,8 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (6)
+## Release notes - 1.0.0 (7)
 
-- Now displaying Invalid code once a wrong OT is entered - FHDHABI-110
-- Implemented state persistence ofor retail onboarding process - FHDHABI-122
+- Implemented biometric - FHDHABI-105 and FHDHABI-134
+- Implemented state persistence ofor business onboarding process - FHDHABI-122
+- Fixed Submit button enabling without address selection - FHDHABI-130

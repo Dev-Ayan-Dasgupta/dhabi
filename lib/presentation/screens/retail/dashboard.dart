@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_event.dart';
 import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_state.dart';
@@ -6,6 +7,7 @@ import 'package:dialup_mobile_app/bloc/tabBar/tabbar_bloc.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_event.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
@@ -44,37 +46,58 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   @override
   void initState() {
     super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {});
     argumentInitialization();
-
     tabbarInitialization();
-    // if (retailDashboardArgumentModel.isFirst) {
-    //   promptBiometricSettings();
-    // }
   }
 
   void argumentInitialization() {
     retailDashboardArgumentModel =
         RetailDashboardArgumentModel.fromMap(widget.argument as dynamic ?? {});
+    if (retailDashboardArgumentModel.isFirst && !persistBiometric!) {
+      Future.delayed(const Duration(seconds: 1), promptBiometricSettings);
+      // promptBiometricSettings();
+    }
   }
 
-  void promptBiometricSettings() {
+  void promptBiometricSettings() async {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return CustomDialog(
-          svgAssetPath: ImageConstants.warning,
+          svgAssetPath: ImageConstants.warningGreen,
           title: messages[99]["messageText"],
           message: messages[58]["messageText"],
-          auxWidget: SolidButton(
-            onTap: () {},
-            text: labels[127]["labelText"],
-            color: AppColors.primaryBright17,
-            fontColor: AppColors.primary,
+          actionWidget: Column(
+            children: [
+              SolidButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[127]["labelText"],
+                color: AppColors.primaryBright17,
+                fontColor: AppColors.primary,
+              ),
+              const SizeBox(height: 20),
+            ],
           ),
-          actionWidget: GradientButton(
-            onTap: () {},
-            text: "Enable Now",
+          auxWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () async {
+                  await storage.write(
+                      key: "persistBiometric", value: true.toString());
+                  persistBiometric =
+                      await storage.read(key: "persistBiometric") == "true";
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                },
+                text: "Enable Now",
+              ),
+              const SizeBox(height: 15),
+            ],
           ),
         );
       },
@@ -121,7 +144,12 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           imgUrl: retailDashboardArgumentModel.imgUrl,
           name: retailDashboardArgumentModel.name,
         ),
-        title: SvgPicture.asset(ImageConstants.dhabiText),
+        title: InkWell(
+          onTap: () {
+            promptBiometricSettings();
+          },
+          child: SvgPicture.asset(ImageConstants.dhabiText),
+        ),
         actions: const [AppBarAction()],
         backgroundColor: Colors.transparent,
         centerTitle: true,

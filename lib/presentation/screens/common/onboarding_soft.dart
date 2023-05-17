@@ -11,15 +11,12 @@ import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:local_auth/local_auth.dart';
 
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
 import 'package:dialup_mobile_app/utils/lists/onboarding_soft.dart';
-import 'package:open_settings/open_settings.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({
@@ -126,11 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             Ternary(
                               condition: onboardingArgumentModel.isInitial,
                               truthy: InkWell(
-                                onTap: biometricPrompt,
-                                // () {
-                                //   Navigator.pushNamed(
-                                //       context, Routes.loginUserId);
-                                // },
+                                onTap: loginMethod,
                                 child: Text(
                                   labels[205]["labelText"],
                                   style: TextStyles.primaryBold.copyWith(
@@ -359,7 +352,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             },
                           ),
                           falsy: GradientButton(
-                            onTap: biometricPrompt,
+                            onTap: loginMethod,
                             text: labels[205]["labelText"],
                           ),
                         ),
@@ -370,8 +363,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             onTap: () {
                               Navigator.pushNamed(
                                   context, Routes.exploreDashboard);
-                              // Navigator.pushNamed(context, Routes.setPassword);
-
+                              // Navigator.pushNamed(
+                              //   context,
+                              //   Routes.retailDashboard,
+                              //   arguments: RetailDashboardArgumentModel(
+                              //     imgUrl:
+                              //         "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+                              //     name: storageEmail ?? "",
+                              //     isFirst: true,
+                              //   ).toMap(),
+                              // );
                               // OAuthHelper.oAuth();
                             },
                             text: labels[208]["labelText"],
@@ -431,36 +432,50 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     showButtonBloc.add(ShowButtonEvent(show: isLoading));
   }
 
-  void biometricPrompt() async {
-    if (checkBiometric) {
-      bool isBiometricSupported =
-          await LocalAuthentication().isDeviceSupported();
-      log("isBiometricSupported -> $isBiometricSupported");
-
-      if (deviceId == "bf8e43a90970f33c") {
-        if (context.mounted) {
-          Navigator.pushNamed(context, Routes.loginUserId);
-        }
-      }
-
-      if (!isBiometricSupported) {
-        if (context.mounted) {
-          Navigator.pushNamed(context, Routes.loginUserId);
-        }
-      } else {
-        bool isAuthenticated = await BiometricHelper.authenticateUser();
-
-        if (isAuthenticated) {
-          if (context.mounted) {
-            Navigator.pushNamed(context, Routes.loginUserId);
-          }
-        } else {
-          // TODO: Verify from client if they want a dialog box to enable biometric
-          OpenSettings.openBiometricEnrollSetting();
-        }
-      }
-    } else {
+  void loginMethod() {
+    if (storageEmail == null) {
       Navigator.pushNamed(context, Routes.loginUserId);
+    } else {
+      Navigator.pushNamed(
+        context,
+        Routes.loginPassword,
+        arguments: LoginPasswordArgumentModel(
+          emailId: storageEmail ?? "",
+          userId: storageUserId ?? 0,
+          userTypeId: storageUserTypeId ?? 1,
+          companyId: storageCompanyId ?? 0,
+        ).toMap(),
+      );
     }
+    // if (persistBiometric!) {
+    //   bool isBiometricSupported =
+    //       await LocalAuthentication().isDeviceSupported();
+    //   log("isBiometricSupported -> $isBiometricSupported");
+
+    //   if (deviceId == "bf8e43a90970f33c") {
+    //     if (context.mounted) {
+    //       Navigator.pushNamed(context, Routes.loginUserId);
+    //     }
+    //   }
+
+    //   if (!isBiometricSupported) {
+    //     if (context.mounted) {
+    //       Navigator.pushNamed(context, Routes.loginUserId);
+    //     }
+    //   } else {
+    //     bool isAuthenticated = await BiometricHelper.authenticateUser();
+
+    //     if (isAuthenticated) {
+    //       if (context.mounted) {
+    //         Navigator.pushNamed(context, Routes.loginUserId);
+    //       }
+    //     } else {
+    //       // TODO: Verify from client if they want a dialog box to enable biometric
+    //       OpenSettings.openBiometricEnrollSetting();
+    //     }
+    //   }
+    // } else {
+    //   Navigator.pushNamed(context, Routes.loginUserId);
+    // }
   }
 }

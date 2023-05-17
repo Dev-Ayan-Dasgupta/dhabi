@@ -185,6 +185,9 @@ class _SplashScreenState extends State<SplashScreen> {
       storageCompanyId = int.parse(await storage.read(key: "companyId") ?? "0");
       log("storageCompanyId -> $storageCompanyId");
 
+      persistBiometric = await storage.read(key: "persistBiometric") == "true";
+      log("persistBiometric -> $persistBiometric");
+
       storageStepsCompleted =
           int.parse(await storage.read(key: "stepsCompleted") ?? "0");
       log("storageStepsCompleted -> $storageStepsCompleted");

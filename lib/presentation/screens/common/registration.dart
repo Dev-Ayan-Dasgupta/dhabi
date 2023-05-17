@@ -279,19 +279,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               {"emailID": _emailController.text});
           log("Send Email OTP Response -> $result");
 
-          if (context.mounted) {
-            Navigator.pushNamed(
-              context,
-              Routes.otp,
-              arguments: OTPArgumentModel(
-                emailOrPhone: _emailController.text,
-                isEmail: true,
-                isBusiness: false,
-                isInitial: registrationArgument.isInitial,
-                isLogin: false,
-              ).toMap(),
-            );
+          if (_isLoading) {
+            if (context.mounted) {
+              Navigator.pushNamed(
+                context,
+                Routes.otp,
+                arguments: OTPArgumentModel(
+                  emailOrPhone: _emailController.text,
+                  isEmail: true,
+                  isBusiness: false,
+                  isInitial: registrationArgument.isInitial,
+                  isLogin: false,
+                ).toMap(),
+              );
+            }
           }
+
           _isLoading = false;
           showButtonBloc.add(ShowButtonEvent(show: _isLoading));
         },
