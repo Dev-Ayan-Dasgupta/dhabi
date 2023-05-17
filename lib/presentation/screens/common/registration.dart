@@ -205,7 +205,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(
+                    context,
+                    Routes.onboarding,
+                    arguments: OnboardingArgumentModel(isInitial: true).toMap(),
+                  );
                 },
                 text: "Go Back",
               ),

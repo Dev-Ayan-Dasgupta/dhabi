@@ -86,6 +86,7 @@ class ImageConstants {
   static const String mobile = "${iconsRoot}mobile.svg";
   static const String building = "${iconsRoot}building.svg";
   static const String support = "${iconsRoot}support.svg";
+  static const String biometric = "${iconsRoot}biometric.svg";
 
   // * BANNERS
   static const String dashboard = "${bannersRoot}dashboard.png";

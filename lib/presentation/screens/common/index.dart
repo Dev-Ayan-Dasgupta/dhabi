@@ -13,6 +13,7 @@ export './final_face_image.dart';
 export './capture_face.dart';
 export './login_userid.dart';
 export './login_password.dart';
+export './login_biometric.dart';
 export './terms_and_conditions.dart';
 export './privacy_statement.dart';
 export './set_password.dart';

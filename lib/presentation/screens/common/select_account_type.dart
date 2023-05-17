@@ -266,12 +266,12 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                   return CustomDialog(
                     svgAssetPath: ImageConstants.warning,
                     title: storageUserTypeId == 1
-                        ? "User already exists"
+                        ? messages[71]["messageText"]
                         : "Application approval pending",
                     message: storageUserTypeId == 1
-                        ? "Try logging in again."
+                        ? messages[70]["messageText"]
                         : result["message"],
-                    actionWidget: Column(
+                    auxWidget: Column(
                       children: [
                         GradientButton(
                           onTap: () async {
@@ -302,6 +302,19 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                           text: storageUserTypeId == 1
                               ? labels[205]["labelText"]
                               : "Register",
+                        ),
+                        const SizeBox(height: 15),
+                      ],
+                    ),
+                    actionWidget: Column(
+                      children: [
+                        SolidButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          text: labels[166]["labelText"],
+                          color: AppColors.primaryBright17,
+                          fontColor: AppColors.primary,
                         ),
                         const SizeBox(height: 20),
                       ],

@@ -1,6 +1,9 @@
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
@@ -52,6 +55,8 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
   int emirateIndex = -1;
 
   bool isUploading = false;
+
+  bool isPoValid = false;
 
   @override
   void initState() {
@@ -262,11 +267,54 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       ),
                     ),
                     const SizeBox(height: 9),
-                    CustomTextField(
-                      controller: _zipController,
-                      keyboardType: TextInputType.number,
-                      onChanged: (p0) {},
-                      hintText: "0000",
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: (context, state) {
+                        return CustomTextField(
+                          controller: _zipController,
+                          keyboardType: TextInputType.number,
+                          borderColor: isPoValid
+                              ? const Color(0xFFEEEEEE)
+                              : AppColors.red100,
+                          onChanged: (p0) {
+                            final ShowButtonBloc showButtonBloc =
+                                context.read<ShowButtonBloc>();
+                            if (p0.length == 4) {
+                              isPoValid = true;
+                            } else {
+                              isPoValid = false;
+                            }
+                            showButtonBloc
+                                .add(ShowButtonEvent(show: isPoValid));
+                          },
+                          hintText: "0000",
+                        );
+                      },
+                    ),
+                    const SizeBox(height: 7),
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: (context, state) {
+                        return Ternary(
+                          condition: isPoValid,
+                          truthy: const SizeBox(),
+                          falsy: Row(
+                            children: [
+                              Icon(
+                                Icons.error_rounded,
+                                color: AppColors.red100,
+                                size: (13 / Dimensions.designWidth).w,
+                              ),
+                              const SizeBox(width: 5),
+                              Text(
+                                "Must be 4 digits",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.red100,
+                                  fontSize: (12 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                     // const SizeBox(height: 20),
                     // Text(

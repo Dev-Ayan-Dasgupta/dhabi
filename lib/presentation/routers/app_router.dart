@@ -56,6 +56,12 @@ class AppRouter {
             argument: args,
           ),
         );
+      case Routes.loginBiometric:
+        return MaterialPageRoute(
+          builder: (_) => LoginBiometricScreen(
+            argument: args,
+          ),
+        );
       case Routes.selectAccountType:
         return MaterialPageRoute(
           builder: (_) => SelectAccountTypeScreen(

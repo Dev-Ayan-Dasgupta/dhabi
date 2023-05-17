@@ -29,11 +29,17 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Padding(
-          padding: EdgeInsets.all((20 / Dimensions.designWidth).w),
-          child: SvgPicture.asset(ImageConstants.menu),
+        leading: InkWell(
+          onTap: promptUser,
+          child: Padding(
+            padding: EdgeInsets.all((20 / Dimensions.designWidth).w),
+            child: SvgPicture.asset(ImageConstants.menu),
+          ),
         ),
-        title: SvgPicture.asset(ImageConstants.dhabiText),
+        title: InkWell(
+          onTap: promptUser,
+          child: SvgPicture.asset(ImageConstants.dhabiText),
+        ),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(

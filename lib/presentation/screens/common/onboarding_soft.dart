@@ -363,6 +363,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             onTap: () {
                               Navigator.pushNamed(
                                   context, Routes.exploreDashboard);
+
                               // Navigator.pushNamed(
                               //   context,
                               //   Routes.retailDashboard,
@@ -373,7 +374,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               //     isFirst: true,
                               //   ).toMap(),
                               // );
-                              // OAuthHelper.oAuth();
                             },
                             text: labels[208]["labelText"],
                             color: const Color.fromRGBO(85, 85, 85, 0.2),
@@ -440,6 +440,43 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         if (storageisCompanyRegistered == false) {
           Navigator.pushNamed(context, Routes.loginUserId);
         } else {
+          if (persistBiometric == true) {
+            Navigator.pushNamed(
+              context,
+              Routes.loginBiometric,
+              arguments: LoginPasswordArgumentModel(
+                emailId: storageEmail ?? "",
+                userId: storageUserId ?? 0,
+                userTypeId: storageUserTypeId ?? 1,
+                companyId: storageCompanyId ?? 0,
+              ).toMap(),
+            );
+          } else {
+            Navigator.pushNamed(
+              context,
+              Routes.loginPassword,
+              arguments: LoginPasswordArgumentModel(
+                emailId: storageEmail ?? "",
+                userId: storageUserId ?? 0,
+                userTypeId: storageUserTypeId ?? 1,
+                companyId: storageCompanyId ?? 0,
+              ).toMap(),
+            );
+          }
+        }
+      } else {
+        if (persistBiometric == true) {
+          Navigator.pushNamed(
+            context,
+            Routes.loginBiometric,
+            arguments: LoginPasswordArgumentModel(
+              emailId: storageEmail ?? "",
+              userId: storageUserId ?? 0,
+              userTypeId: storageUserTypeId ?? 1,
+              companyId: storageCompanyId ?? 0,
+            ).toMap(),
+          );
+        } else {
           Navigator.pushNamed(
             context,
             Routes.loginPassword,
@@ -451,17 +488,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ).toMap(),
           );
         }
-      } else {
-        Navigator.pushNamed(
-          context,
-          Routes.loginPassword,
-          arguments: LoginPasswordArgumentModel(
-            emailId: storageEmail ?? "",
-            userId: storageUserId ?? 0,
-            userTypeId: storageUserTypeId ?? 1,
-            companyId: storageCompanyId ?? 0,
-          ).toMap(),
-        );
       }
     }
     // if (persistBiometric!) {

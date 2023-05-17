@@ -1,30 +1,26 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
-
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:dialup_mobile_app/bloc/matchPassword/match_password_bloc.dart';
-import 'package:dialup_mobile_app/bloc/matchPassword/match_password_event.dart';
-import 'package:dialup_mobile_app/bloc/matchPassword/match_password_state.dart';
-import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
-import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/presentation/widgets/login/attempts.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:open_settings/open_settings.dart';
 
-class LoginPasswordScreen extends StatefulWidget {
-  const LoginPasswordScreen({
+class LoginBiometricScreen extends StatefulWidget {
+  const LoginBiometricScreen({
     Key? key,
     this.argument,
   }) : super(key: key);
@@ -32,28 +28,16 @@ class LoginPasswordScreen extends StatefulWidget {
   final Object? argument;
 
   @override
-  State<LoginPasswordScreen> createState() => _LoginPasswordScreenState();
+  State<LoginBiometricScreen> createState() => _LoginBiometricScreenState();
 }
 
-class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
-  final TextEditingController _passwordController = TextEditingController();
-
-  bool showPassword = false;
-
-  bool isMatch = true;
-
-  int matchPasswordErrorCount = 0;
-  int toggle = 0;
-
-  bool isLoading = false;
-
+class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
   late LoginPasswordArgumentModel loginPasswordArgument;
 
   @override
   void initState() {
     super.initState();
     argumentInitialization();
-    // biometricPrompt();
   }
 
   void argumentInitialization() {
@@ -61,44 +45,13 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         LoginPasswordArgumentModel.fromMap(widget.argument as dynamic ?? {});
   }
 
-  // void biometricPrompt() async {
-  //   if (persistBiometric!) {
-  //     bool isBiometricSupported =
-  //         await LocalAuthentication().isDeviceSupported();
-  //     log("isBiometricSupported -> $isBiometricSupported");
-
-  //     if (deviceId == "bf8e43a90970f33c") {
-  //       if (context.mounted) {
-  //         Navigator.pushNamed(context, Routes.loginUserId);
-  //       }
-  //     }
-
-  //     if (!isBiometricSupported) {
-  //       // if (context.mounted) {
-  //       //   Navigator.pushNamed(context, Routes.loginUserId);
-  //       // }
-  //     } else {
-  //       bool isAuthenticated = await BiometricHelper.authenticateUser();
-
-  //       if (isAuthenticated) {
-  //         if (context.mounted) {
-  //           // Navigator.pushNamed(context, Routes.loginUserId);
-  //           onSubmit(storagePassword ?? "");
-  //         }
-  //       } else {
-  //         // TODO: Verify from client if they want a dialog box to enable biometric
-  //         OpenSettings.openBiometricEnrollSetting();
-  //       }
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBarLeading(),
+        title: SvgPicture.asset(ImageConstants.dhabiText),
         backgroundColor: Colors.transparent,
+        centerTitle: true,
         elevation: 0,
       ),
       body: Padding(
@@ -110,154 +63,124 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           children: [
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    labels[214]["labelText"],
+                    "Welcome",
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 20),
-                  Row(
-                    children: [
-                      Text(
-                        "Enter Password",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.black63,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const Asterisk(),
-                    ],
+                  const SizeBox(height: 15),
+                  Text(
+                    "Mr. Mohamed Abood",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: Colors.black,
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
                   ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                    builder: buildShowHidePassword,
-                  ),
-                  const SizeBox(height: 7),
-                  BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-                    builder: buildErrorMessage,
-                  ),
+                  const SizeBox(height: 72),
+                  InkWell(
+                    onTap: biometricPrompt,
+                    child: SvgPicture.asset(
+                      ImageConstants.biometric,
+                      width: (145 / Dimensions.designWidth).w,
+                      height: (159 / Dimensions.designHeight).h,
+                    ),
+                  )
                 ],
               ),
             ),
             Column(
               children: [
-                BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
-                  builder: buildLoginButton,
-                ),
-                const SizeBox(height: 15),
-                Align(
-                  alignment: Alignment.center,
-                  child: InkWell(
-                    onTap: onForgotEmailPwd,
-                    child: Text(
-                      labels[47]["labelText"],
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.primaryLighter,
-                        fontSize: (16 / Dimensions.designWidth).w,
+                SolidButton(
+                  onTap: () {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      Routes.loginPassword,
+                      arguments: LoginPasswordArgumentModel(
+                        emailId: storageEmail ?? "",
+                        userId: storageUserId ?? 0,
+                        userTypeId: storageUserTypeId ?? 1,
+                        companyId: storageCompanyId ?? 0,
+                      ).toMap(),
+                    );
+                  },
+                  text: "Use password instead",
+                  color: Colors.white,
+                  fontColor: AppColors.primary,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      offset: Offset(
+                        (4 / Dimensions.designWidth).w,
+                        (4 / Dimensions.designHeight).h,
                       ),
-                    ),
-                  ),
+                      blurRadius: (8 / Dimensions.designWidth).w,
+                    )
+                  ],
                 ),
                 SizeBox(
                   height: PaddingConstants.bottomPadding +
                       MediaQuery.of(context).padding.bottom,
                 ),
               ],
-            ),
+            )
           ],
         ),
       ),
     );
   }
 
-  Widget buildShowHidePassword(BuildContext context, ShowPasswordState state) {
-    if (showPassword) {
-      return CustomTextField(
-        controller: _passwordController,
-        minLines: 1,
-        maxLines: 1,
-        suffix: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: hidePassword,
-            child: Icon(
-              Icons.visibility_off_outlined,
-              color: const Color.fromRGBO(34, 97, 105, 0.5),
-              size: (20 / Dimensions.designWidth).w,
-            ),
-          ),
-        ),
-        onChanged: onChanged,
-        obscureText: !showPassword,
-      );
-    } else {
-      return CustomTextField(
-        controller: _passwordController,
-        minLines: 1,
-        maxLines: 1,
-        suffix: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: showsPassword,
-            child: Icon(
-              Icons.visibility_outlined,
-              color: AppColors.primaryBright50,
-              size: (20 / Dimensions.designWidth).w,
-            ),
-          ),
-        ),
-        onChanged: onChanged,
-        obscureText: !showPassword,
-      );
-    }
-  }
+  void biometricPrompt() async {
+    log("storageEmail -> $storageEmail");
+    log("storagePassword -> $storagePassword");
+    if (persistBiometric!) {
+      bool isBiometricSupported =
+          await LocalAuthentication().isDeviceSupported();
+      log("isBiometricSupported -> $isBiometricSupported");
 
-  void hidePassword() {
-    final ShowPasswordBloc showPasswordBloc = context.read<ShowPasswordBloc>();
-    showPasswordBloc
-        .add(HidePasswordEvent(showPassword: false, toggle: ++toggle));
-    showPassword = !showPassword;
-  }
+      if (deviceId == "bf8e43a90970f33c") {
+        if (context.mounted) {
+          Navigator.pushNamed(context, Routes.loginUserId);
+        }
+      }
 
-  void showsPassword() {
-    final ShowPasswordBloc showPasswordBloc = context.read<ShowPasswordBloc>();
-    showPasswordBloc
-        .add(DisplayPasswordEvent(showPassword: true, toggle: ++toggle));
-    showPassword = !showPassword;
-  }
+      if (!isBiometricSupported) {
+        // if (context.mounted) {
+        //   Navigator.pushNamed(context, Routes.loginUserId);
+        // }
+      } else {
+        bool isAuthenticated = await BiometricHelper.authenticateUser();
 
-  void onChanged(String p0) {
-    final MatchPasswordBloc matchPasswordBloc =
-        context.read<MatchPasswordBloc>();
-    if (p0 == "AyanDg16@#") {
-      isMatch = true;
-      matchPasswordBloc.add(
-          MatchPasswordEvent(isMatch: isMatch, count: matchPasswordErrorCount));
-    } else {
-      isMatch = true;
-      matchPasswordBloc.add(
-          MatchPasswordEvent(isMatch: isMatch, count: matchPasswordErrorCount));
+        if (isAuthenticated) {
+          if (context.mounted) {
+            // Navigator.pushNamed(context, Routes.loginUserId);
+            onSubmit(storagePassword ?? "");
+          }
+        } else {
+          // TODO: Verify from client if they want a dialog box to enable biometric
+          OpenSettings.openBiometricEnrollSetting();
+        }
+      }
     }
   }
 
   void onSubmit(String password) async {
-    log("companyID -> ${loginPasswordArgument.companyId}");
-    log("userTypeId -> ${loginPasswordArgument.userTypeId}");
-    final MatchPasswordBloc matchPasswordBloc =
-        context.read<MatchPasswordBloc>();
+    // log("companyID -> ${loginPasswordArgument.companyId}");
+    // log("userTypeId -> ${loginPasswordArgument.userTypeId}");
+    // final MatchPasswordBloc matchPasswordBloc =
+    //     context.read<MatchPasswordBloc>();
 
-    isLoading = true;
-    matchPasswordBloc
-        .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
+    // isLoading = true;
+    // matchPasswordBloc
+    //     .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
     var result = await MapLogin.mapLogin({
-      "emailId": loginPasswordArgument.emailId,
-      "userTypeId": loginPasswordArgument.userTypeId,
-      "userId": loginPasswordArgument.userId,
-      "companyId": loginPasswordArgument.companyId,
+      "emailId": storageEmail,
+      "userTypeId": storageUserTypeId,
+      "userId": storageUserId,
+      "companyId": storageCompanyId,
       "password": password,
       "deviceId": deviceId,
       "registerDevice": false,
@@ -270,8 +193,6 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     log("token -> $token");
 
     if (result["success"]) {
-      await storage.write(key: "password", value: _passwordController.text);
-      storagePassword = await storage.read(key: "password");
       if (context.mounted) {
         if (loginPasswordArgument.userTypeId == 1) {
           Navigator.pushNamedAndRemoveUntil(
@@ -333,9 +254,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       }
     }
 
-    isLoading = false;
-    matchPasswordBloc
-        .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
+    // isLoading = false;
+    // matchPasswordBloc
+    //     .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
   }
 
   void promptWrongCredentials() {
@@ -387,7 +308,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                         "userTypeId": loginPasswordArgument.userTypeId,
                         "userId": loginPasswordArgument.userId,
                         "companyId": loginPasswordArgument.companyId,
-                        "password": _passwordController.text,
+                        "password": storagePassword,
                         "deviceId": deviceId,
                         "registerDevice": true,
                         "deviceName": deviceName,
@@ -484,68 +405,5 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         );
       },
     );
-  }
-
-  Widget buildErrorMessage(BuildContext context, MatchPasswordState state) {
-    if (isMatch == false) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Incorrect Password",
-            style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.red100,
-              fontSize: (12 / Dimensions.designWidth).w,
-            ),
-          ),
-          const SizeBox(height: 22),
-          Ternary(
-            condition:
-                matchPasswordErrorCount < 3 && matchPasswordErrorCount > 0,
-            truthy: Center(
-              child: LoginAttempt(
-                message:
-                    "Incorrect password - ${3 - matchPasswordErrorCount} attempts left",
-              ),
-            ),
-            falsy: Ternary(
-              condition: matchPasswordErrorCount == 0,
-              truthy: const SizeBox(),
-              falsy: LoginAttempt(
-                message: messages[68]["messageText"],
-                // "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials",
-              ),
-            ),
-          )
-        ],
-      );
-    } else {
-      return const SizeBox();
-    }
-  }
-
-  Widget buildLoginButton(BuildContext context, MatchPasswordState state) {
-    if (matchPasswordErrorCount < 3) {
-      return GradientButton(
-        onTap: () async {
-          onSubmit(_passwordController.text);
-        },
-        text: labels[205]["labelText"],
-        auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
-      );
-    } else {
-      return SolidButton(onTap: () {}, text: labels[205]["labelText"]);
-    }
-  }
-
-  void onForgotEmailPwd() {
-    Navigator.pushNamed(context, Routes.registration,
-        arguments: RegistrationArgumentModel(isInitial: false).toMap());
-  }
-
-  @override
-  void dispose() {
-    _passwordController.dispose();
-    super.dispose();
   }
 }
