@@ -181,12 +181,12 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                                 left: (20 / Dimensions.designWidth).w,
                               ),
                               child: const DashboardBannerImage(
-                                imgUrl: ImageConstants.dashboard,
+                                imgUrl: ImageConstants.banner3,
                               ),
                             );
                           } else {
                             return const DashboardBannerImage(
-                              imgUrl: ImageConstants.dashboard,
+                              imgUrl: ImageConstants.banner3,
                             );
                           }
                         },

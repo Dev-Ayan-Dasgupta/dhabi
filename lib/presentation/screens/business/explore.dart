@@ -41,7 +41,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     width: 100.w,
                     height: (131.47 / Dimensions.designWidth).w,
                     child: Image.asset(
-                      ImageConstants.dashboard,
+                      ImageConstants.banner3,
                       fit: BoxFit.fill,
                     ),
                   );

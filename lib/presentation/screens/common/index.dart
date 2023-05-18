@@ -17,3 +17,4 @@ export './login_biometric.dart';
 export './terms_and_conditions.dart';
 export './privacy_statement.dart';
 export './set_password.dart';
+export '../../../utils/constants/account_info.dart';

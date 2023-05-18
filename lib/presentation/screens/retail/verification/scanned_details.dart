@@ -485,7 +485,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
-      bool result = await MapIfPassportExists.mapIfPassportExists(
+      var result = await MapIfPassportExists.mapIfPassportExists(
           {"passportNumber": passportNumber}, token ?? "");
       log("If Passport Exists API response -> $result");
 
@@ -565,7 +565,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       }
 
       // ? Check for previous existence
-      else if (result) {
+      else if (result["exists"]) {
         if (context.mounted) {
           Navigator.pushNamed(context, Routes.errorSuccessScreen,
               arguments: ErrorArgumentModel(

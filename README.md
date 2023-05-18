@@ -6,3 +6,5 @@ Digital Banking Application for Dhabi
 
 - Tried padding fix for pop-up box
 - Invalid email error message appears on login userID screen - FHDHABI-146
+- Getting expiry date message on scanning expired passport - FHDHABI-129
+- App locked in Portrait mode

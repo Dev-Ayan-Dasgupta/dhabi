@@ -15,9 +15,11 @@ class DashboardBannerImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: (325 / Dimensions.designWidth).w,
+      width: (396 / Dimensions.designWidth).w,
       height: (109 / Dimensions.designWidth).w,
-      margin: EdgeInsets.only(right: (20 / Dimensions.designWidth).w),
+      margin: EdgeInsets.symmetric(
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
           Radius.circular((10 / Dimensions.designWidth).w),

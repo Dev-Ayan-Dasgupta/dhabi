@@ -222,17 +222,21 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
 
           // if only one cif
           if (singleCifResult["hasSingleCIF"]) {
-            if (context.mounted) {
-              Navigator.pushNamed(
-                context,
-                Routes.loginPassword,
-                arguments: LoginPasswordArgumentModel(
-                  emailId: _emailController.text,
-                  userId: 0,
-                  userTypeId: singleCifResult["userType"],
-                  companyId: singleCifResult["cid"],
-                ).toMap(),
-              );
+            if (singleCifResult["hasValidCIF"]) {
+              if (context.mounted) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.loginPassword,
+                  arguments: LoginPasswordArgumentModel(
+                    emailId: _emailController.text,
+                    userId: 0,
+                    userTypeId: singleCifResult["userType"],
+                    companyId: singleCifResult["cid"],
+                  ).toMap(),
+                );
+              }
+            } else {
+              // TODO: Display the pop-up as done in select account type for business
             }
           } else {
             var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(

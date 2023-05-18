@@ -143,7 +143,16 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
 
       if (deviceId == "bf8e43a90970f33c") {
         if (context.mounted) {
-          Navigator.pushNamed(context, Routes.loginUserId);
+          Navigator.pushNamed(
+            context,
+            Routes.loginPassword,
+            arguments: LoginPasswordArgumentModel(
+              emailId: storageEmail ?? "",
+              userId: storageUserId ?? 0,
+              userTypeId: storageUserTypeId ?? 1,
+              companyId: storageCompanyId ?? 0,
+            ).toMap(),
+          );
         }
       }
 

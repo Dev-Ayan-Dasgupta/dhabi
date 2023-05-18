@@ -72,7 +72,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
 
       String? tempNationalityCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
-      nationalityCode = LongToShortCode.longToShortCode(tempNationalityCode!);
+      nationalityCode =
+          LongToShortCode.longToShortCode(tempNationalityCode ?? "");
       await storage.write(key: "nationalityCode", value: nationalityCode);
       storageNationalityCode = await storage.read(key: "nationalityCode");
 
@@ -121,7 +122,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
       log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
 
-      bool result = await MapIfPassportExists.mapIfPassportExists(
+      var result = await MapIfPassportExists.mapIfPassportExists(
           {"passportNumber": passportNumber}, token ?? "");
       log("If Passport Exists API response -> $result");
 
@@ -198,7 +199,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       }
 
       // ? Check for previous existence
-      else if (result) {
+      else if (result["exists"]) {
         if (context.mounted) {
           Navigator.pushNamed(context, Routes.errorSuccessScreen,
               arguments: ErrorArgumentModel(

@@ -150,10 +150,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       children: [
                         const SizeBox(height: 15),
                         InkWell(
-                          onTap: () {
-                            // TODO: Add biometricPrompt
-                            Navigator.pushNamed(context, Routes.loginUserId);
-                          },
+                          onTap: loginMethod,
                           child: RichText(
                             text: TextSpan(
                               text: '${labels[213]["labelText"]} ',
@@ -322,6 +319,66 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           falsy: const SizeBox(),
         ),
       );
+    }
+  }
+
+  void loginMethod() {
+    if (storageCif == "null" || storageCif == null) {
+      Navigator.pushNamed(context, Routes.loginUserId);
+    } else {
+      if (storageIsCompany == true) {
+        if (storageisCompanyRegistered == false) {
+          Navigator.pushNamed(context, Routes.loginUserId);
+        } else {
+          if (persistBiometric == true) {
+            Navigator.pushNamed(
+              context,
+              Routes.loginBiometric,
+              arguments: LoginPasswordArgumentModel(
+                emailId: storageEmail ?? "",
+                userId: storageUserId ?? 0,
+                userTypeId: storageUserTypeId ?? 1,
+                companyId: storageCompanyId ?? 0,
+              ).toMap(),
+            );
+          } else {
+            Navigator.pushNamed(
+              context,
+              Routes.loginPassword,
+              arguments: LoginPasswordArgumentModel(
+                emailId: storageEmail ?? "",
+                userId: storageUserId ?? 0,
+                userTypeId: storageUserTypeId ?? 1,
+                companyId: storageCompanyId ?? 0,
+              ).toMap(),
+            );
+          }
+        }
+      } else {
+        if (persistBiometric == true) {
+          Navigator.pushNamed(
+            context,
+            Routes.loginBiometric,
+            arguments: LoginPasswordArgumentModel(
+              emailId: storageEmail ?? "",
+              userId: storageUserId ?? 0,
+              userTypeId: storageUserTypeId ?? 1,
+              companyId: storageCompanyId ?? 0,
+            ).toMap(),
+          );
+        } else {
+          Navigator.pushNamed(
+            context,
+            Routes.loginPassword,
+            arguments: LoginPasswordArgumentModel(
+              emailId: storageEmail ?? "",
+              userId: storageUserId ?? 0,
+              userTypeId: storageUserTypeId ?? 1,
+              companyId: storageCompanyId ?? 0,
+            ).toMap(),
+          );
+        }
+      }
     }
   }
 

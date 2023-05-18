@@ -28,7 +28,12 @@ class EnvConfig implements BaseConfig {
 
   @override
   String get getCustomerAccountDetails {
-    return dotenv.env['GET_CUSTOMER_ACOUNT_DETAILS'] ?? "";
+    return dotenv.env['GET_CUSTOMER_ACCOUNT_DETAILS'] ?? "";
+  }
+
+  @override
+  String get getCustomerAccountStatement {
+    return dotenv.env['GET_CUSTOMER_ACCOUNT_STATEMENT'] ?? "";
   }
 
   // ? Authentication APIs

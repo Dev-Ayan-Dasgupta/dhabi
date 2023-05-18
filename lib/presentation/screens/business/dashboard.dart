@@ -539,7 +539,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                             (index == 0) ? (15 / Dimensions.designWidth).w : 0,
                       ),
                       child: const DashboardBannerImage(
-                        imgUrl: ImageConstants.dashboard,
+                        imgUrl: ImageConstants.banner3,
                       ),
                     );
                   },

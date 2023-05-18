@@ -281,7 +281,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                   "internationalTaxes": [
                     {
                       "countryCode":
-                          dhabiCountryNames.indexOf(storageTaxCountry!) == -1
+                          !dhabiCountryNames.contains(storageTaxCountry!)
                               // dhabiCountryNames.contains(-1)
                               ? "US"
                               : dhabiCountries[dhabiCountryNames

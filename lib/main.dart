@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:dialup_mobile_app/presentation/routers/app_router.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
@@ -39,6 +40,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of our application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return FlutterSizer(
       builder: (context, orientation, screenType) {
         return CustomMultiBlocProvider(appRouter: appRouter);

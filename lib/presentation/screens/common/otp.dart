@@ -390,7 +390,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                               getCustomerDetailsResponse[
                                                   "cifDetails"];
                                           if (context.mounted) {
-                                            Navigator.pushNamed(
+                                            Navigator.pushReplacementNamed(
                                               context,
                                               Routes.selectAccount,
                                               arguments:
@@ -421,7 +421,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           },
                         );
                       } else {
-                        Navigator.pushNamed(
+                        Navigator.pushReplacementNamed(
                           context,
                           Routes.retailOnboardingStatus,
                           arguments: OnboardingStatusArgumentModel(
@@ -482,7 +482,25 @@ class _OTPScreenState extends State<OTPScreen> {
                         if (context.mounted) {
                           cif = getCustomerDetailsResponse["cifDetails"][0]
                               ["cif"];
-                          Navigator.pushNamed(context, Routes.setPassword);
+
+                          isCompany = getCustomerDetailsResponse["cifDetails"]
+                              [0]["isCompany"];
+
+                          isCompanyRegistered =
+                              getCustomerDetailsResponse["cifDetails"][0]
+                                  ["isCompanyRegistered"];
+
+                          if (cif != null || cif != "null") {
+                            if (isCompany) {
+                              if (isCompanyRegistered) {
+                                Navigator.pushReplacementNamed(
+                                    context, Routes.setPassword);
+                              }
+                            } else {
+                              Navigator.pushReplacementNamed(
+                                  context, Routes.setPassword);
+                            }
+                          }
                         }
                       } else {
                         if (context.mounted) {
@@ -529,7 +547,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                               getCustomerDetailsResponse[
                                                   "cifDetails"];
                                           if (context.mounted) {
-                                            Navigator.pushNamed(
+                                            Navigator.pushReplacementNamed(
                                               context,
                                               Routes.selectAccount,
                                               arguments:
@@ -560,7 +578,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           },
                         );
                       } else {
-                        Navigator.pushNamed(
+                        Navigator.pushReplacementNamed(
                           context,
                           Routes.retailOnboardingStatus,
                           arguments: OnboardingStatusArgumentModel(
@@ -652,18 +670,51 @@ class _OTPScreenState extends State<OTPScreen> {
                                               "cifDetails"];
                                       if (context.mounted) {
                                         if (cifDetails.length == 1) {
-                                          Navigator.pushReplacementNamed(
-                                            context,
-                                            Routes.loginPassword,
-                                            arguments:
-                                                LoginPasswordArgumentModel(
-                                              emailId: storageEmail ?? "",
-                                              userId: storageUserId ?? 0,
-                                              userTypeId:
-                                                  storageUserTypeId ?? 2,
-                                              companyId: storageCompanyId ?? 0,
-                                            ).toMap(),
-                                          );
+                                          cif = getCustomerDetailsResponse[
+                                              "cifDetails"][0]["cif"];
+
+                                          isCompany =
+                                              getCustomerDetailsResponse[
+                                                  "cifDetails"][0]["isCompany"];
+
+                                          isCompanyRegistered =
+                                              getCustomerDetailsResponse[
+                                                      "cifDetails"][0]
+                                                  ["isCompanyRegistered"];
+
+                                          if (cif != null || cif != "null") {
+                                            if (isCompany) {
+                                              if (isCompanyRegistered) {
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  Routes.loginPassword,
+                                                  arguments:
+                                                      LoginPasswordArgumentModel(
+                                                    emailId: storageEmail ?? "",
+                                                    userId: storageUserId ?? 0,
+                                                    userTypeId:
+                                                        storageUserTypeId ?? 2,
+                                                    companyId:
+                                                        storageCompanyId ?? 0,
+                                                  ).toMap(),
+                                                );
+                                              }
+                                            } else {
+                                              Navigator.pushReplacementNamed(
+                                                context,
+                                                Routes.loginPassword,
+                                                arguments:
+                                                    LoginPasswordArgumentModel(
+                                                  emailId: storageEmail ?? "",
+                                                  userId: storageUserId ?? 0,
+                                                  userTypeId:
+                                                      storageUserTypeId ?? 2,
+                                                  companyId:
+                                                      storageCompanyId ?? 0,
+                                                ).toMap(),
+                                              );
+                                            }
+                                          }
                                         } else {
                                           Navigator.pushReplacementNamed(
                                             context,
@@ -705,7 +756,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       },
                     );
                   } else {
-                    Navigator.pushNamed(
+                    Navigator.pushReplacementNamed(
                       context,
                       Routes.retailOnboardingStatus,
                       arguments: OnboardingStatusArgumentModel(
