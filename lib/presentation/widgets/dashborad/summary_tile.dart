@@ -53,7 +53,7 @@ class AccountSummaryTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomCircleAvatar(imgUrl: imgUrl),
+                CustomCircleAvatarAsset(imgUrl: imgUrl),
                 Text(
                   accountType,
                   style: TextStyles.primary.copyWith(
@@ -63,7 +63,7 @@ class AccountSummaryTile extends StatelessWidget {
                 ),
               ],
             ),
-            SizeBox(height: subText.isEmpty ? 45 : 15),
+            SizeBox(height: subText.isEmpty ? 43 : 15),
             RichText(
               text: TextSpan(
                 text: "$currency ",

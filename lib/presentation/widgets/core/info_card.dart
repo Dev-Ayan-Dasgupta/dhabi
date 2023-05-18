@@ -61,7 +61,7 @@ class InfoCard extends StatelessWidget {
                   ),
                 ],
               ),
-              CustomCircleAvatar(
+              CustomCircleAvatarAsset(
                 imgUrl: flagImgUrl,
               ),
             ],

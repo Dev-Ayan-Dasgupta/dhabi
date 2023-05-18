@@ -46,7 +46,7 @@ class AppBarAvatar extends StatelessWidget {
               ? const SizeBox()
               : Center(
                   child: Text(
-                    name[0].toUpperCase(),
+                    "${name[0]}${name.split(' ').last[0]}",
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (16 / Dimensions.designWidth).w,

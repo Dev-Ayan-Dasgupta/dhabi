@@ -716,7 +716,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    text: "Go Back",
+                    text: labels[347]["labelText"],
                     color: AppColors.primaryBright17,
                     fontColor: AppColors.primary,
                   ),

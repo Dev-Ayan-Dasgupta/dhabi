@@ -151,7 +151,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                               onTap: () {
                                                 Navigator.pop(context);
                                               },
-                                              text: "Go Back",
+                                              text: labels[347]["labelText"],
                                             ),
                                             const SizeBox(height: 20),
                                           ],

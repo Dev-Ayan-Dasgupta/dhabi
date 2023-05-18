@@ -27,7 +27,7 @@ class EditProfilePhoto extends StatelessWidget {
             boxShadow: [BoxShadows.primary],
           ),
           child: Center(
-            child: CustomCircleAvatar(
+            child: CustomCircleAvatarAsset(
               imgUrl: imgUrl,
               width: (109 / Dimensions.designWidth).w,
               height: (109 / Dimensions.designWidth).w,

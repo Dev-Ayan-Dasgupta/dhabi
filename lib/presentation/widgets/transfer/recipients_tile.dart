@@ -63,7 +63,7 @@ class RecipientsTile extends StatelessWidget {
                       Positioned(
                         left: (15 / Dimensions.designWidth).w,
                         top: (15 / Dimensions.designWidth).w,
-                        child: CustomCircleAvatar(
+                        child: CustomCircleAvatarAsset(
                           imgUrl: flagImgUrl,
                           width: (21 / Dimensions.designWidth).w,
                           height: (21 / Dimensions.designWidth).w,

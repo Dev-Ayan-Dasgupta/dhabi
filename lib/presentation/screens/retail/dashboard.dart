@@ -24,6 +24,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class RetailDashboardScreen extends StatefulWidget {
   const RetailDashboardScreen({
@@ -52,13 +53,16 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   bool isFetchingAccountDetails = false;
 
+  List accountDetails = [];
+  List statementList = [];
+
   @override
   void initState() {
     super.initState();
     // WidgetsBinding.instance.addPostFrameCallback((_) async {});
     argumentInitialization();
     tabbarInitialization();
-    getCustomerAcountDetails();
+    getApiData();
   }
 
   void argumentInitialization() {
@@ -170,16 +174,46 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     });
   }
 
-  Future<void> getCustomerAcountDetails() async {
+  Future<void> getApiData() async {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     isFetchingAccountDetails = true;
     showButtonBloc.add(ShowButtonEvent(show: isFetchingAccountDetails));
-    customerDetails =
-        await MapCustomerAccountDetails.mapCustomerAccountDetails(token ?? "");
-    log("Customer Account Details API response -> $customerDetails");
-    if (customerDetails["success"]) {
-      isFetchingAccountDetails = false;
-      showButtonBloc.add(ShowButtonEvent(show: isFetchingAccountDetails));
+    await getCustomerAcountDetails();
+    await getCustomerAccountStatement();
+    isFetchingAccountDetails = false;
+    showButtonBloc.add(ShowButtonEvent(show: isFetchingAccountDetails));
+  }
+
+  Future<void> getCustomerAcountDetails() async {
+    try {
+      customerDetails =
+          await MapCustomerAccountDetails.mapCustomerAccountDetails(
+              token ?? "");
+      log("Customer Account Details API response -> $customerDetails");
+      accountDetails =
+          customerDetails["crCustomerProfileRes"]["body"]["accountDetails"];
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<void> getCustomerAccountStatement() async {
+    try {
+      customerStatement =
+          await MapCustomerAccountStatement.mapCustomerAccountStatement(
+        {
+          "accountNumber": accountDetails[0]["accountNumber"],
+          "startDate": DateFormat('yyyy-MM-dd')
+              .format(DateTime.now().subtract(const Duration(days: 90))),
+          "endDate": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        },
+        token ?? "",
+      );
+      log("Customer Account Statement API response -> $customerStatement");
+      statementList = customerStatement["flexiAccountStatementRes"]["body"]
+          ["statementList"];
+    } catch (_) {
+      rethrow;
     }
   }
 
@@ -280,32 +314,39 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                         child: ListView.builder(
                                           controller: _scrollController,
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: 6,
+                                          itemCount: accountDetails.length,
                                           itemBuilder: (context, index) {
                                             return Padding(
                                               padding: EdgeInsets.only(
                                                 left: (index == 0)
-                                                    ? (15 /
+                                                    ? (PaddingConstants
+                                                                .horizontalPadding /
                                                             Dimensions
                                                                 .designWidth)
                                                         .w
                                                     : 0,
                                               ),
                                               child: AccountSummaryTile(
-                                                onTap: () {
-                                                  if (index == 2) {
-                                                    Navigator.pushNamed(
-                                                        context, Routes.vault);
-                                                  }
-                                                },
-                                                imgUrl:
-                                                    "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                                accountType: "Savings",
-                                                currency: "AED",
-                                                amount: 0.00,
-                                                subText: "Powered by FH",
-                                                subImgUrl:
-                                                    "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+                                                onTap: () {},
+                                                imgUrl: accountDetails[index][
+                                                            "accountCurrency"] ==
+                                                        "AED"
+                                                    ? ImageConstants.uaeFlag
+                                                    : ImageConstants.usaFlag,
+                                                accountType: accountDetails[
+                                                                index]
+                                                            ["productCode"] ==
+                                                        "1001"
+                                                    ? "Savings"
+                                                    : "Current",
+                                                currency: accountDetails[index]
+                                                    ["accountCurrency"],
+                                                amount: double.parse(
+                                                    accountDetails[index]
+                                                            ["currentBalance"]
+                                                        .substring(4)),
+                                                subText: "",
+                                                subImgUrl: "",
                                               ),
                                             );
                                           },
@@ -319,7 +360,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                         return Padding(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 47.w -
-                                                  ((6 - 1) *
+                                                  ((accountDetails.length - 1) *
                                                       (6.5 /
                                                               Dimensions
                                                                   .designWidth)
@@ -332,7 +373,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                               scrollDirection: Axis.horizontal,
                                               physics:
                                                   const NeverScrollableScrollPhysics(),
-                                              itemCount: 6,
+                                              itemCount: accountDetails.length,
                                               itemBuilder: (context, index) {
                                                 return ScrollIndicator(
                                                   isCurrent:
@@ -752,17 +793,23 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                           Expanded(
                             child: ListView.builder(
                               controller: scrollController,
-                              itemCount: 50,
+                              itemCount: 60,
+                              // statementList.length,
                               itemBuilder: (context, index) {
                                 return DashboardTransactionListTile(
                                   onTap: () {},
                                   isCredit: true,
+                                  // statementList[index]["creditAmount"] == 0,
                                   title:
                                       "Tax non filer debit Tax non filer debit",
+                                  // statementList[index]["transactionType"],
                                   name: "Alexander Doe",
                                   amount: 50.23,
+                                  // statementList[index]["creditAmount"] == 0 ? statementList[index]["creditAmount"] : statementList[index]["debitAmount"],
                                   currency: "AED",
+                                  // statementList[index]["amountCurrency"],
                                   date: "Tue, Apr 1 2022",
+                                  // statementList[index]["bookingDate"]
                                 );
                               },
                             ),
@@ -787,318 +834,3 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     super.dispose();
   }
 }
-
-// class ExploreView extends StatelessWidget {
-//   const ExploreView({
-//     super.key,
-//     required ScrollController scrollController,
-//     required int scrollIndex,
-//   })  : _scrollController = scrollController,
-//         _scrollIndex = scrollIndex;
-
-//   final ScrollController _scrollController;
-//   final int _scrollIndex;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         const SizeBox(height: 9.5),
-//         Expanded(
-//           child: ListView.builder(
-//             controller: _scrollController,
-//             scrollDirection: Axis.horizontal,
-//             itemCount: 6,
-//             itemBuilder: (context, index) {
-//               if (index == 0) {
-//                 return Padding(
-//                   padding: EdgeInsets.only(
-//                     left: (15 / Dimensions.designWidth).w,
-//                   ),
-//                   child: AccountSummaryTile(
-//                     onTap: () {},
-//                     imgUrl:
-//                         "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-//                     accountType: "Savings",
-//                     currency: "AED",
-//                     amount: 0.00,
-//                     subText: "Powered by FH",
-//                     subImgUrl:
-//                         "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-//                   ),
-//                 );
-//               } else {
-//                 return AccountSummaryTile(
-//                   onTap: () {},
-//                   imgUrl: "",
-//                   accountType: "Savings",
-//                   currency: "USD",
-//                   amount: 0.00,
-//                   subText: "",
-//                   subImgUrl: "",
-//                 );
-//               }
-//             },
-//           ),
-//         ),
-//         const SizeBox(height: 10),
-//         BlocBuilder<SummaryTileBloc, SummaryTileState>(
-//           builder: (context, state) {
-//             return Padding(
-//               padding: EdgeInsets.symmetric(
-//                   horizontal:
-//                       47.w - ((6 - 1) * (6.5 / Dimensions.designWidth).w)),
-//               child: SizedBox(
-//                 width: 90.w,
-//                 height: (9 / Dimensions.designWidth).w,
-//                 child: ListView.builder(
-//                   scrollDirection: Axis.horizontal,
-//                   physics: const NeverScrollableScrollPhysics(),
-//                   itemCount: 6,
-//                   itemBuilder: (context, index) {
-//                     return ScrollIndicator(
-//                       isCurrent: (index == _scrollIndex),
-//                     );
-//                   },
-//                 ),
-//               ),
-//             );
-//           },
-//         ),
-//         const SizeBox(height: 15),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             DashboardActivityTile(
-//               iconPath: ImageConstants.add,
-//               activityText: "Add Money",
-//               onTap: () {},
-//             ),
-//             const SizeBox(width: 40),
-//             DashboardActivityTile(
-//               iconPath: ImageConstants.arrowOutward,
-//               activityText: "Send Money",
-//               onTap: () {},
-//             ),
-//             const SizeBox(width: 40),
-//             DashboardActivityTile(
-//               iconPath: ImageConstants.barChart,
-//               activityText: "Insights",
-//               onTap: () {},
-//             ),
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// class DepositsView extends StatelessWidget {
-//   const DepositsView({
-//     super.key,
-//     required ScrollController scrollController,
-//     required int scrollIndex,
-//   })  : _scrollController = scrollController,
-//         _scrollIndex = scrollIndex;
-
-//   final ScrollController _scrollController;
-//   final int _scrollIndex;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         const SizeBox(height: 9.5),
-//         Expanded(
-//           child: ListView.builder(
-//             controller: _scrollController,
-//             scrollDirection: Axis.horizontal,
-//             itemCount: 6,
-//             itemBuilder: (context, index) {
-//               if (index == 0) {
-//                 return Padding(
-//                   padding: EdgeInsets.only(
-//                     left: (15 / Dimensions.designWidth).w,
-//                   ),
-//                   child: AccountSummaryTile(
-//                     onTap: () {},
-//                     imgUrl:
-//                         "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-//                     accountType: "Savings",
-//                     currency: "AED",
-//                     amount: 0.00,
-//                     subText: "Powered by FH",
-//                     subImgUrl:
-//                         "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-//                   ),
-//                 );
-//               } else {
-//                 return AccountSummaryTile(
-//                   onTap: () {},
-//                   imgUrl: "",
-//                   accountType: "Savings",
-//                   currency: "USD",
-//                   amount: 0.00,
-//                   subText: "",
-//                   subImgUrl: "",
-//                 );
-//               }
-//             },
-//           ),
-//         ),
-//         const SizeBox(height: 10),
-//         BlocBuilder<SummaryTileBloc, SummaryTileState>(
-//           builder: (context, state) {
-//             return Padding(
-//               padding: EdgeInsets.symmetric(
-//                   horizontal:
-//                       47.w - ((6 - 1) * (6.5 / Dimensions.designWidth).w)),
-//               child: SizedBox(
-//                 width: 90.w,
-//                 height: (9 / Dimensions.designWidth).w,
-//                 child: ListView.builder(
-//                   scrollDirection: Axis.horizontal,
-//                   physics: const NeverScrollableScrollPhysics(),
-//                   itemCount: 6,
-//                   itemBuilder: (context, index) {
-//                     return ScrollIndicator(
-//                       isCurrent: (index == _scrollIndex),
-//                     );
-//                   },
-//                 ),
-//               ),
-//             );
-//           },
-//         ),
-//         const SizeBox(height: 15),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             DashboardActivityTile(
-//               iconPath: ImageConstants.add,
-//               activityText: "Add Money",
-//               onTap: () {},
-//             ),
-//             const SizeBox(width: 40),
-//             DashboardActivityTile(
-//               iconPath: ImageConstants.arrowOutward,
-//               activityText: "Send Money",
-//               onTap: () {},
-//             ),
-//             const SizeBox(width: 40),
-//             DashboardActivityTile(
-//               iconPath: ImageConstants.barChart,
-//               activityText: "Insights",
-//               onTap: () {},
-//             ),
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// class HomeView extends StatelessWidget {
-//   const HomeView({
-//     super.key,
-//     required ScrollController scrollController,
-//     required int scrollIndex,
-//   })  : _scrollController = scrollController,
-//         _scrollIndex = scrollIndex;
-
-//   final ScrollController _scrollController;
-//   final int _scrollIndex;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         const SizeBox(height: 9.5),
-//         Expanded(
-//           child: ListView.builder(
-//             controller: _scrollController,
-//             scrollDirection: Axis.horizontal,
-//             itemCount: 6,
-//             itemBuilder: (context, index) {
-//               if (index == 0) {
-//                 return Padding(
-//                   padding: EdgeInsets.only(
-//                     left: (15 / Dimensions.designWidth).w,
-//                   ),
-//                   child: AccountSummaryTile(
-//                     onTap: () {},
-//                     imgUrl:
-//                         "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-//                     accountType: "Savings",
-//                     currency: "AED",
-//                     amount: 0.00,
-//                     subText: "Powered by FH",
-//                     subImgUrl:
-//                         "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-//                   ),
-//                 );
-//               } else {
-//                 return AccountSummaryTile(
-//                   onTap: () {},
-//                   imgUrl: "",
-//                   accountType: "Savings",
-//                   currency: "USD",
-//                   amount: 0.00,
-//                   subText: "",
-//                   subImgUrl: "",
-//                 );
-//               }
-//             },
-//           ),
-//         ),
-//         const SizeBox(height: 10),
-//         BlocBuilder<SummaryTileBloc, SummaryTileState>(
-//           builder: (context, state) {
-//             return Padding(
-//               padding: EdgeInsets.symmetric(
-//                   horizontal:
-//                       47.w - ((6 - 1) * (6.5 / Dimensions.designWidth).w)),
-//               child: SizedBox(
-//                 width: 90.w,
-//                 height: (9 / Dimensions.designWidth).w,
-//                 child: ListView.builder(
-//                   scrollDirection: Axis.horizontal,
-//                   physics: const NeverScrollableScrollPhysics(),
-//                   itemCount: 6,
-//                   itemBuilder: (context, index) {
-//                     return ScrollIndicator(
-//                       isCurrent: (index == _scrollIndex),
-//                     );
-//                   },
-//                 ),
-//               ),
-//             );
-//           },
-//         ),
-//         const SizeBox(height: 15),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             DashboardActivityTile(
-//               iconPath: ImageConstants.add,
-//               activityText: "Add Money",
-//               onTap: () {},
-//             ),
-//             const SizeBox(width: 40),
-//             DashboardActivityTile(
-//               iconPath: ImageConstants.arrowOutward,
-//               activityText: "Send Money",
-//               onTap: () {},
-//             ),
-//             const SizeBox(width: 40),
-//             DashboardActivityTile(
-//               iconPath: ImageConstants.barChart,
-//               activityText: "Insights",
-//               onTap: () {},
-//             ),
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-// }

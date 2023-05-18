@@ -3,8 +3,8 @@ import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
-class CustomCircleAvatar extends StatelessWidget {
-  const CustomCircleAvatar({
+class CustomCircleAvatarAsset extends StatelessWidget {
+  const CustomCircleAvatarAsset({
     Key? key,
     this.width,
     this.height,
@@ -23,10 +23,7 @@ class CustomCircleAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         image: DecorationImage(
-          image: imgUrl.isEmpty
-              ? const NetworkImage(
-                  "https://www.flagsimporter.com/static/frontend/Mgs/orson/en_US/Magefan_Blog/images/default-no-image.png")
-              : NetworkImage(imgUrl),
+          image: AssetImage(imgUrl),
           fit: BoxFit.fill,
         ),
       ),

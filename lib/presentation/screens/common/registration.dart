@@ -208,7 +208,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     arguments: OnboardingArgumentModel(isInitial: true).toMap(),
                   );
                 },
-                text: "Go Back",
+                text: labels[347]["labelText"],
               ),
               const SizeBox(height: 15),
             ],

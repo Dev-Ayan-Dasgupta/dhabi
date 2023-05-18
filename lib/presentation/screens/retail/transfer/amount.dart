@@ -96,7 +96,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                     fontSize: (16 / Dimensions.designWidth).w,
                                   ),
                                 ),
-                                CustomCircleAvatar(
+                                CustomCircleAvatarAsset(
                                   imgUrl:
                                       "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                   width: (23 / Dimensions.designWidth).w,
@@ -132,7 +132,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                     fontSize: (16 / Dimensions.designWidth).w,
                                   ),
                                 ),
-                                CustomCircleAvatar(
+                                CustomCircleAvatarAsset(
                                   imgUrl:
                                       "https://t4.ftcdn.net/jpg/05/22/35/01/240_F_522350125_mPLuK4cNT6RNN6bvpuKZpLGjqbJr5EiL.jpg",
                                   width: (23 / Dimensions.designWidth).w,

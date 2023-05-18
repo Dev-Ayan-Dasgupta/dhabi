@@ -366,7 +366,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                         RegistrationArgumentModel(isInitial: true).toMap(),
                   );
                 },
-                text: "Go Back",
+                text: labels[347]["labelText"],
               ),
               const SizeBox(height: 15),
             ],

@@ -51,3 +51,5 @@ String? storageTradeLicenseNumber;
 String? storageCif;
 bool? storageIsCompany;
 bool? storageisCompanyRegistered;
+
+bool? storageRetailLoggedIn;

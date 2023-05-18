@@ -84,7 +84,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                     prefix: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        CustomCircleAvatar(
+                        CustomCircleAvatarAsset(
                           width: (25 / Dimensions.designWidth).w,
                           height: (25 / Dimensions.designWidth).w,
                           imgUrl:

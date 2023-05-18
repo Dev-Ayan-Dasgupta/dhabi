@@ -340,7 +340,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                text: "Go Back",
+                text: labels[347]["labelText"],
               ),
               const SizeBox(height: 15),
             ],
@@ -622,6 +622,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 log("token -> $token");
 
                 if (result["success"]) {
+                  customerName = result["customerName"];
                   await storage.write(
                       key: "stepsCompleted", value: 2.toString());
                   storageStepsCompleted = int.parse(
@@ -714,6 +715,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 log("token -> $token");
 
                 if (result["success"]) {
+                  customerName = result["customerName"];
                   await storage.write(
                       key: "stepsCompleted", value: 2.toString());
                   storageStepsCompleted = int.parse(
@@ -839,6 +841,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                       token = result["token"];
                       log("token -> $token");
                       if (result["success"]) {
+                        customerName = result["customerName"];
                         await storage.write(
                             key: "stepsCompleted", value: 2.toString());
                         storageStepsCompleted = int.parse(
@@ -850,9 +853,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               Routes.retailDashboard,
                               (route) => false,
                               arguments: RetailDashboardArgumentModel(
-                                imgUrl:
-                                    "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                name: storageEmail ?? "",
+                                imgUrl: "",
+                                name: result["customerName"],
                                 isFirst: true,
                               ).toMap(),
                             );

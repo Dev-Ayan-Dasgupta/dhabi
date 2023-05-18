@@ -240,7 +240,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                text: "Go Back",
+                text: labels[347]["labelText"],
               ),
               const SizeBox(height: 15),
             ],

@@ -267,6 +267,10 @@ class _SplashScreenState extends State<SplashScreen> {
       storageisCompanyRegistered =
           await storage.read(key: "isCompanyRegistered") == "true";
       log("storageisCompanyRegistered -> $storageisCompanyRegistered");
+
+      storageRetailLoggedIn =
+          await storage.read(key: "retailLoggedIn") == "true";
+      log("storageRetailLoggedIn -> $storageRetailLoggedIn");
     } catch (e) {
       log("Init LS Exception -> $e");
     }

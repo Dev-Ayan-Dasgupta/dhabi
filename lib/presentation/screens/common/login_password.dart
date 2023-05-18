@@ -270,21 +270,26 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     log("token -> $token");
 
     if (result["success"]) {
+      customerName = result["customerName"];
       await storage.write(key: "password", value: _passwordController.text);
       storagePassword = await storage.read(key: "password");
       if (context.mounted) {
         if (loginPasswordArgument.userTypeId == 1) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            Routes.retailDashboard,
-            (route) => false,
-            arguments: RetailDashboardArgumentModel(
-              imgUrl:
-                  "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-              name: storageEmail ?? "",
-              isFirst: false,
-            ).toMap(),
-          );
+          await storage.write(key: "retailLoggedIn", value: true.toString());
+          storageRetailLoggedIn =
+              await storage.read(key: "retailLoggedIn") == "true";
+          if (context.mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.retailDashboard,
+              (route) => false,
+              arguments: RetailDashboardArgumentModel(
+                imgUrl: "",
+                name: result["customerName"],
+                isFirst: false,
+              ).toMap(),
+            );
+          }
         } else {
           Navigator.pushNamedAndRemoveUntil(
               context, Routes.businessDashboard, (route) => false);
@@ -398,6 +403,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                       token = result["token"];
                       log("token -> $token");
                       if (result["success"]) {
+                        customerName = result["customerName"];
                         if (context.mounted) {
                           if (loginPasswordArgument.userTypeId == 1) {
                             Navigator.pushNamedAndRemoveUntil(
@@ -405,9 +411,8 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                               Routes.retailDashboard,
                               (route) => false,
                               arguments: RetailDashboardArgumentModel(
-                                imgUrl:
-                                    "https://images.unsplash.com/photo-1619895862022-09114b41f16f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZmlsZSUyMHBpY3R1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-                                name: storageEmail ?? "",
+                                imgUrl: "",
+                                name: result["customerName"],
                                 isFirst: false,
                               ).toMap(),
                             );

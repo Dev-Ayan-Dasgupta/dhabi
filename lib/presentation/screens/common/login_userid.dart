@@ -145,7 +145,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                 },
-                text: "Go Back",
+                text: labels[347]["labelText"],
               ),
               const SizeBox(height: 15),
             ],
@@ -237,6 +237,65 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
               }
             } else {
               // TODO: Display the pop-up as done in select account type for business
+              if (context.mounted) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return CustomDialog(
+                      svgAssetPath: ImageConstants.warning,
+                      title: "Application approval pending",
+                      message:
+                          "You already have a registration pending. Please contact Dhabi support.",
+                      auxWidget: Column(
+                        children: [
+                          GradientButton(
+                            onTap: () async {
+                              // await storage.write(
+                              //     key: "stepsCompleted", value: 0.toString());
+                              // storageStepsCompleted = int.parse(
+                              //     await storage.read(key: "stepsCompleted") ??
+                              //         "0");
+                              if (context.mounted) {
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  Routes.loginUserId,
+                                  // arguments: storageUserTypeId == 1
+                                  //     ? LoginPasswordArgumentModel(
+                                  //         emailId: storageEmail ?? "",
+                                  //         userId: 0,
+                                  //         userTypeId:
+                                  //             isPersonalFocussed ? 1 : 2,
+                                  //         companyId: isPersonalFocussed ? 0 : 1,
+                                  //       ).toMap()
+                                  //     : RegistrationArgumentModel(
+                                  //             isInitial: true)
+                                  //         .toMap(),
+                                );
+                              }
+                            },
+                            text: labels[347]["labelText"],
+                          ),
+                          const SizeBox(height: 15),
+                        ],
+                      ),
+                      actionWidget: Column(
+                        children: [
+                          SolidButton(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            text: labels[166]["labelText"],
+                            color: AppColors.primaryBright17,
+                            fontColor: AppColors.primary,
+                          ),
+                          const SizeBox(height: 20),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }
             }
           } else {
             var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(

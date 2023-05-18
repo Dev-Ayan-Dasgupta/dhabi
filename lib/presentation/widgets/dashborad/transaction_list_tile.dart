@@ -110,7 +110,7 @@ class DashboardTransactionListTile extends StatelessWidget {
                   isCredit
                       ? "${amount.toStringAsFixed(2)} $currency"
                       : "- ${amount.toStringAsFixed(2)} $currency",
-                  style: TextStyles.primary.copyWith(
+                  style: TextStyles.primaryBold.copyWith(
                     color:
                         isCredit ? AppColors.green100 : AppColors.primaryDark,
                     fontSize: (14 / Dimensions.designWidth).w,

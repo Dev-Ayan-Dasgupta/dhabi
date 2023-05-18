@@ -30,7 +30,7 @@ class CountryTile extends StatelessWidget {
           children: [
             Row(
               children: [
-                CustomCircleAvatar(
+                CustomCircleAvatarAsset(
                   imgUrl: flagImgUrl,
                   width: (30 / Dimensions.designWidth).w,
                   height: (30 / Dimensions.designWidth).w,

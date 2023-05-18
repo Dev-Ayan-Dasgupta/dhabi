@@ -96,4 +96,6 @@ class ImageConstants {
   static const String eidFront = "${bannersRoot}eid_front.png";
   static const String eidBack = "${bannersRoot}eid_back.png";
   static const String passport = "${bannersRoot}passport.png";
+  static const String usaFlag = "${bannersRoot}usa_flag.png";
+  static const String uaeFlag = "${bannersRoot}uae_flag.png";
 }
