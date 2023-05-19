@@ -93,6 +93,7 @@ class ImageConstants {
 
   // * BANNERS
   static const String banner3 = "${bannersRoot}banner3.png";
+  static const String banner2 = "${bannersRoot}banner2.png";
   static const String cardBase = "${bannersRoot}card_base.png";
   static const String eidFront = "${bannersRoot}eid_front.png";
   static const String eidBack = "${bannersRoot}eid_back.png";

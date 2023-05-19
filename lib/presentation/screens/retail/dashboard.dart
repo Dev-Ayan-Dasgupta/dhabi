@@ -621,7 +621,12 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                       ),
                     ),
                     const SizeBox(height: 15),
-                    const DashboardBannerImage(imgUrl: ImageConstants.banner3),
+                    InkWell(
+                        onTap: () {
+                          tabController.animateTo(1);
+                        },
+                        child: const DashboardBannerImage(
+                            imgUrl: ImageConstants.banner3)),
                     const SizeBox(height: 15),
                     const SizeBox(height: 265)
                   ],

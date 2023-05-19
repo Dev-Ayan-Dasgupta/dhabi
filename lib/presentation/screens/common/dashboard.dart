@@ -166,33 +166,9 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
               const SizeBox(height: 20),
               SizedBox(
                 width: 100.w,
-                height: (120 / Dimensions.designWidth).w,
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 2,
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                left: (20 / Dimensions.designWidth).w,
-                              ),
-                              child: const DashboardBannerImage(
-                                imgUrl: ImageConstants.banner3,
-                              ),
-                            );
-                          } else {
-                            return const DashboardBannerImage(
-                              imgUrl: ImageConstants.banner3,
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+                height: (164 / Dimensions.designHeight).h,
+                child: const DashboardBannerImage(
+                  imgUrl: ImageConstants.banner2,
                 ),
               ),
               const SizeBox(height: 20),
