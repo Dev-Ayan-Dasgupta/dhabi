@@ -229,12 +229,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           imgUrl: retailDashboardArgumentModel.imgUrl,
           name: retailDashboardArgumentModel.name,
         ),
-        title: InkWell(
-          onTap: () {
-            promptBiometricSettings();
-          },
-          child: SvgPicture.asset(ImageConstants.dhabiText),
-        ),
+        title: SvgPicture.asset(ImageConstants.dhabiText),
         actions: const [AppBarAction()],
         backgroundColor: Colors.transparent,
         centerTitle: true,
@@ -261,6 +256,11 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                             child: BlocBuilder<TabbarBloc, TabbarState>(
                               builder: (context, state) {
                                 return TabBar(
+                                  splashFactory: NoSplash.splashFactory,
+                                  overlayColor:
+                                      MaterialStateProperty.all<Color>(
+                                    Colors.transparent,
+                                  ),
                                   controller: tabController,
                                   onTap: (index) {
                                     _scrollOffset = 0;

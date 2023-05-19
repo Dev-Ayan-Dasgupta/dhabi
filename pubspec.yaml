@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   device_info_plus: ^8.2.0
   dropdown_button2: ^2.0.0
+  email_validator: ^2.1.17
   equatable: ^2.0.5
   firebase_core: ^2.12.0
   flip_card: ^0.7.0

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/main.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +17,6 @@ import 'package:dialup_mobile_app/data/repositories/onboarding/map_send_email_ot
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/helpers/input_validator.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({
@@ -125,12 +125,32 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ],
                     ),
                     const SizeBox(height: 9),
-                    CustomTextField(
-                      controller: _emailController,
-                      suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                        builder: buildCheckCircle,
-                      ),
-                      onChanged: emailValidation,
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: (context, state) {
+                        return CustomTextField(
+                          borderColor: _isEmailValid ||
+                                  _emailController.text.isEmpty ||
+                                  !_emailController.text.contains('@') ||
+                                  (_emailController.text.contains('@') &&
+                                      (RegExp("[A-Za-z0-9.-]").hasMatch(
+                                          _emailController.text
+                                              .split('@')
+                                              .last)) &&
+                                      !(_emailController.text
+                                          .split('@')
+                                          .last
+                                          .contains(RegExp(
+                                              r'[!@#$%^&*(),_?":{}|<>\/\\]'))))
+                              ? const Color(0xFFEEEEEE)
+                              : AppColors.red100,
+                          controller: _emailController,
+                          suffixIcon:
+                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: buildCheckCircle,
+                          ),
+                          onChanged: emailValidation,
+                        );
+                      },
                     ),
                     const SizeBox(height: 9),
                     BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -248,27 +268,43 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void emailValidation(String p0) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    _isEmailValid = InputValidator.isEmailValid(p0);
+    _isEmailValid = EmailValidator.validate(p0);
+    // InputValidator.isEmailValid(p0);
     showButtonBloc.add(ShowButtonEvent(show: _isEmailValid || p0.length <= 5));
+    log(_emailController.text.split('@').last);
+    log("contains non spcl -> ${(RegExp("[A-Za-z0-9.-]").hasMatch(_emailController.text.split('@').last))}");
+    log("does not contain spcl -> ${!(_emailController.text.split('@').last.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')))}");
+    log("@ is last -> ${_emailController.text.split('@').last.isEmpty}");
+    // log("${_emailController.text.indexOf('@')}");
+    // log("${_emailController.text.length}");
   }
 
   Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
-    if (_isEmailValid || _emailController.text.length <= 5) {
+    if (_isEmailValid ||
+        _emailController.text.isEmpty ||
+        !_emailController.text.contains('@') ||
+        (_emailController.text.contains('@') &&
+            (RegExp("[A-Za-z0-9.-]")
+                .hasMatch(_emailController.text.split('@').last)) &&
+            !(_emailController.text
+                .split('@')
+                .last
+                .contains(RegExp(r'[!@#$%^&*(),_?":{}|<>\/\\]'))))) {
       return const SizeBox();
     } else {
       return Row(
         children: [
           SvgPicture.asset(
             ImageConstants.errorSolid,
-            width: (14 / Dimensions.designWidth).w,
-            height: (14 / Dimensions.designWidth).w,
+            width: (10 / Dimensions.designWidth).w,
+            height: (10 / Dimensions.designWidth).w,
           ),
           const SizeBox(width: 5),
           Text(
             "Invalid email",
             style: TextStyles.primaryMedium.copyWith(
               color: const Color(0xFFC94540),
-              fontSize: (16 / Dimensions.designWidth).w,
+              fontSize: (12 / Dimensions.designWidth).w,
             ),
           ),
         ],

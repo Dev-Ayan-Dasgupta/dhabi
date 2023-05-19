@@ -10,7 +10,7 @@ import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/helpers/index.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -82,7 +82,19 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                     builder: (context, state) {
                       return CustomTextField(
                         controller: _emailController,
-                        borderColor: isEmailValid
+                        borderColor: isEmailValid ||
+                                _emailController.text.isEmpty ||
+                                !_emailController.text.contains('@') ||
+                                (_emailController.text.contains('@') &&
+                                    (RegExp("[A-Za-z0-9.-]").hasMatch(
+                                        _emailController.text
+                                            .split('@')
+                                            .last)) &&
+                                    !(_emailController.text
+                                        .split('@')
+                                        .last
+                                        .contains(RegExp(
+                                            r'[!@#$%^&*(),_?":{}|<>\/\\]'))))
                             ? const Color(0xFFEEEEEE)
                             : AppColors.red100,
                         suffix: Padding(
@@ -170,7 +182,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
 
   void emailValidation(String p0) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    if (InputValidator.isEmailValid(p0)) {
+    if (EmailValidator.validate(p0)) {
       isEmailValid = true;
       showButtonBloc.add(ShowButtonEvent(show: isEmailValid));
     } else {
@@ -180,7 +192,16 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
   }
 
   Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
-    if (isEmailValid) {
+    if (isEmailValid ||
+        _emailController.text.isEmpty ||
+        !_emailController.text.contains('@') ||
+        (_emailController.text.contains('@') &&
+            (RegExp("[A-Za-z0-9.-]")
+                .hasMatch(_emailController.text.split('@').last)) &&
+            !(_emailController.text
+                .split('@')
+                .last
+                .contains(RegExp(r'[!@#$%^&*(),_?":{}|<>\/\\]'))))) {
       return const SizeBox();
     } else {
       return Row(
