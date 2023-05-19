@@ -360,17 +360,49 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
       criteria3Color: hasUpperLower ? AppColors.primaryDark : AppColors.red100,
       criteria4Color: hasSpecial ? AppColors.primaryDark : AppColors.red100,
       criteria1Widget: hasMin8
-          ? SvgPicture.asset(ImageConstants.checkSmall)
-          : const SizeBox(),
+          ? SvgPicture.asset(
+              ImageConstants.checkSmall,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+            )
+          : SvgPicture.asset(
+              ImageConstants.redCross,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+            ),
       criteria2Widget: hasNumeric
-          ? SvgPicture.asset(ImageConstants.checkSmall)
-          : const SizeBox(),
+          ? SvgPicture.asset(
+              ImageConstants.checkSmall,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+            )
+          : SvgPicture.asset(
+              ImageConstants.redCross,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+            ),
       criteria3Widget: hasUpperLower
-          ? SvgPicture.asset(ImageConstants.checkSmall)
-          : const SizeBox(),
+          ? SvgPicture.asset(
+              ImageConstants.checkSmall,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+            )
+          : SvgPicture.asset(
+              ImageConstants.redCross,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+            ),
       criteria4Widget: hasSpecial
-          ? SvgPicture.asset(ImageConstants.checkSmall)
-          : const SizeBox(),
+          ? SvgPicture.asset(
+              ImageConstants.checkSmall,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+            )
+          : SvgPicture.asset(
+              ImageConstants.redCross,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+            ),
     );
   }
 

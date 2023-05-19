@@ -62,6 +62,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       passportNumber = tempPassportNumber?.split("\n").last.substring(0, 8);
       // passportNumber = ppMrz!.substring(0, 9);
       // print("passportNumber -> $passportNumber");
+      // passportNumber = await results
+      //     ?.textFieldValueByType(EVisualFieldType.FT_PASSPORT_NUMBER);
       await storage.write(key: "passportNumber", value: passportNumber);
       storagePassportNumber = await storage.read(key: "passportNumber");
 
@@ -141,7 +143,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               iconPath: ImageConstants.errorOutlined,
               title: messages[81]["messageText"],
               message: messages[29]["messageText"],
-              buttonText: labels[1]["labelText"],
+              buttonText: "Go Home",
+              // labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
@@ -177,7 +180,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               iconPath: ImageConstants.errorOutlined,
               title: messages[80]["messageText"],
               message: messages[33]["messageText"],
-              buttonText: labels[1]["labelText"],
+              buttonText: "Go Home",
+              // labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
@@ -266,7 +270,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             title: messages[73]["messageText"],
             message: "Your time has run out. Please try again.",
             // messages[35]["messageText"],
-            buttonText: labels[1]["labelText"],
+            buttonText: "Go Home",
+            // labels[1]["labelText"],
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
                 context,

@@ -1,11 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 
 class CustomTextField extends StatefulWidget {
   const CustomTextField({
     Key? key,
+    this.isDense,
     this.width,
     this.topPadding,
     this.bottomPadding,
@@ -19,7 +21,9 @@ class CustomTextField extends StatefulWidget {
     this.fontColor,
     this.hintColor,
     this.helperColor,
+    this.prefixIcon,
     this.prefix,
+    this.suffixIcon,
     this.suffix,
     this.obscureText,
     required this.onChanged,
@@ -30,6 +34,7 @@ class CustomTextField extends StatefulWidget {
     this.maxLength,
   }) : super(key: key);
 
+  final bool? isDense;
   final double? width;
   final double? topPadding;
   final double? bottomPadding;
@@ -43,7 +48,9 @@ class CustomTextField extends StatefulWidget {
   final Color? fontColor;
   final Color? hintColor;
   final Color? helperColor;
+  final Widget? prefixIcon;
   final Widget? prefix;
+  final Widget? suffixIcon;
   final Widget? suffix;
   final bool? obscureText;
   final Function(String) onChanged;
@@ -86,8 +93,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
         maxLines: widget.maxLines,
         maxLength: widget.maxLength,
         decoration: InputDecoration(
+          isDense: widget.isDense ?? false,
           border: InputBorder.none,
+          prefixIcon: widget.prefixIcon,
+          prefixIconConstraints:
+              const BoxConstraints(minWidth: 0, minHeight: 0),
           prefix: widget.prefix,
+          suffixIcon: widget.suffixIcon,
+          suffixIconConstraints:
+              const BoxConstraints(minWidth: 0, minHeight: 0),
           suffix: widget.suffix,
           hintText: widget.hintText ?? "",
           hintStyle: TextStyles.primaryMedium.copyWith(

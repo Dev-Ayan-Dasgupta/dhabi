@@ -89,6 +89,7 @@ class ImageConstants {
   static const String biometric = "${iconsRoot}biometric.svg";
   static const String download = "${iconsRoot}download.svg";
   static const String pyramid = "${iconsRoot}pyramid.svg";
+  static const String redCross = "${iconsRoot}red_cross.svg";
 
   // * BANNERS
   static const String banner3 = "${bannersRoot}banner3.png";

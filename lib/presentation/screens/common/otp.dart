@@ -390,6 +390,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                               getCustomerDetailsResponse[
                                                   "cifDetails"];
                                           if (context.mounted) {
+                                            Navigator.pop(context);
                                             Navigator.pushReplacementNamed(
                                               context,
                                               Routes.selectAccount,
@@ -547,7 +548,8 @@ class _OTPScreenState extends State<OTPScreen> {
                                               getCustomerDetailsResponse[
                                                   "cifDetails"];
                                           if (context.mounted) {
-                                            Navigator.pushReplacementNamed(
+                                            Navigator.pop(context);
+                                            Navigator.pushNamed(
                                               context,
                                               Routes.selectAccount,
                                               arguments:
@@ -685,7 +687,8 @@ class _OTPScreenState extends State<OTPScreen> {
                                           if (cif != null || cif != "null") {
                                             if (isCompany) {
                                               if (isCompanyRegistered) {
-                                                Navigator.pushReplacementNamed(
+                                                Navigator.pop(context);
+                                                Navigator.pushNamed(
                                                   context,
                                                   Routes.loginPassword,
                                                   arguments:
@@ -700,7 +703,8 @@ class _OTPScreenState extends State<OTPScreen> {
                                                 );
                                               }
                                             } else {
-                                              Navigator.pushReplacementNamed(
+                                              Navigator.pop(context);
+                                              Navigator.pushNamed(
                                                 context,
                                                 Routes.loginPassword,
                                                 arguments:

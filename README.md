@@ -2,9 +2,9 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (11)
+## Release notes - 1.0.0 (12)
 
-- Tried padding fix for pop-up box
-- Invalid email error message appears on login userID screen - FHDHABI-146
-- Getting expiry date message on scanning expired passport - FHDHABI-129
-- App locked in Portrait mode
+- Enabled UAE number prompt to be always on in Verify Mobile screen - FHDHABI-150
+- Disabled Add More Tax Countries button if user clicks on No button for CRS - FHDHABI-152
+- Added X icon for password criteria mismatch - FHDHABI-154
+- Fetching statement data dynamically from API

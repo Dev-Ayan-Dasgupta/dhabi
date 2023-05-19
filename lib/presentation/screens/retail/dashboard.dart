@@ -60,9 +60,9 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   void initState() {
     super.initState();
     // WidgetsBinding.instance.addPostFrameCallback((_) async {});
+    getApiData();
     argumentInitialization();
     tabbarInitialization();
-    getApiData();
   }
 
   void argumentInitialization() {
@@ -186,6 +186,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   Future<void> getCustomerAcountDetails() async {
     try {
+      log("token -> $token");
       customerDetails =
           await MapCustomerAccountDetails.mapCustomerAccountDetails(
               token ?? "");
@@ -210,8 +211,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
         token ?? "",
       );
       log("Customer Account Statement API response -> $customerStatement");
-      statementList = customerStatement["flexiAccountStatementRes"]["body"]
-          ["statementList"];
+      if (customerStatement["flexiAccountStatementRes"]["body"] != null) {
+        statementList = customerStatement["flexiAccountStatementRes"]["body"]
+            ["statementList"];
+      }
     } catch (_) {
       rethrow;
     }
@@ -337,8 +340,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                 index]
                                                             ["productCode"] ==
                                                         "1001"
-                                                    ? "Savings"
-                                                    : "Current",
+                                                    ? "Current"
+                                                    : "Savings",
                                                 currency: accountDetails[index]
                                                     ["accountCurrency"],
                                                 amount: double.parse(
@@ -790,28 +793,58 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                             ],
                           ),
                           const SizeBox(height: 15),
-                          Expanded(
-                            child: ListView.builder(
-                              controller: scrollController,
-                              itemCount: 60,
-                              // statementList.length,
-                              itemBuilder: (context, index) {
-                                return DashboardTransactionListTile(
-                                  onTap: () {},
-                                  isCredit: true,
-                                  // statementList[index]["creditAmount"] == 0,
-                                  title:
-                                      "Tax non filer debit Tax non filer debit",
-                                  // statementList[index]["transactionType"],
-                                  name: "Alexander Doe",
-                                  amount: 50.23,
-                                  // statementList[index]["creditAmount"] == 0 ? statementList[index]["creditAmount"] : statementList[index]["debitAmount"],
-                                  currency: "AED",
-                                  // statementList[index]["amountCurrency"],
-                                  date: "Tue, Apr 1 2022",
-                                  // statementList[index]["bookingDate"]
-                                );
-                              },
+                          Ternary(
+                            condition: statementList.isEmpty,
+                            truthy: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizeBox(height: 70),
+                                Text(
+                                  "No transactions",
+                                  style: TextStyles.primaryBold.copyWith(
+                                    color: AppColors.dark30,
+                                    fontSize: (24 / Dimensions.designWidth).w,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            falsy: Expanded(
+                              child: ListView.builder(
+                                controller: scrollController,
+                                itemCount: statementList.length,
+                                itemBuilder: (context, index) {
+                                  return DashboardTransactionListTile(
+                                    onTap: () {},
+                                    isCredit:
+                                        // true,
+                                        statementList[index]["creditAmount"] ==
+                                            0,
+                                    title:
+                                        // "Tax non filer debit Tax non filer debit",
+                                        statementList[index]["transactionType"],
+                                    name: "Alexander Doe",
+                                    amount:
+                                        // 50.23,
+                                        (statementList[index]["creditAmount"] !=
+                                                    0
+                                                ? statementList[index]
+                                                    ["creditAmount"]
+                                                : statementList[index]
+                                                    ["debitAmount"])
+                                            .toDouble(),
+                                    currency:
+                                        // "AED",
+                                        statementList[index]["amountCurrency"],
+                                    date:
+                                        // "Tue, Apr 1 2022",
+                                        DateFormat('EEE, MMM dd yyyy').format(
+                                      DateTime.parse(
+                                        statementList[index]["bookingDate"],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ],

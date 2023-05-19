@@ -50,19 +50,22 @@ class _ErrorSuccessScreenState extends State<ErrorSuccessScreen> {
                   const SizeBox(height: 30),
                   Text(
                     errorArgumentModel.title,
-                    style: TextStyles.primaryBold.copyWith(
-                      color: AppColors.black25,
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.dark80,
                       fontSize: (24 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 20),
-                  Text(
-                    errorArgumentModel.message,
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.black25,
-                      fontSize: (16 / Dimensions.designWidth).w,
+                  SizedBox(
+                    width: 60.w,
+                    child: Text(
+                      errorArgumentModel.message,
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.dark50,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                 ],
               ),

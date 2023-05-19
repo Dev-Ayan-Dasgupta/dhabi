@@ -265,7 +265,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               iconPath: ImageConstants.errorOutlined,
               title: messages[81]["messageText"],
               message: messages[29]["messageText"],
-              buttonText: labels[1]["labelText"],
+              buttonText: "Go Home",
+              // labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
@@ -301,7 +302,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               iconPath: ImageConstants.errorOutlined,
               title: messages[80]["messageText"],
               message: messages[33]["messageText"],
-              buttonText: labels[1]["labelText"],
+              buttonText: "Go Home",
+              // labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
@@ -390,7 +392,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             title: messages[73]["messageText"],
             message: "Your time has run out. Please try again.",
             // messages[35]["messageText"],
-            buttonText: labels[1]["labelText"],
+            buttonText: "Go Home",
+            // labels[1]["labelText"],
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -507,7 +510,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               iconPath: ImageConstants.errorOutlined,
               title: messages[81]["messageText"],
               message: messages[29]["messageText"],
-              buttonText: labels[1]["labelText"],
+              buttonText: "Go Home",
+              // labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
@@ -543,7 +547,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               iconPath: ImageConstants.errorOutlined,
               title: messages[80]["messageText"],
               message: messages[33]["messageText"],
-              buttonText: labels[1]["labelText"],
+              buttonText: "Go Home",
+              // labels[1]["labelText"],
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
@@ -632,7 +637,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             title: messages[73]["messageText"],
             message: "Your time has run out. Please try again.",
             // messages[35]["messageText"],
-            buttonText: labels[1]["labelText"],
+            buttonText: "Go Home",
+            // labels[1]["labelText"],
             onTap: () {
               Navigator.pushNamedAndRemoveUntil(
                 context,

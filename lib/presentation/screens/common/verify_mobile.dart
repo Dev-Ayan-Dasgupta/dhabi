@@ -81,14 +81,14 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                   CustomTextField(
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
-                    prefix: Row(
+                    // isDense: true,
+                    prefixIcon: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         CustomCircleAvatarAsset(
                           width: (25 / Dimensions.designWidth).w,
                           height: (25 / Dimensions.designWidth).w,
-                          imgUrl:
-                              "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
+                          imgUrl: ImageConstants.uaeFlag,
                         ),
                         const SizeBox(width: 7),
                         Text(
@@ -101,7 +101,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                         const SizeBox(width: 7),
                       ],
                     ),
-                    suffix: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    suffixIcon: BlocBuilder<ShowButtonBloc, ShowButtonState>(
                       builder: buildCheckCircle,
                     ),
                     onChanged: checkPhoneNumber,

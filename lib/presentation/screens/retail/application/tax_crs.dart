@@ -552,12 +552,16 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
       return Column(
         children: [
           const SizeBox(height: 20),
-          SolidButton(
-            onTap: () {},
-            text: labels[284]["labelText"],
-            color: Colors.white,
-            boxShadow: [BoxShadows.primary],
-            fontColor: AppColors.primary,
+          Ternary(
+            condition: isCRSno,
+            truthy: const SizeBox(),
+            falsy: SolidButton(
+              onTap: () {},
+              text: labels[284]["labelText"],
+              color: Colors.white,
+              boxShadow: [BoxShadows.primary],
+              fontColor: AppColors.primary,
+            ),
           ),
           const SizeBox(height: 15),
           GradientButton(

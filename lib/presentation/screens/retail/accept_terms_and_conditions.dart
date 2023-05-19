@@ -2,8 +2,10 @@
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -239,23 +241,64 @@ class _AcceptTermsAndConditionsScreenState
 
                               // TODO: Use Navigator.pushNamedAndRemoveUntil
                               if (responseAccount["success"]) {
-                                await storage.write(
-                                    key: "retailLoggedIn",
-                                    value: true.toString());
-                                storageRetailLoggedIn =
-                                    await storage.read(key: "retailLoggedIn") ==
-                                        "true";
-                                if (context.mounted) {
-                                  Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    Routes.retailDashboard,
-                                    (route) => false,
-                                    arguments: RetailDashboardArgumentModel(
-                                      imgUrl: "",
-                                      name: customerName,
-                                      isFirst: true,
-                                    ).toMap(),
-                                  );
+                                var result = await MapLogin.mapLogin({
+                                  "emailId": storageEmail,
+                                  "userTypeId": storageUserTypeId,
+                                  "userId": storageUserId,
+                                  "companyId": storageCompanyId,
+                                  "password": storagePassword,
+                                  "deviceId": deviceId,
+                                  "registerDevice": false,
+                                  "deviceName": deviceName,
+                                  "deviceType": deviceType,
+                                  "appVersion": appVersion
+                                });
+                                log("Login API Response -> $result");
+                                token = result["token"];
+                                log("token -> $token");
+
+                                if (result["success"]) {
+                                  customerName = result["customerName"];
+
+                                  await storage.write(
+                                      key: "retailLoggedIn",
+                                      value: true.toString());
+                                  storageRetailLoggedIn = await storage.read(
+                                          key: "retailLoggedIn") ==
+                                      "true";
+                                  if (context.mounted) {
+                                    Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      Routes.retailDashboard,
+                                      (route) => false,
+                                      arguments: RetailDashboardArgumentModel(
+                                        imgUrl: "",
+                                        name: storageFullName ?? "",
+                                        isFirst: true,
+                                      ).toMap(),
+                                    );
+                                  }
+
+                                  await storage.write(
+                                      key: "cif", value: cif.toString());
+                                  storageCif = await storage.read(key: "cif");
+                                  log("storageCif -> $storageCif");
+
+                                  await storage.write(
+                                      key: "isCompany",
+                                      value: isCompany.toString());
+                                  storageIsCompany =
+                                      await storage.read(key: "isCompany") ==
+                                          "true";
+                                  log("storageIsCompany -> $storageIsCompany");
+
+                                  await storage.write(
+                                      key: "isCompanyRegistered",
+                                      value: isCompanyRegistered.toString());
+                                  storageisCompanyRegistered = await storage
+                                          .read(key: "isCompanyRegistered") ==
+                                      "true";
+                                  log("storageisCompanyRegistered -> $storageisCompanyRegistered");
                                 }
                               }
 
