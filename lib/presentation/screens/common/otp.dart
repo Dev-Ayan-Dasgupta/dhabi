@@ -367,9 +367,9 @@ class _OTPScreenState extends State<OTPScreen> {
                           builder: (context) {
                             return CustomDialog(
                               svgAssetPath: ImageConstants.checkCircleOutlined,
-                              title: "Verified",
+                              title: "Thank You!",
                               message:
-                                  "Your phone number has been verified.\nYou will receive email on the next steps.",
+                                  "Your request is submitted with reference number $storagReferenceNumber. We will contact you on next steps.",
                               actionWidget: Column(
                                 children: [
                                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -604,9 +604,9 @@ class _OTPScreenState extends State<OTPScreen> {
                           builder: (context) {
                             return CustomDialog(
                               svgAssetPath: ImageConstants.checkCircleOutlined,
-                              title: "Verified",
+                              title: "Thank You!",
                               message:
-                                  "Your phone number has been verified.\nYou will receive email on the next steps.",
+                                  "Your request is submitted with reference number $storagReferenceNumber. We will contact you on next steps.",
                               actionWidget: Column(
                                 children: [
                                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -807,9 +807,9 @@ class _OTPScreenState extends State<OTPScreen> {
                       builder: (context) {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.checkCircleOutlined,
-                          title: "Verified",
+                          title: "Thank You!",
                           message:
-                              "Your phone number has been verified.\nYou will receive email on the next steps.",
+                              "Your request is submitted with reference number $storagReferenceNumber. We will contact you on next steps.",
                           actionWidget: Column(
                             children: [
                               BlocBuilder<ShowButtonBloc, ShowButtonState>(

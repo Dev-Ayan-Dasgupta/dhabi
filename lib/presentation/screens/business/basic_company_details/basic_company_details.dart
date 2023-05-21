@@ -273,24 +273,32 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                               token ?? "",
                             );
                             log("regResult -> $regResult");
-                            if (context.mounted) {
-                              Navigator.pushNamed(
-                                context,
-                                Routes.businessOnboardingStatus,
-                                arguments: OnboardingStatusArgumentModel(
-                                  stepsCompleted: 2,
-                                  isFatca: false,
-                                  isPassport: false,
-                                  isRetail: false,
-                                ).toMap(),
-                              );
-                            }
 
-                            await storage.write(
-                                key: "stepsCompleted", value: 11.toString());
-                            storageStepsCompleted = int.parse(
-                                await storage.read(key: "stepsCompleted") ??
-                                    "0");
+                            if (regResult["success"]) {
+                              await storage.write(
+                                  key: "referenceNumber",
+                                  value: regResult["reference"]);
+                              storagReferenceNumber =
+                                  await storage.read(key: "referenceNumber");
+                              if (context.mounted) {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.businessOnboardingStatus,
+                                  arguments: OnboardingStatusArgumentModel(
+                                    stepsCompleted: 2,
+                                    isFatca: false,
+                                    isPassport: false,
+                                    isRetail: false,
+                                  ).toMap(),
+                                );
+                              }
+
+                              await storage.write(
+                                  key: "stepsCompleted", value: 11.toString());
+                              storageStepsCompleted = int.parse(
+                                  await storage.read(key: "stepsCompleted") ??
+                                      "0");
+                            }
                           }
 
                           isLoading = false;
