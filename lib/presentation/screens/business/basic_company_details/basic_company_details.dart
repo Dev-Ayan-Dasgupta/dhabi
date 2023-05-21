@@ -223,11 +223,13 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                                     svgAssetPath: ImageConstants.warning,
                                     title: "Trade license exists",
                                     message:
-                                        "The given trade license number already exist in your database",
+                                        "The given trade license number already exists in your database",
                                     auxWidget: Column(
                                       children: [
                                         SolidButton(
-                                          onTap: () {},
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
                                           text: labels[293]["labelText"],
                                           color: AppColors.primaryBright17,
                                           fontColor: AppColors.primary,

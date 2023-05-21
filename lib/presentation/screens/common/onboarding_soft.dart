@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -422,6 +423,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     token = result["token"];
     log("token -> $token");
     customerName = result["customerName"];
+    await storage.write(key: "customerName", value: customerName);
+    storageCustomerName = await storage.read(key: "customerName");
     isLoading = false;
     showButtonBloc.add(ShowButtonEvent(show: isLoading));
   }

@@ -74,9 +74,10 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                   ),
                   const SizeBox(height: 15),
                   Text(
-                    "Mr. Mohamed Abood",
+                    // "Mr. Mohamed Abood",
+                    storageCustomerName ?? "",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: Colors.black,
+                      color: AppColors.dark80,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -203,6 +204,8 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
 
     if (result["success"]) {
       customerName = result["customerName"];
+      await storage.write(key: "customerName", value: customerName);
+      storageCustomerName = await storage.read(key: "customerName");
       if (context.mounted) {
         if (loginPasswordArgument.userTypeId == 1) {
           Navigator.pushNamedAndRemoveUntil(
@@ -329,6 +332,10 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                       log("token -> $token");
                       if (result["success"]) {
                         customerName = result["customerName"];
+                        await storage.write(
+                            key: "customerName", value: customerName);
+                        storageCustomerName =
+                            await storage.read(key: "customerName");
                         if (context.mounted) {
                           if (loginPasswordArgument.userTypeId == 1) {
                             await storage.write(

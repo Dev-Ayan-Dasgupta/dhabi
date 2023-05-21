@@ -391,7 +391,33 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
 
   void loginMethod() {
     if (storageCif == "null" || storageCif == null) {
-      Navigator.pushNamed(context, Routes.loginUserId);
+      if (storageRetailLoggedIn == true) {
+        if (persistBiometric == true) {
+          Navigator.pushNamed(
+            context,
+            Routes.loginBiometric,
+            arguments: LoginPasswordArgumentModel(
+              emailId: storageEmail ?? "",
+              userId: storageUserId ?? 0,
+              userTypeId: storageUserTypeId ?? 1,
+              companyId: storageCompanyId ?? 0,
+            ).toMap(),
+          );
+        } else {
+          Navigator.pushNamed(
+            context,
+            Routes.loginPassword,
+            arguments: LoginPasswordArgumentModel(
+              emailId: storageEmail ?? "",
+              userId: storageUserId ?? 0,
+              userTypeId: storageUserTypeId ?? 1,
+              companyId: storageCompanyId ?? 0,
+            ).toMap(),
+          );
+        }
+      } else {
+        Navigator.pushNamed(context, Routes.loginUserId);
+      }
     } else {
       if (storageIsCompany == true) {
         if (storageisCompanyRegistered == false) {

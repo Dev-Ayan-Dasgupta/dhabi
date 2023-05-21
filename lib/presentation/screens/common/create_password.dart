@@ -370,7 +370,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         controller: _passwordController,
         minLines: 1,
         maxLines: 1,
-        suffix: Padding(
+        suffixIcon: Padding(
           padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
           child: InkWell(
             onTap: () {
@@ -397,7 +397,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         controller: _passwordController,
         minLines: 1,
         maxLines: 1,
-        suffix: Padding(
+        suffixIcon: Padding(
           padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
           child: InkWell(
             onTap: () {
@@ -433,7 +433,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         controller: _confirmPasswordController,
         minLines: 1,
         maxLines: 1,
-        suffix: Padding(
+        suffixIcon: Padding(
           padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
           child: InkWell(
             onTap: () {
@@ -461,7 +461,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         controller: _confirmPasswordController,
         minLines: 1,
         maxLines: 1,
-        suffix: Padding(
+        suffixIcon: Padding(
           padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
           child: InkWell(
             onTap: () {

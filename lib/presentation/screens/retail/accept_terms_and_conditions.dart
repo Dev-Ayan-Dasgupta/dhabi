@@ -259,7 +259,10 @@ class _AcceptTermsAndConditionsScreenState
 
                                 if (result["success"]) {
                                   customerName = result["customerName"];
-
+                                  await storage.write(
+                                      key: "customerName", value: customerName);
+                                  storageCustomerName =
+                                      await storage.read(key: "customerName");
                                   await storage.write(
                                       key: "retailLoggedIn",
                                       value: true.toString());

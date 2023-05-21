@@ -275,8 +275,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     log("contains non spcl -> ${(RegExp("[A-Za-z0-9.-]").hasMatch(_emailController.text.split('@').last))}");
     log("does not contain spcl -> ${!(_emailController.text.split('@').last.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]')))}");
     log("@ is last -> ${_emailController.text.split('@').last.isEmpty}");
-    // log("${_emailController.text.indexOf('@')}");
-    // log("${_emailController.text.length}");
   }
 
   Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
@@ -360,7 +358,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void loginMethod() {
     if (storageCif == "null" || storageCif == null) {
-      Navigator.pushNamed(context, Routes.loginUserId);
+      if (storageRetailLoggedIn == true) {
+        if (persistBiometric == true) {
+          Navigator.pushNamed(
+            context,
+            Routes.loginBiometric,
+            arguments: LoginPasswordArgumentModel(
+              emailId: storageEmail ?? "",
+              userId: storageUserId ?? 0,
+              userTypeId: storageUserTypeId ?? 1,
+              companyId: storageCompanyId ?? 0,
+            ).toMap(),
+          );
+        } else {
+          Navigator.pushNamed(
+            context,
+            Routes.loginPassword,
+            arguments: LoginPasswordArgumentModel(
+              emailId: storageEmail ?? "",
+              userId: storageUserId ?? 0,
+              userTypeId: storageUserTypeId ?? 1,
+              companyId: storageCompanyId ?? 0,
+            ).toMap(),
+          );
+        }
+      } else {
+        Navigator.pushNamed(context, Routes.loginUserId);
+      }
     } else {
       if (storageIsCompany == true) {
         if (storageisCompanyRegistered == false) {
@@ -416,11 +440,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         }
       }
     }
-  }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    super.dispose();
+    @override
+    void dispose() {
+      _emailController.dispose();
+      super.dispose();
+    }
   }
 }

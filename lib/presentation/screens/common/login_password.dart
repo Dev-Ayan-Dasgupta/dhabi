@@ -180,7 +180,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         controller: _passwordController,
         minLines: 1,
         maxLines: 1,
-        suffix: Padding(
+        suffixIcon: Padding(
           padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
           child: InkWell(
             onTap: hidePassword,
@@ -199,7 +199,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         controller: _passwordController,
         minLines: 1,
         maxLines: 1,
-        suffix: Padding(
+        suffixIcon: Padding(
           padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
           child: InkWell(
             onTap: showsPassword,
@@ -271,6 +271,8 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
 
     if (result["success"]) {
       customerName = result["customerName"];
+      await storage.write(key: "customerName", value: customerName);
+      storageCustomerName = await storage.read(key: "customerName");
       await storage.write(key: "password", value: _passwordController.text);
       storagePassword = await storage.read(key: "password");
       if (context.mounted) {
@@ -404,6 +406,10 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                       log("token -> $token");
                       if (result["success"]) {
                         customerName = result["customerName"];
+                        await storage.write(
+                            key: "customerName", value: customerName);
+                        storageCustomerName =
+                            await storage.read(key: "customerName");
                         if (context.mounted) {
                           if (loginPasswordArgument.userTypeId == 1) {
                             Navigator.pushNamedAndRemoveUntil(

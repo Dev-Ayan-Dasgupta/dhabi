@@ -53,3 +53,5 @@ bool? storageIsCompany;
 bool? storageisCompanyRegistered;
 
 bool? storageRetailLoggedIn;
+
+String? storageCustomerName;
