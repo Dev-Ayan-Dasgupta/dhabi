@@ -404,12 +404,13 @@ class _OTPScreenState extends State<OTPScreen> {
                                                           "cifDetails"][0]
                                                       ["isCompanyRegistered"];
 
-                                              if (cif != null ||
-                                                  cif != "null") {
+                                              if (cif == null ||
+                                                  cif == "null") {
                                                 if (isCompany) {
                                                   if (isCompanyRegistered) {
                                                     Navigator.pop(context);
-                                                    Navigator.pushNamed(
+                                                    Navigator
+                                                        .pushReplacementNamed(
                                                       context,
                                                       Routes.loginPassword,
                                                       arguments:
@@ -426,10 +427,22 @@ class _OTPScreenState extends State<OTPScreen> {
                                                                 0,
                                                       ).toMap(),
                                                     );
+                                                  } else {
+                                                    Navigator.pop(context);
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      Routes.onboarding,
+                                                      arguments:
+                                                          OnboardingArgumentModel(
+                                                        isInitial: true,
+                                                      ).toMap(),
+                                                    );
                                                   }
                                                 } else {
                                                   Navigator.pop(context);
-                                                  Navigator.pushNamed(
+                                                  Navigator
+                                                      .pushReplacementNamed(
                                                     context,
                                                     Routes.loginPassword,
                                                     arguments:
@@ -628,12 +641,13 @@ class _OTPScreenState extends State<OTPScreen> {
                                                           "cifDetails"][0]
                                                       ["isCompanyRegistered"];
 
-                                              if (cif != null ||
-                                                  cif != "null") {
+                                              if (cif == null ||
+                                                  cif == "null") {
                                                 if (isCompany) {
                                                   if (isCompanyRegistered) {
                                                     Navigator.pop(context);
-                                                    Navigator.pushNamed(
+                                                    Navigator
+                                                        .pushReplacementNamed(
                                                       context,
                                                       Routes.loginPassword,
                                                       arguments:
@@ -650,10 +664,22 @@ class _OTPScreenState extends State<OTPScreen> {
                                                                 0,
                                                       ).toMap(),
                                                     );
+                                                  } else {
+                                                    Navigator.pop(context);
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      Routes.onboarding,
+                                                      arguments:
+                                                          OnboardingArgumentModel(
+                                                        isInitial: true,
+                                                      ).toMap(),
+                                                    );
                                                   }
                                                 } else {
                                                   Navigator.pop(context);
-                                                  Navigator.pushNamed(
+                                                  Navigator
+                                                      .pushReplacementNamed(
                                                     context,
                                                     Routes.loginPassword,
                                                     arguments:
@@ -816,11 +842,11 @@ class _OTPScreenState extends State<OTPScreen> {
                                                       "cifDetails"][0]
                                                   ["isCompanyRegistered"];
 
-                                          if (cif != null || cif != "null") {
+                                          if (cif == null || cif == "null") {
                                             if (isCompany) {
                                               if (isCompanyRegistered) {
                                                 Navigator.pop(context);
-                                                Navigator.pushNamed(
+                                                Navigator.pushReplacementNamed(
                                                   context,
                                                   Routes.loginPassword,
                                                   arguments:
@@ -833,10 +859,20 @@ class _OTPScreenState extends State<OTPScreen> {
                                                         storageCompanyId ?? 0,
                                                   ).toMap(),
                                                 );
+                                              } else {
+                                                Navigator.pop(context);
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  Routes.onboarding,
+                                                  arguments:
+                                                      OnboardingArgumentModel(
+                                                    isInitial: true,
+                                                  ).toMap(),
+                                                );
                                               }
                                             } else {
                                               Navigator.pop(context);
-                                              Navigator.pushNamed(
+                                              Navigator.pushReplacementNamed(
                                                 context,
                                                 Routes.loginPassword,
                                                 arguments:

@@ -213,7 +213,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                             },
                             token ?? "",
                           );
-                          log("Trade License API resonse -> $tLResult");
+                          log("Trade License Exists API response -> $tLResult");
                           if (tLResult) {
                             if (context.mounted) {
                               showDialog(
