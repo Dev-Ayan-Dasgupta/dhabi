@@ -611,6 +611,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   context.read<CreatePasswordBloc>();
               await storage.write(
                   key: "password", value: _confirmPasswordController.text);
+              storagePassword = await storage.read(key: "password");
               if (createAccountArgumentModel.isRetail) {
                 isRegistering = true;
                 createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
@@ -974,7 +975,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   Navigator.pushReplacementNamed(
                     context,
                     Routes.onboarding,
-                    arguments: OnboardingArgumentModel(isInitial: true),
+                    arguments: OnboardingArgumentModel(isInitial: true).toMap(),
                   );
                 },
                 text: "Go Home",

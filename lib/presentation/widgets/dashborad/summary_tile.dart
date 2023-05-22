@@ -63,7 +63,7 @@ class AccountSummaryTile extends StatelessWidget {
                 ),
               ],
             ),
-            SizeBox(height: subText.isEmpty ? 42 : 15),
+            SizeBox(height: subText.isEmpty ? 41 : 15),
             RichText(
               text: TextSpan(
                 text: "$currency ",

@@ -332,6 +332,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           await storage.write(
               key: "emailAddress", value: _emailController.text);
           emailAddress = _emailController.text;
+          storageEmail = await storage.read(key: "emailAddress");
           _isLoading = true;
           showButtonBloc.add(ShowButtonEvent(show: _isLoading));
 
@@ -487,11 +488,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         }
       }
     }
+  }
 
-    @override
-    void dispose() {
-      _emailController.dispose();
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 }

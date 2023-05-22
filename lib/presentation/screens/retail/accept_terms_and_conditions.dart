@@ -239,6 +239,9 @@ class _AcceptTermsAndConditionsScreenState
                                       token ?? "");
                               log("Create Account API response -> $responseAccount");
 
+                              log("Email ID -> $storageEmail");
+                              log("Password -> $storagePassword");
+
                               // TODO: Use Navigator.pushNamedAndRemoveUntil
                               if (responseAccount["success"]) {
                                 var result = await MapLogin.mapLogin({

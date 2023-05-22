@@ -436,7 +436,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                   Navigator.pushReplacementNamed(
                     context,
                     Routes.onboarding,
-                    arguments: OnboardingArgumentModel(isInitial: true),
+                    arguments: OnboardingArgumentModel(isInitial: true).toMap(),
                   );
                 },
                 text: "Go Home",

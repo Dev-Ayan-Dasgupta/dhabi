@@ -503,7 +503,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                   Navigator.pushReplacementNamed(
                     context,
                     Routes.onboarding,
-                    arguments: OnboardingArgumentModel(isInitial: true),
+                    arguments: OnboardingArgumentModel(isInitial: true).toMap(),
                   );
                 },
                 text: "Go Home",
