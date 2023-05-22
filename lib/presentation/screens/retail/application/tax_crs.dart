@@ -392,6 +392,12 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                           ShowButtonEvent(show: isShowButton),
                         );
                       }
+                      if (_tinController.text.isEmpty) {
+                        isShowButton = false;
+                        showButtonBloc.add(
+                          ShowButtonEvent(show: isShowButton),
+                        );
+                      }
                     },
                     text: "Yes",
                   );

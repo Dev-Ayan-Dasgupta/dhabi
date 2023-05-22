@@ -2,8 +2,9 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (13)
+## Release notes - 1.0.0 (14)
 
-- Fixed loading issue infinite loop during business account creation
-- Fixed API issue when creating new retail account via no TIN
-- Placed popups for API error
+- Fixed disabling of Contiue button in TIN screen - FHDHABI-161
+- Enabled Rescan button in scanned details screen - FHDHABI-160
+- Added Cancel button for Verify this Session - FHDHABI-165
+- Added pop-up for max retry limit (reasonCode 9) - FHDHABI-159

@@ -46,6 +46,7 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0XFFEEEEEE),
       appBar: AppBar(
         leading: const AppBarLeading(),
         backgroundColor: Colors.transparent,
@@ -113,10 +114,7 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return const Divider(
-                      color: Color.fromRGBO(129, 129, 129, 0.2),
-                      thickness: 1,
-                    );
+                    return const SizeBox(height: 10);
                   },
                   itemCount: notifications.length,
                 ),

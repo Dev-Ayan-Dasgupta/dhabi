@@ -943,10 +943,19 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           SolidButton(onTap: () {}, text: labels[246]["labelText"]),
           const SizeBox(height: 15),
           SolidButton(
-            onTap: () {},
+            onTap: () {
+              if (!isFaceScanning) {
+                scannedDetailsArgument.isEID
+                    ? isEidChosen = true
+                    : isEidChosen = false;
+                DocumentReader.showScanner();
+              }
+            },
             text: scannedDetailsArgument.isEID
                 ? labels[247]["labelText"]
                 : labels[260]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
           const SizeBox(height: PaddingConstants.bottomPadding),
         ],

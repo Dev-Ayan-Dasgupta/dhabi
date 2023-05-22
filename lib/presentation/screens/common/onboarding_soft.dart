@@ -362,8 +362,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
                             onTap: () {
+                              // Navigator.pushNamed(
+                              //     context, Routes.exploreDashboard);
                               Navigator.pushNamed(
-                                  context, Routes.exploreDashboard);
+                                  context, Routes.businessDashboard);
                             },
                             text: labels[208]["labelText"],
                             color: const Color.fromRGBO(85, 85, 85, 0.2),

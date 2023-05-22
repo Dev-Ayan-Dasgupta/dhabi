@@ -335,6 +335,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           case 7:
             promptVerifySession();
             break;
+          case 9:
+            promptMaxRetries();
+            break;
           default:
         }
       }
@@ -379,7 +382,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           svgAssetPath: ImageConstants.warning,
           title: "Verify this session",
           message: messages[66]["messageText"],
-          actionWidget: Column(
+          auxWidget: Column(
             children: [
               BlocBuilder<ShowButtonBloc, ShowButtonState>(
                 builder: (context, state) {
@@ -452,6 +455,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                             case 7:
                               promptVerifySession();
                               break;
+                            case 9:
+                              promptMaxRetries();
+                              break;
                             default:
                           }
                         }
@@ -463,6 +469,44 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                     auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
                   );
                 },
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
+          ),
+        );
+      },
+    );
+  }
+
+  void promptMaxRetries() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Retry Limit Reached",
+          message:
+              "You have exceeded maximum number of 3 retries. Please wait for 24 hours before you can try again.",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(
+                    context,
+                    Routes.onboarding,
+                    arguments: OnboardingArgumentModel(isInitial: true),
+                  );
+                },
+                text: "Go Home",
               ),
               const SizeBox(height: 20),
             ],
@@ -549,7 +593,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     }
   }
 
-  void onForgotEmailPwd() {
+  void onForgotEmailPwd() async {
     Navigator.pushNamed(context, Routes.registration,
         arguments: RegistrationArgumentModel(isInitial: false).toMap());
   }

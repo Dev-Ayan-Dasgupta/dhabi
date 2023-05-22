@@ -253,7 +253,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   Widget buildCheckCircle(BuildContext context, ShowButtonState state) {
     if (!_isEmailValid) {
-      return const SizedBox();
+      return Padding(
+        padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+        child: InkWell(
+          onTap: () {
+            _emailController.clear();
+          },
+          child: SvgPicture.asset(
+            ImageConstants.deleteText,
+            width: (17.5 / Dimensions.designWidth).w,
+            height: (17.5 / Dimensions.designWidth).w,
+          ),
+        ),
+      );
     } else {
       return Padding(
         padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
@@ -299,7 +311,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           const SizeBox(width: 5),
           Text(
-            "Invalid email",
+            "Invalid email address",
             style: TextStyles.primaryMedium.copyWith(
               color: const Color(0xFFC94540),
               fontSize: (12 / Dimensions.designWidth).w,
@@ -327,24 +339,59 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               {"emailID": _emailController.text});
           log("Send Email OTP Response -> $result");
 
-          if (_isLoading) {
+          if (result["success"]) {
+            if (_isLoading) {
+              if (context.mounted) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.otp,
+                  arguments: OTPArgumentModel(
+                    emailOrPhone: _emailController.text,
+                    isEmail: true,
+                    isBusiness: false,
+                    isInitial: registrationArgument.isInitial,
+                    isLogin: false,
+                  ).toMap(),
+                );
+              }
+            }
+
+            _isLoading = false;
+            showButtonBloc.add(ShowButtonEvent(show: _isLoading));
+          } else {
             if (context.mounted) {
-              Navigator.pushNamed(
-                context,
-                Routes.otp,
-                arguments: OTPArgumentModel(
-                  emailOrPhone: _emailController.text,
-                  isEmail: true,
-                  isBusiness: false,
-                  isInitial: registrationArgument.isInitial,
-                  isLogin: false,
-                ).toMap(),
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return CustomDialog(
+                    svgAssetPath: ImageConstants.warning,
+                    title: "Retry Limit Reached",
+                    message: result["message"],
+                    actionWidget: Column(
+                      children: [
+                        GradientButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              Routes.onboarding,
+                              arguments: OnboardingArgumentModel(
+                                isInitial: true,
+                              ).toMap(),
+                            );
+                          },
+                          text: "Go Home",
+                        ),
+                        const SizeBox(height: 20),
+                      ],
+                    ),
+                  );
+                },
               );
+              _isLoading = false;
+              showButtonBloc.add(ShowButtonEvent(show: _isLoading));
             }
           }
-
-          _isLoading = false;
-          showButtonBloc.add(ShowButtonEvent(show: _isLoading));
         },
         text: labels[31]["labelText"],
         auxWidget: Ternary(

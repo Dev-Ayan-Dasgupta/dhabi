@@ -185,12 +185,13 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                 ],
               ),
             ),
-            const SizeBox(height: 15),
+            const SizeBox(height: 10),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
               builder: (context, state) {
                 if (isCompany && isCountrySelected && isTradeLicense) {
                   return Column(
                     children: [
+                      const SizeBox(height: 10),
                       GradientButton(
                         onTap: () async {
                           final ShowButtonBloc showButtonBloc =

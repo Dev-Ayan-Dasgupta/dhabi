@@ -97,20 +97,46 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                                             r'[!@#$%^&*(),_?":{}|<>\/\\]'))))
                             ? const Color(0xFFEEEEEE)
                             : AppColors.red100,
-                        suffix: Padding(
-                          padding: EdgeInsets.only(
-                              left: (10 / Dimensions.designWidth).w),
-                          child: InkWell(
-                            onTap: () {
-                              _emailController.clear();
-                            },
+                        suffixIcon: Ternary(
+                          condition: !isEmailValid,
+                          truthy: Padding(
+                            padding: EdgeInsets.only(
+                                left: (10 / Dimensions.designWidth).w),
+                            child: InkWell(
+                              onTap: () {
+                                _emailController.clear();
+                              },
+                              child: SvgPicture.asset(
+                                ImageConstants.deleteText,
+                                width: (17.5 / Dimensions.designWidth).w,
+                                height: (17.5 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                          ),
+                          falsy: Padding(
+                            padding: EdgeInsets.only(
+                                left: (10 / Dimensions.designWidth).w),
                             child: SvgPicture.asset(
-                              ImageConstants.deleteText,
-                              width: (17.5 / Dimensions.designWidth).w,
-                              height: (17.5 / Dimensions.designWidth).w,
+                              ImageConstants.checkCircle,
+                              width: (20 / Dimensions.designWidth).w,
+                              height: (20 / Dimensions.designWidth).w,
                             ),
                           ),
                         ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(
+                        //       left: (10 / Dimensions.designWidth).w),
+                        //   child: InkWell(
+                        //     onTap: () {
+                        //       _emailController.clear();
+                        //     },
+                        //     child: SvgPicture.asset(
+                        //       ImageConstants.deleteText,
+                        //       width: (17.5 / Dimensions.designWidth).w,
+                        //       height: (17.5 / Dimensions.designWidth).w,
+                        //     ),
+                        //   ),
+                        // ),
                         onChanged: emailValidation,
                       );
                     },

@@ -20,15 +20,25 @@ class NotificationsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: (5 / Dimensions.designWidth).w),
+    return Container(
+      padding: EdgeInsets.symmetric(
+        vertical: (16 / Dimensions.designHeight).h,
+        horizontal:
+            (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          (Radius.circular((10 / Dimensions.designWidth).w)),
+        ),
+        color: Colors.white,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
             style: TextStyles.primary.copyWith(
-              color: const Color(0XFF1A1F36),
+              color: AppColors.dark80,
               fontSize: (16 / Dimensions.designWidth).w,
               fontWeight: FontWeight.w500,
             ),

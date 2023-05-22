@@ -147,7 +147,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Widget buildIcon(BuildContext context, PinputErrorState state) {
-    if (pinputErrorCount < 3 || !isOtpFrozen) {
+    if (pinputErrorCount < 3) {
       if (otpArgumentModel.isEmail) {
         return SvgPicture.asset(
           ImageConstants.otp,
@@ -171,7 +171,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Widget buildTitle(BuildContext context, PinputErrorState state) {
-    if (pinputErrorCount < 3 || !isOtpFrozen) {
+    if (pinputErrorCount < 3) {
       return Text(
         labels[32]["labelText"],
         style: TextStyles.primaryMedium.copyWith(
@@ -191,7 +191,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Widget buildDescription(BuildContext context, PinputErrorState state) {
-    if (pinputErrorCount < 3 || !isOtpFrozen) {
+    if (pinputErrorCount < 3) {
       if (otpArgumentModel.isEmail) {
         return Text(
           "${labels[41]["labelText"]} $obscuredEmail",
@@ -212,13 +212,16 @@ class _OTPScreenState extends State<OTPScreen> {
         );
       }
     } else {
-      return Text(
-        "Reached the maximum number of entries.\nTry again later.",
-        style: TextStyles.primaryMedium.copyWith(
-          color: const Color(0xFF343434),
-          fontSize: (18 / Dimensions.designWidth).w,
+      return SizedBox(
+        width: 80.w,
+        child: Text(
+          "You have exceeded maximum number of 3 retries. Please wait for 24 hours before you can try again.",
+          style: TextStyles.primaryMedium.copyWith(
+            color: const Color(0xFF343434),
+            fontSize: (18 / Dimensions.designWidth).w,
+          ),
+          textAlign: TextAlign.center,
         ),
-        textAlign: TextAlign.center,
       );
     }
   }
@@ -374,123 +377,140 @@ class _OTPScreenState extends State<OTPScreen> {
                                 children: [
                                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                                     builder: (context, state) {
-                                      return GradientButton(
-                                        onTap: () async {
-                                          isLoading = true;
-                                          final ShowButtonBloc showButtonBloc =
-                                              context.read<ShowButtonBloc>();
-                                          showButtonBloc.add(
-                                              ShowButtonEvent(show: isLoading));
-                                          var getCustomerDetailsResponse =
-                                              await MapCustomerDetails
-                                                  .mapCustomerDetails(
-                                                      token ?? "");
-                                          log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                                          List cifDetails =
-                                              getCustomerDetailsResponse[
-                                                  "cifDetails"];
-                                          if (context.mounted) {
-                                            if (cifDetails.length == 1) {
-                                              cif = getCustomerDetailsResponse[
-                                                  "cifDetails"][0]["cif"];
-
-                                              isCompany =
+                                      return Column(
+                                        children: [
+                                          const SizeBox(height: 15),
+                                          GradientButton(
+                                            onTap: () async {
+                                              isLoading = true;
+                                              final ShowButtonBloc
+                                                  showButtonBloc = context
+                                                      .read<ShowButtonBloc>();
+                                              showButtonBloc.add(
+                                                  ShowButtonEvent(
+                                                      show: isLoading));
+                                              var getCustomerDetailsResponse =
+                                                  await MapCustomerDetails
+                                                      .mapCustomerDetails(
+                                                          token ?? "");
+                                              log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                              List cifDetails =
                                                   getCustomerDetailsResponse[
-                                                          "cifDetails"][0]
-                                                      ["isCompany"];
+                                                      "cifDetails"];
+                                              if (context.mounted) {
+                                                if (cifDetails.length == 1) {
+                                                  cif =
+                                                      getCustomerDetailsResponse[
+                                                              "cifDetails"][0]
+                                                          ["cif"];
 
-                                              isCompanyRegistered =
-                                                  getCustomerDetailsResponse[
-                                                          "cifDetails"][0]
-                                                      ["isCompanyRegistered"];
+                                                  isCompany =
+                                                      getCustomerDetailsResponse[
+                                                              "cifDetails"][0]
+                                                          ["isCompany"];
 
-                                              if (cif == null ||
-                                                  cif == "null") {
-                                                if (isCompany) {
-                                                  if (isCompanyRegistered) {
-                                                    Navigator.pop(context);
-                                                    Navigator
-                                                        .pushReplacementNamed(
-                                                      context,
-                                                      Routes.loginPassword,
-                                                      arguments:
-                                                          LoginPasswordArgumentModel(
-                                                        emailId:
-                                                            storageEmail ?? "",
-                                                        userId:
-                                                            storageUserId ?? 0,
-                                                        userTypeId:
-                                                            storageUserTypeId ??
-                                                                2,
-                                                        companyId:
-                                                            storageCompanyId ??
-                                                                0,
-                                                      ).toMap(),
-                                                    );
-                                                  } else {
-                                                    Navigator.pop(context);
-                                                    Navigator
-                                                        .pushReplacementNamed(
-                                                      context,
-                                                      Routes.onboarding,
-                                                      arguments:
-                                                          OnboardingArgumentModel(
-                                                        isInitial: true,
-                                                      ).toMap(),
-                                                    );
+                                                  isCompanyRegistered =
+                                                      getCustomerDetailsResponse[
+                                                              "cifDetails"][0][
+                                                          "isCompanyRegistered"];
+
+                                                  if (cif == null ||
+                                                      cif == "null") {
+                                                    if (isCompany) {
+                                                      if (isCompanyRegistered) {
+                                                        Navigator.pop(context);
+                                                        Navigator
+                                                            .pushReplacementNamed(
+                                                          context,
+                                                          Routes.loginPassword,
+                                                          arguments:
+                                                              LoginPasswordArgumentModel(
+                                                            emailId:
+                                                                storageEmail ??
+                                                                    "",
+                                                            userId:
+                                                                storageUserId ??
+                                                                    0,
+                                                            userTypeId:
+                                                                storageUserTypeId ??
+                                                                    2,
+                                                            companyId:
+                                                                storageCompanyId ??
+                                                                    0,
+                                                          ).toMap(),
+                                                        );
+                                                      } else {
+                                                        Navigator.pop(context);
+                                                        Navigator
+                                                            .pushReplacementNamed(
+                                                          context,
+                                                          Routes.onboarding,
+                                                          arguments:
+                                                              OnboardingArgumentModel(
+                                                            isInitial: true,
+                                                          ).toMap(),
+                                                        );
+                                                      }
+                                                    } else {
+                                                      Navigator.pop(context);
+                                                      Navigator
+                                                          .pushReplacementNamed(
+                                                        context,
+                                                        Routes.loginPassword,
+                                                        arguments:
+                                                            LoginPasswordArgumentModel(
+                                                          emailId:
+                                                              storageEmail ??
+                                                                  "",
+                                                          userId:
+                                                              storageUserId ??
+                                                                  0,
+                                                          userTypeId:
+                                                              storageUserTypeId ??
+                                                                  2,
+                                                          companyId:
+                                                              storageCompanyId ??
+                                                                  0,
+                                                        ).toMap(),
+                                                      );
+                                                    }
                                                   }
                                                 } else {
-                                                  Navigator.pop(context);
                                                   Navigator
                                                       .pushReplacementNamed(
                                                     context,
-                                                    Routes.loginPassword,
+                                                    Routes.selectAccount,
                                                     arguments:
-                                                        LoginPasswordArgumentModel(
-                                                      emailId:
-                                                          storageEmail ?? "",
-                                                      userId:
-                                                          storageUserId ?? 0,
-                                                      userTypeId:
-                                                          storageUserTypeId ??
-                                                              2,
-                                                      companyId:
-                                                          storageCompanyId ?? 0,
+                                                        SelectAccountArgumentModel(
+                                                      emailId: otpArgumentModel
+                                                          .emailOrPhone,
+                                                      cifDetails: cifDetails,
+                                                      isPwChange: false,
+                                                      isLogin: false,
                                                     ).toMap(),
                                                   );
                                                 }
                                               }
-                                            } else {
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                Routes.selectAccount,
-                                                arguments:
-                                                    SelectAccountArgumentModel(
-                                                  emailId: otpArgumentModel
-                                                      .emailOrPhone,
-                                                  cifDetails: cifDetails,
-                                                  isPwChange: false,
-                                                  isLogin: false,
-                                                ).toMap(),
-                                              );
-                                            }
-                                          }
-                                          isLoading = false;
-                                          showButtonBloc.add(
-                                              ShowButtonEvent(show: isLoading));
+                                              isLoading = false;
+                                              showButtonBloc.add(
+                                                  ShowButtonEvent(
+                                                      show: isLoading));
 
-                                          await storage.write(
-                                              key: "stepsCompleted",
-                                              value: 0.toString());
-                                          storageStepsCompleted = int.parse(
-                                              await storage.read(
-                                                      key: "stepsCompleted") ??
-                                                  "0");
-                                        },
-                                        text: labels[31]["labelText"],
-                                        auxWidget: isLoading
-                                            ? const LoaderRow()
-                                            : const SizeBox(),
+                                              await storage.write(
+                                                  key: "stepsCompleted",
+                                                  value: 0.toString());
+                                              storageStepsCompleted = int.parse(
+                                                  await storage.read(
+                                                          key:
+                                                              "stepsCompleted") ??
+                                                      "0");
+                                            },
+                                            text: labels[31]["labelText"],
+                                            auxWidget: isLoading
+                                                ? const LoaderRow()
+                                                : const SizeBox(),
+                                          ),
+                                        ],
                                       );
                                     },
                                   ),
@@ -570,6 +590,11 @@ class _OTPScreenState extends State<OTPScreen> {
                               getCustomerDetailsResponse["cifDetails"][0]
                                   ["isCompanyRegistered"];
 
+                          log("cif -> $cif");
+                          log("cif RTT -> ${cif.runtimeType}");
+                          log("isCompany -> $isCompany");
+                          log("isCompanyRegistered -> $isCompanyRegistered");
+
                           if (cif != null || cif != "null") {
                             if (isCompany) {
                               if (isCompanyRegistered) {
@@ -581,19 +606,113 @@ class _OTPScreenState extends State<OTPScreen> {
                                   context, Routes.setPassword);
                             }
                           }
+                          if (cif == null) {
+                            log("cif is null");
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return CustomDialog(
+                                  svgAssetPath: ImageConstants.warning,
+                                  title: "Application approval pending",
+                                  message:
+                                      "You already have a registration pending. Please contact Dhabi support.",
+                                  auxWidget: Column(
+                                    children: [
+                                      GradientButton(
+                                        onTap: () async {
+                                          // await storage.write(
+                                          //     key: "stepsCompleted",
+                                          //     value: 0.toString());
+                                          // storageStepsCompleted = int.parse(
+                                          //     await storage.read(
+                                          //             key: "stepsCompleted") ??
+                                          //         "0");
+                                          if (context.mounted) {
+                                            Navigator.pop(context);
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              Routes.registration,
+                                              arguments:
+                                                  RegistrationArgumentModel(
+                                                isInitial: true,
+                                              ).toMap(),
+                                            );
+                                          }
+                                        },
+                                        text: "Go Home",
+                                      ),
+                                      const SizeBox(height: 15),
+                                    ],
+                                  ),
+                                  actionWidget: Column(
+                                    children: [
+                                      SolidButton(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        text: labels[166]["labelText"],
+                                        color: AppColors.primaryBright17,
+                                        fontColor: AppColors.primary,
+                                      ),
+                                      const SizeBox(height: 20),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          }
                         }
                       } else {
-                        if (context.mounted) {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            Routes.selectAccount,
-                            arguments: SelectAccountArgumentModel(
-                              emailId: otpArgumentModel.emailOrPhone,
-                              cifDetails: cifDetails,
-                              isPwChange: true,
-                              isLogin: false,
-                            ).toMap(),
-                          );
+                        if (cifDetails.isEmpty) {
+                          if (context.mounted) {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return CustomDialog(
+                                  svgAssetPath: ImageConstants.warning,
+                                  title: "Invalid Email",
+                                  message:
+                                      "There is no Dhabi Account associated with this email address.",
+                                  actionWidget: Column(
+                                    children: [
+                                      GradientButton(
+                                        onTap: () async {
+                                          if (context.mounted) {
+                                            Navigator.pop(context);
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              Routes.registration,
+                                              arguments:
+                                                  RegistrationArgumentModel(
+                                                isInitial: true,
+                                              ).toMap(),
+                                            );
+                                          }
+                                        },
+                                        text: "Go Home",
+                                      ),
+                                      const SizeBox(height: 15),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        } else {
+                          if (context.mounted) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              Routes.selectAccount,
+                              arguments: SelectAccountArgumentModel(
+                                emailId: otpArgumentModel.emailOrPhone,
+                                cifDetails: cifDetails,
+                                isPwChange: true,
+                                isLogin: false,
+                              ).toMap(),
+                            );
+                          }
                         }
                       }
                     } else {
@@ -611,123 +730,140 @@ class _OTPScreenState extends State<OTPScreen> {
                                 children: [
                                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                                     builder: (context, state) {
-                                      return GradientButton(
-                                        onTap: () async {
-                                          isLoading = true;
-                                          final ShowButtonBloc showButtonBloc =
-                                              context.read<ShowButtonBloc>();
-                                          showButtonBloc.add(
-                                              ShowButtonEvent(show: isLoading));
-                                          var getCustomerDetailsResponse =
-                                              await MapCustomerDetails
-                                                  .mapCustomerDetails(
-                                                      token ?? "");
-                                          log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                                          List cifDetails =
-                                              getCustomerDetailsResponse[
-                                                  "cifDetails"];
-                                          if (context.mounted) {
-                                            if (cifDetails.length == 1) {
-                                              cif = getCustomerDetailsResponse[
-                                                  "cifDetails"][0]["cif"];
-
-                                              isCompany =
+                                      return Column(
+                                        children: [
+                                          const SizeBox(height: 15),
+                                          GradientButton(
+                                            onTap: () async {
+                                              isLoading = true;
+                                              final ShowButtonBloc
+                                                  showButtonBloc = context
+                                                      .read<ShowButtonBloc>();
+                                              showButtonBloc.add(
+                                                  ShowButtonEvent(
+                                                      show: isLoading));
+                                              var getCustomerDetailsResponse =
+                                                  await MapCustomerDetails
+                                                      .mapCustomerDetails(
+                                                          token ?? "");
+                                              log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                              List cifDetails =
                                                   getCustomerDetailsResponse[
-                                                          "cifDetails"][0]
-                                                      ["isCompany"];
+                                                      "cifDetails"];
+                                              if (context.mounted) {
+                                                if (cifDetails.length == 1) {
+                                                  cif =
+                                                      getCustomerDetailsResponse[
+                                                              "cifDetails"][0]
+                                                          ["cif"];
 
-                                              isCompanyRegistered =
-                                                  getCustomerDetailsResponse[
-                                                          "cifDetails"][0]
-                                                      ["isCompanyRegistered"];
+                                                  isCompany =
+                                                      getCustomerDetailsResponse[
+                                                              "cifDetails"][0]
+                                                          ["isCompany"];
 
-                                              if (cif == null ||
-                                                  cif == "null") {
-                                                if (isCompany) {
-                                                  if (isCompanyRegistered) {
-                                                    Navigator.pop(context);
-                                                    Navigator
-                                                        .pushReplacementNamed(
-                                                      context,
-                                                      Routes.loginPassword,
-                                                      arguments:
-                                                          LoginPasswordArgumentModel(
-                                                        emailId:
-                                                            storageEmail ?? "",
-                                                        userId:
-                                                            storageUserId ?? 0,
-                                                        userTypeId:
-                                                            storageUserTypeId ??
-                                                                2,
-                                                        companyId:
-                                                            storageCompanyId ??
-                                                                0,
-                                                      ).toMap(),
-                                                    );
-                                                  } else {
-                                                    Navigator.pop(context);
-                                                    Navigator
-                                                        .pushReplacementNamed(
-                                                      context,
-                                                      Routes.onboarding,
-                                                      arguments:
-                                                          OnboardingArgumentModel(
-                                                        isInitial: true,
-                                                      ).toMap(),
-                                                    );
+                                                  isCompanyRegistered =
+                                                      getCustomerDetailsResponse[
+                                                              "cifDetails"][0][
+                                                          "isCompanyRegistered"];
+
+                                                  if (cif == null ||
+                                                      cif == "null") {
+                                                    if (isCompany) {
+                                                      if (isCompanyRegistered) {
+                                                        Navigator.pop(context);
+                                                        Navigator
+                                                            .pushReplacementNamed(
+                                                          context,
+                                                          Routes.loginPassword,
+                                                          arguments:
+                                                              LoginPasswordArgumentModel(
+                                                            emailId:
+                                                                storageEmail ??
+                                                                    "",
+                                                            userId:
+                                                                storageUserId ??
+                                                                    0,
+                                                            userTypeId:
+                                                                storageUserTypeId ??
+                                                                    2,
+                                                            companyId:
+                                                                storageCompanyId ??
+                                                                    0,
+                                                          ).toMap(),
+                                                        );
+                                                      } else {
+                                                        Navigator.pop(context);
+                                                        Navigator
+                                                            .pushReplacementNamed(
+                                                          context,
+                                                          Routes.onboarding,
+                                                          arguments:
+                                                              OnboardingArgumentModel(
+                                                            isInitial: true,
+                                                          ).toMap(),
+                                                        );
+                                                      }
+                                                    } else {
+                                                      Navigator.pop(context);
+                                                      Navigator
+                                                          .pushReplacementNamed(
+                                                        context,
+                                                        Routes.loginPassword,
+                                                        arguments:
+                                                            LoginPasswordArgumentModel(
+                                                          emailId:
+                                                              storageEmail ??
+                                                                  "",
+                                                          userId:
+                                                              storageUserId ??
+                                                                  0,
+                                                          userTypeId:
+                                                              storageUserTypeId ??
+                                                                  2,
+                                                          companyId:
+                                                              storageCompanyId ??
+                                                                  0,
+                                                        ).toMap(),
+                                                      );
+                                                    }
                                                   }
                                                 } else {
-                                                  Navigator.pop(context);
                                                   Navigator
                                                       .pushReplacementNamed(
                                                     context,
-                                                    Routes.loginPassword,
+                                                    Routes.selectAccount,
                                                     arguments:
-                                                        LoginPasswordArgumentModel(
-                                                      emailId:
-                                                          storageEmail ?? "",
-                                                      userId:
-                                                          storageUserId ?? 0,
-                                                      userTypeId:
-                                                          storageUserTypeId ??
-                                                              2,
-                                                      companyId:
-                                                          storageCompanyId ?? 0,
+                                                        SelectAccountArgumentModel(
+                                                      emailId: otpArgumentModel
+                                                          .emailOrPhone,
+                                                      cifDetails: cifDetails,
+                                                      isPwChange: false,
+                                                      isLogin: false,
                                                     ).toMap(),
                                                   );
                                                 }
                                               }
-                                            } else {
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                Routes.selectAccount,
-                                                arguments:
-                                                    SelectAccountArgumentModel(
-                                                  emailId: otpArgumentModel
-                                                      .emailOrPhone,
-                                                  cifDetails: cifDetails,
-                                                  isPwChange: false,
-                                                  isLogin: false,
-                                                ).toMap(),
-                                              );
-                                            }
-                                          }
-                                          isLoading = false;
-                                          showButtonBloc.add(
-                                              ShowButtonEvent(show: isLoading));
+                                              isLoading = false;
+                                              showButtonBloc.add(
+                                                  ShowButtonEvent(
+                                                      show: isLoading));
 
-                                          await storage.write(
-                                              key: "stepsCompleted",
-                                              value: 0.toString());
-                                          storageStepsCompleted = int.parse(
-                                              await storage.read(
-                                                      key: "stepsCompleted") ??
-                                                  "0");
-                                        },
-                                        text: labels[31]["labelText"],
-                                        auxWidget: isLoading
-                                            ? const LoaderRow()
-                                            : const SizeBox(),
+                                              await storage.write(
+                                                  key: "stepsCompleted",
+                                                  value: 0.toString());
+                                              storageStepsCompleted = int.parse(
+                                                  await storage.read(
+                                                          key:
+                                                              "stepsCompleted") ??
+                                                      "0");
+                                            },
+                                            text: labels[31]["labelText"],
+                                            auxWidget: isLoading
+                                                ? const LoaderRow()
+                                                : const SizeBox(),
+                                          ),
+                                        ],
                                       );
                                     },
                                   ),
@@ -814,110 +950,128 @@ class _OTPScreenState extends State<OTPScreen> {
                             children: [
                               BlocBuilder<ShowButtonBloc, ShowButtonState>(
                                 builder: (context, state) {
-                                  return GradientButton(
-                                    onTap: () async {
-                                      isLoading = true;
-                                      final ShowButtonBloc showButtonBloc =
-                                          context.read<ShowButtonBloc>();
-                                      showButtonBloc.add(
-                                          ShowButtonEvent(show: isLoading));
-                                      var getCustomerDetailsResponse =
-                                          await MapCustomerDetails
-                                              .mapCustomerDetails(token ?? "");
-                                      log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                                      List cifDetails =
-                                          getCustomerDetailsResponse[
-                                              "cifDetails"];
-                                      if (context.mounted) {
-                                        if (cifDetails.length == 1) {
-                                          cif = getCustomerDetailsResponse[
-                                              "cifDetails"][0]["cif"];
-
-                                          isCompany =
+                                  return Column(
+                                    children: [
+                                      const SizeBox(height: 15),
+                                      GradientButton(
+                                        onTap: () async {
+                                          isLoading = true;
+                                          final ShowButtonBloc showButtonBloc =
+                                              context.read<ShowButtonBloc>();
+                                          showButtonBloc.add(
+                                              ShowButtonEvent(show: isLoading));
+                                          var getCustomerDetailsResponse =
+                                              await MapCustomerDetails
+                                                  .mapCustomerDetails(
+                                                      token ?? "");
+                                          log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                          List cifDetails =
                                               getCustomerDetailsResponse[
-                                                  "cifDetails"][0]["isCompany"];
+                                                  "cifDetails"];
+                                          if (context.mounted) {
+                                            if (cifDetails.length == 1) {
+                                              cif = getCustomerDetailsResponse[
+                                                  "cifDetails"][0]["cif"];
 
-                                          isCompanyRegistered =
-                                              getCustomerDetailsResponse[
-                                                      "cifDetails"][0]
-                                                  ["isCompanyRegistered"];
+                                              isCompany =
+                                                  getCustomerDetailsResponse[
+                                                          "cifDetails"][0]
+                                                      ["isCompany"];
 
-                                          if (cif == null || cif == "null") {
-                                            if (isCompany) {
-                                              if (isCompanyRegistered) {
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacementNamed(
-                                                  context,
-                                                  Routes.loginPassword,
-                                                  arguments:
-                                                      LoginPasswordArgumentModel(
-                                                    emailId: storageEmail ?? "",
-                                                    userId: storageUserId ?? 0,
-                                                    userTypeId:
-                                                        storageUserTypeId ?? 2,
-                                                    companyId:
-                                                        storageCompanyId ?? 0,
-                                                  ).toMap(),
-                                                );
-                                              } else {
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacementNamed(
-                                                  context,
-                                                  Routes.onboarding,
-                                                  arguments:
-                                                      OnboardingArgumentModel(
-                                                    isInitial: true,
-                                                  ).toMap(),
-                                                );
+                                              isCompanyRegistered =
+                                                  getCustomerDetailsResponse[
+                                                          "cifDetails"][0]
+                                                      ["isCompanyRegistered"];
+
+                                              if (cif == null ||
+                                                  cif == "null") {
+                                                if (isCompany) {
+                                                  if (isCompanyRegistered) {
+                                                    Navigator.pop(context);
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      Routes.loginPassword,
+                                                      arguments:
+                                                          LoginPasswordArgumentModel(
+                                                        emailId:
+                                                            storageEmail ?? "",
+                                                        userId:
+                                                            storageUserId ?? 0,
+                                                        userTypeId:
+                                                            storageUserTypeId ??
+                                                                2,
+                                                        companyId:
+                                                            storageCompanyId ??
+                                                                0,
+                                                      ).toMap(),
+                                                    );
+                                                  } else {
+                                                    Navigator.pop(context);
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      Routes.onboarding,
+                                                      arguments:
+                                                          OnboardingArgumentModel(
+                                                        isInitial: true,
+                                                      ).toMap(),
+                                                    );
+                                                  }
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  Navigator
+                                                      .pushReplacementNamed(
+                                                    context,
+                                                    Routes.loginPassword,
+                                                    arguments:
+                                                        LoginPasswordArgumentModel(
+                                                      emailId:
+                                                          storageEmail ?? "",
+                                                      userId:
+                                                          storageUserId ?? 0,
+                                                      userTypeId:
+                                                          storageUserTypeId ??
+                                                              2,
+                                                      companyId:
+                                                          storageCompanyId ?? 0,
+                                                    ).toMap(),
+                                                  );
+                                                }
                                               }
                                             } else {
-                                              Navigator.pop(context);
                                               Navigator.pushReplacementNamed(
                                                 context,
-                                                Routes.loginPassword,
+                                                Routes.selectAccount,
                                                 arguments:
-                                                    LoginPasswordArgumentModel(
-                                                  emailId: storageEmail ?? "",
-                                                  userId: storageUserId ?? 0,
-                                                  userTypeId:
-                                                      storageUserTypeId ?? 2,
-                                                  companyId:
-                                                      storageCompanyId ?? 0,
+                                                    SelectAccountArgumentModel(
+                                                  emailId: otpArgumentModel
+                                                      .emailOrPhone,
+                                                  cifDetails: cifDetails,
+                                                  isPwChange: false,
+                                                  isLogin: false,
                                                 ).toMap(),
                                               );
                                             }
                                           }
-                                        } else {
-                                          Navigator.pushReplacementNamed(
-                                            context,
-                                            Routes.selectAccount,
-                                            arguments:
-                                                SelectAccountArgumentModel(
-                                              emailId:
-                                                  otpArgumentModel.emailOrPhone,
-                                              cifDetails: cifDetails,
-                                              isPwChange: false,
-                                              isLogin: false,
-                                            ).toMap(),
-                                          );
-                                        }
-                                      }
-                                      isLoading = false;
-                                      showButtonBloc.add(
-                                          ShowButtonEvent(show: isLoading));
+                                          isLoading = false;
+                                          showButtonBloc.add(
+                                              ShowButtonEvent(show: isLoading));
 
-                                      await storage.write(
-                                          key: "stepsCompleted",
-                                          value: 0.toString());
-                                      storageStepsCompleted = int.parse(
-                                          await storage.read(
-                                                  key: "stepsCompleted") ??
-                                              "0");
-                                    },
-                                    text: labels[31]["labelText"],
-                                    auxWidget: isLoading
-                                        ? const LoaderRow()
-                                        : const SizeBox(),
+                                          await storage.write(
+                                              key: "stepsCompleted",
+                                              value: 0.toString());
+                                          storageStepsCompleted = int.parse(
+                                              await storage.read(
+                                                      key: "stepsCompleted") ??
+                                                  "0");
+                                        },
+                                        text: labels[31]["labelText"],
+                                        auxWidget: isLoading
+                                            ? const LoaderRow()
+                                            : const SizeBox(),
+                                      ),
+                                    ],
                                   );
                                 },
                               ),
@@ -965,7 +1119,7 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   Widget buildTimer(BuildContext context, PinputErrorState state) {
-    if (pinputErrorCount < 3 || !isOtpFrozen) {
+    if (pinputErrorCount < 3) {
       return Column(
         children: [
           const SizeBox(height: 30),

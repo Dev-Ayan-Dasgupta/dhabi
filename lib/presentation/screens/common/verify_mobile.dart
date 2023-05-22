@@ -5,6 +5,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/verify_mobile.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -181,21 +182,59 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
           var result = await MapSendMobileOtp.mapSendMobileOtp(
               {"mobileNo": "+971${_phoneController.text}"}, token ?? "");
           log("Send Mobile OTP API response -> $result");
-          if (context.mounted) {
-            Navigator.pushNamed(
-              context,
-              Routes.otp,
-              arguments: OTPArgumentModel(
-                emailOrPhone: "+971${_phoneController.text}",
-                isEmail: false,
-                isBusiness: verifyMobileArgumentModel.isBusiness,
-                isInitial: true, // TODO: check this later
-                isLogin: false,
-              ).toMap(),
-            );
+
+          if (result["success"]) {
+            if (isLoading) {
+              if (context.mounted) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.otp,
+                  arguments: OTPArgumentModel(
+                    emailOrPhone: "+971${_phoneController.text}",
+                    isEmail: false,
+                    isBusiness: verifyMobileArgumentModel.isBusiness,
+                    isInitial: true, // TODO: check this later
+                    isLogin: false,
+                  ).toMap(),
+                );
+              }
+            }
+            isLoading = false;
+            showButtonBloc.add(ShowButtonEvent(show: isLoading));
+          } else {
+            if (context.mounted) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return CustomDialog(
+                    svgAssetPath: ImageConstants.warning,
+                    title: "Retry Limit Reached",
+                    message: result["message"],
+                    actionWidget: Column(
+                      children: [
+                        GradientButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              Routes.onboarding,
+                              arguments: OnboardingArgumentModel(
+                                isInitial: true,
+                              ).toMap(),
+                            );
+                          },
+                          text: "Go Home",
+                        ),
+                        const SizeBox(height: 20),
+                      ],
+                    ),
+                  );
+                },
+              );
+              isLoading = false;
+              showButtonBloc.add(ShowButtonEvent(show: isLoading));
+            }
           }
-          isLoading = false;
-          showButtonBloc.add(ShowButtonEvent(show: isLoading));
         },
         text: labels[31]["labelText"],
         auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
