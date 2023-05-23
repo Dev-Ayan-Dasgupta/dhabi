@@ -219,6 +219,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               "Going to the previous screen will make you repeat this step.",
           auxWidget: Column(
             children: [
+              const SizeBox(height: 15),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);

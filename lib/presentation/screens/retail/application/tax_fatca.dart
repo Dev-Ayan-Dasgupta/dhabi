@@ -267,6 +267,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                                     : Colors.transparent,
                                                 onTap: () {
                                                   isUSResident = false;
+                                                  storageUsTin = "";
                                                   applicationTaxBloc.add(
                                                     ApplicationTaxEvent(
                                                       isUSCitizen: isUSCitizen,

@@ -273,24 +273,19 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
               );
               log("Income Source API response -> $incomeApiResult");
 
+              log("TAX API Request -> ${{
+                "isUSFATCA": storageIsUSFATCA,
+                "ustin": storageUsTin,
+                "internationalTaxes": storageInternationalTaxes,
+                "updateFatca": storageIsUSFATCA == true ? true : false,
+              }}");
+
               var taxApiResult =
                   await MapCustomerTaxInformation.mapCustomerTaxInformation(
                 {
                   "isUSFATCA": storageIsUSFATCA,
                   "ustin": storageUsTin,
-                  "internationalTaxes": [
-                    {
-                      "countryCode":
-                          !dhabiCountryNames.contains(storageTaxCountry!)
-                              // dhabiCountryNames.contains(-1)
-                              ? "US"
-                              : dhabiCountries[dhabiCountryNames
-                                  .indexOf(storageTaxCountry!)]["shortCode"],
-                      "isTIN": storageIsTinYes,
-                      "tin": storageCrsTin,
-                      "noTINReason": storageNoTinReason
-                    }
-                  ]
+                  "internationalTaxes": storageInternationalTaxes
                 },
                 token ?? "",
               );

@@ -85,8 +85,15 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           actionWidget: Column(
             children: [
               SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
+                onTap: () async {
+                  await storage.write(
+                      key: "persistBiometric", value: false.toString());
+                  persistBiometric =
+                      await storage.read(key: "persistBiometric") == "true";
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    showBiometricLater();
+                  }
                 },
                 text: labels[127]["labelText"],
                 color: AppColors.primaryBright17,
@@ -127,6 +134,31 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           title: "Successful",
           message:
               "Enjoy the added convenience and security in using the app with biometric authentication.",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[293]["labelText"],
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void showBiometricLater() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.checkCircleOutlined,
+          title: "Understood",
+          message:
+              "You may enable biometric from your profile section anytime.",
           actionWidget: Column(
             children: [
               GradientButton(

@@ -36,12 +36,13 @@ String? storageAddressPoBox;
 String? storageIncomeSource;
 
 bool? storageIsUSFATCA;
-String? storageUsTin;
+String? storageUsTin = "";
 
 String? storageTaxCountry;
 bool? storageIsTinYes;
 String? storageCrsTin;
 String? storageNoTinReason;
+List? storageInternationalTaxes;
 
 int? storageAccountType;
 

@@ -81,9 +81,9 @@ class _VerificationInitializingScreenState
       "processParams": {
         "dateFormat": "dd/MM/yyyy",
         "scenario": "MrzOrOcr",
-        "timeout": 60.0,
-        "timeoutFromFirstDetect": 45.0,
-        "timeoutFromFirstDocType": 35.0,
+        "timeout": 30.0,
+        "timeoutFromFirstDetect": 30.0,
+        "timeoutFromFirstDocType": 30.0,
         "multipageProcessing": true
       }
     });

@@ -718,6 +718,9 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                   "Your selfie does not match with the photo from your scanned document",
               auxWidget: Column(
                 children: [
+                  const SizeBox(
+                    height: 25,
+                  ),
                   SolidButton(
                     onTap: () {
                       Navigator.pop(context);

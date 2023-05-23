@@ -335,6 +335,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               "Going to the previous screen will make you repeat this step.",
           auxWidget: Column(
             children: [
+              const SizeBox(height: 15),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);
@@ -852,7 +853,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
-          title: "Verify this session",
+          title: messages[65]["messageText"],
           message: messages[66]["messageText"],
           auxWidget: Column(
             children: [

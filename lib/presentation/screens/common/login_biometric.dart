@@ -219,8 +219,62 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
             ).toMap(),
           );
         } else {
-          Navigator.pushNamedAndRemoveUntil(
-              context, Routes.businessDashboard, (route) => false);
+          if (storageCif == null || storageCif == "null") {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return CustomDialog(
+                    svgAssetPath: ImageConstants.warning,
+                    title: "Application approval pending",
+                    message:
+                        "You already have a registration pending. Please contact Dhabi support.",
+                    auxWidget: Column(
+                      children: [
+                        GradientButton(
+                          onTap: () async {
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.onboarding,
+                                arguments: OnboardingArgumentModel(
+                                  isInitial: true,
+                                ).toMap(),
+                              );
+                            }
+                          },
+                          text: labels[347]["labelText"],
+                        ),
+                        const SizeBox(height: 15),
+                      ],
+                    ),
+                    actionWidget: Column(
+                      children: [
+                        SolidButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          text: labels[166]["labelText"],
+                          color: AppColors.primaryBright17,
+                          fontColor: AppColors.primary,
+                        ),
+                        const SizeBox(height: 20),
+                      ],
+                    ),
+                  );
+                });
+          } else {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.businessDashboard,
+              (route) => false,
+              arguments: RetailDashboardArgumentModel(
+                imgUrl: "",
+                name: "",
+                isFirst: false,
+              ).toMap(),
+            );
+          }
         }
       }
       await storage.write(key: "cif", value: cif.toString());
@@ -306,7 +360,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
-          title: "Verify this session",
+          title: messages[65]["messageText"],
           message: messages[66]["messageText"],
           auxWidget: Column(
             children: [

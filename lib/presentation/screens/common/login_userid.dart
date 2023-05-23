@@ -178,6 +178,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
               "Going to the previous screen will make you repeat this step.",
           auxWidget: Column(
             children: [
+              const SizeBox(height: 15),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);
@@ -298,26 +299,14 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                         children: [
                           GradientButton(
                             onTap: () async {
-                              // await storage.write(
-                              //     key: "stepsCompleted", value: 0.toString());
-                              // storageStepsCompleted = int.parse(
-                              //     await storage.read(key: "stepsCompleted") ??
-                              //         "0");
                               if (context.mounted) {
+                                Navigator.pop(context);
                                 Navigator.pushReplacementNamed(
                                   context,
-                                  Routes.loginUserId,
-                                  // arguments: storageUserTypeId == 1
-                                  //     ? LoginPasswordArgumentModel(
-                                  //         emailId: storageEmail ?? "",
-                                  //         userId: 0,
-                                  //         userTypeId:
-                                  //             isPersonalFocussed ? 1 : 2,
-                                  //         companyId: isPersonalFocussed ? 0 : 1,
-                                  //       ).toMap()
-                                  //     : RegistrationArgumentModel(
-                                  //             isInitial: true)
-                                  //         .toMap(),
+                                  Routes.onboarding,
+                                  arguments: OnboardingArgumentModel(
+                                    isInitial: true,
+                                  ).toMap(),
                                 );
                               }
                             },

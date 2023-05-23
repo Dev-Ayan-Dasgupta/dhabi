@@ -311,7 +311,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                     alignment: Alignment.center,
                     child: SizedBox(
                       width: (276 / Dimensions.designWidth).w,
-                      height: (159 / Dimensions.designWidth).w,
+                      height: (159 / Dimensions.designHeight).h,
                       child: Image.asset(ImageConstants.eidFront),
                     ),
                   ),
@@ -320,7 +320,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                     alignment: Alignment.center,
                     child: SizedBox(
                       width: (276 / Dimensions.designWidth).w,
-                      height: (159 / Dimensions.designWidth).w,
+                      height: (159 / Dimensions.designHeight).h,
                       child: Image.asset(ImageConstants.eidBack),
                     ),
                   ),

@@ -78,109 +78,120 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                     ),
                   ),
                   const SizeBox(height: 20),
-                  Row(
-                    children: [
-                      Text(
-                        labels[296]["labelText"],
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.black63,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                labels[296]["labelText"],
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          const SizeBox(height: 7),
+                          CustomTextField(
+                            controller: _companyNameController,
+                            onChanged: (p0) {
+                              if (p0.isEmpty) {
+                                isCompany = false;
+                              } else {
+                                isCompany = true;
+                              }
+                              showButtonBloc.add(
+                                ShowButtonEvent(
+                                  show: isCompany &&
+                                      isCountrySelected &&
+                                      isTradeLicense,
+                                ),
+                              );
+                            },
+                          ),
+                          const SizeBox(height: 10),
+                          Row(
+                            children: [
+                              Text(
+                                labels[297]["labelText"],
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          const SizeBox(height: 7),
+                          BlocBuilder<DropdownSelectedBloc,
+                              DropdownSelectedState>(
+                            builder: (context, state) {
+                              return CustomDropDown(
+                                title: "Select a Country",
+                                items: dhabiCountryNames,
+                                value: selectedCountry,
+                                onChanged: (value) {
+                                  toggles++;
+                                  isCountrySelected = true;
+                                  selectedCountry = value as String;
+                                  dhabiCountryIndex = dhabiCountryNames
+                                      .indexOf(selectedCountry!);
+                                  log("dhabiCountryIndex -> $dhabiCountryIndex");
+                                  countrySelectedBloc.add(
+                                    DropdownSelectedEvent(
+                                      isDropdownSelected: isCountrySelected,
+                                      toggles: toggles,
+                                    ),
+                                  );
+                                  showButtonBloc.add(
+                                    ShowButtonEvent(
+                                      show: isCompany &&
+                                          isCountrySelected &&
+                                          isTradeLicense,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          const SizeBox(height: 10),
+                          Row(
+                            children: [
+                              Text(
+                                "Trade License Number",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          const SizeBox(height: 7),
+                          CustomTextField(
+                            controller: _tradeLicenseController,
+                            // keyboardType: TextInputType.number,
+                            onChanged: (p0) {
+                              if (p0.isEmpty) {
+                                isTradeLicense = false;
+                              } else {
+                                isTradeLicense = true;
+                              }
+                              showButtonBloc.add(
+                                ShowButtonEvent(
+                                  show: isCompany &&
+                                      isCountrySelected &&
+                                      isTradeLicense,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       ),
-                      const Asterisk(),
-                    ],
-                  ),
-                  const SizeBox(height: 7),
-                  CustomTextField(
-                    controller: _companyNameController,
-                    onChanged: (p0) {
-                      if (p0.isEmpty) {
-                        isCompany = false;
-                      } else {
-                        isCompany = true;
-                      }
-                      showButtonBloc.add(
-                        ShowButtonEvent(
-                          show:
-                              isCompany && isCountrySelected && isTradeLicense,
-                        ),
-                      );
-                    },
-                  ),
-                  const SizeBox(height: 10),
-                  Row(
-                    children: [
-                      Text(
-                        labels[297]["labelText"],
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.black63,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const Asterisk(),
-                    ],
-                  ),
-                  const SizeBox(height: 7),
-                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                    builder: (context, state) {
-                      return CustomDropDown(
-                        title: "Select a Country",
-                        items: dhabiCountryNames,
-                        value: selectedCountry,
-                        onChanged: (value) {
-                          toggles++;
-                          isCountrySelected = true;
-                          selectedCountry = value as String;
-                          dhabiCountryIndex =
-                              dhabiCountryNames.indexOf(selectedCountry!);
-                          log("dhabiCountryIndex -> $dhabiCountryIndex");
-                          countrySelectedBloc.add(
-                            DropdownSelectedEvent(
-                              isDropdownSelected: isCountrySelected,
-                              toggles: toggles,
-                            ),
-                          );
-                          showButtonBloc.add(
-                            ShowButtonEvent(
-                              show: isCompany &&
-                                  isCountrySelected &&
-                                  isTradeLicense,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  const SizeBox(height: 10),
-                  Row(
-                    children: [
-                      Text(
-                        "Trade License Number",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.black63,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const Asterisk(),
-                    ],
-                  ),
-                  const SizeBox(height: 7),
-                  CustomTextField(
-                    controller: _tradeLicenseController,
-                    // keyboardType: TextInputType.number,
-                    onChanged: (p0) {
-                      if (p0.isEmpty) {
-                        isTradeLicense = false;
-                      } else {
-                        isTradeLicense = true;
-                      }
-                      showButtonBloc.add(
-                        ShowButtonEvent(
-                          show:
-                              isCompany && isCountrySelected && isTradeLicense,
-                        ),
-                      );
-                    },
+                    ),
                   ),
                 ],
               ),

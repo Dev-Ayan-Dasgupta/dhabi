@@ -238,6 +238,7 @@ class _OTPScreenState extends State<OTPScreen> {
               "Going to the previous screen will make you repeat this step.",
           auxWidget: Column(
             children: [
+              const SizeBox(height: 15),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);
@@ -1211,28 +1212,30 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   void resendOTP() async {
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    if (seconds == 0 || pinputErrorCount > 0) {
-      if (otpArgumentModel.isEmail) {
-        seconds = 300;
-      } else {
-        seconds = 90;
+    if (seconds != 0) {
+      final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+      if (seconds == 0 || pinputErrorCount > 0) {
+        if (otpArgumentModel.isEmail) {
+          seconds = 90;
+        } else {
+          seconds = 90;
+        }
+        startTimer();
+        final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
+        otpTimerBloc.add(OTPTimerEvent(seconds: seconds));
       }
-      startTimer();
-      final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
-      otpTimerBloc.add(OTPTimerEvent(seconds: seconds));
+      if (otpArgumentModel.isEmail) {
+        await MapSendEmailOtp.mapSendEmailOtp(
+            {"emailID": otpArgumentModel.emailOrPhone});
+      } else {
+        await MapSendMobileOtp.mapSendMobileOtp(
+          {"mobileNo": otpArgumentModel.emailOrPhone},
+          token ?? "",
+        );
+      }
+      pinputErrorCount = 0;
+      showButtonBloc.add(const ShowButtonEvent(show: true));
     }
-    if (otpArgumentModel.isEmail) {
-      await MapSendEmailOtp.mapSendEmailOtp(
-          {"emailID": otpArgumentModel.emailOrPhone});
-    } else {
-      await MapSendMobileOtp.mapSendMobileOtp(
-        {"mobileNo": otpArgumentModel.emailOrPhone},
-        token ?? "",
-      );
-    }
-    pinputErrorCount = 0;
-    showButtonBloc.add(const ShowButtonEvent(show: true));
   }
 
   @override

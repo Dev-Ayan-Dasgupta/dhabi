@@ -332,7 +332,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                     alignment: Alignment.center,
                     child: SizedBox(
                       width: (280 / Dimensions.designWidth).w,
-                      height: (384 / Dimensions.designWidth).w,
+                      height: (384 / Dimensions.designHeight).h,
                       child: Image.asset(ImageConstants.passport),
                     ),
                   ),

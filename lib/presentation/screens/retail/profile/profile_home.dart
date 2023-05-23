@@ -192,7 +192,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                     context,
                     Routes.onboarding,
                     arguments: OnboardingArgumentModel(
-                      isInitial: false,
+                      isInitial: true,
                     ).toMap(),
                   );
                 },
