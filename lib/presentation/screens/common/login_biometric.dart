@@ -34,6 +34,8 @@ class LoginBiometricScreen extends StatefulWidget {
 class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
   late LoginPasswordArgumentModel loginPasswordArgument;
 
+  bool isShowBiometric = true;
+
   @override
   void initState() {
     super.initState();
@@ -82,15 +84,6 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                  // const SizeBox(height: 72),
-                  // InkWell(
-                  //   onTap: biometricPrompt,
-                  //   child: SvgPicture.asset(
-                  //     ImageConstants.biometric,
-                  //     width: (145 / Dimensions.designWidth).w,
-                  //     height: (159 / Dimensions.designHeight).h,
-                  //   ),
-                  // )
                 ],
               ),
             ),
@@ -98,6 +91,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
               children: [
                 SolidButton(
                   onTap: () {
+                    isShowBiometric = false;
                     Navigator.pushReplacementNamed(
                       context,
                       Routes.loginPassword,
@@ -139,41 +133,44 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
     log("storageEmail -> $storageEmail");
     log("storagePassword -> $storagePassword");
     await Future.delayed(const Duration(seconds: 3));
-    if (persistBiometric!) {
-      bool isBiometricSupported =
-          await LocalAuthentication().isDeviceSupported();
-      log("isBiometricSupported -> $isBiometricSupported");
+    log("isShowBiometric -> $isShowBiometric");
+    if (isShowBiometric) {
+      if (persistBiometric!) {
+        bool isBiometricSupported =
+            await LocalAuthentication().isDeviceSupported();
+        log("isBiometricSupported -> $isBiometricSupported");
 
-      if (deviceId == "bf8e43a90970f33c") {
-        if (context.mounted) {
-          Navigator.pushNamed(
-            context,
-            Routes.loginPassword,
-            arguments: LoginPasswordArgumentModel(
-              emailId: storageEmail ?? "",
-              userId: storageUserId ?? 0,
-              userTypeId: storageUserTypeId ?? 1,
-              companyId: storageCompanyId ?? 0,
-            ).toMap(),
-          );
-        }
-      }
-
-      if (!isBiometricSupported) {
-        // if (context.mounted) {
-        //   Navigator.pushNamed(context, Routes.loginUserId);
-        // }
-      } else {
-        bool isAuthenticated = await BiometricHelper.authenticateUser();
-
-        if (isAuthenticated) {
+        if (deviceId == "bf8e43a90970f33c") {
           if (context.mounted) {
-            // Navigator.pushNamed(context, Routes.loginUserId);
-            onSubmit(storagePassword ?? "");
+            Navigator.pushNamed(
+              context,
+              Routes.loginPassword,
+              arguments: LoginPasswordArgumentModel(
+                emailId: storageEmail ?? "",
+                userId: storageUserId ?? 0,
+                userTypeId: storageUserTypeId ?? 1,
+                companyId: storageCompanyId ?? 0,
+              ).toMap(),
+            );
           }
+        }
+
+        if (!isBiometricSupported) {
+          // if (context.mounted) {
+          //   Navigator.pushNamed(context, Routes.loginUserId);
+          // }
         } else {
-          // TODO: Verify from client if they want a dialog box to enable biometric
-          OpenSettings.openBiometricEnrollSetting();
+          bool isAuthenticated = await BiometricHelper.authenticateUser();
+
+          if (isAuthenticated) {
+            if (context.mounted) {
+              // Navigator.pushNamed(context, Routes.loginUserId);
+              onSubmit(storagePassword ?? "");
+            }
+          } else {
+            // TODO: Verify from client if they want a dialog box to enable biometric
+            OpenSettings.openBiometricEnrollSetting();
+          }
         }
       }
     }

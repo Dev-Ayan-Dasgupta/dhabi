@@ -301,7 +301,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 arguments: OnboardingArgumentModel(isInitial: true).toMap());
           } else {
             if (persistBiometric == true) {
-              Navigator.pushNamed(
+              Navigator.pushReplacementNamed(
                 context,
                 Routes.loginBiometric,
                 arguments: LoginPasswordArgumentModel(
@@ -312,7 +312,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 ).toMap(),
               );
             } else {
-              Navigator.pushNamed(
+              Navigator.pushReplacementNamed(
                 context,
                 Routes.loginPassword,
                 arguments: LoginPasswordArgumentModel(
@@ -326,7 +326,7 @@ class _SplashScreenState extends State<SplashScreen> {
           }
         } else {
           if (persistBiometric == true) {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.loginBiometric,
               arguments: LoginPasswordArgumentModel(
@@ -337,7 +337,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ).toMap(),
             );
           } else {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.loginPassword,
               arguments: LoginPasswordArgumentModel(
@@ -352,7 +352,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         if (storageUserTypeId == 1) {
           if (storageStepsCompleted == 1) {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.retailOnboardingStatus,
               arguments: OnboardingStatusArgumentModel(
@@ -363,7 +363,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ).toMap(),
             );
           } else if (storageStepsCompleted == 2 || storageStepsCompleted == 3) {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.retailOnboardingStatus,
               arguments: OnboardingStatusArgumentModel(
@@ -378,7 +378,7 @@ class _SplashScreenState extends State<SplashScreen> {
               storageStepsCompleted == 6 ||
               storageStepsCompleted == 7 ||
               storageStepsCompleted == 8) {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.retailOnboardingStatus,
               arguments: OnboardingStatusArgumentModel(
@@ -389,7 +389,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ).toMap(),
             );
           } else if (storageStepsCompleted == 9) {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.retailOnboardingStatus,
               arguments: OnboardingStatusArgumentModel(
@@ -400,7 +400,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ).toMap(),
             );
           } else if (storageStepsCompleted == 10) {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.retailOnboardingStatus,
               arguments: OnboardingStatusArgumentModel(
@@ -414,7 +414,7 @@ class _SplashScreenState extends State<SplashScreen> {
         }
         if (storageUserTypeId == 2) {
           if (storageStepsCompleted == 1) {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.createPassword,
               arguments: CreateAccountArgumentModel(
@@ -425,7 +425,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ).toMap(),
             );
           } else if (storageStepsCompleted == 2) {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.businessOnboardingStatus,
               arguments: OnboardingStatusArgumentModel(
@@ -436,7 +436,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ).toMap(),
             );
           } else if (storageStepsCompleted == 11) {
-            Navigator.pushNamed(
+            Navigator.pushReplacementNamed(
               context,
               Routes.businessOnboardingStatus,
               arguments: OnboardingStatusArgumentModel(
