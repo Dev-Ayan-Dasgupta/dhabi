@@ -38,6 +38,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
   void initState() {
     super.initState();
     argumentInitialization();
+    biometricPrompt();
   }
 
   void argumentInitialization() {
@@ -81,15 +82,15 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 72),
-                  InkWell(
-                    onTap: biometricPrompt,
-                    child: SvgPicture.asset(
-                      ImageConstants.biometric,
-                      width: (145 / Dimensions.designWidth).w,
-                      height: (159 / Dimensions.designHeight).h,
-                    ),
-                  )
+                  // const SizeBox(height: 72),
+                  // InkWell(
+                  //   onTap: biometricPrompt,
+                  //   child: SvgPicture.asset(
+                  //     ImageConstants.biometric,
+                  //     width: (145 / Dimensions.designWidth).w,
+                  //     height: (159 / Dimensions.designHeight).h,
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -137,6 +138,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
   void biometricPrompt() async {
     log("storageEmail -> $storageEmail");
     log("storagePassword -> $storagePassword");
+    await Future.delayed(const Duration(seconds: 3));
     if (persistBiometric!) {
       bool isBiometricSupported =
           await LocalAuthentication().isDeviceSupported();
@@ -215,7 +217,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
             arguments: RetailDashboardArgumentModel(
               imgUrl: "",
               name: result["customerName"],
-              isFirst: false,
+              isFirst: storageIsFirstLogin == true ? false : false,
             ).toMap(),
           );
         } else {
@@ -271,7 +273,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
               arguments: RetailDashboardArgumentModel(
                 imgUrl: "",
                 name: "",
-                isFirst: false,
+                isFirst: storageIsFirstLogin == true ? false : true,
               ).toMap(),
             );
           }
@@ -290,6 +292,9 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
       storageisCompanyRegistered =
           await storage.read(key: "isCompanyRegistered") == "true";
       log("storageisCompanyRegistered -> $storageisCompanyRegistered");
+
+      await storage.write(key: "isFirstLogin", value: true.toString());
+      storageIsFirstLogin = (await storage.read(key: "isFirstLogin")) == "true";
     } else {
       log("Reason Code -> ${result["reasonCode"]}");
       if (context.mounted) {
@@ -408,7 +413,9 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                                 arguments: RetailDashboardArgumentModel(
                                   imgUrl: "",
                                   name: result["customerName"],
-                                  isFirst: false,
+                                  isFirst: storageIsFirstLogin == true
+                                      ? false
+                                      : true,
                                 ).toMap(),
                               );
                             }
@@ -417,6 +424,11 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                                 Routes.businessDashboard, (route) => false);
                           }
                         }
+
+                        await storage.write(
+                            key: "isFirstLogin", value: true.toString());
+                        storageIsFirstLogin =
+                            (await storage.read(key: "isFirstLogin")) == "true";
                       } else {
                         log("Reason Code -> ${result["reasonCode"]}");
                         if (context.mounted) {
@@ -457,16 +469,21 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                   );
                 },
               ),
-              const SizeBox(height: 20),
+              const SizeBox(height: 15),
             ],
           ),
-          actionWidget: SolidButton(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            text: labels[166]["labelText"],
-            color: AppColors.primaryBright17,
-            fontColor: AppColors.primary,
+          actionWidget: Column(
+            children: [
+              SolidButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[166]["labelText"],
+                color: AppColors.primaryBright17,
+                fontColor: AppColors.primary,
+              ),
+              const SizeBox(height: 20),
+            ],
           ),
         );
       },
@@ -484,6 +501,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
               "You have exceeded maximum number of 3 retries. Please wait for 24 hours before you can try again.",
           actionWidget: Column(
             children: [
+              const SizeBox(height: 20),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);

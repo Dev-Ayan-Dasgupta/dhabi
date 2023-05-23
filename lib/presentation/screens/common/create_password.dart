@@ -943,16 +943,21 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   );
                 },
               ),
-              const SizeBox(height: 20),
+              const SizeBox(height: 15),
             ],
           ),
-          actionWidget: SolidButton(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            text: labels[166]["labelText"],
-            color: AppColors.primaryBright17,
-            fontColor: AppColors.primary,
+          actionWidget: Column(
+            children: [
+              SolidButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[166]["labelText"],
+                color: AppColors.primaryBright17,
+                fontColor: AppColors.primary,
+              ),
+              const SizeBox(height: 20),
+            ],
           ),
         );
       },
@@ -970,6 +975,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               "You have exceeded maximum number of 3 retries. Please wait for 24 hours before you can try again.",
           actionWidget: Column(
             children: [
+              const SizeBox(height: 20),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);

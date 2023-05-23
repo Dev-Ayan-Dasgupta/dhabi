@@ -62,7 +62,7 @@ class GradientButton extends StatelessWidget {
             Text(
               text,
               style: TextStyles.primary.copyWith(
-                fontSize: fontSize ?? (20 / Dimensions.designWidth).w,
+                fontSize: fontSize ?? (18 / Dimensions.designWidth).w,
                 fontWeight: fontWeight ?? FontWeight.w700,
               ),
             ),

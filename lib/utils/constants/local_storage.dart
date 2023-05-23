@@ -1,3 +1,8 @@
+bool? storageIsNotNewInstall;
+bool? storageHasFirstLoggedIn;
+
+bool? storageIsFirstLogin;
+
 String? storageEmail;
 String? storagePassword;
 int? storageUserId;

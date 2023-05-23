@@ -505,6 +505,14 @@ class _OTPScreenState extends State<OTPScreen> {
                                                           key:
                                                               "stepsCompleted") ??
                                                       "0");
+                                              await storage.write(
+                                                  key: "hasFirstLoggedIn",
+                                                  value: true.toString());
+                                              storageHasFirstLoggedIn =
+                                                  (await storage.read(
+                                                          key:
+                                                              "hasFirstLoggedIn")) ==
+                                                      "true";
                                             },
                                             text: labels[31]["labelText"],
                                             auxWidget: isLoading
@@ -858,6 +866,14 @@ class _OTPScreenState extends State<OTPScreen> {
                                                           key:
                                                               "stepsCompleted") ??
                                                       "0");
+                                              await storage.write(
+                                                  key: "hasFirstLoggedIn",
+                                                  value: true.toString());
+                                              storageHasFirstLoggedIn =
+                                                  (await storage.read(
+                                                          key:
+                                                              "hasFirstLoggedIn")) ==
+                                                      "true";
                                             },
                                             text: labels[31]["labelText"],
                                             auxWidget: isLoading
@@ -1066,6 +1082,14 @@ class _OTPScreenState extends State<OTPScreen> {
                                               await storage.read(
                                                       key: "stepsCompleted") ??
                                                   "0");
+                                          await storage.write(
+                                              key: "hasFirstLoggedIn",
+                                              value: true.toString());
+                                          storageHasFirstLoggedIn =
+                                              (await storage.read(
+                                                      key:
+                                                          "hasFirstLoggedIn")) ==
+                                                  "true";
                                         },
                                         text: labels[31]["labelText"],
                                         auxWidget: isLoading

@@ -1546,6 +1546,16 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                   );
                 }
               },
+              auxWidget: Row(
+                children: [
+                  Icon(
+                    Icons.add_rounded,
+                    color: AppColors.primary,
+                    size: (16 / Dimensions.designWidth).w,
+                  ),
+                  const SizeBox(width: 10),
+                ],
+              ),
               text: labels[284]["labelText"],
               color: Colors.white,
               boxShadow: [BoxShadows.primary],

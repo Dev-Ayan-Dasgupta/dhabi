@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
@@ -6,6 +8,8 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +38,8 @@ class _BusinessOnboardingStatusScreenState
   late OnboardingStatusArgumentModel onboardingStatusArgument;
 
   bool isChecked = false;
+
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -204,31 +210,51 @@ class _BusinessOnboardingStatusScreenState
               ),
               falsy: Column(
                 children: [
-                  GradientButton(
-                    onTap: () {
-                      // Navigator.pushNamed(context, Routes.basicCompanyDetails);
-                      switch (onboardingStatusArgument.stepsCompleted) {
-                        case 1:
-                          Navigator.pushNamed(
-                              context, Routes.basicCompanyDetails);
-                          break;
-                        case 2:
-                          Navigator.pushNamed(
-                            context,
-                            Routes.verifyMobile,
-                            arguments: VerifyMobileArgumentModel(
-                              isBusiness: true,
-                            ).toMap(),
-                          );
-                          break;
-                        case 3:
-                          Navigator.pushNamed(
-                              context, Routes.businessDashboard);
-                          break;
-                        default:
-                      }
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      return GradientButton(
+                        onTap: () {
+                          switch (onboardingStatusArgument.stepsCompleted) {
+                            case 0:
+                              Navigator.pushNamed(
+                                context,
+                                Routes.createPassword,
+                                arguments: CreateAccountArgumentModel(
+                                  email: storageEmail ?? "",
+                                  isRetail:
+                                      storageUserTypeId == 1 ? true : false,
+                                  userTypeId: storageUserTypeId ?? 1,
+                                  companyId: storageCompanyId ?? 0,
+                                ).toMap(),
+                              );
+                              break;
+                            case 1:
+                              callLoginApi();
+                              Navigator.pushNamed(
+                                  context, Routes.basicCompanyDetails);
+                              break;
+                            case 2:
+                              callLoginApi();
+                              Navigator.pushNamed(
+                                context,
+                                Routes.verifyMobile,
+                                arguments: VerifyMobileArgumentModel(
+                                  isBusiness: true,
+                                ).toMap(),
+                              );
+                              break;
+                            case 3:
+                              Navigator.pushNamed(
+                                  context, Routes.businessDashboard);
+                              break;
+                            default:
+                          }
+                        },
+                        text: labels[31]["labelText"],
+                        auxWidget:
+                            isLoading ? const LoaderRow() : const SizeBox(),
+                      );
                     },
-                    text: labels[31]["labelText"],
                   ),
                   SizeBox(
                     height: PaddingConstants.bottomPadding +
@@ -281,5 +307,31 @@ class _BusinessOnboardingStatusScreenState
   void triggerAllTrueEvent() {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     showButtonBloc.add(ShowButtonEvent(show: isChecked));
+  }
+
+  void callLoginApi() async {
+    isLoading = true;
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    showButtonBloc.add(ShowButtonEvent(show: isLoading));
+    var result = await MapLogin.mapLogin({
+      "emailId": storageEmail,
+      "userTypeId": storageUserTypeId,
+      "userId": storageUserId,
+      "companyId": storageCompanyId,
+      "password": storagePassword,
+      "deviceId": deviceId,
+      "registerDevice": false,
+      "deviceName": deviceName,
+      "deviceType": deviceType,
+      "appVersion": appVersion
+    });
+    log("Login API Response -> $result");
+    token = result["token"];
+    log("token -> $token");
+    customerName = result["customerName"];
+    await storage.write(key: "customerName", value: customerName);
+    storageCustomerName = await storage.read(key: "customerName");
+    isLoading = false;
+    showButtonBloc.add(ShowButtonEvent(show: isLoading));
   }
 }

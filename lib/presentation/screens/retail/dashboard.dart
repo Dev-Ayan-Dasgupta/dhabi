@@ -156,9 +156,9 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.checkCircleOutlined,
-          title: "Understood",
+          title: "Preference Saved",
           message:
-              "You may enable biometric from your profile section anytime.",
+              "You can enable biometric authentication anytime by going to the settings menu",
           actionWidget: Column(
             children: [
               GradientButton(

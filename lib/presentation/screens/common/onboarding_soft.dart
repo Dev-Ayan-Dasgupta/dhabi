@@ -362,17 +362,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
                             onTap: () {
-                              // Navigator.pushNamed(
-                              //     context, Routes.exploreDashboard);
-                              // Navigator.pushNamed(context, Routes.loginUserId);
                               Navigator.pushNamed(
-                                context,
-                                Routes.applicationTaxCRS,
-                                arguments: TaxCrsArgumentModel(
-                                  isUSFATCA: storageIsUSFATCA ?? true,
-                                  ustin: storageUsTin ?? "",
-                                ).toMap(),
-                              );
+                                  context, Routes.exploreDashboard);
+                              // Navigator.pushNamed(context, Routes.loginUserId);
                             },
                             text: labels[208]["labelText"],
                             color: const Color.fromRGBO(85, 85, 85, 0.2),

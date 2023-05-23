@@ -236,6 +236,9 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
             log("Validate Email (Business) response -> $result");
           }
           if (result["success"]) {
+            await storage.write(key: "newInstall", value: true.toString());
+            storageIsNotNewInstall =
+                (await storage.read(key: "newInstall")) == "true";
             await storage.write(key: "stepsCompleted", value: 1.toString());
             storageStepsCompleted =
                 int.parse(await storage.read(key: "stepsCompleted") ?? "0");

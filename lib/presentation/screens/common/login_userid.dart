@@ -334,21 +334,25 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
               }
             }
           } else {
-            var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
-                {"emailID": _emailController.text});
-            log("sendEmailOtpResult -> $sendEmailOtpResult");
-            if (context.mounted) {
-              Navigator.pushNamed(
-                context,
-                Routes.otp,
-                arguments: OTPArgumentModel(
-                  emailOrPhone: _emailController.text,
-                  isEmail: true,
-                  isBusiness: false,
-                  isInitial: false,
-                  isLogin: true,
-                ).toMap(),
-              );
+            if (singleCifResult["hasValidCIF"]) {
+              var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
+                  {"emailID": _emailController.text});
+              log("sendEmailOtpResult -> $sendEmailOtpResult");
+              if (context.mounted) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.otp,
+                  arguments: OTPArgumentModel(
+                    emailOrPhone: _emailController.text,
+                    isEmail: true,
+                    isBusiness: false,
+                    isInitial: false,
+                    isLogin: true,
+                  ).toMap(),
+                );
+              }
+            } else {
+              promptWrongCredentials();
             }
           }
           isLoading = false;
@@ -360,6 +364,31 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
     } else {
       return SolidButton(onTap: () {}, text: labels[31]["labelText"]);
     }
+  }
+
+  void promptWrongCredentials() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Wrong Credentials",
+          message: "You have entered invalid username or password",
+          actionWidget: Column(
+            children: [
+              GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacementNamed(context, Routes.loginUserId);
+                },
+                text: labels[88]["labelText"],
+              ),
+              const SizeBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override

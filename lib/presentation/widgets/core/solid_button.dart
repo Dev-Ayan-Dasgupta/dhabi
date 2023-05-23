@@ -1,7 +1,9 @@
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 
 class SolidButton extends StatelessWidget {
   const SolidButton({
@@ -13,6 +15,7 @@ class SolidButton extends StatelessWidget {
     this.borderRadius,
     this.boxShadow,
     this.color,
+    this.auxWidget,
     required this.text,
     this.subtitle,
     this.fontColor,
@@ -28,6 +31,7 @@ class SolidButton extends StatelessWidget {
   final double? borderRadius;
   final List<BoxShadow>? boxShadow;
   final Color? color;
+  final Widget? auxWidget;
   final String text;
   final String? subtitle;
   final Color? fontColor;
@@ -54,12 +58,18 @@ class SolidButton extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              text,
-              style: TextStyles.primaryBold.copyWith(
-                color: fontColor ?? AppColors.dark50,
-                fontSize: fontSize ?? (20 / Dimensions.designWidth).w,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                auxWidget ?? const SizeBox(),
+                Text(
+                  text,
+                  style: TextStyles.primaryBold.copyWith(
+                    color: fontColor ?? AppColors.dark50,
+                    fontSize: fontSize ?? (18 / Dimensions.designWidth).w,
+                  ),
+                ),
+              ],
             ),
             SizeBox(height: subtitle != null ? 3 : 0),
             Ternary(

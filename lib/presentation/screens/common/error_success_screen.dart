@@ -91,7 +91,10 @@ class _ErrorSuccessScreenState extends State<ErrorSuccessScreen> {
                   onTap: errorArgumentModel.onTap,
                   text: errorArgumentModel.buttonText,
                 ),
-                const SizeBox(height: 20),
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.of(context).padding.bottom,
+                ),
               ],
             )
           ],

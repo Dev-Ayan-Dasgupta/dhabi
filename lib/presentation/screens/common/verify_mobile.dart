@@ -60,7 +60,6 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
                     labels[227]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
@@ -70,9 +69,17 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                   ),
                   const SizeBox(height: 22),
                   Text(
+                    "We will send the OTP to your registered mobile number",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.dark50,
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 22),
+                  Text(
                     labels[27]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.black63,
+                      color: AppColors.dark80,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),

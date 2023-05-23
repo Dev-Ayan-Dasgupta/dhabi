@@ -280,6 +280,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           await storage.write(key: "retailLoggedIn", value: true.toString());
           storageRetailLoggedIn =
               await storage.read(key: "retailLoggedIn") == "true";
+
           if (context.mounted) {
             Navigator.pushNamedAndRemoveUntil(
               context,
@@ -288,7 +289,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               arguments: RetailDashboardArgumentModel(
                 imgUrl: "",
                 name: result["customerName"],
-                isFirst: false,
+                isFirst: storageIsFirstLogin == true ? false : true,
               ).toMap(),
             );
           }
@@ -345,7 +346,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               arguments: RetailDashboardArgumentModel(
                 imgUrl: "",
                 name: "",
-                isFirst: false,
+                isFirst: storageIsFirstLogin == true ? false : true,
               ).toMap(),
             );
           }
@@ -364,6 +365,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       storageisCompanyRegistered =
           await storage.read(key: "isCompanyRegistered") == "true";
       log("storageisCompanyRegistered -> $storageisCompanyRegistered");
+
+      await storage.write(key: "isFirstLogin", value: true.toString());
+      storageIsFirstLogin = (await storage.read(key: "isFirstLogin")) == "true";
     } else {
       log("Reason Code -> ${result["reasonCode"]}");
       if (context.mounted) {
@@ -476,7 +480,8 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                               arguments: RetailDashboardArgumentModel(
                                 imgUrl: "",
                                 name: result["customerName"],
-                                isFirst: false,
+                                isFirst:
+                                    storageIsFirstLogin == true ? false : true,
                               ).toMap(),
                             );
                           } else {
@@ -484,6 +489,11 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                                 Routes.businessDashboard, (route) => false);
                           }
                         }
+
+                        await storage.write(
+                            key: "isFirstLogin", value: true.toString());
+                        storageIsFirstLogin =
+                            (await storage.read(key: "isFirstLogin")) == "true";
                       } else {
                         log("Reason Code -> ${result["reasonCode"]}");
                         if (context.mounted) {
@@ -524,16 +534,21 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                   );
                 },
               ),
-              const SizeBox(height: 20),
+              const SizeBox(height: 15),
             ],
           ),
-          actionWidget: SolidButton(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            text: labels[166]["labelText"],
-            color: AppColors.primaryBright17,
-            fontColor: AppColors.primary,
+          actionWidget: Column(
+            children: [
+              SolidButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[166]["labelText"],
+                color: AppColors.primaryBright17,
+                fontColor: AppColors.primary,
+              ),
+              const SizeBox(height: 20),
+            ],
           ),
         );
       },
@@ -551,6 +566,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               "You have exceeded maximum number of 3 retries. Please wait for 24 hours before you can try again.",
           actionWidget: Column(
             children: [
+              const SizeBox(height: 20),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);

@@ -280,7 +280,7 @@ class _AcceptTermsAndConditionsScreenState
                                       arguments: RetailDashboardArgumentModel(
                                         imgUrl: "",
                                         name: storageFullName ?? "",
-                                        isFirst: true,
+                                        isFirst: false,
                                       ).toMap(),
                                     );
                                   }
@@ -317,6 +317,13 @@ class _AcceptTermsAndConditionsScreenState
                               storageStepsCompleted = int.parse(
                                   await storage.read(key: "stepsCompleted") ??
                                       "0");
+
+                              await storage.write(
+                                  key: "hasFirstLoggedIn",
+                                  value: true.toString());
+                              storageHasFirstLoggedIn = (await storage.read(
+                                      key: "hasFirstLoggedIn")) ==
+                                  "true";
                             },
                             text: "I Agree",
                             auxWidget: isUploading

@@ -2,9 +2,6 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (14)
+## Release notes - 1.0.0 (15)
 
-- Fixed disabling of Continue button in TIN screen - FHDHABI-161
-- Enabled Rescan button in scanned details screen - FHDHABI-160
-- Added Cancel button for Verify this Session - FHDHABI-165
-- Added pop-up for max retry limit (reasonCode 9) - FHDHABI-159
+- Pushing code for following tests: 104, 118, 121, 127, 135, 147, 149, 157, 158, 166, 167, 168, 170, 132, 145, 172,
