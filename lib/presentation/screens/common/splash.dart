@@ -177,14 +177,12 @@ class _SplashScreenState extends State<SplashScreen> {
       await storage.deleteAll();
       prefs.setBool('first_run', false);
     }
-    log("init LS started");
+
     try {
-      // await storage.write(key: "newInstall", value: true.toString());
       storageIsNotNewInstall =
           // false;
           (await storage.read(key: "newInstall")) == "true";
       log("storageIsNotNewInstall -> $storageIsNotNewInstall");
-      // await storage.write(key: "hasFirstLoggedIn", value: false.toString());
       storageHasFirstLoggedIn =
           (await storage.read(key: "hasFirstLoggedIn")) == "true";
       log("storageHasFirstLoggedIn -> $storageHasFirstLoggedIn");
@@ -286,11 +284,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
       storageCustomerName = await storage.read(key: "customerName");
       log("storageCustomerName -> $storageCustomerName");
-    } catch (e) {
-      log("Init LS Exception -> $e");
+    } catch (_) {
+      rethrow;
     }
-
-    log("init LS ended");
   }
 
   void navigate(BuildContext context) {
@@ -299,9 +295,35 @@ class _SplashScreenState extends State<SplashScreen> {
           arguments: OnboardingArgumentModel(isInitial: true).toMap());
     } else {
       if (storageStepsCompleted == 0) {
-        if (storageHasFirstLoggedIn == false) {
-          Navigator.pushNamed(context, Routes.registration,
-              arguments: RegistrationArgumentModel(isInitial: true).toMap());
+        if (storageUserTypeId == 2) {
+          if (storageIsFirstLogin == false) {
+            Navigator.pushReplacementNamed(context, Routes.onboarding,
+                arguments: OnboardingArgumentModel(isInitial: true).toMap());
+          } else {
+            if (persistBiometric == true) {
+              Navigator.pushNamed(
+                context,
+                Routes.loginBiometric,
+                arguments: LoginPasswordArgumentModel(
+                  emailId: storageEmail ?? "",
+                  userId: storageUserId ?? 0,
+                  userTypeId: storageUserTypeId ?? 1,
+                  companyId: storageCompanyId ?? 0,
+                ).toMap(),
+              );
+            } else {
+              Navigator.pushNamed(
+                context,
+                Routes.loginPassword,
+                arguments: LoginPasswordArgumentModel(
+                  emailId: storageEmail ?? "",
+                  userId: storageUserId ?? 0,
+                  userTypeId: storageUserTypeId ?? 1,
+                  companyId: storageCompanyId ?? 0,
+                ).toMap(),
+              );
+            }
+          }
         } else {
           if (persistBiometric == true) {
             Navigator.pushNamed(

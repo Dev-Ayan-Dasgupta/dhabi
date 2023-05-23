@@ -270,6 +270,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     log("token -> $token");
 
     if (result["success"]) {
+      await storage.write(key: "newInstall", value: true.toString());
+      storageIsNotNewInstall =
+          (await storage.read(key: "newInstall")) == "true";
       customerName = result["customerName"];
       await storage.write(key: "customerName", value: customerName);
       storageCustomerName = await storage.read(key: "customerName");
@@ -466,6 +469,10 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                       token = result["token"];
                       log("token -> $token");
                       if (result["success"]) {
+                        await storage.write(
+                            key: "newInstall", value: true.toString());
+                        storageIsNotNewInstall =
+                            (await storage.read(key: "newInstall")) == "true";
                         customerName = result["customerName"];
                         await storage.write(
                             key: "customerName", value: customerName);
@@ -485,8 +492,17 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                               ).toMap(),
                             );
                           } else {
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                Routes.businessDashboard, (route) => false);
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.businessDashboard,
+                              (route) => false,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl: "",
+                                name: "",
+                                isFirst:
+                                    storageIsFirstLogin == true ? false : true,
+                              ).toMap(),
+                            );
                           }
                         }
 

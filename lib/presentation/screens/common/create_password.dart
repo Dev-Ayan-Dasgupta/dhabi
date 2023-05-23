@@ -657,6 +657,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
                 if (result["success"]) {
                   // customerName = result["customerName"];
+
                   await storage.write(
                       key: "stepsCompleted", value: 2.toString());
                   storageStepsCompleted = int.parse(
@@ -899,8 +900,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               ).toMap(),
                             );
                           } else {
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                Routes.businessDashboard, (route) => false);
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.businessDashboard,
+                              (route) => false,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl: "",
+                                name: "",
+                                isFirst:
+                                    storageIsFirstLogin == true ? false : true,
+                              ).toMap(),
+                            );
                           }
                         }
                       } else {

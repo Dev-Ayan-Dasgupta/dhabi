@@ -205,6 +205,9 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
     log("token -> $token");
 
     if (result["success"]) {
+      await storage.write(key: "newInstall", value: true.toString());
+      storageIsNotNewInstall =
+          (await storage.read(key: "newInstall")) == "true";
       customerName = result["customerName"];
       await storage.write(key: "customerName", value: customerName);
       storageCustomerName = await storage.read(key: "customerName");
@@ -393,6 +396,10 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                       token = result["token"];
                       log("token -> $token");
                       if (result["success"]) {
+                        await storage.write(
+                            key: "newInstall", value: true.toString());
+                        storageIsNotNewInstall =
+                            (await storage.read(key: "newInstall")) == "true";
                         customerName = result["customerName"];
                         await storage.write(
                             key: "customerName", value: customerName);
@@ -420,8 +427,17 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                               );
                             }
                           } else {
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                Routes.businessDashboard, (route) => false);
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.businessDashboard,
+                              (route) => false,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl: "",
+                                name: "",
+                                isFirst:
+                                    storageIsFirstLogin == true ? false : true,
+                              ).toMap(),
+                            );
                           }
                         }
 

@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -17,6 +18,11 @@ class ThankYouScreen extends StatelessWidget {
             Navigator.pushReplacementNamed(
               context,
               Routes.businessDashboard,
+              arguments: RetailDashboardArgumentModel(
+                imgUrl: "",
+                name: "",
+                isFirst: storageIsFirstLogin == true ? false : true,
+              ).toMap(),
             );
           },
         ),

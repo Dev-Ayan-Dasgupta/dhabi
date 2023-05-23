@@ -245,7 +245,16 @@ class _BusinessOnboardingStatusScreenState
                               break;
                             case 3:
                               Navigator.pushNamed(
-                                  context, Routes.businessDashboard);
+                                context,
+                                Routes.businessDashboard,
+                                arguments: RetailDashboardArgumentModel(
+                                  imgUrl: "",
+                                  name: "",
+                                  isFirst: storageIsFirstLogin == true
+                                      ? false
+                                      : true,
+                                ).toMap(),
+                              );
                               break;
                             default:
                           }
