@@ -6,7 +6,6 @@ import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:open_settings/open_settings.dart';
 
 class TransferConfirmationScreen extends StatefulWidget {
   const TransferConfirmationScreen({Key? key}) : super(key: key);
@@ -151,7 +150,7 @@ class _TransferConfirmationScreenState
       } else {
         // TODO: Verify from client if they want a dialog box to enable biometric
 
-        OpenSettings.openBiometricEnrollSetting();
+        // OpenSettings.openBiometricEnrollSetting();
         // if (context.mounted) {
         //   ScaffoldMessenger.of(context).showSnackBar(
         //     SnackBar(

@@ -613,6 +613,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               await storage.write(
                   key: "password", value: _confirmPasswordController.text);
               storagePassword = await storage.read(key: "password");
+              log("storagePassword -> $storagePassword");
               if (createAccountArgumentModel.isRetail) {
                 isRegistering = true;
                 createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
@@ -860,96 +861,104 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             children: [
               BlocBuilder<ShowButtonBloc, ShowButtonState>(
                 builder: (context, state) {
-                  return GradientButton(
-                    onTap: () async {
-                      isLoading = true;
-                      final ShowButtonBloc showButtonBloc =
-                          context.read<ShowButtonBloc>();
-                      showButtonBloc.add(ShowButtonEvent(show: isLoading));
-                      var result = await MapLogin.mapLogin({
-                        "emailId": createAccountArgumentModel.email,
-                        "userTypeId": storageUserTypeId,
-                        "userId": storageUserId,
-                        "companyId": storageCompanyId,
-                        "password": _confirmPasswordController.text,
-                        "deviceId": deviceId,
-                        "registerDevice": true,
-                        "deviceName": deviceName,
-                        "deviceType": deviceType,
-                        "appVersion": appVersion
-                      });
-                      log("Login API Response -> $result");
-                      token = result["token"];
-                      log("token -> $token");
-                      if (result["success"]) {
-                        // customerName = result["customerName"];
-                        await storage.write(
-                            key: "stepsCompleted", value: 2.toString());
-                        storageStepsCompleted = int.parse(
-                            await storage.read(key: "stepsCompleted") ?? "0");
-                        if (context.mounted) {
-                          if (createAccountArgumentModel.userTypeId == 1) {
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              Routes.retailDashboard,
-                              (route) => false,
-                              arguments: RetailDashboardArgumentModel(
-                                imgUrl: "",
-                                name: result["customerName"],
-                                isFirst: true,
-                              ).toMap(),
-                            );
+                  return Column(
+                    children: [
+                      const SizeBox(height: 15),
+                      GradientButton(
+                        onTap: () async {
+                          isLoading = true;
+                          final ShowButtonBloc showButtonBloc =
+                              context.read<ShowButtonBloc>();
+                          showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                          var result = await MapLogin.mapLogin({
+                            "emailId": createAccountArgumentModel.email,
+                            "userTypeId": storageUserTypeId,
+                            "userId": storageUserId,
+                            "companyId": storageCompanyId,
+                            "password": _confirmPasswordController.text,
+                            "deviceId": deviceId,
+                            "registerDevice": true,
+                            "deviceName": deviceName,
+                            "deviceType": deviceType,
+                            "appVersion": appVersion
+                          });
+                          log("Login API Response -> $result");
+                          token = result["token"];
+                          log("token -> $token");
+                          if (result["success"]) {
+                            // customerName = result["customerName"];
+                            await storage.write(
+                                key: "stepsCompleted", value: 2.toString());
+                            storageStepsCompleted = int.parse(
+                                await storage.read(key: "stepsCompleted") ??
+                                    "0");
+                            if (context.mounted) {
+                              if (createAccountArgumentModel.userTypeId == 1) {
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  Routes.retailDashboard,
+                                  (route) => false,
+                                  arguments: RetailDashboardArgumentModel(
+                                    imgUrl: "",
+                                    name: result["customerName"],
+                                    isFirst: true,
+                                  ).toMap(),
+                                );
+                              } else {
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  Routes.businessDashboard,
+                                  (route) => false,
+                                  arguments: RetailDashboardArgumentModel(
+                                    imgUrl: "",
+                                    name: "",
+                                    isFirst: storageIsFirstLogin == true
+                                        ? false
+                                        : true,
+                                  ).toMap(),
+                                );
+                              }
+                            }
                           } else {
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              Routes.businessDashboard,
-                              (route) => false,
-                              arguments: RetailDashboardArgumentModel(
-                                imgUrl: "",
-                                name: "",
-                                isFirst:
-                                    storageIsFirstLogin == true ? false : true,
-                              ).toMap(),
-                            );
+                            log("Reason Code -> ${result["reasonCode"]}");
+                            if (context.mounted) {
+                              switch (result["reasonCode"]) {
+                                case 1:
+                                  // promptWrongCredentials();
+                                  break;
+                                case 2:
+                                  promptWrongCredentials();
+                                  break;
+                                case 3:
+                                  promptWrongCredentials();
+                                  break;
+                                case 4:
+                                  promptWrongCredentials();
+                                  break;
+                                case 5:
+                                  promptWrongCredentials();
+                                  break;
+                                case 6:
+                                  promptKycExpired();
+                                  break;
+                                case 7:
+                                  promptVerifySession();
+                                  break;
+                                case 9:
+                                  promptMaxRetries();
+                                  break;
+                                default:
+                              }
+                            }
                           }
-                        }
-                      } else {
-                        log("Reason Code -> ${result["reasonCode"]}");
-                        if (context.mounted) {
-                          switch (result["reasonCode"]) {
-                            case 1:
-                              // promptWrongCredentials();
-                              break;
-                            case 2:
-                              promptWrongCredentials();
-                              break;
-                            case 3:
-                              promptWrongCredentials();
-                              break;
-                            case 4:
-                              promptWrongCredentials();
-                              break;
-                            case 5:
-                              promptWrongCredentials();
-                              break;
-                            case 6:
-                              promptKycExpired();
-                              break;
-                            case 7:
-                              promptVerifySession();
-                              break;
-                            case 9:
-                              promptMaxRetries();
-                              break;
-                            default:
-                          }
-                        }
-                      }
-                      isLoading = false;
-                      showButtonBloc.add(ShowButtonEvent(show: isLoading));
-                    },
-                    text: labels[31]["labelText"],
-                    auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
+                          isLoading = false;
+                          showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                        },
+                        text: labels[31]["labelText"],
+                        auxWidget:
+                            isLoading ? const LoaderRow() : const SizeBox(),
+                      ),
+                    ],
                   );
                 },
               ),

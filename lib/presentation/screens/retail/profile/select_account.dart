@@ -5,7 +5,9 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -99,32 +101,14 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                   ["cif"];
                               log("cif -> $cif");
                               log("cif RTT -> ${cif.runtimeType}");
-                              // await storage.write(
-                              //     key: "cif", value: cif.toString());
-                              // storageCif = await storage.read(key: "cif");
-                              // log("storageCif -> $storageCif");
 
                               isCompany = selectAccountArgument
                                   .cifDetails[index]["isCompany"];
                               log("isCompany -> $isCompany");
-                              // await storage.write(
-                              //     key: "isCompany",
-                              //     value: isCompany.toString());
-                              // storageIsCompany =
-                              //     await storage.read(key: "isCompany") ==
-                              //         "true";
-                              // log("storageIsCompany -> $storageIsCompany");
 
                               isCompanyRegistered = selectAccountArgument
                                   .cifDetails[index]["isCompanyRegistered"];
                               log("isCompanyRegistered -> $isCompanyRegistered");
-                              // await storage.write(
-                              //     key: "isCompanyRegistered",
-                              //     value: isCompanyRegistered.toString());
-                              // storageisCompanyRegistered = await storage.read(
-                              //         key: "isCompanyRegistered") ==
-                              //     "true";
-                              // log("storageisCompanyRegistered -> $storageisCompanyRegistered");
 
                               log("isLogin -> ${selectAccountArgument.isLogin}");
                               log("isPwChange -> ${selectAccountArgument.isPwChange}");
@@ -162,13 +146,84 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                 }
                               } else {
                                 if (selectAccountArgument.isPwChange) {
-                                  if (!isCompany || isCompanyRegistered) {
-                                    if (context.mounted) {
-                                      Navigator.pushNamed(
-                                          context, Routes.setPassword);
+                                  // TODO: call deviceValid API
+                                  var isDeviceValidApiResult =
+                                      await MapIsDeviceValid.mapIsDeviceValid({
+                                    "userId": selectAccountArgument
+                                        .cifDetails[index]["userID"],
+                                    "deviceId": deviceId,
+                                  }, tokenCP ?? "");
+                                  log("isDeviceValidApiResult -> $isDeviceValidApiResult");
+                                  if (isDeviceValidApiResult["success"]) {
+                                    if (!isCompany || isCompanyRegistered) {
+                                      if (context.mounted) {
+                                        Navigator.pushNamed(
+                                            context, Routes.setPassword);
+                                      }
+                                    } else {
+                                      // TODO: show dialog box which Samit sir will share
+                                      if (context.mounted) {
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (context) {
+                                            return CustomDialog(
+                                              svgAssetPath:
+                                                  ImageConstants.warning,
+                                              title:
+                                                  "Application approval pending",
+                                              message:
+                                                  "You already have a registration pending. Please contact Dhabi support.",
+                                              actionWidget: Column(
+                                                children: [
+                                                  GradientButton(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    text: labels[347]
+                                                        ["labelText"],
+                                                  ),
+                                                  const SizeBox(height: 20),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
                                     }
                                   } else {
-                                    // TODO: show dialog box which Samit sir will share
+                                    if (context.mounted) {
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) {
+                                          return CustomDialog(
+                                            svgAssetPath:
+                                                ImageConstants.warning,
+                                            title: "Device Invalid",
+                                            message:
+                                                "You are trying to login from an unregistered device.",
+                                            actionWidget: Column(
+                                              children: [
+                                                GradientButton(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      Routes.loginUserId,
+                                                    );
+                                                  },
+                                                  text: labels[347]
+                                                      ["labelText"],
+                                                ),
+                                                const SizeBox(height: 20),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
                                   }
                                 } else {
                                   if (selectAccountArgument.isLogin) {
@@ -238,62 +293,6 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                 },
               ),
             ),
-            // Column(
-            //   children: [
-            //     const SizeBox(height: 30),
-            //     BlocBuilder<ShowButtonBloc, ShowButtonState>(
-            //       builder: (context, state) {
-            //         if (isSelected) {
-            //           return GradientButton(
-            //             onTap: () {
-            //               if (selectAccountArgument.isPwChange) {
-            //               } else {
-            //                 if (selectAccountArgument.isLogin) {
-            //                 } else {
-            //                   // TODO: Navigate to dashboard
-            //                 }
-            //               }
-            //             },
-            //             text: labels[127]["labelText"],
-            //             // auxWidget:
-            //             //     isLoading ? const LoaderRow() : const SizeBox(),
-            //           );
-            //         } else {
-            //           return SolidButton(
-            //             onTap: () {},
-            //             text: labels[127]["labelText"],
-            //           );
-            //         }
-            //       },
-            //     ),
-            //     SizeBox(
-            //       height: PaddingConstants.bottomPadding +
-            //           MediaQuery.of(context).padding.bottom,
-            //     ),
-            //   ],
-            // ),
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     const SizeBox(height: 20),
-            //     Text(
-            //       "Please select from the personal account you wish to reset the password",
-            //       style: TextStyles.primaryMedium.copyWith(
-            //         color: AppColors.grey40,
-            //         fontSize: (16 / Dimensions.designWidth).w,
-            //       ),
-            //     ),
-            //     const SizeBox(height: 10),
-            //     SolidButton(
-            //       onTap: () {},
-            //       text: "Personal Account",
-            //       color: Colors.white,
-            //       boxShadow: [BoxShadows.primary],
-            //       fontColor: AppColors.primary,
-            //     ),
-            //     const SizeBox(height: 560 - (3 * 70)),
-            //   ],
-            // )
           ],
         ),
       ),

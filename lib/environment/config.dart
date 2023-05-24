@@ -58,6 +58,11 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['CHANGE_PASSWORD'] ?? "";
   }
 
+  @override
+  String get isDeviceValid {
+    return dotenv.env['IS_DEVICE_VALID'] ?? "";
+  }
+
   // ? Configuration APIs
 
   @override

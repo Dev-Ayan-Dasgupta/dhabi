@@ -13,6 +13,7 @@ abstract class BaseConfig {
   String get addNewDevice;
   String get validateEmailOtpForPassword;
   String get changePassword;
+  String get isDeviceValid;
 
   // ? Configuration APIs
 

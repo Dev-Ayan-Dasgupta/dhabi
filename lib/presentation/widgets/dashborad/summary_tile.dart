@@ -20,7 +20,7 @@ class AccountSummaryTile extends StatelessWidget {
   final String imgUrl;
   final String accountType;
   final String currency;
-  final double amount;
+  final String amount;
   final String subText;
   final String subImgUrl;
 
@@ -73,7 +73,7 @@ class AccountSummaryTile extends StatelessWidget {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: amount.toStringAsFixed(2),
+                    text: amount,
                     style: TextStyles.primary.copyWith(
                         color: AppColors.primary,
                         fontSize: (20 / Dimensions.designWidth).w,

@@ -104,6 +104,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
           message: messages[58]["messageText"],
           actionWidget: Column(
             children: [
+              const SizeBox(height: 15),
               SolidButton(
                 onTap: () {
                   Navigator.pop(context);
@@ -112,7 +113,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                 color: AppColors.primaryBright17,
                 fontColor: AppColors.primary,
               ),
-              const SizeBox(height: 20),
+              const SizeBox(height: 15),
             ],
           ),
           auxWidget: Column(
@@ -130,7 +131,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                 },
                 text: "Enable Now",
               ),
-              const SizeBox(height: 15),
+              const SizeBox(height: 20),
             ],
           ),
         );
@@ -149,6 +150,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
               "Enjoy the added convenience and security in using the app with biometric authentication.",
           actionWidget: Column(
             children: [
+              const SizeBox(height: 15),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);
@@ -282,12 +284,11 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                       "1001"
                                                   ? "Current"
                                                   : "Savings",
-                                              currency: accountDetails[index]
-                                                  ["accountCurrency"],
-                                              amount: double.parse(
-                                                  accountDetails[index]
-                                                          ["currentBalance"]
-                                                      .substring(4)),
+                                              currency: "",
+                                              // accountDetails[index]
+                                              //     ["accountCurrency"],
+                                              amount: accountDetails[index]
+                                                  ["currentBalance"],
                                               subText: "",
                                               subImgUrl: "",
                                             ),
@@ -379,7 +380,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                     "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                                 accountType: "Savings",
                                                 currency: "AED",
-                                                amount: 0.00,
+                                                amount: "0.00",
                                                 subText: "Powered by FH",
                                                 subImgUrl:
                                                     "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
@@ -391,7 +392,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                               imgUrl: "",
                                               accountType: "Savings",
                                               currency: "USD",
-                                              amount: 0.00,
+                                              amount: "0.00",
                                               subText: "",
                                               subImgUrl: "",
                                             );
@@ -491,7 +492,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                   "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                               accountType: "Savings",
                                               currency: "AED",
-                                              amount: 0.00,
+                                              amount: "0.00",
                                               subText: "Powered by FH",
                                               subImgUrl:
                                                   "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
@@ -581,7 +582,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                     "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                                 accountType: "Savings",
                                                 currency: "AED",
-                                                amount: 0.00,
+                                                amount: "0.00",
                                                 subText: "Powered by FH",
                                                 subImgUrl:
                                                     "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
@@ -593,7 +594,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                               imgUrl: "",
                                               accountType: "Savings",
                                               currency: "USD",
-                                              amount: 0.00,
+                                              amount: "0.00",
                                               subText: "",
                                               subImgUrl: "",
                                             );

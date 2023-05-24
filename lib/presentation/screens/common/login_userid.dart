@@ -151,6 +151,17 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
             ),
             Column(
               children: [
+                // SizeBox(
+                //   height: PaddingConstants.bottomPadding +
+                //       MediaQuery.of(context).padding.bottom,
+                // ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     log("storageEmail -> $storageEmail");
+                //     log("storagePassword -> $storagePassword");
+                //   },
+                //   child: const Text("Test storageEmail and storagePassword"),
+                // ),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: buildProceedButton,
                 ),

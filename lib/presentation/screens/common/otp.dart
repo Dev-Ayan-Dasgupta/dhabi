@@ -18,6 +18,7 @@ import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/obscure.dart';
@@ -57,7 +58,7 @@ class _OTPScreenState extends State<OTPScreen> {
     super.initState();
     argumentInitialization();
     blocInitialization();
-    startTimer();
+    startTimer(otpArgumentModel.isEmail ? 300 : 90);
   }
 
   void argumentInitialization() {
@@ -76,8 +77,8 @@ class _OTPScreenState extends State<OTPScreen> {
         PinputErrorEvent(isError: false, isComplete: false, errorCount: 0));
   }
 
-  void startTimer() {
-    seconds = otpArgumentModel.isEmail ? 300 : 90;
+  void startTimer(int count) {
+    seconds = count;
     final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
     Timer.periodic(
       const Duration(seconds: 1),
@@ -604,72 +605,81 @@ class _OTPScreenState extends State<OTPScreen> {
                           log("isCompany -> $isCompany");
                           log("isCompanyRegistered -> $isCompanyRegistered");
 
-                          if (cif != null || cif != "null") {
-                            if (isCompany) {
-                              if (isCompanyRegistered) {
-                                Navigator.pushReplacementNamed(
-                                    context, Routes.setPassword);
+                          // TODO: call deviceValid API
+                          var isDeviceValidApiResult =
+                              await MapIsDeviceValid.mapIsDeviceValid({
+                            "userId": cifDetails[0]["userID"],
+                            "deviceId": deviceId,
+                          }, tokenCP ?? "");
+                          log("isDeviceValidApiResult -> $isDeviceValidApiResult");
+
+                          if (isDeviceValidApiResult["success"]) {
+                            if (context.mounted) {
+                              if (cif != null || cif != "null") {
+                                if (isCompany) {
+                                  if (isCompanyRegistered) {
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      Routes.setPassword,
+                                    );
+                                  }
+                                } else {
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    Routes.setPassword,
+                                  );
+                                }
                               }
-                            } else {
-                              Navigator.pushReplacementNamed(
-                                  context, Routes.setPassword);
-                            }
-                          }
-                          if (cif == null) {
-                            log("cif is null");
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) {
-                                return CustomDialog(
-                                  svgAssetPath: ImageConstants.warning,
-                                  title: "Application approval pending",
-                                  message:
-                                      "You already have a registration pending. Please contact Dhabi support.",
-                                  auxWidget: Column(
-                                    children: [
-                                      GradientButton(
-                                        onTap: () async {
-                                          // await storage.write(
-                                          //     key: "stepsCompleted",
-                                          //     value: 0.toString());
-                                          // storageStepsCompleted = int.parse(
-                                          //     await storage.read(
-                                          //             key: "stepsCompleted") ??
-                                          //         "0");
-                                          if (context.mounted) {
-                                            Navigator.pop(context);
-                                            Navigator.pushReplacementNamed(
-                                              context,
-                                              Routes.registration,
-                                              arguments:
-                                                  RegistrationArgumentModel(
-                                                isInitial: true,
-                                              ).toMap(),
-                                            );
-                                          }
-                                        },
-                                        text: "Go Home",
+                              if (cif == null) {
+                                log("cif is null");
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    return CustomDialog(
+                                      svgAssetPath: ImageConstants.warning,
+                                      title: "Application approval pending",
+                                      message:
+                                          "You already have a registration pending. Please contact Dhabi support.",
+                                      auxWidget: Column(
+                                        children: [
+                                          GradientButton(
+                                            onTap: () async {
+                                              if (context.mounted) {
+                                                Navigator.pop(context);
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  Routes.registration,
+                                                  arguments:
+                                                      RegistrationArgumentModel(
+                                                    isInitial: true,
+                                                  ).toMap(),
+                                                );
+                                              }
+                                            },
+                                            text: "Go Home",
+                                          ),
+                                          const SizeBox(height: 15),
+                                        ],
                                       ),
-                                      const SizeBox(height: 15),
-                                    ],
-                                  ),
-                                  actionWidget: Column(
-                                    children: [
-                                      SolidButton(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        text: labels[166]["labelText"],
-                                        color: AppColors.primaryBright17,
-                                        fontColor: AppColors.primary,
+                                      actionWidget: Column(
+                                        children: [
+                                          SolidButton(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            text: labels[166]["labelText"],
+                                            color: AppColors.primaryBright17,
+                                            fontColor: AppColors.primary,
+                                          ),
+                                          const SizeBox(height: 20),
+                                        ],
                                       ),
-                                      const SizeBox(height: 20),
-                                    ],
-                                  ),
+                                    );
+                                  },
                                 );
-                              },
-                            );
+                              }
+                            }
                           }
                         }
                       } else {
@@ -1236,7 +1246,8 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   void resendOTP() async {
-    if (seconds != 0) {
+    final PinputErrorBloc pinputErrorBloc = context.read<PinputErrorBloc>();
+    if (seconds == 0) {
       final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
       if (seconds == 0 || pinputErrorCount > 0) {
         if (otpArgumentModel.isEmail) {
@@ -1244,7 +1255,7 @@ class _OTPScreenState extends State<OTPScreen> {
         } else {
           seconds = 90;
         }
-        startTimer();
+        startTimer(seconds);
         final OTPTimerBloc otpTimerBloc = context.read<OTPTimerBloc>();
         otpTimerBloc.add(OTPTimerEvent(seconds: seconds));
       }
@@ -1258,6 +1269,15 @@ class _OTPScreenState extends State<OTPScreen> {
         );
       }
       pinputErrorCount = 0;
+      _pinController.clear();
+      pinputErrorBloc.add(
+        PinputErrorEvent(
+          isError: false,
+          isComplete: false,
+          errorCount: pinputErrorCount,
+        ),
+      );
+
       showButtonBloc.add(const ShowButtonEvent(show: true));
     }
   }

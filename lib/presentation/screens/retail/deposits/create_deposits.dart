@@ -147,7 +147,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                               "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                           accountType: "Savings",
                           currency: "USD",
-                          amount: 20000,
+                          amount: "0.00",
                           subText: "",
                           subImgUrl: "",
                         );

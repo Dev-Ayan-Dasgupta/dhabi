@@ -46,6 +46,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   int tabIndex = 0;
 
   final ScrollController _scrollController = ScrollController();
+  final ScrollController myScrollController = ScrollController();
   double _scrollOffset = 0;
   int _scrollIndex = 0;
 
@@ -54,6 +55,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   bool isFetchingAccountDetails = false;
 
   List accountDetails = [];
+  List depositDetails = [];
   List statementList = [];
 
   @override
@@ -84,6 +86,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           message: messages[58]["messageText"],
           actionWidget: Column(
             children: [
+              const SizeBox(height: 15),
               SolidButton(
                 onTap: () async {
                   await storage.write(
@@ -99,7 +102,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                 color: AppColors.primaryBright17,
                 fontColor: AppColors.primary,
               ),
-              const SizeBox(height: 20),
+              const SizeBox(height: 15),
             ],
           ),
           auxWidget: Column(
@@ -117,7 +120,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                 },
                 text: "Enable Now",
               ),
-              const SizeBox(height: 15),
+              const SizeBox(height: 20),
             ],
           ),
         );
@@ -136,6 +139,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
               "Enjoy the added convenience and security in using the app with biometric authentication.",
           actionWidget: Column(
             children: [
+              const SizeBox(height: 15),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);
@@ -161,6 +165,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
               "You can enable biometric authentication anytime by going to the settings menu",
           actionWidget: Column(
             children: [
+              const SizeBox(height: 15),
               GradientButton(
                 onTap: () {
                   Navigator.pop(context);
@@ -225,6 +230,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       log("Customer Account Details API response -> $customerDetails");
       accountDetails =
           customerDetails["crCustomerProfileRes"]["body"]["accountDetails"];
+      depositDetails =
+          customerDetails["crCustomerProfileRes"]["body"]["depositDetails"];
     } catch (_) {
       rethrow;
     }
@@ -375,11 +382,13 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     ? "Current"
                                                     : "Savings",
                                                 currency: accountDetails[index]
-                                                    ["accountCurrency"],
-                                                amount: double.parse(
-                                                    accountDetails[index]
-                                                            ["currentBalance"]
-                                                        .substring(4)),
+                                                        ["currentBalance"]
+                                                    .split(" ")
+                                                    .first,
+                                                amount: accountDetails[index]
+                                                        ["currentBalance"]
+                                                    .split(" ")
+                                                    .last,
                                                 subText: "",
                                                 subImgUrl: "",
                                               ),
@@ -425,12 +434,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        // DashboardActivityTile(
-                                        //   iconPath: ImageConstants.add,
-                                        //   activityText: "Add Money",
-                                        //   onTap: () {},
-                                        // ),
-                                        // const SizeBox(width: 40),
                                         DashboardActivityTile(
                                           iconPath: ImageConstants.arrowOutward,
                                           activityText: "Send Money",
@@ -439,15 +442,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                 context, Routes.sendMoney);
                                           },
                                         ),
-                                        // const SizeBox(width: 40),
-                                        // DashboardActivityTile(
-                                        //   iconPath: ImageConstants.barChart,
-                                        //   activityText: "Insights",
-                                        //   onTap: () {
-                                        //     Navigator.pushNamed(
-                                        //         context, Routes.insights);
-                                        //   },
-                                        // ),
                                       ],
                                     ),
                                   ],
@@ -460,36 +454,36 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                       child: ListView.builder(
                                         controller: _scrollController,
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: 6,
+                                        itemCount: depositDetails.length,
                                         itemBuilder: (context, index) {
                                           return Padding(
                                             padding: EdgeInsets.only(
                                               left: (index == 0)
-                                                  ? (15 /
+                                                  ? (PaddingConstants
+                                                              .horizontalPadding /
                                                           Dimensions
                                                               .designWidth)
                                                       .w
                                                   : 0,
                                             ),
                                             child: AccountSummaryTile(
-                                              onTap: () {
-                                                if (index == 0) {
-                                                  Navigator.pushNamed(context,
-                                                      Routes.createDeposits);
-                                                }
-                                                if (index == 1) {
-                                                  Navigator.pushNamed(context,
-                                                      Routes.depositDetails);
-                                                }
-                                              },
-                                              imgUrl:
-                                                  "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                              accountType: "Savings",
-                                              currency: "AED",
-                                              amount: 0.00,
-                                              subText: "Powered by FH",
-                                              subImgUrl:
-                                                  "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+                                              onTap: () {},
+                                              imgUrl: depositDetails[index][
+                                                          "depositAccountCurrency"] ==
+                                                      "AED"
+                                                  ? ImageConstants.uaeFlag
+                                                  : ImageConstants.usaFlag,
+                                              accountType: "Fixed Deposit",
+                                              currency: depositDetails[index]
+                                                      ["depositPrincipalAmount"]
+                                                  .split(" ")
+                                                  .first,
+                                              amount: depositDetails[index]
+                                                      ["depositPrincipalAmount"]
+                                                  .split(" ")
+                                                  .last,
+                                              subText: "",
+                                              subImgUrl: "",
                                             ),
                                           );
                                         },
@@ -502,7 +496,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                         return Padding(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 47.w -
-                                                  ((6 - 1) *
+                                                  ((depositDetails.length - 1) *
                                                       (6.5 /
                                                               Dimensions
                                                                   .designWidth)
@@ -515,7 +509,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                               scrollDirection: Axis.horizontal,
                                               physics:
                                                   const NeverScrollableScrollPhysics(),
-                                              itemCount: 6,
+                                              itemCount: depositDetails.length,
                                               itemBuilder: (context, index) {
                                                 return ScrollIndicator(
                                                   isCurrent:
@@ -578,7 +572,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                   "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                                               accountType: "Savings",
                                               currency: "AED",
-                                              amount: 0.00,
+                                              amount: "0.00",
                                               subText: "Powered by FH",
                                               subImgUrl:
                                                   "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
@@ -670,224 +664,249 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                   minChildSize: 0.39,
                   maxChildSize: 1,
                   builder: (context, scrollController) {
-                    return Container(
-                      height: 85.h,
-                      width: 100.w,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: (PaddingConstants.horizontalPadding /
-                                Dimensions.designWidth)
-                            .w,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft:
-                              Radius.circular((20 / Dimensions.designWidth).w),
-                          topRight:
-                              Radius.circular((20 / Dimensions.designWidth).w),
-                        ),
-                        boxShadow: [BoxShadows.primary],
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        children: [
-                          const SizeBox(height: 15),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: (10 / Dimensions.designWidth).w,
-                            ),
-                            height: (7 / Dimensions.designWidth).w,
-                            width: (50 / Dimensions.designWidth).w,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                    (10 / Dimensions.designWidth).w),
-                              ),
-                              color: const Color(0xFFD9D9D9),
-                            ),
+                    return ListView(
+                      controller: scrollController,
+                      children: [
+                        Container(
+                          height: 90.h,
+                          width: 100.w,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: (PaddingConstants.horizontalPadding /
+                                    Dimensions.designWidth)
+                                .w,
                           ),
-                          const SizeBox(height: 15),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(
+                                  (20 / Dimensions.designWidth).w),
+                              topRight: Radius.circular(
+                                  (20 / Dimensions.designWidth).w),
+                            ),
+                            boxShadow: [BoxShadows.primary],
+                            color: Colors.white,
+                          ),
+                          child: Column(
                             children: [
-                              Text(
-                                labels[10]["labelText"],
-                                style: TextStyles.primary.copyWith(
-                                  color: AppColors.dark50,
-                                  fontSize: (16 / Dimensions.designWidth).w,
+                              const SizeBox(height: 15),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: (10 / Dimensions.designWidth).w,
+                                ),
+                                height: (7 / Dimensions.designWidth).w,
+                                width: (50 / Dimensions.designWidth).w,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                        (10 / Dimensions.designWidth).w),
+                                  ),
+                                  color: const Color(0xFFD9D9D9),
                                 ),
                               ),
+                              const SizeBox(height: 15),
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SvgPicture.asset(
-                                    ImageConstants.download,
-                                    width: (15 / Dimensions.designWidth).w,
-                                    height: (15 / Dimensions.designWidth).w,
-                                  ),
-                                  const SizeBox(width: 10),
                                   Text(
-                                    labels[89]["labelText"],
+                                    labels[10]["labelText"],
                                     style: TextStyles.primary.copyWith(
                                       color: AppColors.dark50,
                                       fontSize: (16 / Dimensions.designWidth).w,
                                     ),
                                   ),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        ImageConstants.download,
+                                        width: (15 / Dimensions.designWidth).w,
+                                        height: (15 / Dimensions.designWidth).w,
+                                      ),
+                                      const SizeBox(width: 10),
+                                      Text(
+                                        labels[89]["labelText"],
+                                        style: TextStyles.primary.copyWith(
+                                          color: AppColors.dark50,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
-                            ],
-                          ),
-                          const SizeBox(height: 15),
-                          Row(
-                            children: [
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  width: (236 / Dimensions.designWidth).w,
-                                  height: (39 / Dimensions.designHeight).h,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromRGBO(34, 97, 105, 0.1),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        (10 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        ImageConstants.pyramid,
-                                        width: (10 / Dimensions.designHeight).w,
-                                        height:
-                                            (10 / Dimensions.designHeight).h,
-                                      ),
-                                      const SizeBox(width: 10),
-                                      Text(
-                                        "Filter: ",
-                                        style: TextStyles.primary.copyWith(
-                                          color: AppColors.dark50,
-                                          fontSize:
-                                              (16 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                      Text(
-                                        "All",
-                                        style:
-                                            TextStyles.primaryMedium.copyWith(
-                                          color: AppColors.primary,
-                                          fontSize:
-                                              (16 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizeBox(width: 10),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  width: (150 / Dimensions.designWidth).w,
-                                  height: (39 / Dimensions.designHeight).h,
-                                  decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromRGBO(34, 97, 105, 0.1),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        (10 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      SvgPicture.asset(
-                                        ImageConstants.pyramid,
-                                        width: (10 / Dimensions.designHeight).w,
-                                        height:
-                                            (10 / Dimensions.designHeight).h,
-                                      ),
-                                      const SizeBox(width: 10),
-                                      Text(
-                                        "Sort: ",
-                                        style: TextStyles.primary.copyWith(
-                                          color: AppColors.dark50,
-                                          fontSize:
-                                              (16 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                      Text(
-                                        "Date",
-                                        style:
-                                            TextStyles.primaryMedium.copyWith(
-                                          color: AppColors.primary,
-                                          fontSize:
-                                              (16 / Dimensions.designWidth).w,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizeBox(height: 15),
-                          Ternary(
-                            condition: statementList.isEmpty,
-                            truthy: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const SizeBox(height: 70),
-                                Text(
-                                  "No transactions",
-                                  style: TextStyles.primaryBold.copyWith(
-                                    color: AppColors.dark30,
-                                    fontSize: (24 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            falsy: Expanded(
-                              child: ListView.builder(
-                                controller: scrollController,
-                                itemCount: statementList.length,
-                                itemBuilder: (context, index) {
-                                  return DashboardTransactionListTile(
+                              const SizeBox(height: 15),
+                              Row(
+                                children: [
+                                  InkWell(
                                     onTap: () {},
-                                    isCredit:
-                                        // true,
-                                        statementList[index]["creditAmount"] ==
-                                            0,
-                                    title:
-                                        // "Tax non filer debit Tax non filer debit",
-                                        statementList[index]["transactionType"],
-                                    name: "Alexander Doe",
-                                    amount:
-                                        // 50.23,
-                                        (statementList[index]["creditAmount"] !=
-                                                    0
-                                                ? statementList[index]
-                                                    ["creditAmount"]
-                                                : statementList[index]
-                                                    ["debitAmount"])
-                                            .toDouble(),
-                                    currency:
-                                        // "AED",
-                                        statementList[index]["amountCurrency"],
-                                    date:
-                                        // "Tue, Apr 1 2022",
-                                        DateFormat('EEE, MMM dd yyyy').format(
-                                      DateTime.parse(
-                                        statementList[index]["bookingDate"],
+                                    child: Container(
+                                      width: (236 / Dimensions.designWidth).w,
+                                      height: (39 / Dimensions.designHeight).h,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromRGBO(
+                                            34, 97, 105, 0.1),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                            (10 / Dimensions.designWidth).w,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            ImageConstants.pyramid,
+                                            width:
+                                                (10 / Dimensions.designHeight)
+                                                    .w,
+                                            height:
+                                                (10 / Dimensions.designHeight)
+                                                    .h,
+                                          ),
+                                          const SizeBox(width: 10),
+                                          Text(
+                                            "Filter: ",
+                                            style: TextStyles.primary.copyWith(
+                                              color: AppColors.dark50,
+                                              fontSize:
+                                                  (16 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                          ),
+                                          Text(
+                                            "All",
+                                            style: TextStyles.primaryMedium
+                                                .copyWith(
+                                              color: AppColors.primary,
+                                              fontSize:
+                                                  (16 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  );
-                                },
+                                  ),
+                                  const SizeBox(width: 10),
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Container(
+                                      width: (150 / Dimensions.designWidth).w,
+                                      height: (39 / Dimensions.designHeight).h,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromRGBO(
+                                            34, 97, 105, 0.1),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                            (10 / Dimensions.designWidth).w,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          SvgPicture.asset(
+                                            ImageConstants.pyramid,
+                                            width:
+                                                (10 / Dimensions.designHeight)
+                                                    .w,
+                                            height:
+                                                (10 / Dimensions.designHeight)
+                                                    .h,
+                                          ),
+                                          const SizeBox(width: 10),
+                                          Text(
+                                            "Sort: ",
+                                            style: TextStyles.primary.copyWith(
+                                              color: AppColors.dark50,
+                                              fontSize:
+                                                  (16 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Date",
+                                            style: TextStyles.primaryMedium
+                                                .copyWith(
+                                              color: AppColors.primary,
+                                              fontSize:
+                                                  (16 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
+                              const SizeBox(height: 15),
+                              Ternary(
+                                condition: statementList.isEmpty,
+                                truthy: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const SizeBox(height: 70),
+                                    Text(
+                                      "No transactions",
+                                      style: TextStyles.primaryBold.copyWith(
+                                        color: AppColors.dark30,
+                                        fontSize:
+                                            (24 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                falsy: Expanded(
+                                  child: ListView.builder(
+                                    controller: scrollController,
+                                    itemCount: statementList.length,
+                                    itemBuilder: (context, index) {
+                                      return DashboardTransactionListTile(
+                                        onTap: () {},
+                                        isCredit:
+                                            // true,
+                                            statementList[index]
+                                                    ["creditAmount"] ==
+                                                0,
+                                        title:
+                                            // "Tax non filer debit Tax non filer debit",
+                                            statementList[index]
+                                                ["transactionType"],
+                                        name: "Alexander Doe",
+                                        amount:
+                                            // 50.23,
+                                            (statementList[index]
+                                                            ["creditAmount"] !=
+                                                        0
+                                                    ? statementList[index]
+                                                        ["creditAmount"]
+                                                    : statementList[index]
+                                                        ["debitAmount"])
+                                                .toDouble(),
+                                        currency:
+                                            // "AED",
+                                            statementList[index]
+                                                ["amountCurrency"],
+                                        date:
+                                            // "Tue, Apr 1 2022",
+                                            DateFormat('EEE, MMM dd yyyy')
+                                                .format(
+                                          DateTime.parse(
+                                            statementList[index]["bookingDate"],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     );
                   },
                 ),

@@ -196,8 +196,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     falsy: const SizeBox(),
                   ),
                   SizeBox(
-                      height: PaddingConstants.bottomPadding +
-                          MediaQuery.of(context).padding.bottom),
+                    height: PaddingConstants.bottomPadding +
+                        MediaQuery.of(context).padding.bottom,
+                  ),
                 ],
               ),
             ],

@@ -119,7 +119,7 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                                   "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
                               accountType: "Savings",
                               currency: "AED",
-                              amount: 0.00,
+                              amount: "0.00",
                               subText: "Powered by FH",
                               subImgUrl:
                                   "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",

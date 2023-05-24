@@ -19,7 +19,6 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -417,6 +416,12 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
               final CreatePasswordBloc createPasswordBloc =
                   context.read<CreatePasswordBloc>();
               createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+
+              log("Request -> ${{
+                "cif": cif,
+                "password": _newPasswordController.text,
+              }}");
+
               var result = await MapChangePassword.mapChangePassword(
                 {
                   "cif": cif,
@@ -425,42 +430,75 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                 tokenCP ?? "",
               );
               log("Change Password API response -> $result");
-              if (context.mounted) {
-                Navigator.pushNamed(
-                  context,
-                  Routes.errorSuccessScreen,
-                  // (route) => false,
-                  arguments: ErrorArgumentModel(
-                    hasSecondaryButton: false,
-                    iconPath: ImageConstants.checkCircleOutlined,
-                    title: "Password Set Successfully!",
-                    message:
-                        "Your password updated successfully.\nPlease log in again with your new password.",
-                    buttonText: labels[205]["labelText"],
-                    onTap: () {
-                      // TODO: change this to loginUserId after testing
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        Routes.loginUserId,
-                        (route) => false,
-                        arguments: LoginPasswordArgumentModel(
-                          emailId: emailAddress,
-                          userId: 0,
-                          userTypeId: 1,
-                          companyId: 0,
-                        ).toMap(),
+              if (result["success"]) {
+                if (context.mounted) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.errorSuccessScreen,
+                    // (route) => false,
+                    arguments: ErrorArgumentModel(
+                      hasSecondaryButton: false,
+                      iconPath: ImageConstants.checkCircleOutlined,
+                      title: "Password Set Successfully!",
+                      message:
+                          "Your password updated successfully.\nPlease log in again with your new password.",
+                      buttonText: labels[205]["labelText"],
+                      onTap: () {
+                        // TODO: change this to loginUserId after testing
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          Routes.loginPassword,
+                          (route) => false,
+                          arguments: LoginPasswordArgumentModel(
+                            emailId: storageEmail ?? "",
+                            userId: storageUserId ?? 0,
+                            userTypeId: storageUserTypeId ?? 1,
+                            companyId: storageCompanyId ?? 0,
+                          ).toMap(),
+                        );
+                      },
+                      buttonTextSecondary: "",
+                      onTapSecondary: () {},
+                    ).toMap(),
+                  );
+                }
+                await storage.write(
+                    key: "password", value: _confirmNewPasswordController.text);
+                storagePassword = await storage.read(key: "password");
+                log("storagePassword -> $storagePassword");
+                await storage.write(key: "cif", value: cif);
+                storageCif = await storage.read(key: "cif");
+                log("storageCif -> $storageCif");
+              } else {
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CustomDialog(
+                        svgAssetPath: ImageConstants.warning,
+                        title: "Old Password Used",
+                        message: result["message"],
+                        actionWidget: Column(
+                          children: [
+                            const SizeBox(height: 15),
+                            GradientButton(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacementNamed(
+                                      context, Routes.loginUserId);
+                                },
+                                text: "Understood"),
+                            const SizeBox(height: 22),
+                          ],
+                        ),
                       );
                     },
-                    buttonTextSecondary: "",
-                    onTapSecondary: () {},
-                  ).toMap(),
-                );
+                  );
+                }
               }
+
               isLoading = false;
               createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
-              await storage.write(
-                  key: "password", value: _confirmNewPasswordController.text);
-              storagePassword = await storage.read(key: "password");
             },
             text: "Save",
             auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
