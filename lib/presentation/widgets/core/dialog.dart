@@ -27,10 +27,11 @@ class CustomDialog extends StatelessWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.only(
-          left: (22 / Dimensions.designWidth).w,
-          right: (22 / Dimensions.designWidth).w,
-          bottom: (22 / Dimensions.designWidth).w,
-          top: ((auxWidget == null ? 500 : 440) / Dimensions.designHeight)
+          left: (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+          right:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+          bottom: (22 / Dimensions.designHeight).h,
+          top: ((auxWidget == null ? 510 : 440) / Dimensions.designHeight)
               .h, // TODO: might have to change these to 1051 : 925 (500 : 440)
         ),
         child: Container(
@@ -43,47 +44,43 @@ class CustomDialog extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: Padding(
-              padding: EdgeInsets.only(
-                  left: (22 / Dimensions.designWidth).w,
-                  right: (22 / Dimensions.designWidth).w,
-                  top: (22 / Dimensions.designHeight).h),
+              padding: EdgeInsets.symmetric(
+                  horizontal: (22 / Dimensions.designWidth).w,
+                  vertical: (22 / Dimensions.designHeight).h),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            svgAssetPath,
-                            width: (111 / Dimensions.designHeight).h,
-                            height: (111 / Dimensions.designHeight).h,
-                          ),
-                          const SizeBox(height: 30),
-                          Text(
-                            title,
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.black25,
-                              fontSize: (20 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          const SizeBox(height: 20),
-                          Text(
-                            message,
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.dark50,
-                              fontSize: (14 / Dimensions.designWidth).w,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizeBox(height: 20),
-                        ],
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        svgAssetPath,
+                        width: (111 / Dimensions.designHeight).h,
+                        height: (111 / Dimensions.designHeight).h,
                       ),
-                    ),
+                      const SizeBox(height: 20),
+                      Text(
+                        title,
+                        style: TextStyles.primaryBold.copyWith(
+                          color: AppColors.black25,
+                          fontSize: (20 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const SizeBox(height: 20),
+                      Text(
+                        message,
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark50,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizeBox(height: auxWidget != null ? 20 : 0),
+                      auxWidget ?? const SizeBox(),
+                      const SizeBox(height: 20),
+                      actionWidget,
+                    ],
                   ),
-                  auxWidget ?? const SizeBox(),
-                  actionWidget,
                 ],
               ),
             ),

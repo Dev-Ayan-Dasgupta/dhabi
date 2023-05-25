@@ -157,16 +157,11 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           title: "Hey, there!",
           message:
               "Please check FAQs.\nIf you do not find your query,\nContact us at +971 200 0000",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: "Back",
-              ),
-              const SizeBox(height: 22),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: "Back",
           ),
         );
       },
@@ -182,24 +177,19 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           svgAssetPath: ImageConstants.warning,
           title: labels[250]["labelText"],
           message: "If you log out you would need to re-login again",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.pushNamed(
-                    context,
-                    Routes.onboarding,
-                    arguments: OnboardingArgumentModel(
-                      isInitial: true,
-                    ).toMap(),
-                  );
-                },
-                text: "Yes, I am sure",
-              ),
-              const SizeBox(height: 22),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pushNamed(
+                context,
+                Routes.onboarding,
+                arguments: OnboardingArgumentModel(
+                  isInitial: true,
+                ).toMap(),
+              );
+            },
+            text: "Yes, I am sure",
           ),
         );
       },

@@ -7,6 +7,8 @@ import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class VerificationInitializingScreen extends StatefulWidget {
   const VerificationInitializingScreen({Key? key}) : super(key: key);
@@ -26,15 +28,7 @@ class _VerificationInitializingScreenState
   void initState() {
     super.initState();
     initPlatformState();
-    // const EventChannel('flutter_document_reader_api/event/completion')
-    //     .receiveBroadcastStream()
-    //     .listen(
-    //       (jsonString) => handleCompletion(
-    //         DocumentReaderCompletion.fromJson(
-    //           json.decode(jsonString),
-    //         )!,
-    //       ),
-    //     );
+
     const EventChannel('flutter_document_reader_api/event/database_progress')
         .receiveBroadcastStream()
         .listen(
@@ -121,20 +115,24 @@ class _VerificationInitializingScreenState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Initialization Status: ",
-                  style: TextStyles.primaryBold.copyWith(color: Colors.black),
-                ),
-                Text(
-                  status,
-                  style: TextStyles.primaryMedium.copyWith(color: Colors.black),
-                ),
-              ],
+            SpinKitFadingCircle(
+              color: AppColors.primary,
+              size: (20 / Dimensions.designWidth).w,
             ),
-            Text("Database download progress -> $progressValue%"),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: [
+            //     Text(
+            //       "Initialization Status: ",
+            //       style: TextStyles.primaryBold.copyWith(color: Colors.black),
+            //     ),
+            //     Text(
+            //       status,
+            //       style: TextStyles.primaryMedium.copyWith(color: Colors.black),
+            //     ),
+            //   ],
+            // ),
+            // Text("Database download progress -> $progressValue%"),
           ],
         ),
       ),

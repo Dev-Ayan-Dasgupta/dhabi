@@ -39,17 +39,6 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
   // bool isCityEntered = false;
   int toggles = 0;
 
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
-
   String? selectedValue;
 
   int emirateIndex = -1;
@@ -69,13 +58,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
         context.read<DropdownSelectedBloc>();
     return Scaffold(
       appBar: AppBar(
-        leading: AppBarLeading(
-          onTap: () {
-            // residenceSelectedBloc.add(DropdownSelectedEvent(
-            //     isDropdownSelected: false, toggles: toggles));
-            // Navigator.pop(context);
-          },
-        ),
+        leading: const AppBarLeading(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -272,9 +255,10 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                         return CustomTextField(
                           controller: _zipController,
                           keyboardType: TextInputType.number,
-                          borderColor: isPoValid
-                              ? const Color(0xFFEEEEEE)
-                              : AppColors.red100,
+                          borderColor:
+                              (isPoValid || _zipController.text.isEmpty)
+                                  ? const Color(0xFFEEEEEE)
+                                  : AppColors.red100,
                           onChanged: (p0) {
                             final ShowButtonBloc showButtonBloc =
                                 context.read<ShowButtonBloc>();
@@ -294,7 +278,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     BlocBuilder<ShowButtonBloc, ShowButtonState>(
                       builder: (context, state) {
                         return Ternary(
-                          condition: isPoValid,
+                          condition: (isPoValid || _zipController.text.isEmpty),
                           truthy: const SizeBox(),
                           falsy: Row(
                             children: [
@@ -316,36 +300,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                         );
                       },
                     ),
-                    // const SizeBox(height: 20),
-                    // Text(
-                    //   "Resident Since *",
-                    //   style: TextStyles.primary.copyWith(
-                    //     color: AppColors.black63,
-                    //     fontSize: (16 / Dimensions.designWidth).w,
-                    //   ),
-                    // ),
-                    // const SizeBox(height: 9),
-                    // BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                    //   builder: (context, state) {
-                    //     return CustomDropDown(
-                    //       title: "Year",
-                    //       items: items,
-                    //       value: selectedValue,
-                    //       onChanged: (value) {
-                    //         toggles++;
-                    //         isResidenceYearSelected = true;
-                    //         selectedValue = value as String;
-                    //         residenceSelectedBloc.add(
-                    //           DropdownSelectedEvent(
-                    //             isDropdownSelected: isResidenceYearSelected &&
-                    //                 (isAddress1Entered && isCityEntered),
-                    //             toggles: toggles,
-                    //           ),
-                    //         );
-                    //       },
-                    //     );
-                    //   },
-                    // ),
+
                     const SizeBox(height: 30),
                   ],
                 ),

@@ -333,31 +333,20 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           title: labels[250]["labelText"],
           message:
               "Going to the previous screen will make you repeat this step.",
-          auxWidget: Column(
-            children: [
-              const SizeBox(height: 15),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                text: labels[347]["labelText"],
-              ),
-              const SizeBox(height: 15),
-            ],
+          auxWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            text: labels[347]["labelText"],
           ),
-          actionWidget: Column(
-            children: [
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[166]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
         );
       },
@@ -831,16 +820,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           svgAssetPath: ImageConstants.warning,
           title: "Wrong Credentials",
           message: "You have entered invalid username or password",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[88]["labelText"],
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[88]["labelText"],
           ),
         );
       },
@@ -965,18 +949,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               const SizeBox(height: 15),
             ],
           ),
-          actionWidget: Column(
-            children: [
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[166]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
         );
       },
@@ -992,22 +971,16 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           title: "Retry Limit Reached",
           message:
               "You have exceeded maximum number of 3 retries. Please wait for 24 hours before you can try again.",
-          actionWidget: Column(
-            children: [
-              const SizeBox(height: 20),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(
-                    context,
-                    Routes.onboarding,
-                    arguments: OnboardingArgumentModel(isInitial: true).toMap(),
-                  );
-                },
-                text: "Go Home",
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.onboarding,
+                arguments: OnboardingArgumentModel(isInitial: true).toMap(),
+              );
+            },
+            text: "Go Home",
           ),
         );
       },
@@ -1023,16 +996,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           title: "KYC Expired",
           message:
               "Your KYC Documents have expired. Please verify your documents again.",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.verificationInitializing);
-                },
-                text: "Verify",
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pushNamed(context, Routes.verificationInitializing);
+            },
+            text: "Verify",
           ),
         );
       },

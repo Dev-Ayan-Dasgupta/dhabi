@@ -262,25 +262,20 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
           svgAssetPath: ImageConstants.checkCircleOutlined,
           title: "Done exploring?",
           message: "Register now and enjoy the world of digital banking!",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  // Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.pushNamed(
-                    context,
-                    Routes.registration,
-                    // (route) => false,
-                    arguments: RegistrationArgumentModel(
-                      isInitial: true,
-                    ).toMap(),
-                  );
-                },
-                text: "Register Now",
-              ),
-              const SizeBox(height: 22),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              // Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pushNamed(
+                context,
+                Routes.registration,
+                // (route) => false,
+                arguments: RegistrationArgumentModel(
+                  isInitial: true,
+                ).toMap(),
+              );
+            },
+            text: "Register Now",
           ),
         );
       },

@@ -102,37 +102,26 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
           svgAssetPath: ImageConstants.warningGreen,
           title: messages[99]["messageText"],
           message: messages[58]["messageText"],
-          actionWidget: Column(
-            children: [
-              const SizeBox(height: 15),
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[127]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: 15),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[127]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
-          auxWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () async {
-                  await storage.write(
-                      key: "persistBiometric", value: true.toString());
-                  persistBiometric =
-                      await storage.read(key: "persistBiometric") == "true";
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    showBiometricSuccess();
-                  }
-                },
-                text: "Enable Now",
-              ),
-              const SizeBox(height: 20),
-            ],
+          auxWidget: GradientButton(
+            onTap: () async {
+              await storage.write(
+                  key: "persistBiometric", value: true.toString());
+              persistBiometric =
+                  await storage.read(key: "persistBiometric") == "true";
+              if (context.mounted) {
+                Navigator.pop(context);
+                showBiometricSuccess();
+              }
+            },
+            text: "Enable Now",
           ),
         );
       },
@@ -148,17 +137,18 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
           title: "Successful",
           message:
               "Enjoy the added convenience and security in using the app with biometric authentication.",
-          actionWidget: Column(
-            children: [
-              const SizeBox(height: 15),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[293]["labelText"],
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () async {
+              await storage.write(
+                  key: "persistBiometric", value: true.toString());
+              persistBiometric =
+                  await storage.read(key: "persistBiometric") == "true";
+              if (context.mounted) {
+                Navigator.pop(context);
+                showBiometricSuccess();
+              }
+            },
+            text: "Enable Now",
           ),
         );
       },

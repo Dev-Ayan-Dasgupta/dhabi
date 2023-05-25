@@ -716,30 +716,17 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               title: "Selfie Match Failed",
               message:
                   "Your selfie does not match with the photo from your scanned document",
-              auxWidget: Column(
-                children: [
-                  const SizeBox(
-                    height: 25,
-                  ),
-                  SolidButton(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    text: labels[347]["labelText"],
-                    color: AppColors.primaryBright17,
-                    fontColor: AppColors.primary,
-                  ),
-                  const SizeBox(height: 10),
-                ],
+              auxWidget: SolidButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[347]["labelText"],
+                color: AppColors.primaryBright17,
+                fontColor: AppColors.primary,
               ),
-              actionWidget: Column(
-                children: [
-                  GradientButton(
-                    onTap: liveliness,
-                    text: "Retake Selfie",
-                  ),
-                  const SizeBox(height: PaddingConstants.bottomPadding),
-                ],
+              actionWidget: GradientButton(
+                onTap: liveliness,
+                text: "Retake Selfie",
               ),
             );
           },

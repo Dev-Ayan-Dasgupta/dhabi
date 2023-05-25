@@ -143,14 +143,9 @@ class _BusinessDepositDetailsScreenState
                               BlocBuilder<ShowButtonBloc, ShowButtonState>(
                             builder: (context, state) {
                               if (isReasonValid) {
-                                return Column(
-                                  children: [
-                                    GradientButton(
-                                      onTap: () {},
-                                      text: labels[31]["labelText"],
-                                    ),
-                                    const SizeBox(height: 20),
-                                  ],
+                                return GradientButton(
+                                  onTap: () {},
+                                  text: labels[31]["labelText"],
                                 );
                               } else {
                                 return const SizeBox();

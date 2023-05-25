@@ -476,20 +476,15 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                     builder: (context) {
                       return CustomDialog(
                         svgAssetPath: ImageConstants.warning,
-                        title: "Old Password Used",
+                        title: "Password Change Error",
                         message: result["message"],
-                        actionWidget: Column(
-                          children: [
-                            const SizeBox(height: 15),
-                            GradientButton(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  Navigator.pushReplacementNamed(
-                                      context, Routes.loginUserId);
-                                },
-                                text: "Understood"),
-                            const SizeBox(height: 22),
-                          ],
+                        actionWidget: GradientButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                                context, Routes.loginUserId);
+                          },
+                          text: "Understood",
                         ),
                       );
                     },

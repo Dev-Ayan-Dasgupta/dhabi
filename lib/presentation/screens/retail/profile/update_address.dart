@@ -155,7 +155,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             ),
                             const SizeBox(height: 20),
                             Text(
-                              "P.O. Box",
+                              labels[269]["labelText"],
                               style: TextStyles.primaryMedium.copyWith(
                                 color: AppColors.black63,
                                 fontSize: (16 / Dimensions.designWidth).w,

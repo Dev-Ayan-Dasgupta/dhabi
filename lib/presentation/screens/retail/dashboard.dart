@@ -25,6 +25,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:intl/intl.dart';
+import 'package:local_auth/local_auth.dart';
 
 class RetailDashboardScreen extends StatefulWidget {
   const RetailDashboardScreen({
@@ -67,11 +68,17 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     tabbarInitialization();
   }
 
-  void argumentInitialization() {
+  void argumentInitialization() async {
     retailDashboardArgumentModel =
         RetailDashboardArgumentModel.fromMap(widget.argument as dynamic ?? {});
+    log("isFirst -> ${retailDashboardArgumentModel.isFirst}");
     if (retailDashboardArgumentModel.isFirst && !persistBiometric!) {
-      Future.delayed(const Duration(seconds: 1), promptBiometricSettings);
+      List availableBiometrics =
+          await LocalAuthentication().getAvailableBiometrics();
+      log("availableBiometrics -> $availableBiometrics");
+      if (availableBiometrics.isNotEmpty) {
+        Future.delayed(const Duration(seconds: 1), promptBiometricSettings);
+      }
     }
   }
 
@@ -84,44 +91,33 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           svgAssetPath: ImageConstants.warningGreen,
           title: messages[99]["messageText"],
           message: messages[58]["messageText"],
-          actionWidget: Column(
-            children: [
-              const SizeBox(height: 15),
-              SolidButton(
-                onTap: () async {
-                  await storage.write(
-                      key: "persistBiometric", value: false.toString());
-                  persistBiometric =
-                      await storage.read(key: "persistBiometric") == "true";
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    showBiometricLater();
-                  }
-                },
-                text: labels[127]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: 15),
-            ],
+          actionWidget: SolidButton(
+            onTap: () async {
+              await storage.write(
+                  key: "persistBiometric", value: false.toString());
+              persistBiometric =
+                  await storage.read(key: "persistBiometric") == "true";
+              if (context.mounted) {
+                Navigator.pop(context);
+                showBiometricLater();
+              }
+            },
+            text: labels[127]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
-          auxWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () async {
-                  await storage.write(
-                      key: "persistBiometric", value: true.toString());
-                  persistBiometric =
-                      await storage.read(key: "persistBiometric") == "true";
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    showBiometricSuccess();
-                  }
-                },
-                text: "Enable Now",
-              ),
-              const SizeBox(height: 20),
-            ],
+          auxWidget: GradientButton(
+            onTap: () async {
+              await storage.write(
+                  key: "persistBiometric", value: true.toString());
+              persistBiometric =
+                  await storage.read(key: "persistBiometric") == "true";
+              if (context.mounted) {
+                Navigator.pop(context);
+                showBiometricSuccess();
+              }
+            },
+            text: "Enable Now",
           ),
         );
       },
@@ -137,17 +133,11 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           title: "Successful",
           message:
               "Enjoy the added convenience and security in using the app with biometric authentication.",
-          actionWidget: Column(
-            children: [
-              const SizeBox(height: 15),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[293]["labelText"],
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[293]["labelText"],
           ),
         );
       },
@@ -163,17 +153,11 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           title: "Preference Saved",
           message:
               "You can enable biometric authentication anytime by going to the settings menu",
-          actionWidget: Column(
-            children: [
-              const SizeBox(height: 15),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[293]["labelText"],
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[293]["labelText"],
           ),
         );
       },

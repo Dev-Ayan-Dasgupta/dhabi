@@ -187,31 +187,20 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
           title: labels[250]["labelText"],
           message:
               "Going to the previous screen will make you repeat this step.",
-          auxWidget: Column(
-            children: [
-              const SizeBox(height: 15),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                text: labels[347]["labelText"],
-              ),
-              const SizeBox(height: 15),
-            ],
+          auxWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            text: labels[347]["labelText"],
           ),
-          actionWidget: Column(
-            children: [
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[166]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
         );
       },
@@ -306,38 +295,28 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                       title: "Application approval pending",
                       message:
                           "You already have a registration pending. Please contact Dhabi support.",
-                      auxWidget: Column(
-                        children: [
-                          GradientButton(
-                            onTap: () async {
-                              if (context.mounted) {
-                                Navigator.pop(context);
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  Routes.onboarding,
-                                  arguments: OnboardingArgumentModel(
-                                    isInitial: true,
-                                  ).toMap(),
-                                );
-                              }
-                            },
-                            text: labels[347]["labelText"],
-                          ),
-                          const SizeBox(height: 15),
-                        ],
+                      auxWidget: GradientButton(
+                        onTap: () async {
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              Routes.onboarding,
+                              arguments: OnboardingArgumentModel(
+                                isInitial: true,
+                              ).toMap(),
+                            );
+                          }
+                        },
+                        text: labels[347]["labelText"],
                       ),
-                      actionWidget: Column(
-                        children: [
-                          SolidButton(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            text: labels[166]["labelText"],
-                            color: AppColors.primaryBright17,
-                            fontColor: AppColors.primary,
-                          ),
-                          const SizeBox(height: 20),
-                        ],
+                      actionWidget: SolidButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        text: labels[166]["labelText"],
+                        color: AppColors.primaryBright17,
+                        fontColor: AppColors.primary,
                       ),
                     );
                   },
@@ -345,25 +324,26 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
               }
             }
           } else {
-            if (singleCifResult["hasValidCIF"]) {
-              var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
-                  {"emailID": _emailController.text});
-              log("sendEmailOtpResult -> $sendEmailOtpResult");
-              if (context.mounted) {
-                Navigator.pushNamed(
-                  context,
-                  Routes.otp,
-                  arguments: OTPArgumentModel(
-                    emailOrPhone: _emailController.text,
-                    isEmail: true,
-                    isBusiness: false,
-                    isInitial: false,
-                    isLogin: true,
-                  ).toMap(),
-                );
-              }
-            } else {
-              promptWrongCredentials();
+            // if (singleCifResult["hasValidCIF"]) {
+
+            // } else {
+            //   promptWrongCredentials();
+            // }
+            var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
+                {"emailID": _emailController.text});
+            log("sendEmailOtpResult -> $sendEmailOtpResult");
+            if (context.mounted) {
+              Navigator.pushNamed(
+                context,
+                Routes.otp,
+                arguments: OTPArgumentModel(
+                  emailOrPhone: _emailController.text,
+                  isEmail: true,
+                  isBusiness: false,
+                  isInitial: false,
+                  isLogin: true,
+                ).toMap(),
+              );
             }
           }
           isLoading = false;
@@ -385,17 +365,12 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
           svgAssetPath: ImageConstants.warning,
           title: "Wrong Credentials",
           message: "You have entered invalid username or password",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(context, Routes.loginUserId);
-                },
-                text: labels[88]["labelText"],
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, Routes.loginUserId);
+            },
+            text: labels[88]["labelText"],
           ),
         );
       },

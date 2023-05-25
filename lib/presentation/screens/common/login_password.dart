@@ -5,6 +5,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,6 @@ import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/presentation/widgets/login/attempts.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 
 class LoginPasswordScreen extends StatefulWidget {
@@ -47,6 +47,8 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
 
   bool isLoading = false;
 
+  bool isPwdBlank = false;
+
   late LoginPasswordArgumentModel loginPasswordArgument;
 
   @override
@@ -60,38 +62,6 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     loginPasswordArgument =
         LoginPasswordArgumentModel.fromMap(widget.argument as dynamic ?? {});
   }
-
-  // void biometricPrompt() async {
-  //   if (persistBiometric!) {
-  //     bool isBiometricSupported =
-  //         await LocalAuthentication().isDeviceSupported();
-  //     log("isBiometricSupported -> $isBiometricSupported");
-
-  //     if (deviceId == "bf8e43a90970f33c") {
-  //       if (context.mounted) {
-  //         Navigator.pushNamed(context, Routes.loginUserId);
-  //       }
-  //     }
-
-  //     if (!isBiometricSupported) {
-  //       // if (context.mounted) {
-  //       //   Navigator.pushNamed(context, Routes.loginUserId);
-  //       // }
-  //     } else {
-  //       bool isAuthenticated = await BiometricHelper.authenticateUser();
-
-  //       if (isAuthenticated) {
-  //         if (context.mounted) {
-  //           // Navigator.pushNamed(context, Routes.loginUserId);
-  //           onSubmit(storagePassword ?? "");
-  //         }
-  //       } else {
-  //         // TODO: Verify from client if they want a dialog box to enable biometric
-  //         OpenSettings.openBiometricEnrollSetting();
-  //       }
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +107,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                     builder: buildShowHidePassword,
                   ),
                   const SizeBox(height: 7),
-                  BlocBuilder<MatchPasswordBloc, MatchPasswordState>(
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: buildErrorMessage,
                   ),
                 ],
@@ -176,42 +146,54 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
 
   Widget buildShowHidePassword(BuildContext context, ShowPasswordState state) {
     if (showPassword) {
-      return CustomTextField(
-        controller: _passwordController,
-        minLines: 1,
-        maxLines: 1,
-        suffixIcon: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: hidePassword,
-            child: Icon(
-              Icons.visibility_off_outlined,
-              color: const Color.fromRGBO(34, 97, 105, 0.5),
-              size: (20 / Dimensions.designWidth).w,
+      return BlocBuilder<ShowButtonBloc, ShowButtonState>(
+        builder: (context, state) {
+          return CustomTextField(
+            borderColor:
+                isPwdBlank ? AppColors.red100 : const Color(0xFFEEEEEE),
+            controller: _passwordController,
+            minLines: 1,
+            maxLines: 1,
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+              child: InkWell(
+                onTap: hidePassword,
+                child: Icon(
+                  Icons.visibility_off_outlined,
+                  color: const Color.fromRGBO(34, 97, 105, 0.5),
+                  size: (20 / Dimensions.designWidth).w,
+                ),
+              ),
             ),
-          ),
-        ),
-        onChanged: onChanged,
-        obscureText: !showPassword,
+            onChanged: onChanged,
+            obscureText: !showPassword,
+          );
+        },
       );
     } else {
-      return CustomTextField(
-        controller: _passwordController,
-        minLines: 1,
-        maxLines: 1,
-        suffixIcon: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: showsPassword,
-            child: Icon(
-              Icons.visibility_outlined,
-              color: AppColors.primaryBright50,
-              size: (20 / Dimensions.designWidth).w,
+      return BlocBuilder<ShowButtonBloc, ShowButtonState>(
+        builder: (context, state) {
+          return CustomTextField(
+            borderColor:
+                isPwdBlank ? AppColors.red100 : const Color(0xFFEEEEEE),
+            controller: _passwordController,
+            minLines: 1,
+            maxLines: 1,
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+              child: InkWell(
+                onTap: showsPassword,
+                child: Icon(
+                  Icons.visibility_outlined,
+                  color: AppColors.primaryBright50,
+                  size: (20 / Dimensions.designWidth).w,
+                ),
+              ),
             ),
-          ),
-        ),
-        onChanged: onChanged,
-        obscureText: !showPassword,
+            onChanged: onChanged,
+            obscureText: !showPassword,
+          );
+        },
       );
     }
   }
@@ -231,6 +213,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
   }
 
   void onChanged(String p0) {
+    isPwdBlank = false;
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    showButtonBloc.add(ShowButtonEvent(show: isPwdBlank));
     final MatchPasswordBloc matchPasswordBloc =
         context.read<MatchPasswordBloc>();
     if (p0 == "AyanDg16@#") {
@@ -300,48 +285,39 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         } else {
           if (storageCif == null || storageCif == "null") {
             showDialog(
-                context: context,
-                builder: (context) {
-                  return CustomDialog(
-                    svgAssetPath: ImageConstants.warning,
-                    title: "Application approval pending",
-                    message:
-                        "You already have a registration pending. Please contact Dhabi support.",
-                    auxWidget: Column(
-                      children: [
-                        GradientButton(
-                          onTap: () async {
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                              Navigator.pushReplacementNamed(
-                                context,
-                                Routes.onboarding,
-                                arguments: OnboardingArgumentModel(
-                                  isInitial: true,
-                                ).toMap(),
-                              );
-                            }
-                          },
-                          text: labels[347]["labelText"],
-                        ),
-                        const SizeBox(height: 15),
-                      ],
-                    ),
-                    actionWidget: Column(
-                      children: [
-                        SolidButton(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          text: labels[166]["labelText"],
-                          color: AppColors.primaryBright17,
-                          fontColor: AppColors.primary,
-                        ),
-                        const SizeBox(height: 20),
-                      ],
-                    ),
-                  );
-                });
+              context: context,
+              builder: (context) {
+                return CustomDialog(
+                  svgAssetPath: ImageConstants.warning,
+                  title: "Application approval pending",
+                  message:
+                      "You already have a registration pending. Please contact Dhabi support.",
+                  auxWidget: GradientButton(
+                    onTap: () async {
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.onboarding,
+                          arguments: OnboardingArgumentModel(
+                            isInitial: true,
+                          ).toMap(),
+                        );
+                      }
+                    },
+                    text: labels[347]["labelText"],
+                  ),
+                  actionWidget: SolidButton(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    text: labels[166]["labelText"],
+                    color: AppColors.primaryBright17,
+                    fontColor: AppColors.primary,
+                  ),
+                );
+              },
+            );
           } else {
             Navigator.pushNamedAndRemoveUntil(
               context,
@@ -418,16 +394,11 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           svgAssetPath: ImageConstants.warning,
           title: "Wrong Credentials",
           message: "You have entered invalid username or password",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[88]["labelText"],
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[88]["labelText"],
           ),
         );
       },
@@ -448,140 +419,123 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
             children: [
               BlocBuilder<ShowButtonBloc, ShowButtonState>(
                 builder: (context, state) {
-                  return Column(
-                    children: [
-                      const SizeBox(height: 15),
-                      GradientButton(
-                        onTap: () async {
-                          isLoading = true;
-                          final ShowButtonBloc showButtonBloc =
-                              context.read<ShowButtonBloc>();
-                          showButtonBloc.add(ShowButtonEvent(show: isLoading));
-                          var result = await MapLogin.mapLogin({
-                            "emailId": loginPasswordArgument.emailId,
-                            "userTypeId": loginPasswordArgument.userTypeId,
-                            "userId": loginPasswordArgument.userId,
-                            "companyId": loginPasswordArgument.companyId,
-                            "password": _passwordController.text,
-                            "deviceId": deviceId,
-                            "registerDevice": true,
-                            "deviceName": deviceName,
-                            "deviceType": deviceType,
-                            "appVersion": appVersion
-                          });
-                          log("Login API Response -> $result");
-                          token = result["token"];
-                          log("token -> $token");
-                          if (result["success"]) {
-                            await storage.write(
-                                key: "password",
-                                value: _passwordController.text);
-                            storagePassword =
-                                await storage.read(key: "password");
-                            log("storagePassword -> $storagePassword");
-                            await storage.write(
-                                key: "newInstall", value: true.toString());
-                            storageIsNotNewInstall =
-                                (await storage.read(key: "newInstall")) ==
-                                    "true";
-                            customerName = result["customerName"];
-                            await storage.write(
-                                key: "customerName", value: customerName);
-                            storageCustomerName =
-                                await storage.read(key: "customerName");
-                            if (context.mounted) {
-                              if (loginPasswordArgument.userTypeId == 1) {
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  Routes.retailDashboard,
-                                  (route) => false,
-                                  arguments: RetailDashboardArgumentModel(
-                                    imgUrl: "",
-                                    name: result["customerName"],
-                                    isFirst: storageIsFirstLogin == true
-                                        ? false
-                                        : true,
-                                  ).toMap(),
-                                );
-                              } else {
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  Routes.businessDashboard,
-                                  (route) => false,
-                                  arguments: RetailDashboardArgumentModel(
-                                    imgUrl: "",
-                                    name: "",
-                                    isFirst: storageIsFirstLogin == true
-                                        ? false
-                                        : true,
-                                  ).toMap(),
-                                );
-                              }
-                            }
-
-                            await storage.write(
-                                key: "isFirstLogin", value: true.toString());
-                            storageIsFirstLogin =
-                                (await storage.read(key: "isFirstLogin")) ==
-                                    "true";
+                  return GradientButton(
+                    onTap: () async {
+                      isLoading = true;
+                      final ShowButtonBloc showButtonBloc =
+                          context.read<ShowButtonBloc>();
+                      showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                      var result = await MapLogin.mapLogin({
+                        "emailId": loginPasswordArgument.emailId,
+                        "userTypeId": loginPasswordArgument.userTypeId,
+                        "userId": loginPasswordArgument.userId,
+                        "companyId": loginPasswordArgument.companyId,
+                        "password": _passwordController.text,
+                        "deviceId": deviceId,
+                        "registerDevice": true,
+                        "deviceName": deviceName,
+                        "deviceType": deviceType,
+                        "appVersion": appVersion
+                      });
+                      log("Login API Response -> $result");
+                      token = result["token"];
+                      log("token -> $token");
+                      if (result["success"]) {
+                        await storage.write(
+                            key: "password", value: _passwordController.text);
+                        storagePassword = await storage.read(key: "password");
+                        log("storagePassword -> $storagePassword");
+                        await storage.write(
+                            key: "newInstall", value: true.toString());
+                        storageIsNotNewInstall =
+                            (await storage.read(key: "newInstall")) == "true";
+                        customerName = result["customerName"];
+                        await storage.write(
+                            key: "customerName", value: customerName);
+                        storageCustomerName =
+                            await storage.read(key: "customerName");
+                        if (context.mounted) {
+                          if (loginPasswordArgument.userTypeId == 1) {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.retailDashboard,
+                              (route) => false,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl: "",
+                                name: result["customerName"],
+                                isFirst:
+                                    storageIsFirstLogin == true ? false : true,
+                              ).toMap(),
+                            );
                           } else {
-                            log("Reason Code -> ${result["reasonCode"]}");
-                            if (context.mounted) {
-                              switch (result["reasonCode"]) {
-                                case 1:
-                                  // promptWrongCredentials();
-                                  break;
-                                case 2:
-                                  promptWrongCredentials();
-                                  break;
-                                case 3:
-                                  promptWrongCredentials();
-                                  break;
-                                case 4:
-                                  promptWrongCredentials();
-                                  break;
-                                case 5:
-                                  promptWrongCredentials();
-                                  break;
-                                case 6:
-                                  promptKycExpired();
-                                  break;
-                                case 7:
-                                  promptVerifySession();
-                                  break;
-                                case 9:
-                                  promptMaxRetries();
-                                  break;
-                                default:
-                              }
-                            }
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.businessDashboard,
+                              (route) => false,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl: "",
+                                name: "",
+                                isFirst:
+                                    storageIsFirstLogin == true ? false : true,
+                              ).toMap(),
+                            );
                           }
-                          isLoading = false;
-                          showButtonBloc.add(ShowButtonEvent(show: isLoading));
-                        },
-                        text: labels[31]["labelText"],
-                        auxWidget:
-                            isLoading ? const LoaderRow() : const SizeBox(),
-                      ),
-                    ],
+                        }
+
+                        await storage.write(
+                            key: "isFirstLogin", value: true.toString());
+                        storageIsFirstLogin =
+                            (await storage.read(key: "isFirstLogin")) == "true";
+                      } else {
+                        log("Reason Code -> ${result["reasonCode"]}");
+                        if (context.mounted) {
+                          switch (result["reasonCode"]) {
+                            case 1:
+                              // promptWrongCredentials();
+                              break;
+                            case 2:
+                              promptWrongCredentials();
+                              break;
+                            case 3:
+                              promptWrongCredentials();
+                              break;
+                            case 4:
+                              promptWrongCredentials();
+                              break;
+                            case 5:
+                              promptWrongCredentials();
+                              break;
+                            case 6:
+                              promptKycExpired();
+                              break;
+                            case 7:
+                              promptVerifySession();
+                              break;
+                            case 9:
+                              promptMaxRetries();
+                              break;
+                            default:
+                          }
+                        }
+                      }
+                      isLoading = false;
+                      showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                    },
+                    text: labels[31]["labelText"],
+                    auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
                   );
                 },
               ),
               const SizeBox(height: 15),
             ],
           ),
-          actionWidget: Column(
-            children: [
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[166]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
         );
       },
@@ -597,22 +551,16 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           title: "Retry Limit Reached",
           message:
               "You have exceeded maximum number of 3 retries. Please wait for 24 hours before you can try again.",
-          actionWidget: Column(
-            children: [
-              const SizeBox(height: 20),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(
-                    context,
-                    Routes.onboarding,
-                    arguments: OnboardingArgumentModel(isInitial: true).toMap(),
-                  );
-                },
-                text: "Go Home",
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.onboarding,
+                arguments: OnboardingArgumentModel(isInitial: true).toMap(),
+              );
+            },
+            text: "Go Home",
           ),
         );
       },
@@ -628,77 +576,80 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           title: "KYC Expired",
           message:
               "Your KYC Documents have expired. Please verify your documents again.",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.verificationInitializing);
-                },
-                text: "Verify",
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pushNamed(context, Routes.verificationInitializing);
+            },
+            text: "Verify",
           ),
         );
       },
     );
   }
 
-  Widget buildErrorMessage(BuildContext context, MatchPasswordState state) {
-    if (isMatch == false) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
+    return Ternary(
+      condition: !isPwdBlank,
+      truthy: const SizeBox(),
+      falsy: Row(
         children: [
+          Icon(
+            Icons.error_rounded,
+            color: AppColors.red100,
+            size: (13 / Dimensions.designWidth).w,
+          ),
+          const SizeBox(width: 5),
           Text(
-            "Incorrect Password",
+            "Password is required",
             style: TextStyles.primaryMedium.copyWith(
               color: AppColors.red100,
               fontSize: (12 / Dimensions.designWidth).w,
             ),
           ),
-          const SizeBox(height: 22),
-          Ternary(
-            condition:
-                matchPasswordErrorCount < 3 && matchPasswordErrorCount > 0,
-            truthy: Center(
-              child: LoginAttempt(
-                message:
-                    "Incorrect password - ${3 - matchPasswordErrorCount} attempts left",
-              ),
-            ),
-            falsy: Ternary(
-              condition: matchPasswordErrorCount == 0,
-              truthy: const SizeBox(),
-              falsy: LoginAttempt(
-                message: messages[68]["messageText"],
-                // "Your account credentials are temporarily blocked. Use ''Forgot Password'' to reset your credentials",
-              ),
-            ),
-          )
         ],
-      );
-    } else {
-      return const SizeBox();
-    }
+      ),
+    );
   }
 
   Widget buildLoginButton(BuildContext context, MatchPasswordState state) {
-    if (matchPasswordErrorCount < 3) {
-      return GradientButton(
-        onTap: () async {
+    return GradientButton(
+      onTap: () async {
+        final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+        if (_passwordController.text.isEmpty) {
+          isPwdBlank = true;
+        } else {
+          isPwdBlank = false;
           onSubmit(_passwordController.text);
-        },
-        text: labels[205]["labelText"],
-        auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
-      );
-    } else {
-      return SolidButton(onTap: () {}, text: labels[205]["labelText"]);
-    }
+        }
+        showButtonBloc.add(ShowButtonEvent(show: isPwdBlank));
+      },
+      text: labels[205]["labelText"],
+      auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
+    );
   }
 
   void onForgotEmailPwd() async {
-    Navigator.pushNamed(context, Routes.registration,
-        arguments: RegistrationArgumentModel(isInitial: false).toMap());
+    // Navigator.pushNamed(context, Routes.registration,
+    //     arguments: RegistrationArgumentModel(isInitial: false).toMap());
+    var result =
+        await MapSendEmailOtp.mapSendEmailOtp({"emailID": storageEmail});
+    log("Send Email OTP Response -> $result");
+
+    if (result["success"]) {
+      if (context.mounted) {
+        Navigator.pushNamed(
+          context,
+          Routes.otp,
+          arguments: OTPArgumentModel(
+            emailOrPhone: storageEmail ?? "",
+            isEmail: true,
+            isBusiness: false,
+            isInitial: false,
+            isLogin: false,
+          ).toMap(),
+        );
+      }
+    }
   }
 
   @override

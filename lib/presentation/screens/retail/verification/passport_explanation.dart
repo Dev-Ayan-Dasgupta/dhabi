@@ -393,32 +393,22 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           svgAssetPath: ImageConstants.warning,
           title: labels[233]["labelText"],
           message: labels[234]["labelText"],
-          auxWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  // Navigator.pushNamed(context, Routes.eidDetails);
-                  isEidChosen = false;
-                  DocumentReader.showScanner();
-                  Navigator.pop(context);
-                },
-                text: "Allow Access",
-              ),
-              const SizeBox(height: 15),
-            ],
+          auxWidget: GradientButton(
+            onTap: () {
+              // Navigator.pushNamed(context, Routes.eidDetails);
+              isEidChosen = false;
+              DocumentReader.showScanner();
+              Navigator.pop(context);
+            },
+            text: "Allow Access",
           ),
-          actionWidget: Column(
-            children: [
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[235]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: PaddingConstants.bottomPadding),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[235]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
         );
       },

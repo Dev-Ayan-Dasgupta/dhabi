@@ -111,6 +111,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
   int countriesAdded = 0;
   List internationalTaxes = [];
 
+  List selectedCountries = [];
+
   late TaxCrsArgumentModel taxCrsArgument;
 
   @override
@@ -347,6 +349,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           : Colors.transparent,
       onTap: () {
         countriesAdded = 0;
+        selectedCountries.clear();
+        log("selectedCountries -> $selectedCountries");
         toggles++;
         isCRSreportable = false;
         isCRSyes = false;
@@ -357,6 +361,16 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             toggles: toggles,
           ),
         );
+        selectedCountry =
+            selectedCountry2 = selectedCountry3 = selectedCountry4 = null;
+        isTinYes = isTinYes2 = isTinYes3 =
+            isTinYes4 = isTinNo = isTinNo2 = isTinNo3 = isTinNo4 = false;
+        _tinController.clear();
+        _tinController2.clear();
+        _tinController3.clear();
+        _tinController4.clear();
+        selectedReason =
+            selectedReason2 = selectedReason3 = selectedCountry = null;
         showSelectCountry = false;
         showSelectCountry2 = false;
         showSelectCountry3 = false;
@@ -415,21 +429,29 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             items: dhabiCountryNames,
             value: selectedCountry,
             onChanged: (value) {
-              toggles++;
-              isCountrySelected = true;
-              selectedCountry = value as String;
-              dhabiCountryIndex = dhabiCountryNames.indexOf(selectedCountry!);
-              log("dhabiCountryIndex -> $dhabiCountryIndex");
-              // isCountrySelected = true;
-              showTinPrompt = true;
-              applicationCrsBloc.add(
-                ApplicationCrsEvent(
-                  showSelectCountry: showSelectCountry,
-                  showTinPrompt: showTinPrompt,
-                  showTinTextField: showTinTextField,
-                  showTinDropdown: showTinDropdown,
-                ),
-              );
+              log("selectedCountries before -> $selectedCountries");
+              if (selectedCountries.contains(value)) {
+                log("selectedCountries.contains(value) -> ${selectedCountries.contains(value)}");
+                promptSelectedCountryError(value as String);
+              } else {
+                selectedCountries.add(value);
+                log("selectedCountries after -> $selectedCountries");
+                toggles++;
+                isCountrySelected = true;
+                selectedCountry = value as String;
+                dhabiCountryIndex = dhabiCountryNames.indexOf(selectedCountry!);
+                log("dhabiCountryIndex -> $dhabiCountryIndex");
+                // isCountrySelected = true;
+                showTinPrompt = true;
+                applicationCrsBloc.add(
+                  ApplicationCrsEvent(
+                    showSelectCountry: showSelectCountry,
+                    showTinPrompt: showTinPrompt,
+                    showTinTextField: showTinTextField,
+                    showTinDropdown: showTinDropdown,
+                  ),
+                );
+              }
             },
           ),
           const SizeBox(height: 20),
@@ -467,21 +489,30 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             items: dhabiCountryNames,
             value: selectedCountry2,
             onChanged: (value) {
-              toggles++;
-              isCountrySelected2 = true;
-              selectedCountry2 = value as String;
-              dhabiCountryIndex2 = dhabiCountryNames.indexOf(selectedCountry2!);
-              log("dhabiCountryIndex -> $dhabiCountryIndex2");
-              // isCountrySelected = true;
-              showTinPrompt2 = true;
-              applicationCrsBloc.add(
-                ApplicationCrsEvent(
-                  showSelectCountry: showSelectCountry2,
-                  showTinPrompt: showTinPrompt2,
-                  showTinTextField: showTinTextField2,
-                  showTinDropdown: showTinDropdown2,
-                ),
-              );
+              log("selectedCountries before -> $selectedCountries");
+              if (selectedCountries.contains(value)) {
+                log("selectedCountries.contains(value) -> ${selectedCountries.contains(value)}");
+                promptSelectedCountryError(value as String);
+              } else {
+                selectedCountries.add(value);
+                log("selectedCountries after -> $selectedCountries");
+                toggles++;
+                isCountrySelected2 = true;
+                selectedCountry2 = value as String;
+                dhabiCountryIndex2 =
+                    dhabiCountryNames.indexOf(selectedCountry2!);
+                log("dhabiCountryIndex -> $dhabiCountryIndex2");
+                // isCountrySelected = true;
+                showTinPrompt2 = true;
+                applicationCrsBloc.add(
+                  ApplicationCrsEvent(
+                    showSelectCountry: showSelectCountry2,
+                    showTinPrompt: showTinPrompt2,
+                    showTinTextField: showTinTextField2,
+                    showTinDropdown: showTinDropdown2,
+                  ),
+                );
+              }
             },
           ),
           const SizeBox(height: 20),
@@ -519,21 +550,30 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             items: dhabiCountryNames,
             value: selectedCountry3,
             onChanged: (value) {
-              toggles++;
-              isCountrySelected3 = true;
-              selectedCountry3 = value as String;
-              dhabiCountryIndex3 = dhabiCountryNames.indexOf(selectedCountry3!);
-              log("dhabiCountryIndex -> $dhabiCountryIndex3");
-              // isCountrySelected = true;
-              showTinPrompt3 = true;
-              applicationCrsBloc.add(
-                ApplicationCrsEvent(
-                  showSelectCountry: showSelectCountry3,
-                  showTinPrompt: showTinPrompt3,
-                  showTinTextField: showTinTextField3,
-                  showTinDropdown: showTinDropdown3,
-                ),
-              );
+              log("selectedCountries before -> $selectedCountries");
+              if (selectedCountries.contains(value)) {
+                log("selectedCountries.contains(value) -> ${selectedCountries.contains(value)}");
+                promptSelectedCountryError(value as String);
+              } else {
+                selectedCountries.add(value);
+                log("selectedCountries after -> $selectedCountries");
+                toggles++;
+                isCountrySelected3 = true;
+                selectedCountry3 = value as String;
+                dhabiCountryIndex3 =
+                    dhabiCountryNames.indexOf(selectedCountry3!);
+                log("dhabiCountryIndex -> $dhabiCountryIndex3");
+                // isCountrySelected = true;
+                showTinPrompt3 = true;
+                applicationCrsBloc.add(
+                  ApplicationCrsEvent(
+                    showSelectCountry: showSelectCountry3,
+                    showTinPrompt: showTinPrompt3,
+                    showTinTextField: showTinTextField3,
+                    showTinDropdown: showTinDropdown3,
+                  ),
+                );
+              }
             },
           ),
           const SizeBox(height: 20),
@@ -571,21 +611,30 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             items: dhabiCountryNames,
             value: selectedCountry4,
             onChanged: (value) {
-              toggles++;
-              isCountrySelected4 = true;
-              selectedCountry4 = value as String;
-              dhabiCountryIndex4 = dhabiCountryNames.indexOf(selectedCountry4!);
-              log("dhabiCountryIndex -> $dhabiCountryIndex4");
-              // isCountrySelected = true;
-              showTinPrompt4 = true;
-              applicationCrsBloc.add(
-                ApplicationCrsEvent(
-                  showSelectCountry: showSelectCountry4,
-                  showTinPrompt: showTinPrompt4,
-                  showTinTextField: showTinTextField4,
-                  showTinDropdown: showTinDropdown4,
-                ),
-              );
+              log("selectedCountries before -> $selectedCountries");
+              if (selectedCountries.contains(value)) {
+                log("selectedCountries.contains(value) -> ${selectedCountries.contains(value)}");
+                promptSelectedCountryError(value as String);
+              } else {
+                selectedCountries.add(value);
+                log("selectedCountries after -> $selectedCountries");
+                toggles++;
+                isCountrySelected4 = true;
+                selectedCountry4 = value as String;
+                dhabiCountryIndex4 =
+                    dhabiCountryNames.indexOf(selectedCountry4!);
+                log("dhabiCountryIndex -> $dhabiCountryIndex4");
+                // isCountrySelected = true;
+                showTinPrompt4 = true;
+                applicationCrsBloc.add(
+                  ApplicationCrsEvent(
+                    showSelectCountry: showSelectCountry4,
+                    showTinPrompt: showTinPrompt4,
+                    showTinTextField: showTinTextField4,
+                    showTinDropdown: showTinDropdown4,
+                  ),
+                );
+              }
             },
           ),
           const SizeBox(height: 20),
@@ -1679,6 +1728,26 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
         ],
       );
     }
+  }
+
+  void promptSelectedCountryError(String country) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Duplicate Country Selected",
+          message:
+              "Your tax information for $country has already been submitted.",
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: "Go back",
+          ),
+        );
+      },
+    );
   }
 
   @override

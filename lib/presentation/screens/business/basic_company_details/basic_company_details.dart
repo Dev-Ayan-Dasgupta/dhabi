@@ -236,35 +236,22 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                                     title: "Trade license exists",
                                     message:
                                         "The given trade license number already exists in your database",
-                                    auxWidget: Column(
-                                      children: [
-                                        SolidButton(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          text: labels[293]["labelText"],
-                                          color: AppColors.primaryBright17,
-                                          fontColor: AppColors.primary,
-                                        ),
-                                        const SizeBox(height: 15),
-                                      ],
+                                    auxWidget: SolidButton(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      text: labels[293]["labelText"],
+                                      color: AppColors.primaryBright17,
+                                      fontColor: AppColors.primary,
                                     ),
-                                    actionWidget: Column(
-                                      children: [
-                                        GradientButton(
-                                          onTap: () {
-                                            Navigator.pushReplacementNamed(
-                                              context,
-                                              Routes.loginUserId,
-                                            );
-                                          },
-                                          text: "Try Log In",
-                                        ),
-                                        const SizeBox(
-                                          height:
-                                              PaddingConstants.bottomPadding,
-                                        ),
-                                      ],
+                                    actionWidget: GradientButton(
+                                      onTap: () {
+                                        Navigator.pushReplacementNamed(
+                                          context,
+                                          Routes.loginUserId,
+                                        );
+                                      },
+                                      text: "Try Log In",
                                     ),
                                   );
                                 },

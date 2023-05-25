@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -20,7 +23,14 @@ class AppBarLeading extends StatelessWidget {
       child: InkWell(
         onTap: onTap ??
             () {
-              Navigator.pop(context);
+              // Navigator.of(context, rootNavigator: true).pop(context);
+              bool canPop = Navigator.canPop(context);
+              log("canPop -> $canPop");
+              if (canPop) {
+                Navigator.pop(context);
+              } else {
+                SystemNavigator.pop();
+              }
             },
         child: SvgPicture.asset(
           ImageConstants.arrowBack,

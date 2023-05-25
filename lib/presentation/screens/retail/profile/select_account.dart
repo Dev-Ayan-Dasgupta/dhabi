@@ -129,16 +129,11 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                         title: "Application approval pending",
                                         message:
                                             "You already have a registration pending. Please contact Dhabi support.",
-                                        actionWidget: Column(
-                                          children: [
-                                            GradientButton(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                              text: labels[347]["labelText"],
-                                            ),
-                                            const SizeBox(height: 20),
-                                          ],
+                                        actionWidget: GradientButton(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          text: labels[347]["labelText"],
                                         ),
                                       );
                                     },
@@ -174,17 +169,11 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                                   "Application approval pending",
                                               message:
                                                   "You already have a registration pending. Please contact Dhabi support.",
-                                              actionWidget: Column(
-                                                children: [
-                                                  GradientButton(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    text: labels[347]
-                                                        ["labelText"],
-                                                  ),
-                                                  const SizeBox(height: 20),
-                                                ],
+                                              actionWidget: GradientButton(
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                text: labels[347]["labelText"],
                                               ),
                                             );
                                           },
@@ -203,22 +192,15 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                             title: "Device Invalid",
                                             message:
                                                 "You are trying to login from an unregistered device.",
-                                            actionWidget: Column(
-                                              children: [
-                                                GradientButton(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                    Navigator
-                                                        .pushReplacementNamed(
-                                                      context,
-                                                      Routes.loginUserId,
-                                                    );
-                                                  },
-                                                  text: labels[347]
-                                                      ["labelText"],
-                                                ),
-                                                const SizeBox(height: 20),
-                                              ],
+                                            actionWidget: GradientButton(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  Routes.loginUserId,
+                                                );
+                                              },
+                                              text: labels[347]["labelText"],
                                             ),
                                           );
                                         },

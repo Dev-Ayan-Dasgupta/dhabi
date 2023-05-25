@@ -116,17 +116,12 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
           svgAssetPath: ImageConstants.warning,
           title: labels[250]["labelText"],
           message: "Penalty rate will apply in case of premature withdrawal.",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, Routes.prematureWithdrawal);
-                },
-                text: "Yes, I am sure",
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, Routes.prematureWithdrawal);
+            },
+            text: "Yes, I am sure",
           ),
         );
       },

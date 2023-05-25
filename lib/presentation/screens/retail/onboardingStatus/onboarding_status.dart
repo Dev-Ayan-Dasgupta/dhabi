@@ -268,6 +268,10 @@ class _RetailOnboardingStatusScreenState
                               } else if (storageStepsCompleted == 6) {
                                 callLoginApi();
                                 Navigator.pushNamed(
+                                    context, Routes.applicationTaxFATCA);
+                              } else if (storageStepsCompleted == 7) {
+                                callLoginApi();
+                                Navigator.pushNamed(
                                   context,
                                   Routes.applicationTaxCRS,
                                   arguments: TaxCrsArgumentModel(
@@ -275,7 +279,7 @@ class _RetailOnboardingStatusScreenState
                                     ustin: storageUsTin ?? "",
                                   ).toMap(),
                                 );
-                              } else if (storageStepsCompleted == 7) {
+                              } else if (storageStepsCompleted == 8) {
                                 callLoginApi();
                                 Navigator.pushNamed(
                                     context, Routes.applicationAccount);

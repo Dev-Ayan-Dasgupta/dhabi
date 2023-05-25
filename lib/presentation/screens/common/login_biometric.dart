@@ -140,24 +140,10 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
             await LocalAuthentication().isDeviceSupported();
         log("isBiometricSupported -> $isBiometricSupported");
 
-        if (deviceId == "bf8e43a90970f33c") {
-          if (context.mounted) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.loginPassword,
-              arguments: LoginPasswordArgumentModel(
-                emailId: storageEmail ?? "",
-                userId: storageUserId ?? 0,
-                userTypeId: storageUserTypeId ?? 1,
-                companyId: storageCompanyId ?? 0,
-              ).toMap(),
-            );
-          }
-        }
-
         if (!isBiometricSupported) {
         } else {
           bool isAuthenticated = await BiometricHelper.authenticateUser();
+          log("isAuthenticated -> $isAuthenticated");
 
           if (isAuthenticated) {
             if (context.mounted) {
@@ -169,18 +155,21 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
             if (context.mounted) {
               biometricFailedCount++;
               log("biometricFailedCount -> $biometricFailedCount");
-              if (biometricFailedCount == 3) {
-                Navigator.pushReplacementNamed(
-                  context,
-                  Routes.loginPassword,
-                  arguments: LoginPasswordArgumentModel(
-                    emailId: storageEmail ?? "",
-                    userId: storageUserId ?? 0,
-                    userTypeId: storageUserTypeId ?? 1,
-                    companyId: storageCompanyId ?? 0,
-                  ).toMap(),
-                );
-              }
+              // if (biometricFailedCount == 3) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.loginPassword,
+                arguments: LoginPasswordArgumentModel(
+                  emailId: storageEmail ?? "",
+                  userId: storageUserId ?? 0,
+                  userTypeId: storageUserTypeId ?? 1,
+                  companyId: storageCompanyId ?? 0,
+                ).toMap(),
+              );
+              // } else {
+              //   bool isAuthenticated = await BiometricHelper.authenticateUser();
+              //   log("isAuthenticated -> $isAuthenticated");
+              // }
             }
           }
         }
@@ -189,14 +178,6 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
   }
 
   void onSubmit(String password) async {
-    // log("companyID -> ${loginPasswordArgument.companyId}");
-    // log("userTypeId -> ${loginPasswordArgument.userTypeId}");
-    // final MatchPasswordBloc matchPasswordBloc =
-    //     context.read<MatchPasswordBloc>();
-
-    // isLoading = true;
-    // matchPasswordBloc
-    //     .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
     var result = await MapLogin.mapLogin({
       "emailId": storageEmail,
       "userTypeId": storageUserTypeId,
@@ -242,38 +223,28 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                   title: "Application approval pending",
                   message:
                       "You already have a registration pending. Please contact Dhabi support.",
-                  auxWidget: Column(
-                    children: [
-                      GradientButton(
-                        onTap: () async {
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                            Navigator.pushReplacementNamed(
-                              context,
-                              Routes.onboarding,
-                              arguments: OnboardingArgumentModel(
-                                isInitial: true,
-                              ).toMap(),
-                            );
-                          }
-                        },
-                        text: labels[347]["labelText"],
-                      ),
-                      const SizeBox(height: 15),
-                    ],
+                  auxWidget: GradientButton(
+                    onTap: () async {
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.onboarding,
+                          arguments: OnboardingArgumentModel(
+                            isInitial: true,
+                          ).toMap(),
+                        );
+                      }
+                    },
+                    text: labels[347]["labelText"],
                   ),
-                  actionWidget: Column(
-                    children: [
-                      SolidButton(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        text: labels[166]["labelText"],
-                        color: AppColors.primaryBright17,
-                        fontColor: AppColors.primary,
-                      ),
-                      const SizeBox(height: 20),
-                    ],
+                  actionWidget: SolidButton(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    text: labels[166]["labelText"],
+                    color: AppColors.primaryBright17,
+                    fontColor: AppColors.primary,
                   ),
                 );
               },
@@ -340,10 +311,6 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
         }
       }
     }
-
-    // isLoading = false;
-    // matchPasswordBloc
-    //     .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
   }
 
   void promptWrongCredentials() {
@@ -354,17 +321,12 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
           svgAssetPath: ImageConstants.warning,
           title: "Wrong Credentials",
           message: "You have entered invalid username or password",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(context, Routes.loginUserId);
-                },
-                text: labels[88]["labelText"],
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(context, Routes.loginUserId);
+            },
+            text: labels[88]["labelText"],
           ),
         );
       },
@@ -509,18 +471,13 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
               const SizeBox(height: 15),
             ],
           ),
-          actionWidget: Column(
-            children: [
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[166]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
         );
       },
@@ -536,22 +493,16 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
           title: "Retry Limit Reached",
           message:
               "You have exceeded maximum number of 3 retries. Please wait for 24 hours before you can try again.",
-          actionWidget: Column(
-            children: [
-              const SizeBox(height: 20),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(
-                    context,
-                    Routes.onboarding,
-                    arguments: OnboardingArgumentModel(isInitial: true).toMap(),
-                  );
-                },
-                text: "Go Home",
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.onboarding,
+                arguments: OnboardingArgumentModel(isInitial: true).toMap(),
+              );
+            },
+            text: "Go Home",
           ),
         );
       },
@@ -567,16 +518,11 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
           title: "KYC Expired",
           message:
               "Your KYC Documents have expired. Please verify your documents again.",
-          actionWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  Navigator.pushNamed(context, Routes.verificationInitializing);
-                },
-                text: "Verify",
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pushNamed(context, Routes.verificationInitializing);
+            },
+            text: "Verify",
           ),
         );
       },

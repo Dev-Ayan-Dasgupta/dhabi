@@ -218,35 +218,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           title: labels[250]["labelText"],
           message:
               "Going to the previous screen will make you repeat this step.",
-          auxWidget: Column(
-            children: [
-              const SizeBox(height: 15),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacementNamed(
-                    context,
-                    Routes.onboarding,
-                    arguments: OnboardingArgumentModel(isInitial: true).toMap(),
-                  );
-                },
-                text: labels[347]["labelText"],
-              ),
-              const SizeBox(height: 15),
-            ],
+          auxWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.onboarding,
+                arguments: OnboardingArgumentModel(isInitial: true).toMap(),
+              );
+            },
+            text: labels[347]["labelText"],
           ),
-          actionWidget: Column(
-            children: [
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[166]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
         );
       },
@@ -370,23 +359,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     svgAssetPath: ImageConstants.warning,
                     title: "Retry Limit Reached",
                     message: result["message"],
-                    actionWidget: Column(
-                      children: [
-                        GradientButton(
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.pushReplacementNamed(
-                              context,
-                              Routes.onboarding,
-                              arguments: OnboardingArgumentModel(
-                                isInitial: true,
-                              ).toMap(),
-                            );
-                          },
-                          text: "Go Home",
-                        ),
-                        const SizeBox(height: 20),
-                      ],
+                    actionWidget: GradientButton(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.onboarding,
+                          arguments: OnboardingArgumentModel(
+                            isInitial: true,
+                          ).toMap(),
+                        );
+                      },
+                      text: "Go Home",
                     ),
                   );
                 },

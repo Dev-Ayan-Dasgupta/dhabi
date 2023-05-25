@@ -215,23 +215,18 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                     svgAssetPath: ImageConstants.warning,
                     title: "Retry Limit Reached",
                     message: result["message"],
-                    actionWidget: Column(
-                      children: [
-                        GradientButton(
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.pushReplacementNamed(
-                              context,
-                              Routes.onboarding,
-                              arguments: OnboardingArgumentModel(
-                                isInitial: true,
-                              ).toMap(),
-                            );
-                          },
-                          text: "Go Home",
-                        ),
-                        const SizeBox(height: 20),
-                      ],
+                    actionWidget: GradientButton(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.onboarding,
+                          arguments: OnboardingArgumentModel(
+                            isInitial: true,
+                          ).toMap(),
+                        );
+                      },
+                      text: "Go Home",
                     ),
                   );
                 },

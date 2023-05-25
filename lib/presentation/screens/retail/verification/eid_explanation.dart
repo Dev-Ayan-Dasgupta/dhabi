@@ -306,7 +306,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 80),
+                  const SizeBox(height: 70),
                   Align(
                     alignment: Alignment.center,
                     child: SizedBox(
@@ -324,7 +324,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                       child: Image.asset(ImageConstants.eidBack),
                     ),
                   ),
-                  const SizeBox(height: 80),
+                  const SizeBox(height: 70),
                   Align(
                     alignment: Alignment.center,
                     child: Text(
@@ -371,32 +371,22 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           svgAssetPath: ImageConstants.warning,
           title: labels[233]["labelText"],
           message: labels[234]["labelText"],
-          auxWidget: Column(
-            children: [
-              GradientButton(
-                onTap: () {
-                  // Navigator.pushNamed(context, Routes.eidDetails);
-                  isEidChosen = true;
-                  DocumentReader.showScanner();
-                  Navigator.pop(context);
-                },
-                text: "Allow Access",
-              ),
-              const SizeBox(height: 15),
-            ],
+          auxWidget: GradientButton(
+            onTap: () {
+              // Navigator.pushNamed(context, Routes.eidDetails);
+              isEidChosen = true;
+              DocumentReader.showScanner();
+              Navigator.pop(context);
+            },
+            text: "Allow Access",
           ),
-          actionWidget: Column(
-            children: [
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[235]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: PaddingConstants.bottomPadding),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[235]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
         );
       },

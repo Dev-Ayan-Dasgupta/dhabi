@@ -256,7 +256,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
             }
           } else {
             // isInvalid = true;
-            // TODO: uncomment this after testing
+
             if (context.mounted) {
               showDialog(
                 context: context,
@@ -271,69 +271,46 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                     message: storageUserTypeId == 1
                         ? messages[70]["messageText"]
                         : result["message"],
-                    auxWidget: Column(
-                      children: [
-                        GradientButton(
-                          onTap: () async {
-                            await storage.write(
-                                key: "stepsCompleted", value: 0.toString());
-                            storageStepsCompleted = int.parse(
-                                await storage.read(key: "stepsCompleted") ??
-                                    "0");
-                            if (context.mounted) {
-                              Navigator.pushReplacementNamed(
-                                context,
-                                storageUserTypeId == 1
-                                    ? Routes.loginPassword
-                                    : Routes.registration,
-                                arguments: storageUserTypeId == 1
-                                    ? LoginPasswordArgumentModel(
-                                        emailId:
-                                            createAccountArgumentModel.email,
-                                        userId: 0,
-                                        userTypeId: isPersonalFocussed ? 1 : 2,
-                                        companyId: isPersonalFocussed ? 0 : 1,
-                                      ).toMap()
-                                    : RegistrationArgumentModel(isInitial: true)
-                                        .toMap(),
-                              );
-                            }
-                          },
-                          text: storageUserTypeId == 1
-                              ? labels[205]["labelText"]
-                              : "Register",
-                        ),
-                        const SizeBox(height: 15),
-                      ],
+                    auxWidget: GradientButton(
+                      onTap: () async {
+                        await storage.write(
+                            key: "stepsCompleted", value: 0.toString());
+                        storageStepsCompleted = int.parse(
+                            await storage.read(key: "stepsCompleted") ?? "0");
+                        if (context.mounted) {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            storageUserTypeId == 1
+                                ? Routes.loginPassword
+                                : Routes.registration,
+                            arguments: storageUserTypeId == 1
+                                ? LoginPasswordArgumentModel(
+                                    emailId: createAccountArgumentModel.email,
+                                    userId: 0,
+                                    userTypeId: isPersonalFocussed ? 1 : 2,
+                                    companyId: isPersonalFocussed ? 0 : 1,
+                                  ).toMap()
+                                : RegistrationArgumentModel(isInitial: true)
+                                    .toMap(),
+                          );
+                        }
+                      },
+                      text: storageUserTypeId == 1
+                          ? labels[205]["labelText"]
+                          : "Register",
                     ),
-                    actionWidget: Column(
-                      children: [
-                        SolidButton(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          text: labels[166]["labelText"],
-                          color: AppColors.primaryBright17,
-                          fontColor: AppColors.primary,
-                        ),
-                        const SizeBox(height: 20),
-                      ],
+                    actionWidget: SolidButton(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      text: labels[166]["labelText"],
+                      color: AppColors.primaryBright17,
+                      fontColor: AppColors.primary,
                     ),
                   );
                 },
               );
             }
-            // TODO: Comment/remove this after testing
-            // if (context.mounted) {
-            //   Navigator.pushReplacementNamed(
-            //     context,
-            //     Routes.createPassword,
-            //     arguments: CreateAccountArgumentModel(
-            //       email: createAccountArgumentModel.email,
-            //       isRetail: isPersonalFocussed ? true : false,
-            //     ).toMap(),
-            //   );
-            // }
           }
           isValidating = false;
           showButtonBloc.add(ShowButtonEvent(show: isValidating));
@@ -356,37 +333,25 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
           title: labels[250]["labelText"],
           message:
               "Going to the previous screen will make you repeat this step.",
-          auxWidget: Column(
-            children: [
-              const SizeBox(height: 15),
-              GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                  // Navigator.pop(context);
-                  Navigator.pushReplacementNamed(
-                    context,
-                    Routes.registration,
-                    arguments:
-                        RegistrationArgumentModel(isInitial: true).toMap(),
-                  );
-                },
-                text: labels[347]["labelText"],
-              ),
-              const SizeBox(height: 15),
-            ],
+          auxWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              // Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.registration,
+                arguments: RegistrationArgumentModel(isInitial: true).toMap(),
+              );
+            },
+            text: labels[347]["labelText"],
           ),
-          actionWidget: Column(
-            children: [
-              SolidButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[166]["labelText"],
-                color: AppColors.primaryBright17,
-                fontColor: AppColors.primary,
-              ),
-              const SizeBox(height: 20),
-            ],
+          actionWidget: SolidButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
           ),
         );
       },

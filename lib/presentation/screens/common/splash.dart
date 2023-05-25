@@ -179,8 +179,8 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     try {
-      storageIsNotNewInstall =
-          (await storage.read(key: "newInstall")) == "true";
+      storageIsNotNewInstall = false;
+      (await storage.read(key: "newInstall")) == "true";
       log("storageIsNotNewInstall -> $storageIsNotNewInstall");
       storageHasFirstLoggedIn =
           (await storage.read(key: "hasFirstLoggedIn")) == "true";
