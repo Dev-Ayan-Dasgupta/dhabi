@@ -23,12 +23,14 @@ class BiometricHelper {
       try {
         isAuthenticated = await localAuthentication.authenticate(
           localizedReason:
-              "Use biometric authentication to unlock this authenticator",
+              "Authenticate yourself to use Dhabi",
           authMessages: <AuthMessages>[
             const AndroidAuthMessages(
+              signInTitle: 'Authenticate yourself to use Dhabi',
               cancelButton: 'Cancel',
             ),
             const IOSAuthMessages(
+              localizedFallbackTitle: 'Authenticate yourself to use Dhabi',
               cancelButton: 'Cancel',
             )
           ],
