@@ -362,20 +362,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
                             onTap: () {
-                              // Navigator.pushNamed(
-                              //     context, Routes.exploreDashboard);
-                              // Navigator.pushNamed(context, Routes.loginUserId);
-
                               Navigator.pushNamed(
-                                context,
-                                Routes.loginPassword,
-                                arguments: LoginPasswordArgumentModel(
-                                  emailId: storageEmail ?? "",
-                                  userId: storageUserId ?? 0,
-                                  userTypeId: storageUserTypeId ?? 1,
-                                  companyId: storageCompanyId ?? 0,
-                                ).toMap(),
-                              );
+                                  context, Routes.exploreDashboard);
+                              // Navigator.pushNamed(context, Routes.loginUserId);
                             },
                             text: labels[208]["labelText"],
                             color: const Color.fromRGBO(85, 85, 85, 0.2),
