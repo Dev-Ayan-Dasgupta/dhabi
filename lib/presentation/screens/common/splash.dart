@@ -119,6 +119,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       deviceId = await PlatformDeviceId.getDeviceId;
+      // deviceId = await FlutterUdid.consistentUdid;
     } on PlatformException {
       deviceId = 'Failed to get deviceId.';
     }
