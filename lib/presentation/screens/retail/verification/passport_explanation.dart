@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -10,6 +12,7 @@ import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/long_to_short_code.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_face_api/face_api.dart' as regula;
@@ -27,6 +30,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   regula.MatchFacesImage image1 = regula.MatchFacesImage();
 
   Image img1 = Image.asset(ImageConstants.passport);
+
+  bool isScanning = false;
 
   @override
   void initState() {
@@ -59,7 +64,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
 
       String? tempPassportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
-      passportNumber = tempPassportNumber?.split("\n").last.substring(0, 8);
+      passportNumber = tempPassportNumber?.split("\n").last.split('<').first;
       // passportNumber = ppMrz!.substring(0, 9);
       // print("passportNumber -> $passportNumber");
       // passportNumber = await results
@@ -354,8 +359,19 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             Column(
               children: [
                 GradientButton(
-                  onTap: promptUser,
+                  onTap: () {
+                    if (!isScanning) {
+                      final ShowButtonBloc showButtonBloc =
+                          context.read<ShowButtonBloc>();
+                      isScanning = true;
+                      showButtonBloc.add(ShowButtonEvent(show: isScanning));
+                      promptUser();
+                      isScanning = false;
+                      showButtonBloc.add(ShowButtonEvent(show: isScanning));
+                    }
+                  },
                   text: labels[231]["labelText"],
+                  auxWidget: isScanning ? const LoaderRow() : const SizeBox(),
                 ),
                 const SizeBox(height: 15),
                 SolidButton(

@@ -1614,105 +1614,108 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           const SizeBox(height: 15),
           GradientButton(
             onTap: () async {
-              final ShowButtonBloc showButtonBloc =
-                  context.read<ShowButtonBloc>();
-              isUploading = true;
-              showButtonBloc.add(ShowButtonEvent(show: isUploading));
-              // log("countryCode -> ${dhabiCountries[dhabiCountryIndex]["shortCode"]}");
-              log("noTINReason -> ${selectedReason ?? ""}");
+              if (!isUploading) {
+                final ShowButtonBloc showButtonBloc =
+                    context.read<ShowButtonBloc>();
+                isUploading = true;
+                showButtonBloc.add(ShowButtonEvent(show: isUploading));
+                // log("countryCode -> ${dhabiCountries[dhabiCountryIndex]["shortCode"]}");
+                log("noTINReason -> ${selectedReason ?? ""}");
 
-              if (isCRSreportable) {
-                if (countriesAdded == 0) {
-                  countriesAdded++;
+                if (isCRSreportable) {
+                  if (countriesAdded == 0) {
+                    countriesAdded++;
+                  }
                 }
+
+                await storage.write(key: "taxCountry", value: selectedCountry);
+                storageTaxCountry = await storage.read(key: "taxCountry");
+                await storage.write(
+                    key: "isTinYes", value: isTinYes.toString());
+                storageIsTinYes = await storage.read(key: "isTinYes") == "true";
+                await storage.write(key: "crsTin", value: _tinController.text);
+                storageCrsTin = await storage.read(key: "crsTin");
+                await storage.write(key: "noTinReason", value: selectedReason);
+                storageNoTinReason = await storage.read(key: "noTinReason");
+
+                for (int i = 0; i < countriesAdded; i++) {
+                  if (i == 0) {
+                    internationalTaxes.add(
+                      {
+                        "countryCode":
+                            !dhabiCountryNames.contains(selectedCountry ?? "")
+                                ? ""
+                                : dhabiCountries[dhabiCountryNames
+                                    .indexOf(selectedCountry!)]["shortCode"],
+                        "isTIN": isTinYes,
+                        "tin": _tinController.text,
+                        "noTINReason": selectedReason,
+                      },
+                    );
+                  }
+                  if (i == 1) {
+                    internationalTaxes.add(
+                      {
+                        "countryCode":
+                            !dhabiCountryNames.contains(selectedCountry2 ?? "")
+                                ? ""
+                                : dhabiCountries[dhabiCountryNames
+                                    .indexOf(selectedCountry2!)]["shortCode"],
+                        "isTIN": isTinYes2,
+                        "tin": _tinController2.text,
+                        "noTINReason": selectedReason2,
+                      },
+                    );
+                  }
+                  if (i == 2) {
+                    internationalTaxes.add(
+                      {
+                        "countryCode":
+                            !dhabiCountryNames.contains(selectedCountry3 ?? "")
+                                ? ""
+                                : dhabiCountries[dhabiCountryNames
+                                    .indexOf(selectedCountry3!)]["shortCode"],
+                        "isTIN": isTinYes3,
+                        "tin": _tinController3.text,
+                        "noTINReason": selectedReason3,
+                      },
+                    );
+                  }
+                  if (i == 3) {
+                    internationalTaxes.add(
+                      {
+                        "countryCode":
+                            !dhabiCountryNames.contains(selectedCountry4 ?? "")
+                                ? ""
+                                : dhabiCountries[dhabiCountryNames
+                                    .indexOf(selectedCountry4!)]["shortCode"],
+                        "isTIN": isTinYes4,
+                        "tin": _tinController4.text,
+                        "noTINReason": selectedReason4,
+                      },
+                    );
+                  }
+                }
+
+                await storage.write(
+                    key: "internationalTaxes",
+                    value: jsonEncode(internationalTaxes));
+
+                storageInternationalTaxes = jsonDecode(
+                    await storage.read(key: "internationalTaxes") ?? "");
+
+                log("storageInternationalTaxes -> $storageInternationalTaxes");
+
+                if (context.mounted) {
+                  Navigator.pushNamed(context, Routes.applicationAccount);
+                }
+                isUploading = false;
+                showButtonBloc.add(ShowButtonEvent(show: isUploading));
+
+                await storage.write(key: "stepsCompleted", value: 8.toString());
+                storageStepsCompleted =
+                    int.parse(await storage.read(key: "stepsCompleted") ?? "0");
               }
-
-              await storage.write(key: "taxCountry", value: selectedCountry);
-              storageTaxCountry = await storage.read(key: "taxCountry");
-              await storage.write(key: "isTinYes", value: isTinYes.toString());
-              storageIsTinYes = await storage.read(key: "isTinYes") == "true";
-              await storage.write(key: "crsTin", value: _tinController.text);
-              storageCrsTin = await storage.read(key: "crsTin");
-              await storage.write(key: "noTinReason", value: selectedReason);
-              storageNoTinReason = await storage.read(key: "noTinReason");
-
-              for (int i = 0; i < countriesAdded; i++) {
-                if (i == 0) {
-                  internationalTaxes.add(
-                    {
-                      "countryCode":
-                          !dhabiCountryNames.contains(selectedCountry ?? "")
-                              ? ""
-                              : dhabiCountries[dhabiCountryNames
-                                  .indexOf(selectedCountry!)]["shortCode"],
-                      "isTIN": isTinYes,
-                      "tin": _tinController.text,
-                      "noTINReason": selectedReason,
-                    },
-                  );
-                }
-                if (i == 1) {
-                  internationalTaxes.add(
-                    {
-                      "countryCode":
-                          !dhabiCountryNames.contains(selectedCountry2 ?? "")
-                              ? ""
-                              : dhabiCountries[dhabiCountryNames
-                                  .indexOf(selectedCountry2!)]["shortCode"],
-                      "isTIN": isTinYes2,
-                      "tin": _tinController2.text,
-                      "noTINReason": selectedReason2,
-                    },
-                  );
-                }
-                if (i == 2) {
-                  internationalTaxes.add(
-                    {
-                      "countryCode":
-                          !dhabiCountryNames.contains(selectedCountry3 ?? "")
-                              ? ""
-                              : dhabiCountries[dhabiCountryNames
-                                  .indexOf(selectedCountry3!)]["shortCode"],
-                      "isTIN": isTinYes3,
-                      "tin": _tinController3.text,
-                      "noTINReason": selectedReason3,
-                    },
-                  );
-                }
-                if (i == 3) {
-                  internationalTaxes.add(
-                    {
-                      "countryCode":
-                          !dhabiCountryNames.contains(selectedCountry4 ?? "")
-                              ? ""
-                              : dhabiCountries[dhabiCountryNames
-                                  .indexOf(selectedCountry4!)]["shortCode"],
-                      "isTIN": isTinYes4,
-                      "tin": _tinController4.text,
-                      "noTINReason": selectedReason4,
-                    },
-                  );
-                }
-              }
-
-              await storage.write(
-                  key: "internationalTaxes",
-                  value: jsonEncode(internationalTaxes));
-
-              storageInternationalTaxes = jsonDecode(
-                  await storage.read(key: "internationalTaxes") ?? "");
-
-              log("storageInternationalTaxes -> $storageInternationalTaxes");
-
-              if (context.mounted) {
-                Navigator.pushNamed(context, Routes.applicationAccount);
-              }
-              isUploading = false;
-              showButtonBloc.add(ShowButtonEvent(show: isUploading));
-
-              await storage.write(key: "stepsCompleted", value: 8.toString());
-              storageStepsCompleted =
-                  int.parse(await storage.read(key: "stepsCompleted") ?? "0");
             },
             text: labels[127]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -9,6 +11,7 @@ import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_face_api/face_api.dart' as regula;
@@ -26,8 +29,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
 
   Image img1 = Image.asset(ImageConstants.eidFront);
 
-  String status = "";
-  double progressValue = 0;
+  bool isScanning = false;
 
   @override
   void initState() {
@@ -341,7 +343,17 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
             Column(
               children: [
                 GradientButton(
-                  onTap: promptUser,
+                  onTap: () {
+                    if (!isScanning) {
+                      final ShowButtonBloc showButtonBloc =
+                          context.read<ShowButtonBloc>();
+                      isScanning = true;
+                      showButtonBloc.add(ShowButtonEvent(show: isScanning));
+                      promptUser();
+                      isScanning = false;
+                      showButtonBloc.add(ShowButtonEvent(show: isScanning));
+                    }
+                  },
                   text: labels[231]["labelText"],
                 ),
                 const SizeBox(height: 15),

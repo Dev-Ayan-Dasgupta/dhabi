@@ -126,29 +126,31 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
         children: [
           GradientButton(
             onTap: () async {
-              final DropdownSelectedBloc showButtonBloc =
-                  context.read<DropdownSelectedBloc>();
-              isUploading = true;
-              showButtonBloc.add(DropdownSelectedEvent(
-                  isDropdownSelected: isUploading, toggles: toggles));
-              await storage.write(key: "incomeSource", value: selectedValue);
-              storageIncomeSource = await storage.read(key: "incomeSource");
-              // var result =
-              //     await MapAddOrUpdateIncomeSource.mapAddOrUpdateIncomeSource(
-              //   {"incomeSource": selectedValue},
-              //   token ?? "",
-              // );
-              // log("Income Source API response -> $result");
-              if (context.mounted) {
-                Navigator.pushNamed(context, Routes.applicationTaxFATCA);
-              }
-              isUploading = false;
-              showButtonBloc.add(DropdownSelectedEvent(
-                  isDropdownSelected: isUploading, toggles: toggles));
+              if (!isUploading) {
+                final DropdownSelectedBloc showButtonBloc =
+                    context.read<DropdownSelectedBloc>();
+                isUploading = true;
+                showButtonBloc.add(DropdownSelectedEvent(
+                    isDropdownSelected: isUploading, toggles: toggles));
+                await storage.write(key: "incomeSource", value: selectedValue);
+                storageIncomeSource = await storage.read(key: "incomeSource");
+                // var result =
+                //     await MapAddOrUpdateIncomeSource.mapAddOrUpdateIncomeSource(
+                //   {"incomeSource": selectedValue},
+                //   token ?? "",
+                // );
+                // log("Income Source API response -> $result");
+                if (context.mounted) {
+                  Navigator.pushNamed(context, Routes.applicationTaxFATCA);
+                }
+                isUploading = false;
+                showButtonBloc.add(DropdownSelectedEvent(
+                    isDropdownSelected: isUploading, toggles: toggles));
 
-              await storage.write(key: "stepsCompleted", value: 6.toString());
-              storageStepsCompleted =
-                  int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+                await storage.write(key: "stepsCompleted", value: 6.toString());
+                storageStepsCompleted =
+                    int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+              }
             },
             text: labels[127]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),

@@ -242,69 +242,104 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
           const SizeBox(height: 10),
           GradientButton(
             onTap: () async {
-              final ShowButtonBloc showButtonBloc =
-                  context.read<ShowButtonBloc>();
-              isUploading = true;
-              showButtonBloc.add(ShowButtonEvent(show: isUploading));
+              if (!isUploading) {
+                final ShowButtonBloc showButtonBloc =
+                    context.read<ShowButtonBloc>();
+                isUploading = true;
+                showButtonBloc.add(ShowButtonEvent(show: isUploading));
 
-              var addressApiResult = await MapRegisterRetailCustomerAddress
-                  .mapRegisterRetailCustomerAddress(
-                {
-                  "addressLine_1": storageAddressLine1,
-                  "addressLine_2": storageAddressLine2,
-                  "areaId": uaeDetails[emirates.indexOf(storageAddressEmirate!)]
-                      ["areas"][0]["area_Id"],
-                  "cityId": uaeDetails[emirates.indexOf(storageAddressEmirate!)]
-                      ["city_Id"],
-                  "stateId": 1,
-                  "countryId": 1,
-                  "pinCode": storageAddressPoBox
-                },
-                token ?? "",
-              );
-              log("RegisterRetailCustomerAddress API Response -> $addressApiResult");
-
-              if (addressApiResult["success"]) {
-                var incomeApiResult =
-                    await MapAddOrUpdateIncomeSource.mapAddOrUpdateIncomeSource(
-                  {"incomeSource": storageIncomeSource},
+                var addressApiResult = await MapRegisterRetailCustomerAddress
+                    .mapRegisterRetailCustomerAddress(
+                  {
+                    "addressLine_1": storageAddressLine1,
+                    "addressLine_2": storageAddressLine2,
+                    "areaId":
+                        uaeDetails[emirates.indexOf(storageAddressEmirate!)]
+                            ["areas"][0]["area_Id"],
+                    "cityId":
+                        uaeDetails[emirates.indexOf(storageAddressEmirate!)]
+                            ["city_Id"],
+                    "stateId": 1,
+                    "countryId": 1,
+                    "pinCode": storageAddressPoBox
+                  },
                   token ?? "",
                 );
-                log("Income Source API response -> $incomeApiResult");
+                log("RegisterRetailCustomerAddress API Response -> $addressApiResult");
 
-                if (incomeApiResult["success"]) {
-                  var taxApiResult =
-                      await MapCustomerTaxInformation.mapCustomerTaxInformation(
-                    {
-                      "isUSFATCA": storageIsUSFATCA,
-                      "ustin": storageUsTin,
-                      "internationalTaxes": storageInternationalTaxes
-                    },
+                if (addressApiResult["success"]) {
+                  var incomeApiResult = await MapAddOrUpdateIncomeSource
+                      .mapAddOrUpdateIncomeSource(
+                    {"incomeSource": storageIncomeSource},
                     token ?? "",
                   );
-                  log("Tax Information API response -> $taxApiResult");
-                  if (taxApiResult["success"]) {
-                    if (context.mounted) {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.retailOnboardingStatus,
-                        arguments: OnboardingStatusArgumentModel(
-                          stepsCompleted: 3,
-                          isFatca: false,
-                          isPassport: false,
-                          isRetail: true,
-                        ).toMap(),
-                      );
-                    }
-                    await storage.write(
-                        key: "accountType", value: accountType.toString());
-                    storageAccountType = int.parse(
-                        await storage.read(key: "accountType") ?? "1");
+                  log("Income Source API response -> $incomeApiResult");
 
-                    await storage.write(
-                        key: "stepsCompleted", value: 9.toString());
-                    storageStepsCompleted = int.parse(
-                        await storage.read(key: "stepsCompleted") ?? "0");
+                  if (incomeApiResult["success"]) {
+                    var taxApiResult = await MapCustomerTaxInformation
+                        .mapCustomerTaxInformation(
+                      {
+                        "isUSFATCA": storageIsUSFATCA,
+                        "ustin": storageUsTin,
+                        "internationalTaxes": storageInternationalTaxes
+                      },
+                      token ?? "",
+                    );
+                    log("Tax Information API response -> $taxApiResult");
+                    if (taxApiResult["success"]) {
+                      if (context.mounted) {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.retailOnboardingStatus,
+                          arguments: OnboardingStatusArgumentModel(
+                            stepsCompleted: 3,
+                            isFatca: false,
+                            isPassport: false,
+                            isRetail: true,
+                          ).toMap(),
+                        );
+                      }
+                      await storage.write(
+                          key: "accountType", value: accountType.toString());
+                      storageAccountType = int.parse(
+                          await storage.read(key: "accountType") ?? "1");
+
+                      await storage.write(
+                          key: "stepsCompleted", value: 9.toString());
+                      storageStepsCompleted = int.parse(
+                          await storage.read(key: "stepsCompleted") ?? "0");
+                    } else {
+                      if (context.mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return CustomDialog(
+                              svgAssetPath: ImageConstants.warning,
+                              title: "Error",
+                              message: taxApiResult["message"],
+                              actionWidget: GradientButton(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    Routes.applicationTaxCRS,
+                                    arguments: TaxCrsArgumentModel(
+                                      isUSFATCA: storageIsUSFATCA ?? true,
+                                      ustin: storageUsTin ?? "",
+                                    ).toMap(),
+                                  );
+                                },
+                                text: "Go Back",
+                              ),
+                            );
+                          },
+                        );
+                      }
+                      await storage.write(
+                          key: "stepsCompleted", value: 7.toString());
+                      storageStepsCompleted = int.parse(
+                          await storage.read(key: "stepsCompleted") ?? "0");
+                    }
                   } else {
                     if (context.mounted) {
                       showDialog(
@@ -313,17 +348,13 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                           return CustomDialog(
                             svgAssetPath: ImageConstants.warning,
                             title: "Error",
-                            message: taxApiResult["message"],
+                            message: incomeApiResult["message"],
                             actionWidget: GradientButton(
                               onTap: () {
                                 Navigator.pop(context);
                                 Navigator.pushReplacementNamed(
                                   context,
-                                  Routes.applicationTaxCRS,
-                                  arguments: TaxCrsArgumentModel(
-                                    isUSFATCA: storageIsUSFATCA ?? true,
-                                    ustin: storageUsTin ?? "",
-                                  ).toMap(),
+                                  Routes.applicationAddress,
                                 );
                               },
                               text: "Go Back",
@@ -333,7 +364,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                       );
                     }
                     await storage.write(
-                        key: "stepsCompleted", value: 7.toString());
+                        key: "stepsCompleted", value: 5.toString());
                     storageStepsCompleted = int.parse(
                         await storage.read(key: "stepsCompleted") ?? "0");
                   }
@@ -345,13 +376,19 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.warning,
                           title: "Error",
-                          message: incomeApiResult["message"],
+                          message: addressApiResult["message"],
                           actionWidget: GradientButton(
                             onTap: () {
                               Navigator.pop(context);
                               Navigator.pushReplacementNamed(
                                 context,
-                                Routes.applicationAddress,
+                                Routes.retailOnboardingStatus,
+                                arguments: OnboardingStatusArgumentModel(
+                                  stepsCompleted: 2,
+                                  isFatca: false,
+                                  isPassport: false,
+                                  isRetail: true,
+                                ).toMap(),
                               );
                             },
                             text: "Go Back",
@@ -361,46 +398,14 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                     );
                   }
                   await storage.write(
-                      key: "stepsCompleted", value: 5.toString());
+                      key: "stepsCompleted", value: 4.toString());
                   storageStepsCompleted = int.parse(
                       await storage.read(key: "stepsCompleted") ?? "0");
                 }
-              } else {
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return CustomDialog(
-                        svgAssetPath: ImageConstants.warning,
-                        title: "Error",
-                        message: addressApiResult["message"],
-                        actionWidget: GradientButton(
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.pushReplacementNamed(
-                              context,
-                              Routes.retailOnboardingStatus,
-                              arguments: OnboardingStatusArgumentModel(
-                                stepsCompleted: 2,
-                                isFatca: false,
-                                isPassport: false,
-                                isRetail: true,
-                              ).toMap(),
-                            );
-                          },
-                          text: "Go Back",
-                        ),
-                      );
-                    },
-                  );
-                }
-                await storage.write(key: "stepsCompleted", value: 4.toString());
-                storageStepsCompleted =
-                    int.parse(await storage.read(key: "stepsCompleted") ?? "0");
-              }
 
-              isUploading = false;
-              showButtonBloc.add(ShowButtonEvent(show: isUploading));
+                isUploading = false;
+                showButtonBloc.add(ShowButtonEvent(show: isUploading));
+              }
             },
             text: labels[288]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),

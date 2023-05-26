@@ -216,104 +216,110 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
       final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
       return GradientButton(
         onTap: () async {
-          log("emailAddress -> $emailAddress");
-          isValidating = true;
-          showButtonBloc.add(ShowButtonEvent(show: isValidating));
-          Map<String, dynamic> result;
-          if (isPersonalFocussed && !isBusinessFocussed) {
-            await storage.write(key: "userTypeId", value: 1.toString());
-            storageUserTypeId =
-                int.parse(await storage.read(key: "userTypeId") ?? "");
-            result = await MapValidateEmail.mapValidateEmail(
-                {"emailId": createAccountArgumentModel.email, "userTypeId": 1});
-            log("Validate Email (Retail) response -> $result");
-          } else {
-            await storage.write(key: "userTypeId", value: 2.toString());
-            storageUserTypeId =
-                int.parse(await storage.read(key: "userTypeId") ?? "");
-            result = await MapValidateEmail.mapValidateEmail(
-                {"emailId": createAccountArgumentModel.email, "userTypeId": 2});
-            log("Validate Email (Business) response -> $result");
-          }
-          if (result["success"]) {
-            await storage.write(key: "newInstall", value: true.toString());
-            storageIsNotNewInstall =
-                (await storage.read(key: "newInstall")) == "true";
-            await storage.write(key: "stepsCompleted", value: 1.toString());
-            storageStepsCompleted =
-                int.parse(await storage.read(key: "stepsCompleted") ?? "0");
-            if (context.mounted) {
-              Navigator.pushNamed(
-                context,
-                Routes.createPassword,
-                arguments: CreateAccountArgumentModel(
-                  email: createAccountArgumentModel.email,
-                  isRetail: isPersonalFocussed ? true : false,
-                  userTypeId: isPersonalFocussed ? 1 : 2,
-                  companyId: isPersonalFocussed ? 0 : 1,
-                ).toMap(),
-              );
+          if (!isValidating) {
+            log("emailAddress -> $emailAddress");
+            isValidating = true;
+            showButtonBloc.add(ShowButtonEvent(show: isValidating));
+            Map<String, dynamic> result;
+            if (isPersonalFocussed && !isBusinessFocussed) {
+              await storage.write(key: "userTypeId", value: 1.toString());
+              storageUserTypeId =
+                  int.parse(await storage.read(key: "userTypeId") ?? "");
+              result = await MapValidateEmail.mapValidateEmail({
+                "emailId": createAccountArgumentModel.email,
+                "userTypeId": 1
+              });
+              log("Validate Email (Retail) response -> $result");
+            } else {
+              await storage.write(key: "userTypeId", value: 2.toString());
+              storageUserTypeId =
+                  int.parse(await storage.read(key: "userTypeId") ?? "");
+              result = await MapValidateEmail.mapValidateEmail({
+                "emailId": createAccountArgumentModel.email,
+                "userTypeId": 2
+              });
+              log("Validate Email (Business) response -> $result");
             }
-          } else {
-            // isInvalid = true;
+            if (result["success"]) {
+              await storage.write(key: "newInstall", value: true.toString());
+              storageIsNotNewInstall =
+                  (await storage.read(key: "newInstall")) == "true";
+              await storage.write(key: "stepsCompleted", value: 1.toString());
+              storageStepsCompleted =
+                  int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+              if (context.mounted) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.createPassword,
+                  arguments: CreateAccountArgumentModel(
+                    email: createAccountArgumentModel.email,
+                    isRetail: isPersonalFocussed ? true : false,
+                    userTypeId: isPersonalFocussed ? 1 : 2,
+                    companyId: isPersonalFocussed ? 0 : 1,
+                  ).toMap(),
+                );
+              }
+            } else {
+              // isInvalid = true;
 
-            if (context.mounted) {
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (context) {
-                  return CustomDialog(
-                    svgAssetPath: ImageConstants.warning,
-                    title: storageUserTypeId == 1
-                        ? "Sorry"
-                        // messages[71]["messageText"]
-                        : "Application approval pending",
-                    message: storageUserTypeId == 1
-                        ? messages[70]["messageText"]
-                        : result["message"],
-                    auxWidget: GradientButton(
-                      onTap: () async {
-                        await storage.write(
-                            key: "stepsCompleted", value: 0.toString());
-                        storageStepsCompleted = int.parse(
-                            await storage.read(key: "stepsCompleted") ?? "0");
-                        if (context.mounted) {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            storageUserTypeId == 1
-                                ? Routes.loginPassword
-                                : Routes.registration,
-                            arguments: storageUserTypeId == 1
-                                ? LoginPasswordArgumentModel(
-                                    emailId: createAccountArgumentModel.email,
-                                    userId: 0,
-                                    userTypeId: isPersonalFocussed ? 1 : 2,
-                                    companyId: isPersonalFocussed ? 0 : 1,
-                                  ).toMap()
-                                : RegistrationArgumentModel(isInitial: true)
-                                    .toMap(),
-                          );
-                        }
-                      },
-                      text: storageUserTypeId == 1
-                          ? labels[205]["labelText"]
-                          : "Register",
-                    ),
-                    actionWidget: SolidButton(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      text: labels[166]["labelText"],
-                      color: AppColors.primaryBright17,
-                      fontColor: AppColors.primary,
-                    ),
-                  );
-                },
-              );
+              if (context.mounted) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) {
+                    return CustomDialog(
+                      svgAssetPath: ImageConstants.warning,
+                      title: storageUserTypeId == 1
+                          ? "Sorry"
+                          // messages[71]["messageText"]
+                          : "Application approval pending",
+                      message: storageUserTypeId == 1
+                          ? messages[70]["messageText"]
+                          : result["message"],
+                      auxWidget: GradientButton(
+                        onTap: () async {
+                          await storage.write(
+                              key: "stepsCompleted", value: 0.toString());
+                          storageStepsCompleted = int.parse(
+                              await storage.read(key: "stepsCompleted") ?? "0");
+                          if (context.mounted) {
+                            Navigator.pushReplacementNamed(
+                              context,
+                              storageUserTypeId == 1
+                                  ? Routes.loginPassword
+                                  : Routes.registration,
+                              arguments: storageUserTypeId == 1
+                                  ? LoginPasswordArgumentModel(
+                                      emailId: createAccountArgumentModel.email,
+                                      userId: 0,
+                                      userTypeId: isPersonalFocussed ? 1 : 2,
+                                      companyId: isPersonalFocussed ? 0 : 1,
+                                    ).toMap()
+                                  : RegistrationArgumentModel(isInitial: true)
+                                      .toMap(),
+                            );
+                          }
+                        },
+                        text: storageUserTypeId == 1
+                            ? labels[205]["labelText"]
+                            : "Register",
+                      ),
+                      actionWidget: SolidButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        text: labels[166]["labelText"],
+                        color: AppColors.primaryBright17,
+                        fontColor: AppColors.primary,
+                      ),
+                    );
+                  },
+                );
+              }
             }
+            isValidating = false;
+            showButtonBloc.add(ShowButtonEvent(show: isValidating));
           }
-          isValidating = false;
-          showButtonBloc.add(ShowButtonEvent(show: isValidating));
         },
         text: labels[31]["labelText"],
         auxWidget: isValidating ? const LoaderRow() : const SizeBox(),

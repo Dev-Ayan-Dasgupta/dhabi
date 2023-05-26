@@ -343,133 +343,115 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
           svgAssetPath: ImageConstants.warning,
           title: messages[65]["messageText"],
           message: messages[66]["messageText"],
-          auxWidget: Column(
-            children: [
-              BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                builder: (context, state) {
-                  return Column(
-                    children: [
-                      const SizeBox(height: 15),
-                      GradientButton(
-                        onTap: () async {
-                          isLoading = true;
-                          final ShowButtonBloc showButtonBloc =
-                              context.read<ShowButtonBloc>();
-                          showButtonBloc.add(ShowButtonEvent(show: isLoading));
-                          var result = await MapLogin.mapLogin({
-                            "emailId": loginPasswordArgument.emailId,
-                            "userTypeId": loginPasswordArgument.userTypeId,
-                            "userId": loginPasswordArgument.userId,
-                            "companyId": loginPasswordArgument.companyId,
-                            "password": storagePassword,
-                            "deviceId": deviceId,
-                            "registerDevice": true,
-                            "deviceName": deviceName,
-                            "deviceType": deviceType,
-                            "appVersion": appVersion
-                          });
-                          log("Login API Response -> $result");
-                          token = result["token"];
-                          log("token -> $token");
-                          if (result["success"]) {
-                            await storage.write(
-                                key: "newInstall", value: true.toString());
-                            storageIsNotNewInstall =
-                                (await storage.read(key: "newInstall")) ==
-                                    "true";
-                            customerName = result["customerName"];
-                            await storage.write(
-                                key: "customerName", value: customerName);
-                            storageCustomerName =
-                                await storage.read(key: "customerName");
-                            if (context.mounted) {
-                              if (loginPasswordArgument.userTypeId == 1) {
-                                await storage.write(
-                                    key: "retailLoggedIn",
-                                    value: true.toString());
-                                storageRetailLoggedIn =
-                                    await storage.read(key: "retailLoggedIn") ==
-                                        "true";
-                                if (context.mounted) {
-                                  Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    Routes.retailDashboard,
-                                    (route) => false,
-                                    arguments: RetailDashboardArgumentModel(
-                                      imgUrl: "",
-                                      name: result["customerName"],
-                                      isFirst: storageIsFirstLogin == true
-                                          ? false
-                                          : true,
-                                    ).toMap(),
-                                  );
-                                }
-                              } else {
-                                Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  Routes.businessDashboard,
-                                  (route) => false,
-                                  arguments: RetailDashboardArgumentModel(
-                                    imgUrl: "",
-                                    name: "",
-                                    isFirst: storageIsFirstLogin == true
-                                        ? false
-                                        : true,
-                                  ).toMap(),
-                                );
-                              }
-                            }
+          auxWidget: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+            builder: (context, state) {
+              return GradientButton(
+                onTap: () async {
+                  isLoading = true;
+                  final ShowButtonBloc showButtonBloc =
+                      context.read<ShowButtonBloc>();
+                  showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                  var result = await MapLogin.mapLogin({
+                    "emailId": loginPasswordArgument.emailId,
+                    "userTypeId": loginPasswordArgument.userTypeId,
+                    "userId": loginPasswordArgument.userId,
+                    "companyId": loginPasswordArgument.companyId,
+                    "password": storagePassword,
+                    "deviceId": deviceId,
+                    "registerDevice": true,
+                    "deviceName": deviceName,
+                    "deviceType": deviceType,
+                    "appVersion": appVersion
+                  });
+                  log("Login API Response -> $result");
+                  token = result["token"];
+                  log("token -> $token");
+                  if (result["success"]) {
+                    await storage.write(
+                        key: "newInstall", value: true.toString());
+                    storageIsNotNewInstall =
+                        (await storage.read(key: "newInstall")) == "true";
+                    customerName = result["customerName"];
+                    await storage.write(
+                        key: "customerName", value: customerName);
+                    storageCustomerName =
+                        await storage.read(key: "customerName");
+                    if (context.mounted) {
+                      if (loginPasswordArgument.userTypeId == 1) {
+                        await storage.write(
+                            key: "retailLoggedIn", value: true.toString());
+                        storageRetailLoggedIn =
+                            await storage.read(key: "retailLoggedIn") == "true";
+                        if (context.mounted) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.retailDashboard,
+                            (route) => false,
+                            arguments: RetailDashboardArgumentModel(
+                              imgUrl: "",
+                              name: result["customerName"],
+                              isFirst:
+                                  storageIsFirstLogin == true ? false : true,
+                            ).toMap(),
+                          );
+                        }
+                      } else {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          Routes.businessDashboard,
+                          (route) => false,
+                          arguments: RetailDashboardArgumentModel(
+                            imgUrl: "",
+                            name: "",
+                            isFirst: storageIsFirstLogin == true ? false : true,
+                          ).toMap(),
+                        );
+                      }
+                    }
 
-                            await storage.write(
-                                key: "isFirstLogin", value: true.toString());
-                            storageIsFirstLogin =
-                                (await storage.read(key: "isFirstLogin")) ==
-                                    "true";
-                          } else {
-                            log("Reason Code -> ${result["reasonCode"]}");
-                            if (context.mounted) {
-                              switch (result["reasonCode"]) {
-                                case 1:
-                                  // promptWrongCredentials();
-                                  break;
-                                case 2:
-                                  promptWrongCredentials();
-                                  break;
-                                case 3:
-                                  promptWrongCredentials();
-                                  break;
-                                case 4:
-                                  promptWrongCredentials();
-                                  break;
-                                case 5:
-                                  promptWrongCredentials();
-                                  break;
-                                case 6:
-                                  promptKycExpired();
-                                  break;
-                                case 7:
-                                  promptVerifySession();
-                                  break;
-                                case 9:
-                                  promptMaxRetries();
-                                  break;
-                                default:
-                              }
-                            }
-                          }
-                          isLoading = false;
-                          showButtonBloc.add(ShowButtonEvent(show: isLoading));
-                        },
-                        text: labels[31]["labelText"],
-                        auxWidget:
-                            isLoading ? const LoaderRow() : const SizeBox(),
-                      ),
-                    ],
-                  );
+                    await storage.write(
+                        key: "isFirstLogin", value: true.toString());
+                    storageIsFirstLogin =
+                        (await storage.read(key: "isFirstLogin")) == "true";
+                  } else {
+                    log("Reason Code -> ${result["reasonCode"]}");
+                    if (context.mounted) {
+                      switch (result["reasonCode"]) {
+                        case 1:
+                          // promptWrongCredentials();
+                          break;
+                        case 2:
+                          promptWrongCredentials();
+                          break;
+                        case 3:
+                          promptWrongCredentials();
+                          break;
+                        case 4:
+                          promptWrongCredentials();
+                          break;
+                        case 5:
+                          promptWrongCredentials();
+                          break;
+                        case 6:
+                          promptKycExpired();
+                          break;
+                        case 7:
+                          promptVerifySession();
+                          break;
+                        case 9:
+                          promptMaxRetries();
+                          break;
+                        default:
+                      }
+                    }
+                  }
+                  isLoading = false;
+                  showButtonBloc.add(ShowButtonEvent(show: isLoading));
                 },
-              ),
-              const SizeBox(height: 15),
-            ],
+                text: labels[31]["labelText"],
+                auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
+              );
+            },
           ),
           actionWidget: SolidButton(
             onTap: () {

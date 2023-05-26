@@ -364,7 +364,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             onTap: () {
                               Navigator.pushNamed(
                                   context, Routes.exploreDashboard);
-                              // Navigator.pushNamed(context, Routes.loginUserId);
+                              // Navigator.pushNamed(
+                              //     context, Routes.applicationTaxFATCA);
                             },
                             text: labels[208]["labelText"],
                             color: const Color.fromRGBO(85, 85, 85, 0.2),

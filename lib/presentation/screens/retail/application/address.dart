@@ -33,10 +33,9 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _zipController = TextEditingController();
 
-  // bool isResidenceYearSelected = false;
   bool isAddress1Entered = false;
   bool isEmirateSelected = false;
-  // bool isCityEntered = false;
+
   int toggles = 0;
 
   String? selectedValue;
@@ -274,32 +273,32 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                         );
                       },
                     ),
-                    const SizeBox(height: 7),
-                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                      builder: (context, state) {
-                        return Ternary(
-                          condition: (isPoValid || _zipController.text.isEmpty),
-                          truthy: const SizeBox(),
-                          falsy: Row(
-                            children: [
-                              Icon(
-                                Icons.error_rounded,
-                                color: AppColors.red100,
-                                size: (13 / Dimensions.designWidth).w,
-                              ),
-                              const SizeBox(width: 5),
-                              Text(
-                                "Must be 4 digits",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.red100,
-                                  fontSize: (12 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                    // const SizeBox(height: 7),
+                    // BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    //   builder: (context, state) {
+                    //     return Ternary(
+                    //       condition: (isPoValid || _zipController.text.isEmpty),
+                    //       truthy: const SizeBox(),
+                    //       falsy: Row(
+                    //         children: [
+                    //           Icon(
+                    //             Icons.error_rounded,
+                    //             color: AppColors.red100,
+                    //             size: (13 / Dimensions.designWidth).w,
+                    //           ),
+                    //           const SizeBox(width: 5),
+                    //           Text(
+                    //             "Must be 4 digits",
+                    //             style: TextStyles.primaryMedium.copyWith(
+                    //               color: AppColors.red100,
+                    //               fontSize: (12 / Dimensions.designWidth).w,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
 
                     const SizeBox(height: 30),
                   ],
@@ -314,65 +313,68 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     children: [
                       GradientButton(
                         onTap: () async {
-                          final DropdownSelectedBloc showButtonBloc =
-                              context.read<DropdownSelectedBloc>();
-                          isUploading = true;
-                          showButtonBloc.add(
-                            DropdownSelectedEvent(
-                              isDropdownSelected: isUploading,
-                              toggles: toggles,
-                            ),
-                          );
-                          await storage.write(
-                              key: "addressCountry",
-                              value: _countryController.text);
-                          storageAddressCountry =
-                              await storage.read(key: "addressCountry");
-                          await storage.write(
-                              key: "addressLine1",
-                              value: _address1Controller.text);
-                          storageAddressLine1 =
-                              await storage.read(key: "addressLine1");
-                          await storage.write(
-                              key: "addressLine2",
-                              value: _address2Controller.text);
-                          storageAddressLine2 =
-                              await storage.read(key: "addressLine2");
-                          await storage.write(
-                              key: "addressEmirate", value: selectedValue);
-                          storageAddressEmirate =
-                              await storage.read(key: "addressEmirate");
-                          await storage.write(
-                              key: "poBox", value: _zipController.text);
-                          storageAddressPoBox =
-                              await storage.read(key: "poBox");
-                          // var result = await MapRegisterRetailCustomerAddress
-                          //     .mapRegisterRetailCustomerAddress({
-                          //   "addressLine_1": _address1Controller.text,
-                          //   "addressLine_2": _address2Controller.text,
-                          //   "areaId": uaeDetails[emirateIndex]["areas"][0]
-                          //       ["area_Id"],
-                          //   "cityId": uaeDetails[emirateIndex]["city_Id"],
-                          //   "stateId": 1,
-                          //   "countryId": 1,
-                          //   "pinCode": _zipController.text
-                          // }, token ?? "");
-                          // log("RegisterRetailCustomerAddress API Response -> $result");
-                          if (context.mounted) {
-                            Navigator.pushNamed(
-                                context, Routes.applicationIncome);
+                          if (!isUploading) {
+                            final DropdownSelectedBloc showButtonBloc =
+                                context.read<DropdownSelectedBloc>();
+                            isUploading = true;
+                            showButtonBloc.add(
+                              DropdownSelectedEvent(
+                                isDropdownSelected: isUploading,
+                                toggles: toggles,
+                              ),
+                            );
+                            await storage.write(
+                                key: "addressCountry",
+                                value: _countryController.text);
+                            storageAddressCountry =
+                                await storage.read(key: "addressCountry");
+                            await storage.write(
+                                key: "addressLine1",
+                                value: _address1Controller.text);
+                            storageAddressLine1 =
+                                await storage.read(key: "addressLine1");
+                            await storage.write(
+                                key: "addressLine2",
+                                value: _address2Controller.text);
+                            storageAddressLine2 =
+                                await storage.read(key: "addressLine2");
+                            await storage.write(
+                                key: "addressEmirate", value: selectedValue);
+                            storageAddressEmirate =
+                                await storage.read(key: "addressEmirate");
+                            await storage.write(
+                                key: "poBox", value: _zipController.text);
+                            storageAddressPoBox =
+                                await storage.read(key: "poBox");
+                            // var result = await MapRegisterRetailCustomerAddress
+                            //     .mapRegisterRetailCustomerAddress({
+                            //   "addressLine_1": _address1Controller.text,
+                            //   "addressLine_2": _address2Controller.text,
+                            //   "areaId": uaeDetails[emirateIndex]["areas"][0]
+                            //       ["area_Id"],
+                            //   "cityId": uaeDetails[emirateIndex]["city_Id"],
+                            //   "stateId": 1,
+                            //   "countryId": 1,
+                            //   "pinCode": _zipController.text
+                            // }, token ?? "");
+                            // log("RegisterRetailCustomerAddress API Response -> $result");
+                            if (context.mounted) {
+                              Navigator.pushNamed(
+                                  context, Routes.applicationIncome);
+                            }
+                            isUploading = false;
+                            showButtonBloc.add(
+                              DropdownSelectedEvent(
+                                isDropdownSelected: isUploading,
+                                toggles: toggles,
+                              ),
+                            );
+                            await storage.write(
+                                key: "stepsCompleted", value: 5.toString());
+                            storageStepsCompleted = int.parse(
+                                await storage.read(key: "stepsCompleted") ??
+                                    "0");
                           }
-                          isUploading = false;
-                          showButtonBloc.add(
-                            DropdownSelectedEvent(
-                              isDropdownSelected: isUploading,
-                              toggles: toggles,
-                            ),
-                          );
-                          await storage.write(
-                              key: "stepsCompleted", value: 5.toString());
-                          storageStepsCompleted = int.parse(
-                              await storage.read(key: "stepsCompleted") ?? "0");
                         },
                         text: labels[127]["labelText"],
                         auxWidget:

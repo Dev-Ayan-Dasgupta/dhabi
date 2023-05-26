@@ -117,7 +117,7 @@ class _VerificationInitializingScreenState
           children: [
             SpinKitFadingCircle(
               color: AppColors.primary,
-              size: (20 / Dimensions.designWidth).w,
+              size: (50 / Dimensions.designWidth).w,
             ),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,

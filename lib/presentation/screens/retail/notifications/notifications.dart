@@ -46,7 +46,7 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0XFFEEEEEE),
+      backgroundColor: AppColors.primary10,
       appBar: AppBar(
         leading: const AppBarLeading(),
         backgroundColor: Colors.transparent,

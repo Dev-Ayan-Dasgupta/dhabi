@@ -431,7 +431,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
       String? tempPassportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
-      passportNumber = tempPassportNumber?.split("\n").last.substring(0, 8);
+      passportNumber = tempPassportNumber?.split("\n").last.split('<').first;
       await storage.write(key: "passportNumber", value: passportNumber);
       storagePassportNumber = await storage.read(key: "passportNumber");
 

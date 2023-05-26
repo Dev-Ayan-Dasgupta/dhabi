@@ -597,205 +597,207 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           const SizeBox(height: 10),
           GradientButton(
             onTap: () async {
-              final CreatePasswordBloc createPasswordBloc =
-                  context.read<CreatePasswordBloc>();
-              await storage.write(
-                  key: "password", value: _confirmPasswordController.text);
-              storagePassword = await storage.read(key: "password");
-              log("storagePassword -> $storagePassword");
-              if (createAccountArgumentModel.isRetail) {
-                isRegistering = true;
-                createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
-                var result1 = await MapRegisterUser.mapRegisterUser({
-                  "userType": 1,
-                  "emailId": createAccountArgumentModel.email,
-                  "password": _confirmPasswordController.text,
-                  "deviceId": deviceId,
-                  "deviceName": deviceName,
-                  "deviceType": deviceType,
-                  "appVersion": appVersion
-                });
-                log("Create User API Response -> $result1");
+              if (!isRegistering) {
+                final CreatePasswordBloc createPasswordBloc =
+                    context.read<CreatePasswordBloc>();
+                await storage.write(
+                    key: "password", value: _confirmPasswordController.text);
+                storagePassword = await storage.read(key: "password");
+                log("storagePassword -> $storagePassword");
+                if (createAccountArgumentModel.isRetail) {
+                  isRegistering = true;
+                  createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+                  var result1 = await MapRegisterUser.mapRegisterUser({
+                    "userType": 1,
+                    "emailId": createAccountArgumentModel.email,
+                    "password": _confirmPasswordController.text,
+                    "deviceId": deviceId,
+                    "deviceName": deviceName,
+                    "deviceType": deviceType,
+                    "appVersion": appVersion
+                  });
+                  log("Create User API Response -> $result1");
 
-                userId = result1["userId"];
-                await storage.write(key: "userId", value: userId.toString());
-                await storage.write(key: "userTypeId", value: 1.toString());
-                await storage.write(key: "companyId", value: 0.toString());
+                  userId = result1["userId"];
+                  await storage.write(key: "userId", value: userId.toString());
+                  await storage.write(key: "userTypeId", value: 1.toString());
+                  await storage.write(key: "companyId", value: 0.toString());
 
-                storageUserId =
-                    int.parse(await storage.read(key: "userId") ?? "0");
-                storageUserTypeId =
-                    int.parse(await storage.read(key: "userTypeId") ?? "0");
-                storageCompanyId =
-                    int.parse(await storage.read(key: "companyId") ?? "0");
+                  storageUserId =
+                      int.parse(await storage.read(key: "userId") ?? "0");
+                  storageUserTypeId =
+                      int.parse(await storage.read(key: "userTypeId") ?? "0");
+                  storageCompanyId =
+                      int.parse(await storage.read(key: "companyId") ?? "0");
 
-                var result = await MapLogin.mapLogin({
-                  "emailId": createAccountArgumentModel.email,
-                  "userTypeId": storageUserTypeId,
-                  "userId": storageUserId,
-                  "companyId": storageCompanyId,
-                  "password": _confirmPasswordController.text,
-                  "deviceId": deviceId,
-                  "registerDevice": false,
-                  "deviceName": deviceName,
-                  "deviceType": deviceType,
-                  "appVersion": appVersion
-                });
-                log("Login API Response -> $result");
-                token = result["token"];
-                log("token -> $token");
+                  var result = await MapLogin.mapLogin({
+                    "emailId": createAccountArgumentModel.email,
+                    "userTypeId": storageUserTypeId,
+                    "userId": storageUserId,
+                    "companyId": storageCompanyId,
+                    "password": _confirmPasswordController.text,
+                    "deviceId": deviceId,
+                    "registerDevice": false,
+                    "deviceName": deviceName,
+                    "deviceType": deviceType,
+                    "appVersion": appVersion
+                  });
+                  log("Login API Response -> $result");
+                  token = result["token"];
+                  log("token -> $token");
 
-                if (result["success"]) {
-                  // customerName = result["customerName"];
+                  if (result["success"]) {
+                    // customerName = result["customerName"];
 
-                  await storage.write(
-                      key: "stepsCompleted", value: 2.toString());
-                  storageStepsCompleted = int.parse(
-                      await storage.read(key: "stepsCompleted") ?? "0");
-                  if (context.mounted) {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      Routes.retailOnboardingStatus,
-                      (routes) => false,
-                      arguments: OnboardingStatusArgumentModel(
-                        stepsCompleted: 1,
-                        isFatca: false,
-                        isPassport: false,
-                        isRetail: createAccountArgumentModel.isRetail,
-                      ).toMap(),
-                    );
+                    await storage.write(
+                        key: "stepsCompleted", value: 2.toString());
+                    storageStepsCompleted = int.parse(
+                        await storage.read(key: "stepsCompleted") ?? "0");
+                    if (context.mounted) {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.retailOnboardingStatus,
+                        (routes) => false,
+                        arguments: OnboardingStatusArgumentModel(
+                          stepsCompleted: 1,
+                          isFatca: false,
+                          isPassport: false,
+                          isRetail: createAccountArgumentModel.isRetail,
+                        ).toMap(),
+                      );
+                    }
+                  } else {
+                    log("Reason Code -> ${result["reasonCode"]}");
+                    if (context.mounted) {
+                      switch (result["reasonCode"]) {
+                        case 1:
+                          // promptWrongCredentials();
+                          break;
+                        case 2:
+                          promptWrongCredentials();
+                          break;
+                        case 3:
+                          promptWrongCredentials();
+                          break;
+                        case 4:
+                          promptWrongCredentials();
+                          break;
+                        case 5:
+                          promptWrongCredentials();
+                          break;
+                        case 6:
+                          promptKycExpired();
+                          break;
+                        case 7:
+                          promptVerifySession();
+                          break;
+                        case 9:
+                          promptMaxRetries();
+                          break;
+                        default:
+                      }
+                    }
                   }
                 } else {
-                  log("Reason Code -> ${result["reasonCode"]}");
-                  if (context.mounted) {
-                    switch (result["reasonCode"]) {
-                      case 1:
-                        // promptWrongCredentials();
-                        break;
-                      case 2:
-                        promptWrongCredentials();
-                        break;
-                      case 3:
-                        promptWrongCredentials();
-                        break;
-                      case 4:
-                        promptWrongCredentials();
-                        break;
-                      case 5:
-                        promptWrongCredentials();
-                        break;
-                      case 6:
-                        promptKycExpired();
-                        break;
-                      case 7:
-                        promptVerifySession();
-                        break;
-                      case 9:
-                        promptMaxRetries();
-                        break;
-                      default:
+                  isRegistering = true;
+                  createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+                  var result1 = await MapRegisterUser.mapRegisterUser({
+                    "userType": 2,
+                    "emailId": createAccountArgumentModel.email,
+                    "password": _confirmPasswordController.text,
+                    "deviceId": deviceId,
+                    "deviceName": deviceName,
+                    "deviceType": deviceType,
+                    "appVersion": appVersion
+                  });
+                  log("Create User API Response -> $result1");
+
+                  userId = result1["userId"];
+                  log("userId -> $userId");
+                  log("userId runtimeType -> ${userId.runtimeType}");
+
+                  await storage.write(key: "userId", value: userId.toString());
+                  await storage.write(key: "userTypeId", value: 2.toString());
+                  await storage.write(key: "companyId", value: 1.toString());
+
+                  storageUserId =
+                      int.parse(await storage.read(key: "userId") ?? "");
+                  storageUserTypeId =
+                      int.parse(await storage.read(key: "userTypeId") ?? "");
+                  storageCompanyId =
+                      int.parse(await storage.read(key: "companyId") ?? "");
+
+                  var result = await MapLogin.mapLogin({
+                    "emailId": createAccountArgumentModel.email,
+                    "userTypeId": storageUserTypeId,
+                    "userId": storageUserId,
+                    "companyId": storageCompanyId,
+                    "password": _confirmPasswordController.text,
+                    "deviceId": deviceId,
+                    "registerDevice": false,
+                    "deviceName": deviceName,
+                    "deviceType": deviceType,
+                    "appVersion": appVersion
+                  });
+                  log("Login API Response -> $result");
+                  token = result["token"];
+                  log("token -> $token");
+
+                  if (result["success"]) {
+                    // customerName = result["customerName"];
+                    await storage.write(
+                        key: "stepsCompleted", value: 2.toString());
+                    storageStepsCompleted = int.parse(
+                        await storage.read(key: "stepsCompleted") ?? "0");
+                    if (context.mounted) {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.businessOnboardingStatus,
+                        (routes) => false,
+                        arguments: OnboardingStatusArgumentModel(
+                          stepsCompleted: 1,
+                          isFatca: false,
+                          isPassport: false,
+                          isRetail: createAccountArgumentModel.isRetail,
+                        ).toMap(),
+                      );
+                    }
+                  } else {
+                    log("Reason Code -> ${result["reasonCode"]}");
+                    if (context.mounted) {
+                      switch (result["reasonCode"]) {
+                        case 1:
+                          // promptWrongCredentials();
+                          break;
+                        case 2:
+                          promptWrongCredentials();
+                          break;
+                        case 3:
+                          promptWrongCredentials();
+                          break;
+                        case 4:
+                          promptWrongCredentials();
+                          break;
+                        case 5:
+                          promptWrongCredentials();
+                          break;
+                        case 6:
+                          promptKycExpired();
+                          break;
+                        case 7:
+                          promptVerifySession();
+                          break;
+                        case 9:
+                          promptMaxRetries();
+                          break;
+                        default:
+                      }
                     }
                   }
                 }
-              } else {
-                isRegistering = true;
+                isRegistering = false;
                 createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
-                var result1 = await MapRegisterUser.mapRegisterUser({
-                  "userType": 2,
-                  "emailId": createAccountArgumentModel.email,
-                  "password": _confirmPasswordController.text,
-                  "deviceId": deviceId,
-                  "deviceName": deviceName,
-                  "deviceType": deviceType,
-                  "appVersion": appVersion
-                });
-                log("Create User API Response -> $result1");
-
-                userId = result1["userId"];
-                log("userId -> $userId");
-                log("userId runtimeType -> ${userId.runtimeType}");
-
-                await storage.write(key: "userId", value: userId.toString());
-                await storage.write(key: "userTypeId", value: 2.toString());
-                await storage.write(key: "companyId", value: 1.toString());
-
-                storageUserId =
-                    int.parse(await storage.read(key: "userId") ?? "");
-                storageUserTypeId =
-                    int.parse(await storage.read(key: "userTypeId") ?? "");
-                storageCompanyId =
-                    int.parse(await storage.read(key: "companyId") ?? "");
-
-                var result = await MapLogin.mapLogin({
-                  "emailId": createAccountArgumentModel.email,
-                  "userTypeId": storageUserTypeId,
-                  "userId": storageUserId,
-                  "companyId": storageCompanyId,
-                  "password": _confirmPasswordController.text,
-                  "deviceId": deviceId,
-                  "registerDevice": false,
-                  "deviceName": deviceName,
-                  "deviceType": deviceType,
-                  "appVersion": appVersion
-                });
-                log("Login API Response -> $result");
-                token = result["token"];
-                log("token -> $token");
-
-                if (result["success"]) {
-                  // customerName = result["customerName"];
-                  await storage.write(
-                      key: "stepsCompleted", value: 2.toString());
-                  storageStepsCompleted = int.parse(
-                      await storage.read(key: "stepsCompleted") ?? "0");
-                  if (context.mounted) {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      Routes.businessOnboardingStatus,
-                      (routes) => false,
-                      arguments: OnboardingStatusArgumentModel(
-                        stepsCompleted: 1,
-                        isFatca: false,
-                        isPassport: false,
-                        isRetail: createAccountArgumentModel.isRetail,
-                      ).toMap(),
-                    );
-                  }
-                } else {
-                  log("Reason Code -> ${result["reasonCode"]}");
-                  if (context.mounted) {
-                    switch (result["reasonCode"]) {
-                      case 1:
-                        // promptWrongCredentials();
-                        break;
-                      case 2:
-                        promptWrongCredentials();
-                        break;
-                      case 3:
-                        promptWrongCredentials();
-                        break;
-                      case 4:
-                        promptWrongCredentials();
-                        break;
-                      case 5:
-                        promptWrongCredentials();
-                        break;
-                      case 6:
-                        promptKycExpired();
-                        break;
-                      case 7:
-                        promptVerifySession();
-                        break;
-                      case 9:
-                        promptMaxRetries();
-                        break;
-                      default:
-                    }
-                  }
-                }
               }
-              isRegistering = false;
-              createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
             },
             text: labels[222]["labelText"],
             auxWidget: isRegistering ? const LoaderRow() : const SizeBox(),

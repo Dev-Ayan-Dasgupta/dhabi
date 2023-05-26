@@ -14,6 +14,7 @@ abstract class BaseConfig {
   String get validateEmailOtpForPassword;
   String get changePassword;
   String get isDeviceValid;
+  String get renewToken;
 
   // ? Configuration APIs
 
@@ -25,6 +26,7 @@ abstract class BaseConfig {
   String get getDropdownLists;
   String get getTermsAndConditions;
   String get getPrivacyStatement;
+  String get getApplicationConfigurations;
 
   // ? Onboarding APIs
 

@@ -63,6 +63,11 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['IS_DEVICE_VALID'] ?? "";
   }
 
+  @override
+  String get renewToken {
+    return dotenv.env['RENEW_TOKEN'] ?? "";
+  }
+
   // ? Configuration APIs
 
   @override
@@ -103,6 +108,11 @@ class EnvConfig implements BaseConfig {
   @override
   String get getPrivacyStatement {
     return dotenv.env['GET_PRIVACY_STATEMENT'] ?? "";
+  }
+
+  @override
+  String get getApplicationConfigurations {
+    return dotenv.env['GET_APPLICATION_CONFIGURATIONS'] ?? "";
   }
 
   // ? Onboarding APIs

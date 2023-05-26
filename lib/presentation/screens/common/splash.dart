@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/configurations/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -41,8 +42,6 @@ class _SplashScreenState extends State<SplashScreen> {
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
 
-  // String? _deviceId;
-
   @override
   void initState() {
     super.initState();
@@ -52,6 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await initPlatformState();
       await initConfigurations();
       await initLocalStorageData();
+      addNewDevice();
       if (context.mounted) {
         navigate(context);
       }
@@ -285,6 +285,17 @@ class _SplashScreenState extends State<SplashScreen> {
       log("storageCustomerName -> $storageCustomerName");
     } catch (_) {
       rethrow;
+    }
+  }
+
+  void addNewDevice() {
+    if (storageIsNotNewInstall == false) {
+      MapAddNewDevice.mapAddNewDevice({
+        "deviceId": deviceId,
+        "deviceName": deviceName,
+        "deviceType": deviceType,
+        "appVersion": appVersion,
+      });
     }
   }
 

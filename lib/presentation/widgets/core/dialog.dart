@@ -24,33 +24,34 @@ class CustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
-          right:
-              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
-          bottom: (22 / Dimensions.designHeight).h,
-          top: ((auxWidget == null ? 510 : 440) / Dimensions.designHeight)
-              .h, // TODO: might have to change these to 1051 : 925 (500 : 440)
-        ),
-        child: Container(
-          width: 100.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-                Radius.circular((24 / Dimensions.designWidth).w)),
-            color: Colors.white,
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: (22 / Dimensions.designWidth).w,
-                  vertical: (22 / Dimensions.designHeight).h),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Column(
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  (PaddingConstants.horizontalPadding / Dimensions.designWidth)
+                      .w,
+              vertical: PaddingConstants.bottomPadding +
+                  MediaQuery.of(context).padding.bottom,
+            ),
+            child: Container(
+              width: 100.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular((24 / Dimensions.designWidth).w),
+                ),
+                color: Colors.white,
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: (22 / Dimensions.designWidth).w,
+                      vertical: (22 / Dimensions.designHeight).h),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
@@ -66,26 +67,26 @@ class CustomDialog extends StatelessWidget {
                           fontSize: (20 / Dimensions.designWidth).w,
                         ),
                       ),
-                      const SizeBox(height: 20),
+                      const SizeBox(height: 10),
                       Text(
                         message,
                         style: TextStyles.primaryMedium.copyWith(
                           color: AppColors.dark50,
-                          fontSize: (14 / Dimensions.designWidth).w,
+                          fontSize: (16 / Dimensions.designWidth).w,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       SizeBox(height: auxWidget != null ? 20 : 0),
                       auxWidget ?? const SizeBox(),
-                      const SizeBox(height: 20),
+                      SizeBox(height: auxWidget != null ? 10 : 20),
                       actionWidget,
                     ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
