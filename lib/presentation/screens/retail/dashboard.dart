@@ -333,52 +333,47 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                 Column(
                                   children: [
                                     const SizeBox(height: 9.5),
-                                    SizedBox(
-                                      width: 100.w,
-                                      height: (145 / Dimensions.designWidth).w,
-                                      child: Expanded(
-                                        child: ListView.builder(
-                                          controller: _scrollController,
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: accountDetails.length,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding: EdgeInsets.only(
-                                                left: (index == 0)
-                                                    ? (PaddingConstants
-                                                                .horizontalPadding /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w
-                                                    : 0,
-                                              ),
-                                              child: AccountSummaryTile(
-                                                onTap: () {},
-                                                imgUrl: accountDetails[index][
-                                                            "accountCurrency"] ==
-                                                        "AED"
-                                                    ? ImageConstants.uaeFlag
-                                                    : ImageConstants.usaFlag,
-                                                accountType: accountDetails[
-                                                                index]
-                                                            ["productCode"] ==
-                                                        "1001"
-                                                    ? "Current"
-                                                    : "Savings",
-                                                currency: accountDetails[index]
-                                                        ["currentBalance"]
-                                                    .split(" ")
-                                                    .first,
-                                                amount: accountDetails[index]
-                                                        ["currentBalance"]
-                                                    .split(" ")
-                                                    .last,
-                                                subText: "",
-                                                subImgUrl: "",
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        controller: _scrollController,
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: accountDetails.length,
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                              left: (index == 0)
+                                                  ? (PaddingConstants
+                                                              .horizontalPadding /
+                                                          Dimensions
+                                                              .designWidth)
+                                                      .w
+                                                  : 0,
+                                            ),
+                                            child: AccountSummaryTile(
+                                              onTap: () {},
+                                              imgUrl: accountDetails[index]
+                                                          ["accountCurrency"] ==
+                                                      "AED"
+                                                  ? ImageConstants.uaeFlag
+                                                  : ImageConstants.usaFlag,
+                                              accountType: accountDetails[index]
+                                                          ["productCode"] ==
+                                                      "1001"
+                                                  ? "Current"
+                                                  : "Savings",
+                                              currency: accountDetails[index]
+                                                      ["currentBalance"]
+                                                  .split(" ")
+                                                  .first,
+                                              amount: accountDetails[index]
+                                                      ["currentBalance"]
+                                                  .split(" ")
+                                                  .last,
+                                              subText: "",
+                                              subImgUrl: "",
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                     const SizeBox(height: 10),
@@ -640,7 +635,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                       ),
                     ),
                     const SizeBox(height: 15),
-                    const SizeBox(height: 265)
+                    // const SizeBox(height: 265)
                   ],
                 ),
                 DraggableScrollableSheet(
@@ -660,14 +655,24 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                 .w,
                           ),
                           decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 1, color: const Color(0XFFEEEEEE)),
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(
                                   (20 / Dimensions.designWidth).w),
                               topRight: Radius.circular(
                                   (20 / Dimensions.designWidth).w),
                             ),
-                            boxShadow: [BoxShadows.primary],
-                            color: Colors.white,
+                            // boxShadow: [
+                            //   BoxShadows.primary,
+                            //   BoxShadow(
+                            //     color: const Color.fromRGBO(0, 0, 0, 0.1),
+                            //     offset: Offset((-4 / Dimensions.designWidth).w,
+                            //         (-4 / Dimensions.designWidth).w),
+                            //     blurRadius: 10,
+                            //   )
+                            // ],
+                            color: const Color(0xFFFFFFFF),
                           ),
                           child: Column(
                             children: [
@@ -776,7 +781,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                   InkWell(
                                     onTap: () {},
                                     child: Container(
-                                      width: (150 / Dimensions.designWidth).w,
+                                      width: (147 / Dimensions.designWidth).w,
                                       height: (39 / Dimensions.designHeight).h,
                                       decoration: BoxDecoration(
                                         color: const Color.fromRGBO(
