@@ -2,6 +2,6 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (18)
+## Release notes - 1.0.0 (19)
 
-- Fixed issues for 121, 125, 157, 174, 175, 178 and 179
+- Fixed issues for 121, and started implementing loacl session timeout
