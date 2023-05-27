@@ -3,7 +3,7 @@ description: Digital Banking Application for Dhabi
 
 publish_to: "none"
 
-version: 1.0.0+19
+version: 1.0.0+20
 
 environment:
   sdk: ">=2.19.4 <3.0.0"
@@ -35,9 +35,10 @@ dependencies:
   http: ^0.13.5
   intl: ^0.18.0
   local_auth: ^2.1.6
-  local_session_timeout: ^2.3.0
+  open_file: ^3.3.1
   open_settings: ^2.0.2
   package_info_plus: ^3.1.0
+  path_provider: ^2.0.15
   pinput: ^2.2.31
   platform_device_id: ^1.0.1
   shared_preferences: ^2.1.1

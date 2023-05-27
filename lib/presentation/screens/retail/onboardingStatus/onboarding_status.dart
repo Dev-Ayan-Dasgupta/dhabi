@@ -196,6 +196,7 @@ class _RetailOnboardingStatusScreenState
                           children: [
                             GradientButton(
                               onTap: () {
+                                callLoginApi();
                                 Navigator.pushNamed(
                                   context,
                                   Routes.acceptTermsAndConditions,

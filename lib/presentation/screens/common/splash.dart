@@ -1,15 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dialup_mobile_app/data/models/index.dart';
-import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
-import 'package:dialup_mobile_app/data/repositories/configurations/index.dart';
-import 'package:dialup_mobile_app/main.dart';
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,10 +13,18 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/data/repositories/configurations/index.dart';
+import 'package:dialup_mobile_app/main.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/index.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();

@@ -1,3 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_event.dart';
 import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_state.dart';
@@ -7,16 +21,18 @@ import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:intl/intl.dart';
 
 class DownloadStatementScreen extends StatefulWidget {
-  const DownloadStatementScreen({Key? key}) : super(key: key);
+  const DownloadStatementScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<DownloadStatementScreen> createState() =>
@@ -25,14 +41,8 @@ class DownloadStatementScreen extends StatefulWidget {
 
 class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
   final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8'
+    'Excel (.xls)',
+    'PDF (.pdf)',
   ];
 
   String fromDate = "From Date";
@@ -54,6 +64,24 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
   bool isThreeMonths = false;
   bool isSixMonths = false;
 
+  bool isFolderCreated = false;
+  Directory? directory;
+
+  bool isDownloading = false;
+
+  late DownloadStatementArgumentModel downloadStatementArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+  }
+
+  void argumentInitialization() {
+    downloadStatementArgument = DownloadStatementArgumentModel.fromMap(
+        widget.argument as dynamic ?? {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +102,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Download Statement",
+                    labels[95]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -179,8 +207,96 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                   return Column(
                     children: [
                       GradientButton(
-                        onTap: () {},
+                        onTap: () async {
+                          String? base64String;
+                          String? dir;
+                          if (!isDownloading) {
+                            final ShowButtonBloc showButtonBloc =
+                                context.read<ShowButtonBloc>();
+                            isDownloading = true;
+                            showButtonBloc.add(
+                              ShowButtonEvent(show: isDownloading),
+                            );
+                            if (selectedFormat == "Excel (.xls)") {
+                              base64String =
+                                  await MapExcelCustomerAccountStatement
+                                      .mapExcelCustomerAccountStatement(
+                                {
+                                  "accountNumber":
+                                      downloadStatementArgument.accountNumber,
+                                  "startDate": DateFormat('yyyy-MM-dd')
+                                      .format(auxFromDate),
+                                  // DateFormat('yyyy-MM-dd').format(
+                                  //     DateFormat('d MMMM, yyyy').parse(toDate)),
+                                  // "2023-05-26",
+                                  "endDate":
+                                      DateFormat('yyyy-MM-dd').format(auxToDate)
+                                  // DateFormat('yyyy-MM-dd').format(
+                                  //     DateFormat('d MMMM, yyyy')
+                                  //         .parse(fromDate)),
+                                  // "2023-05-27",
+                                },
+                                token ?? "",
+                              );
+                              log("base64 xls -> $base64String");
+                            } else if (selectedFormat == "PDF (.pdf)") {
+                              base64String =
+                                  await MapPdfCustomerAccountStatement
+                                      .mapPdfCustomerAccountStatement(
+                                {
+                                  "accountNumber":
+                                      downloadStatementArgument.accountNumber,
+                                  "startDate": DateFormat('yyyy-MM-dd')
+                                      .format(auxFromDate),
+                                  // DateFormat('yyyy-MM-dd').format(
+                                  //     DateFormat('d MMMM, yyyy')
+                                  //         .parse(fromDate)),
+                                  // "2023-05-26",
+                                  "endDate": DateFormat('yyyy-MM-dd')
+                                      .format(auxToDate),
+                                  // DateFormat('yyyy-MM-dd').format(
+                                  //     DateFormat('d MMMM, yyyy')
+                                  //         .parse(fromDate)),
+                                  // "2023-05-27",
+                                },
+                                token ?? "",
+                              );
+                              log("base64 pdf -> $base64String");
+                            }
+                            isDownloading = false;
+                            showButtonBloc.add(
+                              ShowButtonEvent(show: isDownloading),
+                            );
+                            Uint8List bytes = base64.decode(base64String ?? "");
+
+                            final output = await getExternalStorageDirectory();
+
+                            if (selectedFormat == "Excel (.xls)") {
+                              // dir = "${directory!.path}/DhabiStatement.xls";
+                              final file = File(
+                                  "${output?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.xls");
+                              var nf = await file
+                                  .writeAsBytes(bytes.buffer.asUint8List());
+                              log("nf -> $nf");
+                              await OpenFile.open(
+                                  "${output?.path}/example.xls");
+                              log("${output?.path}/example.xls");
+                            } else if (selectedFormat == "PDF (.pdf)") {
+                              // dir = "${directory!.path}/DhabiStatement.pdf";
+                              final file = File(
+                                  "${output?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.pdf");
+                              var nf = await file
+                                  .writeAsBytes(bytes.buffer.asUint8List());
+                              log("nf -> $nf");
+                              await OpenFile.open(
+                                  "${output?.path}/example.pdf");
+                              log("${output?.path}/example.pdf");
+                            }
+                          }
+                        },
                         text: "Download Now",
+                        auxWidget:
+                            isDownloading ? const LoaderRow() : const SizeBox(),
                       ),
                       const SizeBox(height: 20),
                     ],
@@ -196,6 +312,20 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     );
   }
 
+  Future<void> checkDocumentFolder() async {
+    try {
+      if (!isFolderCreated) {
+        directory = await getApplicationDocumentsDirectory();
+        await directory!.exists().then((value) {
+          if (value) directory!.create();
+          isFolderCreated = true;
+        });
+      }
+    } catch (_) {
+      rethrow;
+    }
+  }
+
   onSelectFileFormat(Object? value) {
     final DropdownSelectedBloc formatSelectionBloc =
         context.read<DropdownSelectedBloc>();
@@ -203,6 +333,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     toggles++;
     isFormatSelected = true;
     selectedFormat = value as String;
+    log("selectedFormat -> $selectedFormat");
     formatSelectionBloc.add(
       DropdownSelectedEvent(
         isDropdownSelected: isFormatSelected,
@@ -499,8 +630,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     toDate = "To Date";
     auxToDate = DateTime.now();
     tempToDate = DateTime.now();
-    auxFromDate = DateTime.now();
-    tempFromDate = DateTime.now();
+    auxFromDate = DateTime.now().subtract(const Duration(days: 30));
+    tempFromDate = DateTime.now().subtract(const Duration(days: 30));
     fromDateSelectionBloc
         .add(DateSelectionEvent(isDateSelected: isFromDateSelected));
     toDateSelectionBloc
@@ -531,8 +662,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     toDate = "To Date";
     auxToDate = DateTime.now();
     tempToDate = DateTime.now();
-    auxFromDate = DateTime.now();
-    tempFromDate = DateTime.now();
+    auxFromDate = DateTime.now().subtract(const Duration(days: 90));
+    tempFromDate = DateTime.now().subtract(const Duration(days: 90));
     fromDateSelectionBloc
         .add(DateSelectionEvent(isDateSelected: isFromDateSelected));
     toDateSelectionBloc
@@ -563,8 +694,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     toDate = "To Date";
     auxToDate = DateTime.now();
     tempToDate = DateTime.now();
-    auxFromDate = DateTime.now();
-    tempFromDate = DateTime.now();
+    auxFromDate = DateTime.now().subtract(const Duration(days: 180));
+    tempFromDate = DateTime.now().subtract(const Duration(days: 180));
     fromDateSelectionBloc
         .add(DateSelectionEvent(isDateSelected: isFromDateSelected));
     toDateSelectionBloc

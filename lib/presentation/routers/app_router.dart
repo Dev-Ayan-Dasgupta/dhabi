@@ -283,7 +283,9 @@ class AppRouter {
         );
       case Routes.downloadStatement:
         return MaterialPageRoute(
-          builder: (_) => const DownloadStatementScreen(),
+          builder: (_) => DownloadStatementScreen(
+            argument: args,
+          ),
         );
       case Routes.vault:
         return MaterialPageRoute(

@@ -2,6 +2,8 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (19)
+## Release notes - 1.0.0 (20)
 
-- Fixed issues for 121, and started implementing loacl session timeout
+- Calling login API on create account button before T&C
+- Implemented downlaod of statement in .xls and .pdf
+- Implemented sort and filter of statement

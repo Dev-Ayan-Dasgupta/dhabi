@@ -48,14 +48,14 @@ class CustomMultiBlocProvider extends StatefulWidget {
       _CustomMultiBlocProviderState();
 }
 
-// Timer? _timer;
+Timer? _timer;
 
 class _CustomMultiBlocProviderState extends State<CustomMultiBlocProvider> {
   @override
   void initState() {
     super.initState();
     initEnvironment();
-    // _initializeTimer();
+    _initializeTimer();
   }
 
   Future<void> initEnvironment() async {
@@ -74,68 +74,66 @@ class _CustomMultiBlocProviderState extends State<CustomMultiBlocProvider> {
     } catch (_) {}
   }
 
-  // void _initializeTimer() {
-  //   _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
-  //     log("_timer -> ${_timer?.tick}");
-  //     _logOutUser();
-  //   });
-  // }
+  void _initializeTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 3000), (timer) {
+      log("_timer -> ${_timer?.tick}");
+      _logOutUser();
+    });
+  }
 
-  // void _logOutUser() {
-  //   log("logout called");
-  //   _timer?.cancel();
-  //   setState(() {
-  //     forceLogout = true;
-  //   });
-  //   navToHomePage(context);
-  // }
+  void _logOutUser() {
+    log("logout called");
+    _timer?.cancel();
+    setState(() {
+      forceLogout = true;
+    });
 
-  // // You'll probably want to wrap this function in a debounce
-  // void _handleUserInteraction([_]) {
-  //   log("_handleUserInteraction");
-  //   if (_timer != null && !_timer!.isActive) {
-  //     // This means the user has logged out
-  //     return;
-  //   }
-  //   _timer?.cancel();
-  //   _initializeTimer();
-  // }
+    // navToHomePage(context);
+  }
 
-  // void navToHomePage(BuildContext context) {
-  //   log("Navigation to home page called");
-  //   navigatorKey.currentState?.pushNamed(
-  //     Routes.onboarding,
-  //     // (Route<dynamic> route) => false,
-  //     arguments: OnboardingArgumentModel(isInitial: true).toMap(),
-  //   );
-  //   // showDialog(
-  //   //   context: context,
-  //   //   builder: (context) {
-  //   //     return CustomDialog(
-  //   //       svgAssetPath: ImageConstants.warning,
-  //   //       title: "Session Timeout",
-  //   //       message: "Your session has timed out.\nPlease login again.",
-  //   //       actionWidget: GradientButton(
-  //   //         onTap: () {
-  //   //           navigatorKey.currentState?.pushNamedAndRemoveUntil(
-  //   //             Routes.onboarding,
-  //   //             (Route<dynamic> route) => false,
-  //   //             arguments: OnboardingArgumentModel(isInitial: true).toMap(),
-  //   //           );
-  //   //         },
-  //   //         text: "Login",
-  //   //       ),
-  //   //     );
-  //   //   },
-  //   // );
-  // }
+  // You'll probably want to wrap this function in a debounce
+  void _handleUserInteraction([_]) {
+    log("_handleUserInteraction");
+    if (_timer != null && !_timer!.isActive) {
+      // This means the user has logged out
+      return;
+    }
+    _timer?.cancel();
+    _initializeTimer();
+  }
+
+  void navToHomePage() {
+    log("Navigation to home page called");
+
+    showDialog(
+      context: navigatorKey.currentState!.overlay!.context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Session Timeout",
+          message: "Your session has timed out.\nPlease login again.",
+          actionWidget: GradientButton(
+            onTap: () {
+              navigatorKey.currentState?.pushNamedAndRemoveUntil(
+                Routes.onboarding,
+                (Route<dynamic> route) => false,
+                arguments: OnboardingArgumentModel(isInitial: true).toMap(),
+              );
+              _initializeTimer();
+            },
+            text: "Login",
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // if (forceLogout) {
-    //   log("forceLogout -> $forceLogout");
-    //   navToHomePage(context);
-    // }
+    if (forceLogout) {
+      log("forceLogout -> $forceLogout");
+      navToHomePage();
+    }
     return MultiBlocProvider(
       providers: [
         BlocProvider<EmailValidationBloc>(
@@ -205,33 +203,35 @@ class _CustomMultiBlocProviderState extends State<CustomMultiBlocProvider> {
           create: (context) => CurrencyPickerBloc(),
         ),
       ],
-      child: GestureDetector(
-        onTap: () {
-          FocusManager.instance.primaryFocus?.unfocus();
-          // _handleUserInteraction();
-        },
-        // onScaleStart: _handleUserInteraction,
-        // onScaleEnd: _handleUserInteraction,
-        // onScaleUpdate: _handleUserInteraction,
-        behavior: HitTestBehavior.opaque,
-        child: MaterialApp(
-          title: 'Dhabi',
-          debugShowCheckedModeBanner: false,
-          navigatorKey: navigatorKey,
-          theme: ThemeData(
-            primarySwatch: AppColors.primarySwatch,
-            appBarTheme: const AppBarTheme(
-              color: Colors.transparent,
-              systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.light,
+      child: Listener(
+        onPointerDown: _handleUserInteraction,
+        onPointerMove: _handleUserInteraction,
+        onPointerUp: _handleUserInteraction,
+        child: GestureDetector(
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            _handleUserInteraction();
+          },
+          behavior: HitTestBehavior.opaque,
+          child: MaterialApp(
+            title: 'Dhabi',
+            debugShowCheckedModeBanner: false,
+            navigatorKey: navigatorKey,
+            theme: ThemeData(
+              primarySwatch: AppColors.primarySwatch,
+              appBarTheme: const AppBarTheme(
+                color: Colors.transparent,
+                systemOverlayStyle: SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness: Brightness.dark,
+                  statusBarBrightness: Brightness.light,
+                ),
               ),
+              scaffoldBackgroundColor: Colors.white,
             ),
-            scaffoldBackgroundColor: Colors.white,
+            initialRoute: Routes.splash,
+            onGenerateRoute: widget.appRouter.onGenerateRoute,
           ),
-          initialRoute: Routes.splash,
-          onGenerateRoute: widget.appRouter.onGenerateRoute,
         ),
       ),
     );

@@ -502,7 +502,8 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
               "Your KYC Documents have expired. Please verify your documents again.",
           actionWidget: GradientButton(
             onTap: () {
-              Navigator.pushNamed(context, Routes.verificationInitializing);
+              Navigator.pushReplacementNamed(
+                  context, Routes.verificationInitializing);
             },
             text: "Verify",
           ),

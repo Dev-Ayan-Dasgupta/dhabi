@@ -157,10 +157,12 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                 // ),
                 // ElevatedButton(
                 //   onPressed: () {
-                //     log("storageEmail -> $storageEmail");
-                //     log("storagePassword -> $storagePassword");
+                //     // log("storageEmail -> $storageEmail");
+                //     // log("storagePassword -> $storagePassword");
+                //     var sessionStateStream = StreamController<SessionState>();
+                //     sessionStateStream.add(SessionState.startListening);
                 //   },
-                //   child: const Text("Test storageEmail and storagePassword"),
+                //   child: const Text("Test sessionStateStream"),
                 // ),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: buildProceedButton,
