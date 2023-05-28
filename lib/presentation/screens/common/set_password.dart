@@ -481,8 +481,8 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                         actionWidget: GradientButton(
                           onTap: () {
                             Navigator.pop(context);
-                            Navigator.pushReplacementNamed(
-                                context, Routes.loginUserId);
+                            // Navigator.pushReplacementNamed(
+                            //     context, Routes.loginUserId);
                           },
                           text: "Understood",
                         ),
