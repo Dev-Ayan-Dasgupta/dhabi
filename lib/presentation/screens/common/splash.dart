@@ -182,8 +182,8 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     try {
-      storageIsNotNewInstall = false;
-      (await storage.read(key: "newInstall")) == "true";
+      storageIsNotNewInstall =
+          (await storage.read(key: "newInstall")) == "true";
       log("storageIsNotNewInstall -> $storageIsNotNewInstall");
       storageHasFirstLoggedIn =
           (await storage.read(key: "hasFirstLoggedIn")) == "true";
@@ -286,6 +286,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
       storageCustomerName = await storage.read(key: "customerName");
       log("storageCustomerName -> $storageCustomerName");
+
+      storageChosenAccount =
+          int.parse(await storage.read(key: "chosenAccount") ?? "0");
+      log("storageChosenAccount -> $storageChosenAccount");
     } catch (_) {
       rethrow;
     }

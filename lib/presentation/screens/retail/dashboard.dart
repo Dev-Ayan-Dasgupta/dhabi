@@ -22,6 +22,7 @@ import 'package:dialup_mobile_app/presentation/widgets/shimmers/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:intl/intl.dart';
@@ -78,6 +79,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   String filterText = "All";
   String sortText = "Latest";
+
+  bool isChangingAccount = false;
 
   @override
   void initState() {
@@ -246,9 +249,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       customerStatement =
           await MapCustomerAccountStatement.mapCustomerAccountStatement(
         {
-          "accountNumber": accountDetails[0]["accountNumber"],
+          "accountNumber": accountDetails[storageChosenAccount ?? 0]
+              ["accountNumber"],
           "startDate": DateFormat('yyyy-MM-dd')
-              .format(DateTime.now().subtract(const Duration(days: 90))),
+              .format(DateTime.now().subtract(const Duration(days: 30))),
           "endDate": DateFormat('yyyy-MM-dd').format(DateTime.now()),
         },
         token ?? "",
@@ -257,6 +261,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       if (customerStatement["flexiAccountStatementRes"]["body"] != null) {
         statementList = customerStatement["flexiAccountStatementRes"]["body"]
             ["statementList"];
+        displayStatementList.clear();
         displayStatementList.addAll(statementList);
       }
     } catch (_) {
@@ -1023,43 +1028,175 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      "Account: ",
-                                                      style: TextStyles
-                                                          .primaryMedium
-                                                          .copyWith(
-                                                        color: AppColors.dark50,
-                                                        fontSize: (16 /
+                                                InkWell(
+                                                  onTap: () {
+                                                    showModalBottomSheet(
+                                                      context: context,
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      builder: (context) {
+                                                        return Container(
+                                                          width: 100.w,
+                                                          height: (10.h) *
+                                                              accountDetails
+                                                                  .length,
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                            vertical: (PaddingConstants
+                                                                        .horizontalPadding /
+                                                                    Dimensions
+                                                                        .designHeight)
+                                                                .h,
+                                                            horizontal: (PaddingConstants
+                                                                        .horizontalPadding /
+                                                                    Dimensions
+                                                                        .designWidth)
+                                                                .w,
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .only(
+                                                              topLeft: Radius
+                                                                  .circular((10 /
+                                                                          Dimensions
+                                                                              .designWidth)
+                                                                      .w),
+                                                              topRight: Radius
+                                                                  .circular((10 /
+                                                                          Dimensions
+                                                                              .designWidth)
+                                                                      .w),
+                                                            ),
+                                                          ),
+                                                          child: BlocBuilder<
+                                                              ShowButtonBloc,
+                                                              ShowButtonState>(
+                                                            builder: (context1,
+                                                                state) {
+                                                              return Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Ternary(
+                                                                    condition:
+                                                                        isChangingAccount,
+                                                                    truthy:
+                                                                        Center(
+                                                                      child:
+                                                                          SpinKitFadingCircle(
+                                                                        color: AppColors
+                                                                            .primary,
+                                                                        size: (50 /
+                                                                                Dimensions.designWidth)
+                                                                            .w,
+                                                                      ),
+                                                                    ),
+                                                                    falsy:
+                                                                        Expanded(
+                                                                      child: ListView
+                                                                          .builder(
+                                                                        itemCount:
+                                                                            accountDetails.length,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return ListTile(
+                                                                            dense:
+                                                                                true,
+                                                                            onTap:
+                                                                                () async {
+                                                                              final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+                                                                              isChangingAccount = true;
+                                                                              showButtonBloc.add(
+                                                                                ShowButtonEvent(show: isChangingAccount),
+                                                                              );
+                                                                              await storage.write(key: "chosenAccount", value: index.toString());
+                                                                              storageChosenAccount = int.parse(await storage.read(key: "chosenAccount") ?? "0");
+                                                                              log("storageChosenAccount -> $storageChosenAccount");
+
+                                                                              getCustomerAccountStatement();
+
+                                                                              isChangingAccount = false;
+                                                                              showButtonBloc.add(
+                                                                                ShowButtonEvent(show: isChangingAccount),
+                                                                              );
+                                                                              if (context1.mounted) {
+                                                                                Navigator.pop(context1);
+                                                                              }
+                                                                            },
+                                                                            leading:
+                                                                                const CustomCircleAvatarAsset(imgUrl: ImageConstants.uaeFlag),
+                                                                            title:
+                                                                                Text(
+                                                                              accountDetails[index]["accountNumber"],
+                                                                              style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),
+                                                                            ),
+                                                                            subtitle:
+                                                                                Text(
+                                                                              accountDetails[index]["productCode"] == "1001" ? "Current" : "Savings",
+                                                                              style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
+                                                                            ),
+                                                                            trailing:
+                                                                                Text(
+                                                                              accountDetails[index]["currentBalance"],
+                                                                              style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
+                                                                            ),
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            },
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                        "Account: ",
+                                                        style: TextStyles
+                                                            .primaryMedium
+                                                            .copyWith(
+                                                          color:
+                                                              AppColors.dark50,
+                                                          fontSize: (16 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? "Current" : "Savings"} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
+                                                        style: TextStyles
+                                                            .primaryMedium
+                                                            .copyWith(
+                                                          color:
+                                                              AppColors.primary,
+                                                          fontSize: (16 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w,
+                                                        ),
+                                                      ),
+                                                      Icon(
+                                                        Icons
+                                                            .arrow_drop_down_rounded,
+                                                        color: AppColors.dark80,
+                                                        size: (20 /
                                                                 Dimensions
                                                                     .designWidth)
                                                             .w,
                                                       ),
-                                                    ),
-                                                    Text(
-                                                      "Current ****4525",
-                                                      style: TextStyles
-                                                          .primaryMedium
-                                                          .copyWith(
-                                                        color:
-                                                            AppColors.primary,
-                                                        fontSize: (16 /
-                                                                Dimensions
-                                                                    .designWidth)
-                                                            .w,
-                                                      ),
-                                                    ),
-                                                    Icon(
-                                                      Icons
-                                                          .arrow_drop_down_rounded,
-                                                      color: AppColors.dark80,
-                                                      size: (20 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w,
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
                                                 const SizeBox(width: 5),
                                                 Text(

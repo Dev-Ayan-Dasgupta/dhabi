@@ -62,3 +62,5 @@ String? storagReferenceNumber;
 bool? storageRetailLoggedIn;
 
 String? storageCustomerName;
+
+int? storageChosenAccount;
