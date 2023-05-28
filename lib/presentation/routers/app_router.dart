@@ -187,7 +187,9 @@ class AppRouter {
         );
       case Routes.applicationAccount:
         return MaterialPageRoute(
-          builder: (_) => const ApplicationAccountScreen(),
+          builder: (_) => ApplicationAccountScreen(
+            argument: args,
+          ),
         );
       case Routes.acceptTermsAndConditions:
         return MaterialPageRoute(

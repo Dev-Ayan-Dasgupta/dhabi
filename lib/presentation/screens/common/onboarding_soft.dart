@@ -291,7 +291,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     case 8:
                                       callLoginApi();
                                       Navigator.pushNamed(
-                                          context, Routes.applicationAccount);
+                                        context,
+                                        Routes.applicationAccount,
+                                        arguments:
+                                            ApplicationAccountArgumentModel(
+                                          isInitial: true,
+                                        ).toMap(),
+                                      );
                                       break;
                                     case 9:
                                       callLoginApi();

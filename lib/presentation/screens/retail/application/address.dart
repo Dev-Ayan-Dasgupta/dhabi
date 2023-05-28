@@ -161,47 +161,6 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       onChanged: (p0) {},
                       hintText: "Address",
                     ),
-                    // const SizeBox(height: 20),
-                    // Text(
-                    //   "${labels[331]["labelText"]} *",
-                    //   style: TextStyles.primary.copyWith(
-                    //     color: AppColors.black63,
-                    //     fontSize: (16 / Dimensions.designWidth).w,
-                    //   ),
-                    // ),
-                    // const SizeBox(height: 9),
-                    // CustomTextField(
-                    //   controller: _cityController,
-                    //   onChanged: (p0) {
-                    //     if (_cityController.text.isEmpty) {
-                    //       isCityEntered = false;
-                    //     } else {
-                    //       isCityEntered = true;
-                    //     }
-                    //     residenceSelectedBloc.add(
-                    //       DropdownSelectedEvent(
-                    //         isDropdownSelected: isResidenceYearSelected &&
-                    //             (isAddress1Entered && isCityEntered),
-                    //         toggles: toggles,
-                    //       ),
-                    //     );
-                    //   },
-                    //   hintText: labels[331]["labelText"],
-                    // ),
-                    // const SizeBox(height: 20),
-                    // Text(
-                    //   "State",
-                    //   style: TextStyles.primary.copyWith(
-                    //     color: AppColors.black63,
-                    //     fontSize: (16 / Dimensions.designWidth).w,
-                    //   ),
-                    // ),
-                    // const SizeBox(height: 9),
-                    // CustomTextField(
-                    //   controller: _stateController,
-                    //   onChanged: (p0) {},
-                    //   hintText: "State",
-                    // ),
                     const SizeBox(height: 20),
                     Row(
                       children: [

@@ -209,7 +209,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                       GradientButton(
                         onTap: () async {
                           String? base64String;
-                          String? dir;
+
                           if (!isDownloading) {
                             final ShowButtonBloc showButtonBloc =
                                 context.read<ShowButtonBloc>();
@@ -226,19 +226,12 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                                       downloadStatementArgument.accountNumber,
                                   "startDate": DateFormat('yyyy-MM-dd')
                                       .format(auxFromDate),
-                                  // DateFormat('yyyy-MM-dd').format(
-                                  //     DateFormat('d MMMM, yyyy').parse(toDate)),
-                                  // "2023-05-26",
                                   "endDate":
                                       DateFormat('yyyy-MM-dd').format(auxToDate)
-                                  // DateFormat('yyyy-MM-dd').format(
-                                  //     DateFormat('d MMMM, yyyy')
-                                  //         .parse(fromDate)),
-                                  // "2023-05-27",
                                 },
                                 token ?? "",
                               );
-                              log("base64 xls -> $base64String");
+                              // log("base64 xls -> $base64String");
                             } else if (selectedFormat == "PDF (.pdf)") {
                               base64String =
                                   await MapPdfCustomerAccountStatement
@@ -248,50 +241,18 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                                       downloadStatementArgument.accountNumber,
                                   "startDate": DateFormat('yyyy-MM-dd')
                                       .format(auxFromDate),
-                                  // DateFormat('yyyy-MM-dd').format(
-                                  //     DateFormat('d MMMM, yyyy')
-                                  //         .parse(fromDate)),
-                                  // "2023-05-26",
                                   "endDate": DateFormat('yyyy-MM-dd')
                                       .format(auxToDate),
-                                  // DateFormat('yyyy-MM-dd').format(
-                                  //     DateFormat('d MMMM, yyyy')
-                                  //         .parse(fromDate)),
-                                  // "2023-05-27",
                                 },
                                 token ?? "",
                               );
-                              log("base64 pdf -> $base64String");
+                              // log("base64 pdf -> $base64String");
                             }
+                            openFile(base64String, selectedFormat);
                             isDownloading = false;
                             showButtonBloc.add(
                               ShowButtonEvent(show: isDownloading),
                             );
-                            Uint8List bytes = base64.decode(base64String ?? "");
-
-                            final output = await getExternalStorageDirectory();
-
-                            if (selectedFormat == "Excel (.xls)") {
-                              // dir = "${directory!.path}/DhabiStatement.xls";
-                              final file = File(
-                                  "${output?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.xls");
-                              var nf = await file
-                                  .writeAsBytes(bytes.buffer.asUint8List());
-                              log("nf -> $nf");
-                              await OpenFile.open(
-                                  "${output?.path}/example.xls");
-                              log("${output?.path}/example.xls");
-                            } else if (selectedFormat == "PDF (.pdf)") {
-                              // dir = "${directory!.path}/DhabiStatement.pdf";
-                              final file = File(
-                                  "${output?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.pdf");
-                              var nf = await file
-                                  .writeAsBytes(bytes.buffer.asUint8List());
-                              log("nf -> $nf");
-                              await OpenFile.open(
-                                  "${output?.path}/example.pdf");
-                              log("${output?.path}/example.pdf");
-                            }
                           }
                         },
                         text: "Download Now",
@@ -312,18 +273,33 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     );
   }
 
-  Future<void> checkDocumentFolder() async {
-    try {
-      if (!isFolderCreated) {
-        directory = await getApplicationDocumentsDirectory();
-        await directory!.exists().then((value) {
-          if (value) directory!.create();
-          isFolderCreated = true;
-        });
-      }
-    } catch (_) {
-      rethrow;
-    }
+  void openFile(String? base64String, String? format) async {
+    Uint8List bytes = base64.decode(base64String ?? "");
+    File file;
+    log("format -> ${format?.split(' ').last.substring(1, format.split(' ').last.length - 1)}");
+    final directory = Platform.isAndroid
+        ? await getExternalStorageDirectory() //! FOR Android
+        : await getApplicationDocumentsDirectory(); //! FOR iOS
+
+    file = File(
+        "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}${format?.split(' ').last.substring(1, format.split(' ').last.length - 1)}");
+    await file.writeAsBytes(bytes.buffer.asUint8List());
+    await OpenFile.open(
+        "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}${format?.split(' ').last.substring(1, format.split(' ').last.length - 1)}");
+
+    // if (selectedFormat == "Excel (.xls)") {
+    //   file = File(
+    //       "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.xls");
+    //   await file.writeAsBytes(bytes.buffer.asUint8List());
+    //   await OpenFile.open(
+    //       "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.xls");
+    // } else if (selectedFormat == "PDF (.pdf)") {
+    //   file = File(
+    //       "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.pdf");
+    //   await file.writeAsBytes(bytes.buffer.asUint8List());
+    //   await OpenFile.open(
+    //       "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.pdf");
+    // }
   }
 
   onSelectFileFormat(Object? value) {

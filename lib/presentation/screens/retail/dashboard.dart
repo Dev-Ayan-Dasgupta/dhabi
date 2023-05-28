@@ -11,7 +11,6 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_bloc.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_event.dart';
 import 'package:dialup_mobile_app/bloc/tabBar/tabbar_state.dart';
-import 'package:dialup_mobile_app/data/models/arguments/retail_dashboard.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -76,6 +75,9 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   bool isDateOldest = false;
   bool isAmountHighest = false;
   bool isAmountLowest = false;
+
+  String filterText = "All";
+  String sortText = "Latest";
 
   @override
   void initState() {
@@ -344,19 +346,25 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                             ),
                           ),
                           SizedBox(
-                            height: (277 / Dimensions.designWidth).w,
+                            height: (277 / Dimensions.designHeight).h,
                             child: TabBarView(
                               controller: tabController,
                               children: [
                                 // ! Home Tab View
                                 Column(
                                   children: [
-                                    const SizeBox(height: 9.5),
+                                    // const SizeBox(height: 5.5),
                                     Expanded(
                                       child: ListView.builder(
+                                        padding: EdgeInsets.only(
+                                            top:
+                                                (5 / Dimensions.designHeight).h,
+                                            bottom:
+                                                (13 / Dimensions.designHeight)
+                                                    .h),
                                         controller: _scrollController,
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: accountDetails.length,
+                                        itemCount: (accountDetails.length) + 1,
                                         itemBuilder: (context, index) {
                                           return Padding(
                                             padding: EdgeInsets.only(
@@ -368,34 +376,62 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                       .w
                                                   : 0,
                                             ),
-                                            child: AccountSummaryTile(
-                                              onTap: () {},
-                                              imgUrl: accountDetails[index]
-                                                          ["accountCurrency"] ==
-                                                      "AED"
-                                                  ? ImageConstants.uaeFlag
-                                                  : ImageConstants.usaFlag,
-                                              accountType: accountDetails[index]
-                                                          ["productCode"] ==
-                                                      "1001"
-                                                  ? "Current"
-                                                  : "Savings",
-                                              currency: accountDetails[index]
-                                                      ["currentBalance"]
-                                                  .split(" ")
-                                                  .first,
-                                              amount: accountDetails[index]
-                                                      ["currentBalance"]
-                                                  .split(" ")
-                                                  .last,
-                                              subText: "",
-                                              subImgUrl: "",
-                                            ),
+                                            child: index ==
+                                                    accountDetails.length
+                                                ? AccountSummaryTile(
+                                                    onTap: () {
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        Routes
+                                                            .applicationAccount,
+                                                        arguments:
+                                                            ApplicationAccountArgumentModel(
+                                                          isInitial: false,
+                                                        ).toMap(),
+                                                      );
+                                                    },
+                                                    imgUrl: ImageConstants
+                                                        .addAccount,
+                                                    accountType: "",
+                                                    currency: "Open Account",
+                                                    amount: "",
+                                                    subText: "",
+                                                    subImgUrl: "",
+                                                    fontSize: 14,
+                                                  )
+                                                : AccountSummaryTile(
+                                                    onTap: () {},
+                                                    imgUrl: accountDetails[
+                                                                    index][
+                                                                "accountCurrency"] ==
+                                                            "AED"
+                                                        ? ImageConstants.uaeFlag
+                                                        : ImageConstants
+                                                            .usaFlag,
+                                                    accountType: accountDetails[
+                                                                    index][
+                                                                "productCode"] ==
+                                                            "1001"
+                                                        ? "Current"
+                                                        : "Savings",
+                                                    currency: accountDetails[
+                                                                index]
+                                                            ["currentBalance"]
+                                                        .split(" ")
+                                                        .first,
+                                                    amount: accountDetails[
+                                                                index]
+                                                            ["currentBalance"]
+                                                        .split(" ")
+                                                        .last,
+                                                    subText: "",
+                                                    subImgUrl: "",
+                                                  ),
                                           );
                                         },
                                       ),
                                     ),
-                                    const SizeBox(height: 10),
+                                    // const SizeBox(height: 10),
                                     BlocBuilder<SummaryTileBloc,
                                         SummaryTileState>(
                                       builder: (context, state) {
@@ -427,7 +463,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                         );
                                       },
                                     ),
-                                    const SizeBox(height: 20),
+                                    const SizeBox(height: 10),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -447,12 +483,18 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                 // ! Deposits Tab View
                                 Column(
                                   children: [
-                                    const SizeBox(height: 9.5),
+                                    // const SizeBox(height: 9.5),
                                     Expanded(
                                       child: ListView.builder(
+                                        padding: EdgeInsets.only(
+                                            top:
+                                                (5 / Dimensions.designHeight).h,
+                                            bottom:
+                                                (13 / Dimensions.designHeight)
+                                                    .h),
                                         controller: _scrollController,
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: depositDetails.length,
+                                        itemCount: depositDetails.length + 1,
                                         itemBuilder: (context, index) {
                                           return Padding(
                                             padding: EdgeInsets.only(
@@ -464,30 +506,49 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                       .w
                                                   : 0,
                                             ),
-                                            child: AccountSummaryTile(
-                                              onTap: () {},
-                                              imgUrl: depositDetails[index][
-                                                          "depositAccountCurrency"] ==
-                                                      "AED"
-                                                  ? ImageConstants.uaeFlag
-                                                  : ImageConstants.usaFlag,
-                                              accountType: "Fixed Deposit",
-                                              currency: depositDetails[index]
-                                                      ["depositPrincipalAmount"]
-                                                  .split(" ")
-                                                  .first,
-                                              amount: depositDetails[index]
-                                                      ["depositPrincipalAmount"]
-                                                  .split(" ")
-                                                  .last,
-                                              subText: "",
-                                              subImgUrl: "",
-                                            ),
+                                            child: index ==
+                                                    depositDetails.length
+                                                ? AccountSummaryTile(
+                                                    onTap: () {},
+                                                    imgUrl: ImageConstants
+                                                        .addAccount,
+                                                    accountType: "",
+                                                    currency:
+                                                        "Create New Deposit",
+                                                    amount: "",
+                                                    subText: "",
+                                                    subImgUrl: "",
+                                                    fontSize: 14,
+                                                  )
+                                                : AccountSummaryTile(
+                                                    onTap: () {},
+                                                    imgUrl: depositDetails[
+                                                                    index][
+                                                                "depositAccountCurrency"] ==
+                                                            "AED"
+                                                        ? ImageConstants.uaeFlag
+                                                        : ImageConstants
+                                                            .usaFlag,
+                                                    accountType:
+                                                        "Fixed Deposit",
+                                                    currency: depositDetails[
+                                                                index][
+                                                            "depositPrincipalAmount"]
+                                                        .split(" ")
+                                                        .first,
+                                                    amount: depositDetails[
+                                                                index][
+                                                            "depositPrincipalAmount"]
+                                                        .split(" ")
+                                                        .last,
+                                                    subText: "",
+                                                    subImgUrl: "",
+                                                  ),
                                           );
                                         },
                                       ),
                                     ),
-                                    const SizeBox(height: 10),
+                                    // const SizeBox(height: 10),
                                     BlocBuilder<SummaryTileBloc,
                                         SummaryTileState>(
                                       builder: (context, state) {
@@ -532,15 +593,15 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                 context, Routes.interestRates);
                                           },
                                         ),
-                                        const SizeBox(width: 40),
-                                        DashboardActivityTile(
-                                          iconPath: ImageConstants.barChart,
-                                          activityText: "Insights",
-                                          onTap: () {
-                                            Navigator.pushNamed(
-                                                context, Routes.insights);
-                                          },
-                                        ),
+                                        // const SizeBox(width: 40),
+                                        // DashboardActivityTile(
+                                        //   iconPath: ImageConstants.barChart,
+                                        //   activityText: "Insights",
+                                        //   onTap: () {
+                                        //     Navigator.pushNamed(
+                                        //         context, Routes.insights);
+                                        //   },
+                                        // ),
                                       ],
                                     ),
                                   ],
@@ -566,8 +627,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                             ),
                                             child: AccountSummaryTile(
                                               onTap: () {},
-                                              imgUrl:
-                                                  "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
+                                              imgUrl: "",
                                               accountType: "Savings",
                                               currency: "AED",
                                               amount: "0.00",
@@ -644,7 +704,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                         ],
                       ),
                     ),
-                    const SizeBox(height: 20),
+                    const SizeBox(height: 15),
                     InkWell(
                       onTap: () {
                         tabController.animateTo(1);
@@ -769,83 +829,280 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                               ),
                                             ],
                                           ),
+                                          // const SizeBox(height: 15),
+                                          // Row(
+                                          //   children: [
+                                          //     InkWell(
+                                          //       onTap: () {
+                                          //         final ShowButtonBloc
+                                          //             showButtonBloc =
+                                          //             context.read<
+                                          //                 ShowButtonBloc>();
+                                          //         isShowFilter = true;
+                                          //         showButtonBloc.add(
+                                          //           ShowButtonEvent(
+                                          //               show: isShowFilter),
+                                          //         );
+                                          //       },
+                                          //       child: Container(
+                                          //         width: (236 /
+                                          //                 Dimensions
+                                          //                     .designWidth)
+                                          //             .w,
+                                          //         height: (39 /
+                                          //                 Dimensions
+                                          //                     .designHeight)
+                                          //             .h,
+                                          //         decoration: BoxDecoration(
+                                          //           color: const Color.fromRGBO(
+                                          //               34, 97, 105, 0.1),
+                                          //           borderRadius:
+                                          //               BorderRadius.all(
+                                          //             Radius.circular(
+                                          //               (10 /
+                                          //                       Dimensions
+                                          //                           .designWidth)
+                                          //                   .w,
+                                          //             ),
+                                          //           ),
+                                          //         ),
+                                          //         child: Row(
+                                          //           mainAxisAlignment:
+                                          //               MainAxisAlignment
+                                          //                   .center,
+                                          //           children: [
+                                          //             SvgPicture.asset(
+                                          //               ImageConstants.pyramid,
+                                          //               width: (10 /
+                                          //                       Dimensions
+                                          //                           .designHeight)
+                                          //                   .w,
+                                          //               height: (10 /
+                                          //                       Dimensions
+                                          //                           .designHeight)
+                                          //                   .h,
+                                          //             ),
+                                          //             const SizeBox(width: 10),
+                                          //             Text(
+                                          //               "Filter: ",
+                                          //               style: TextStyles
+                                          //                   .primary
+                                          //                   .copyWith(
+                                          //                 color:
+                                          //                     AppColors.dark50,
+                                          //                 fontSize: (16 /
+                                          //                         Dimensions
+                                          //                             .designWidth)
+                                          //                     .w,
+                                          //               ),
+                                          //             ),
+                                          //             Text(
+                                          //               (!isAllSelected &&
+                                          //                       !isSentSelected &&
+                                          //                       !isReceivedSelected)
+                                          //                   ? "All"
+                                          //                   : isAllSelected
+                                          //                       ? "All"
+                                          //                       : isSentSelected
+                                          //                           ? "Sent"
+                                          //                           : "Received",
+                                          //               style: TextStyles
+                                          //                   .primaryMedium
+                                          //                   .copyWith(
+                                          //                 color:
+                                          //                     AppColors.primary,
+                                          //                 fontSize: (16 /
+                                          //                         Dimensions
+                                          //                             .designWidth)
+                                          //                     .w,
+                                          //               ),
+                                          //             ),
+                                          //           ],
+                                          //         ),
+                                          //       ),
+                                          //     ),
+                                          //     const SizeBox(width: 10),
+                                          //     InkWell(
+                                          //       onTap: () {
+                                          //         final ShowButtonBloc
+                                          //             showButtonBloc =
+                                          //             context.read<
+                                          //                 ShowButtonBloc>();
+                                          //         isShowSort = true;
+                                          //         showButtonBloc.add(
+                                          //           ShowButtonEvent(
+                                          //               show: isShowSort),
+                                          //         );
+                                          //       },
+                                          //       child: Container(
+                                          //         width: (147 /
+                                          //                 Dimensions
+                                          //                     .designWidth)
+                                          //             .w,
+                                          //         height: (39 /
+                                          //                 Dimensions
+                                          //                     .designHeight)
+                                          //             .h,
+                                          //         decoration: BoxDecoration(
+                                          //           color: const Color.fromRGBO(
+                                          //               34, 97, 105, 0.1),
+                                          //           borderRadius:
+                                          //               BorderRadius.all(
+                                          //             Radius.circular(
+                                          //               (10 /
+                                          //                       Dimensions
+                                          //                           .designWidth)
+                                          //                   .w,
+                                          //             ),
+                                          //           ),
+                                          //         ),
+                                          //         child: Row(
+                                          //           mainAxisAlignment:
+                                          //               MainAxisAlignment
+                                          //                   .center,
+                                          //           children: [
+                                          //             SvgPicture.asset(
+                                          //               ImageConstants.pyramid,
+                                          //               width: (10 /
+                                          //                       Dimensions
+                                          //                           .designHeight)
+                                          //                   .w,
+                                          //               height: (10 /
+                                          //                       Dimensions
+                                          //                           .designHeight)
+                                          //                   .h,
+                                          //             ),
+                                          //             const SizeBox(width: 10),
+                                          //             Text(
+                                          //               "Sort: ",
+                                          //               style: TextStyles
+                                          //                   .primary
+                                          //                   .copyWith(
+                                          //                 color:
+                                          //                     AppColors.dark50,
+                                          //                 fontSize: (16 /
+                                          //                         Dimensions
+                                          //                             .designWidth)
+                                          //                     .w,
+                                          //               ),
+                                          //             ),
+                                          //             Text(
+                                          //               "Date",
+                                          //               style: TextStyles
+                                          //                   .primaryMedium
+                                          //                   .copyWith(
+                                          //                 color:
+                                          //                     AppColors.primary,
+                                          //                 fontSize: (16 /
+                                          //                         Dimensions
+                                          //                             .designWidth)
+                                          //                     .w,
+                                          //               ),
+                                          //             ),
+                                          //           ],
+                                          //         ),
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          // ),
                                           const SizeBox(height: 15),
-                                          Row(
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  final ShowButtonBloc
-                                                      showButtonBloc =
-                                                      context.read<
-                                                          ShowButtonBloc>();
-                                                  isShowFilter = true;
-                                                  showButtonBloc.add(
-                                                    ShowButtonEvent(
-                                                        show: isShowFilter),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  width: (236 /
-                                                          Dimensions
-                                                              .designWidth)
-                                                      .w,
-                                                  height: (39 /
-                                                          Dimensions
-                                                              .designHeight)
-                                                      .h,
-                                                  decoration: BoxDecoration(
-                                                    color: const Color.fromRGBO(
-                                                        34, 97, 105, 0.1),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(
-                                                        (10 /
+                                          Container(
+                                            width: 100.w,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular((10 /
+                                                        Dimensions.designWidth)
+                                                    .w),
+                                              ),
+                                              color: AppColors.primary10,
+                                            ),
+                                            padding: EdgeInsets.all(
+                                              (10 / Dimensions.designWidth).w,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Account: ",
+                                                      style: TextStyles
+                                                          .primaryMedium
+                                                          .copyWith(
+                                                        color: AppColors.dark50,
+                                                        fontSize: (16 /
                                                                 Dimensions
                                                                     .designWidth)
                                                             .w,
                                                       ),
                                                     ),
+                                                    Text(
+                                                      "Current ****4525",
+                                                      style: TextStyles
+                                                          .primaryMedium
+                                                          .copyWith(
+                                                        color:
+                                                            AppColors.primary,
+                                                        fontSize: (16 /
+                                                                Dimensions
+                                                                    .designWidth)
+                                                            .w,
+                                                      ),
+                                                    ),
+                                                    Icon(
+                                                      Icons
+                                                          .arrow_drop_down_rounded,
+                                                      color: AppColors.dark80,
+                                                      size: (20 /
+                                                              Dimensions
+                                                                  .designWidth)
+                                                          .w,
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizeBox(width: 5),
+                                                Text(
+                                                  "|",
+                                                  style: TextStyles
+                                                      .primaryMedium
+                                                      .copyWith(
+                                                    color: AppColors.dark50,
+                                                    fontSize: (16 /
+                                                            Dimensions
+                                                                .designWidth)
+                                                        .w,
                                                   ),
+                                                ),
+                                                const SizeBox(width: 10),
+                                                InkWell(
+                                                  onTap: () {
+                                                    final ShowButtonBloc
+                                                        showButtonBloc =
+                                                        context.read<
+                                                            ShowButtonBloc>();
+                                                    isShowFilter = true;
+                                                    showButtonBloc.add(
+                                                      ShowButtonEvent(
+                                                          show: isShowFilter),
+                                                    );
+                                                  },
                                                   child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
                                                     children: [
                                                       SvgPicture.asset(
-                                                        ImageConstants.pyramid,
-                                                        width: (10 /
+                                                        ImageConstants.filter,
+                                                        width: (12 /
                                                                 Dimensions
                                                                     .designHeight)
                                                             .w,
-                                                        height: (10 /
+                                                        height: (12 /
                                                                 Dimensions
-                                                                    .designHeight)
-                                                            .h,
+                                                                    .designWidth)
+                                                            .w,
                                                       ),
-                                                      const SizeBox(width: 10),
+                                                      const SizeBox(width: 5),
                                                       Text(
-                                                        "Filter: ",
-                                                        style: TextStyles
-                                                            .primary
-                                                            .copyWith(
-                                                          color:
-                                                              AppColors.dark50,
-                                                          fontSize: (16 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        (!isAllSelected &&
-                                                                !isSentSelected &&
-                                                                !isReceivedSelected)
-                                                            ? "All"
-                                                            : isAllSelected
-                                                                ? "All"
-                                                                : isSentSelected
-                                                                    ? "Sent"
-                                                                    : "Received",
+                                                        filterText,
                                                         style: TextStyles
                                                             .primaryMedium
                                                             .copyWith(
@@ -860,74 +1117,48 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                              const SizeBox(width: 10),
-                                              InkWell(
-                                                onTap: () {
-                                                  final ShowButtonBloc
-                                                      showButtonBloc =
-                                                      context.read<
-                                                          ShowButtonBloc>();
-                                                  isShowSort = true;
-                                                  showButtonBloc.add(
-                                                    ShowButtonEvent(
-                                                        show: isShowSort),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  width: (147 /
-                                                          Dimensions
-                                                              .designWidth)
-                                                      .w,
-                                                  height: (39 /
-                                                          Dimensions
-                                                              .designHeight)
-                                                      .h,
-                                                  decoration: BoxDecoration(
-                                                    color: const Color.fromRGBO(
-                                                        34, 97, 105, 0.1),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(
-                                                        (10 /
-                                                                Dimensions
-                                                                    .designWidth)
-                                                            .w,
-                                                      ),
-                                                    ),
+                                                const SizeBox(width: 10),
+                                                Text(
+                                                  "|",
+                                                  style: TextStyles
+                                                      .primaryMedium
+                                                      .copyWith(
+                                                    color: AppColors.dark50,
+                                                    fontSize: (16 /
+                                                            Dimensions
+                                                                .designWidth)
+                                                        .w,
                                                   ),
+                                                ),
+                                                const SizeBox(width: 10),
+                                                InkWell(
+                                                  onTap: () {
+                                                    final ShowButtonBloc
+                                                        showButtonBloc =
+                                                        context.read<
+                                                            ShowButtonBloc>();
+                                                    isShowSort = true;
+                                                    showButtonBloc.add(
+                                                      ShowButtonEvent(
+                                                          show: isShowSort),
+                                                    );
+                                                  },
                                                   child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
                                                     children: [
                                                       SvgPicture.asset(
-                                                        ImageConstants.pyramid,
+                                                        ImageConstants.sort,
                                                         width: (10 /
                                                                 Dimensions
                                                                     .designHeight)
                                                             .w,
                                                         height: (10 /
                                                                 Dimensions
-                                                                    .designHeight)
-                                                            .h,
+                                                                    .designWidth)
+                                                            .w,
                                                       ),
-                                                      const SizeBox(width: 10),
+                                                      const SizeBox(width: 5),
                                                       Text(
-                                                        "Sort: ",
-                                                        style: TextStyles
-                                                            .primary
-                                                            .copyWith(
-                                                          color:
-                                                              AppColors.dark50,
-                                                          fontSize: (16 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        "Date",
+                                                        sortText,
                                                         style: TextStyles
                                                             .primaryMedium
                                                             .copyWith(
@@ -942,8 +1173,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                           const SizeBox(height: 15),
                                           Ternary(
@@ -1048,11 +1279,11 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                       Text(
                                                         "Filter",
                                                         style: TextStyles
-                                                            .primaryMedium
+                                                            .primaryBold
                                                             .copyWith(
                                                                 color: AppColors
                                                                     .dark50,
-                                                                fontSize: (16 /
+                                                                fontSize: (20 /
                                                                         Dimensions
                                                                             .designWidth)
                                                                     .w),
@@ -1066,7 +1297,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                         .primaryMedium
                                                         .copyWith(
                                                             color: AppColors
-                                                                .dark80,
+                                                                .dark50,
                                                             fontSize: (16 /
                                                                     Dimensions
                                                                         .designWidth)
@@ -1102,6 +1333,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                               false;
                                                           isReceivedSelected =
                                                               false;
+                                                          filterText = "All";
                                                           populateDisplayStatementList(
                                                             isAllSelected,
                                                             isSentSelected,
@@ -1150,6 +1382,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                           isSentSelected = true;
                                                           isReceivedSelected =
                                                               false;
+                                                          filterText = "Sent";
                                                           populateDisplayStatementList(
                                                             isAllSelected,
                                                             isSentSelected,
@@ -1203,6 +1436,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                               false;
                                                           isReceivedSelected =
                                                               true;
+                                                          filterText =
+                                                              "Received";
                                                           populateDisplayStatementList(
                                                             isAllSelected,
                                                             isSentSelected,
@@ -1317,6 +1552,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                       isDateOldest = false;
                                                       isAmountHighest = false;
                                                       isAmountLowest = false;
+                                                      sortText = "Latest";
                                                       sortDisplayStatementList(
                                                         isDateNewest,
                                                         isDateOldest,
@@ -1358,6 +1594,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                       isDateOldest = true;
                                                       isAmountHighest = false;
                                                       isAmountLowest = false;
+                                                      sortText = "Oldest";
                                                       sortDisplayStatementList(
                                                         isDateNewest,
                                                         isDateOldest,
@@ -1412,6 +1649,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                       isDateOldest = false;
                                                       isAmountHighest = true;
                                                       isAmountLowest = false;
+                                                      sortText = "Highest";
                                                       sortDisplayStatementList(
                                                         isDateNewest,
                                                         isDateOldest,
@@ -1453,6 +1691,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                       isDateOldest = false;
                                                       isAmountHighest = false;
                                                       isAmountLowest = true;
+                                                      sortText = "Lowest";
                                                       sortDisplayStatementList(
                                                         isDateNewest,
                                                         isDateOldest,

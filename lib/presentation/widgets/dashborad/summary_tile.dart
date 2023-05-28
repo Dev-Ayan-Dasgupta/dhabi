@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 
@@ -14,6 +15,7 @@ class AccountSummaryTile extends StatelessWidget {
     required this.amount,
     required this.subText,
     required this.subImgUrl,
+    this.fontSize,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -23,6 +25,7 @@ class AccountSummaryTile extends StatelessWidget {
   final String amount;
   final String subText;
   final String subImgUrl;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -63,20 +66,20 @@ class AccountSummaryTile extends StatelessWidget {
                 ),
               ],
             ),
-            SizeBox(height: subText.isEmpty ? 41 : 15),
+            SizeBox(height: subText.isEmpty ? 40 : 15),
             RichText(
               text: TextSpan(
                 text: "$currency ",
                 style: TextStyles.primary.copyWith(
                   color: AppColors.primary,
-                  fontSize: (20 / Dimensions.designWidth).w,
+                  fontSize: ((fontSize ?? 20) / Dimensions.designWidth).w,
                 ),
                 children: <TextSpan>[
                   TextSpan(
                     text: amount,
                     style: TextStyles.primary.copyWith(
                         color: AppColors.primary,
-                        fontSize: (20 / Dimensions.designWidth).w,
+                        fontSize: ((fontSize ?? 20) / Dimensions.designWidth).w,
                         fontWeight: FontWeight.w600),
                   ),
                 ],

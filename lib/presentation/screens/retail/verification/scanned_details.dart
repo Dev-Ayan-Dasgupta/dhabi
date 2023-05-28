@@ -88,8 +88,6 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     scannedDetailsArgument =
         ScannedDetailsArgumentModel.fromMap(widget.argument as dynamic ?? {});
 
-    // image1 = scannedDetailsArgument.image1;
-    // img1 = scannedDetailsArgument.img1;
     image1.bitmap =
         base64Encode(base64Decode(storagePhoto!.replaceAll("\n", "")));
     image1.imageType = regula.ImageType.PRINTED;
@@ -379,9 +377,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           );
         }
       }
-    }
-
-    if (completion.action == DocReaderAction.TIMEOUT) {
+    } else if (completion.action == DocReaderAction.TIMEOUT) {
       if (context.mounted) {
         Navigator.pushNamed(
           context,
@@ -410,6 +406,26 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             buttonTextSecondary: "",
             onTapSecondary: () {},
           ).toMap(),
+        );
+      }
+    } else if (completion.action == DocReaderAction.ERROR) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return CustomDialog(
+              svgAssetPath: ImageConstants.warning,
+              title: "Scanning Error",
+              message:
+                  "There was an error while scanning your Emirates ID. Please try again.",
+              actionWidget: GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: "Try Again",
+              ),
+            );
+          },
         );
       }
     }
@@ -624,9 +640,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           );
         }
       }
-    }
-
-    if (completion.action == DocReaderAction.TIMEOUT) {
+    } else if (completion.action == DocReaderAction.TIMEOUT) {
       if (context.mounted) {
         Navigator.pushNamed(
           context,
@@ -655,6 +669,26 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             buttonTextSecondary: "",
             onTapSecondary: () {},
           ).toMap(),
+        );
+      }
+    } else if (completion.action == DocReaderAction.ERROR) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return CustomDialog(
+              svgAssetPath: ImageConstants.warning,
+              title: "Scanning Error",
+              message:
+                  "There was an error while scanning your passport. Please try again.",
+              actionWidget: GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: "Try Again",
+              ),
+            );
+          },
         );
       }
     }

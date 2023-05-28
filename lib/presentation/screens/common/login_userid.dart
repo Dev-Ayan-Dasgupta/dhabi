@@ -123,20 +123,6 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                             ),
                           ),
                         ),
-                        // Padding(
-                        //   padding: EdgeInsets.only(
-                        //       left: (10 / Dimensions.designWidth).w),
-                        //   child: InkWell(
-                        //     onTap: () {
-                        //       _emailController.clear();
-                        //     },
-                        //     child: SvgPicture.asset(
-                        //       ImageConstants.deleteText,
-                        //       width: (17.5 / Dimensions.designWidth).w,
-                        //       height: (17.5 / Dimensions.designWidth).w,
-                        //     ),
-                        //   ),
-                        // ),
                         onChanged: emailValidation,
                       );
                     },
@@ -151,19 +137,6 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
             ),
             Column(
               children: [
-                // SizeBox(
-                //   height: PaddingConstants.bottomPadding +
-                //       MediaQuery.of(context).padding.bottom,
-                // ),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     // log("storageEmail -> $storageEmail");
-                //     // log("storagePassword -> $storagePassword");
-                //     var sessionStateStream = StreamController<SessionState>();
-                //     sessionStateStream.add(SessionState.startListening);
-                //   },
-                //   child: const Text("Test sessionStateStream"),
-                // ),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: buildProceedButton,
                 ),
@@ -257,99 +230,173 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
     if (isEmailValid) {
       return GradientButton(
         onTap: () async {
-          isLoading = true;
-          final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-          showButtonBloc.add(ShowButtonEvent(show: isLoading));
+          if (!isLoading) {
+            isLoading = true;
+            final ShowButtonBloc showButtonBloc =
+                context.read<ShowButtonBloc>();
+            showButtonBloc.add(ShowButtonEvent(show: isLoading));
 
-          await storage.write(
-              key: "emailAddress", value: _emailController.text);
-          storageEmail = await storage.read(key: "emailAddress");
+            await storage.write(
+                key: "emailAddress", value: _emailController.text);
+            storageEmail = await storage.read(key: "emailAddress");
 
-          // check if single cif exists
-          var singleCifResult = await MapCustomerSingleCif.mapCustomerSingleCif(
-              {"emailId": _emailController.text});
-          log("singleCifResult -> $singleCifResult");
+            // check if single cif exists
+            var singleCifResult =
+                await MapCustomerSingleCif.mapCustomerSingleCif(
+                    {"emailId": _emailController.text});
+            log("singleCifResult -> $singleCifResult");
 
-          // if only one cif
-          if (singleCifResult["hasSingleCIF"]) {
-            if (singleCifResult["hasValidCIF"]) {
+            // if only one cif
+            if (singleCifResult["hasSingleCIF"]) {
+              if (singleCifResult["hasValidCIF"]) {
+                // if (singleCifResult["userType"] == 2) {
+                //   var getCustomerDetailsResponse =
+                //       await MapCustomerDetails.mapCustomerDetails(tokenCP ?? "");
+                //   log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                //   List cifDetails = getCustomerDetailsResponse["cifDetails"];
+                //   if (cifDetails[0]["isCompanyRegistered"]) {
+                //     if (context.mounted) {
+                //       Navigator.pushNamed(
+                //         context,
+                //         Routes.loginPassword,
+                //         arguments: LoginPasswordArgumentModel(
+                //           emailId: _emailController.text,
+                //           userId: 0,
+                //           userTypeId: singleCifResult["userType"],
+                //           companyId: singleCifResult["cid"],
+                //         ).toMap(),
+                //       );
+                //     }
+                //   } else {
+                //     if (context.mounted) {
+                //       showDialog(
+                //         context: context,
+                //         barrierDismissible: false,
+                //         builder: (context) {
+                //           return CustomDialog(
+                //             svgAssetPath: ImageConstants.warning,
+                //             title: "Application approval pending",
+                //             message:
+                //                 "You already have a registration pending. Please contact Dhabi support.",
+                //             auxWidget: GradientButton(
+                //               onTap: () async {
+                //                 if (context.mounted) {
+                //                   Navigator.pop(context);
+                //                   Navigator.pushReplacementNamed(
+                //                     context,
+                //                     Routes.onboarding,
+                //                     arguments: OnboardingArgumentModel(
+                //                       isInitial: true,
+                //                     ).toMap(),
+                //                   );
+                //                 }
+                //               },
+                //               text: labels[347]["labelText"],
+                //             ),
+                //             actionWidget: SolidButton(
+                //               onTap: () {
+                //                 Navigator.pop(context);
+                //               },
+                //               text: labels[166]["labelText"],
+                //               color: AppColors.primaryBright17,
+                //               fontColor: AppColors.primary,
+                //             ),
+                //           );
+                //         },
+                //       );
+                //     }
+                //   }
+                // } else {
+                //   if (context.mounted) {
+                //     Navigator.pushNamed(
+                //       context,
+                //       Routes.loginPassword,
+                //       arguments: LoginPasswordArgumentModel(
+                //         emailId: _emailController.text,
+                //         userId: 0,
+                //         userTypeId: singleCifResult["userType"],
+                //         companyId: singleCifResult["cid"],
+                //       ).toMap(),
+                //     );
+                //   }
+                // }
+                if (context.mounted) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.loginPassword,
+                    arguments: LoginPasswordArgumentModel(
+                      emailId: _emailController.text,
+                      userId: 0,
+                      userTypeId: singleCifResult["userType"],
+                      companyId: singleCifResult["cid"],
+                    ).toMap(),
+                  );
+                }
+              } else {
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return CustomDialog(
+                        svgAssetPath: ImageConstants.warning,
+                        title: "Application approval pending",
+                        message:
+                            "You already have a registration pending. Please contact Dhabi support.",
+                        auxWidget: GradientButton(
+                          onTap: () async {
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.onboarding,
+                                arguments: OnboardingArgumentModel(
+                                  isInitial: true,
+                                ).toMap(),
+                              );
+                            }
+                          },
+                          text: labels[347]["labelText"],
+                        ),
+                        actionWidget: SolidButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          text: labels[166]["labelText"],
+                          color: AppColors.primaryBright17,
+                          fontColor: AppColors.primary,
+                        ),
+                      );
+                    },
+                  );
+                }
+              }
+            } else {
+              // if (singleCifResult["hasValidCIF"]) {
+
+              // } else {
+              //   promptWrongCredentials();
+              // }
+              var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
+                  {"emailID": _emailController.text});
+              log("sendEmailOtpResult -> $sendEmailOtpResult");
               if (context.mounted) {
                 Navigator.pushNamed(
                   context,
-                  Routes.loginPassword,
-                  arguments: LoginPasswordArgumentModel(
-                    emailId: _emailController.text,
-                    userId: 0,
-                    userTypeId: singleCifResult["userType"],
-                    companyId: singleCifResult["cid"],
+                  Routes.otp,
+                  arguments: OTPArgumentModel(
+                    emailOrPhone: _emailController.text,
+                    isEmail: true,
+                    isBusiness: false,
+                    isInitial: false,
+                    isLogin: true,
                   ).toMap(),
                 );
               }
-            } else {
-              // TODO: Display the pop-up as done in select account type for business
-              if (context.mounted) {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) {
-                    return CustomDialog(
-                      svgAssetPath: ImageConstants.warning,
-                      title: "Application approval pending",
-                      message:
-                          "You already have a registration pending. Please contact Dhabi support.",
-                      auxWidget: GradientButton(
-                        onTap: () async {
-                          if (context.mounted) {
-                            Navigator.pop(context);
-                            Navigator.pushReplacementNamed(
-                              context,
-                              Routes.onboarding,
-                              arguments: OnboardingArgumentModel(
-                                isInitial: true,
-                              ).toMap(),
-                            );
-                          }
-                        },
-                        text: labels[347]["labelText"],
-                      ),
-                      actionWidget: SolidButton(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        text: labels[166]["labelText"],
-                        color: AppColors.primaryBright17,
-                        fontColor: AppColors.primary,
-                      ),
-                    );
-                  },
-                );
-              }
             }
-          } else {
-            // if (singleCifResult["hasValidCIF"]) {
-
-            // } else {
-            //   promptWrongCredentials();
-            // }
-            var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
-                {"emailID": _emailController.text});
-            log("sendEmailOtpResult -> $sendEmailOtpResult");
-            if (context.mounted) {
-              Navigator.pushNamed(
-                context,
-                Routes.otp,
-                arguments: OTPArgumentModel(
-                  emailOrPhone: _emailController.text,
-                  isEmail: true,
-                  isBusiness: false,
-                  isInitial: false,
-                  isLogin: true,
-                ).toMap(),
-              );
-            }
+            isLoading = false;
+            showButtonBloc.add(ShowButtonEvent(show: isLoading));
           }
-          isLoading = false;
-          showButtonBloc.add(ShowButtonEvent(show: isLoading));
         },
         text: labels[31]["labelText"],
         auxWidget: isLoading ? const LoaderRow() : const SizeBox(),

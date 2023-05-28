@@ -238,9 +238,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           );
         }
       }
-    }
-
-    if (completion.action == DocReaderAction.TIMEOUT) {
+    } else if (completion.action == DocReaderAction.TIMEOUT) {
       if (context.mounted) {
         Navigator.pushNamed(
           context,
@@ -269,6 +267,26 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
             buttonTextSecondary: "",
             onTapSecondary: () {},
           ).toMap(),
+        );
+      }
+    } else if (completion.action == DocReaderAction.ERROR) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return CustomDialog(
+              svgAssetPath: ImageConstants.warning,
+              title: "Scanning Error",
+              message:
+                  "There was an error while scanning your Emirates ID. Please try again.",
+              actionWidget: GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: "Try Again",
+              ),
+            );
+          },
         );
       }
     }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/arguments/tax_crs.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
@@ -1707,7 +1708,13 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                 log("storageInternationalTaxes -> $storageInternationalTaxes");
 
                 if (context.mounted) {
-                  Navigator.pushNamed(context, Routes.applicationAccount);
+                  Navigator.pushNamed(
+                    context,
+                    Routes.applicationAccount,
+                    arguments: ApplicationAccountArgumentModel(
+                      isInitial: true,
+                    ).toMap(),
+                  );
                 }
                 isUploading = false;
                 showButtonBloc.add(ShowButtonEvent(show: isUploading));

@@ -49,7 +49,6 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
-    // TODO: Remove Timeout condition for this screen
     if (completion.action == DocReaderAction.COMPLETE) {
       DocumentReaderResults? results = completion.results;
       String? firstName =
@@ -262,9 +261,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           );
         }
       }
-    }
-
-    if (completion.action == DocReaderAction.TIMEOUT) {
+    } else if (completion.action == DocReaderAction.TIMEOUT) {
       if (context.mounted) {
         Navigator.pushNamed(
           context,
@@ -293,6 +290,26 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             buttonTextSecondary: "",
             onTapSecondary: () {},
           ).toMap(),
+        );
+      }
+    } else if (completion.action == DocReaderAction.ERROR) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return CustomDialog(
+              svgAssetPath: ImageConstants.warning,
+              title: "Scanning Error",
+              message:
+                  "There was an error while scanning your passport. Please try again.",
+              actionWidget: GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: "Try Again",
+              ),
+            );
+          },
         );
       }
     }

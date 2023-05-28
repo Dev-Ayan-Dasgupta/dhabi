@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/tax_crs.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:flutter/material.dart';
@@ -160,7 +161,12 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                           onTap: () async {
                             if (isEmirateID || isUSCitizen) {
                               Navigator.pushNamed(
-                                  context, Routes.applicationAccount);
+                                context,
+                                Routes.applicationAccount,
+                                arguments: ApplicationAccountArgumentModel(
+                                  isInitial: true,
+                                ).toMap(),
+                              );
                             } else {
                               Navigator.pushNamed(
                                 context,

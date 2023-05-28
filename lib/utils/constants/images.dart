@@ -90,6 +90,9 @@ class ImageConstants {
   static const String download = "${iconsRoot}download.svg";
   static const String pyramid = "${iconsRoot}pyramid.svg";
   static const String redCross = "${iconsRoot}red_cross.svg";
+  static const String addAccount = "${iconsRoot}add_account.png";
+  static const String filter = "${iconsRoot}filter.svg";
+  static const String sort = "${iconsRoot}sort.svg";
 
   // * BANNERS
   static const String banner3 = "${bannersRoot}banner3.png";
