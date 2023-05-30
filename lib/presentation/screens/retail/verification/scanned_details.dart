@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_face_api/face_api.dart' as regula;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -53,6 +54,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
   Image img2 = Image.asset(ImageConstants.eidFront);
 
   bool isFaceScanning = false;
+
+  int i = 5;
 
   @override
   void initState() {
@@ -165,10 +168,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
   void initializeFaceSdk() {
     regula.FaceSDK.init().then((json) {
       var response = jsonDecode(json);
-      if (!response["success"]) {
-        // print("Init failed: ");
-        // print(json);
-      }
+      if (!response["success"]) {}
     });
     const EventChannel('flutter_face_api/event/video_encoder_completion')
         .receiveBroadcastStream()
@@ -223,18 +223,53 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
-        setState(() {
-          image1.bitmap =
-              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
-          image1.imageType = regula.ImageType.PRINTED;
-          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
-        });
+        log("photoString before -> $photo");
+        image1.bitmap = base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+        image1.imageType = regula.ImageType.PRINTED;
+        img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
+
+        log("User photo Size before compress -> ${base64Decode(photo!.replaceAll("\n", "")).lengthInBytes / 1024} KB");
+        var compressedPhoto = await FlutterImageCompress.compressWithList(
+          base64Decode(photo!.replaceAll("\n", "")),
+          quality: 95,
+        );
+
+        photo = base64Encode(compressedPhoto);
+        while (compressedPhoto.lengthInBytes / 1024 > 100) {
+          compressedPhoto = await FlutterImageCompress.compressWithList(
+            base64Decode(photo!.replaceAll("\n", "")),
+            quality: 95 - i,
+          );
+          photo = base64Encode(compressedPhoto);
+        }
+        i = 5;
+
+        log("User photo Size after compress -> ${compressedPhoto.lengthInBytes / 1024} KB");
+        img1 = Image.memory(compressedPhoto);
+
+        log("photoString after -> $photo");
       }
       await storage.write(key: "photo", value: photo);
       storagePhoto = await storage.read(key: "photo");
 
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
+      var compressedDocPhoto = await FlutterImageCompress.compressWithList(
+        base64Decode(docPhoto ?? ""),
+        quality: 95,
+      );
+      docPhoto = base64Encode(compressedDocPhoto);
+      while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
+        compressedDocPhoto = await FlutterImageCompress.compressWithList(
+          base64Decode(docPhoto ?? ""),
+          quality: 95 - i,
+        );
+        docPhoto = base64Encode(compressedDocPhoto);
+      }
+      i = 5;
+
+      log("Size after compress DocPhoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
+
       await storage.write(key: "docPhoto", value: docPhoto);
       storageDocPhoto = await storage.read(key: "docPhoto");
 
@@ -371,8 +406,6 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               gender: gender,
               photo: photo,
               docPhoto: docPhoto,
-              // img1: img1,
-              // image1: image1,
             ).toMap(),
           );
         }
@@ -487,18 +520,52 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
-        setState(() {
-          image1.bitmap =
-              base64Encode(base64Decode(photo!.replaceAll("\n", "")));
-          image1.imageType = regula.ImageType.PRINTED;
-          img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
-        });
+        log("photoString before -> $photo");
+        image1.bitmap = base64Encode(base64Decode(photo!.replaceAll("\n", "")));
+        image1.imageType = regula.ImageType.PRINTED;
+        img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
+
+        log("Size before compress -> ${base64Decode(photo!.replaceAll("\n", "")).lengthInBytes}");
+        var compressedPhoto = await FlutterImageCompress.compressWithList(
+          base64Decode(photo!.replaceAll("\n", "")),
+          quality: 95,
+        );
+        photo = base64Encode(compressedPhoto);
+        while (compressedPhoto.lengthInBytes / 1024 > 100) {
+          compressedPhoto = await FlutterImageCompress.compressWithList(
+            base64Decode(photo!.replaceAll("\n", "")),
+            quality: 95 - i,
+          );
+          photo = base64Encode(compressedPhoto);
+        }
+        i = 5;
+
+        log("User Photo Size after compress -> ${compressedPhoto.lengthInBytes / 1024} KB");
+        img1 = Image.memory(compressedPhoto);
+
+        log("photoString after -> $photo");
       }
       await storage.write(key: "photo", value: photo);
       storagePhoto = await storage.read(key: "photo");
 
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
+      var compressedDocPhoto = await FlutterImageCompress.compressWithList(
+        base64Decode(docPhoto ?? ""),
+        quality: 95,
+      );
+      docPhoto = base64Encode(compressedDocPhoto);
+      while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
+        compressedDocPhoto = await FlutterImageCompress.compressWithList(
+          base64Decode(docPhoto ?? ""),
+          quality: 95 - i,
+        );
+        docPhoto = base64Encode(compressedDocPhoto);
+      }
+      i = 5;
+
+      log("Size after compress DocPhoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
+
       await storage.write(key: "docPhoto", value: docPhoto);
       storageDocPhoto = await storage.read(key: "docPhoto");
 
@@ -634,8 +701,6 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               gender: gender,
               photo: photo,
               docPhoto: docPhoto,
-              // img1: img1,
-              // image1: image1,
             ).toMap(),
           );
         }
@@ -703,6 +768,28 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     var value = await regula.FaceSDK.startLiveness();
     var result = regula.LivenessResponse.fromJson(json.decode(value));
     selfiePhoto = result!.bitmap!.replaceAll("\n", "");
+
+    log("Selfie Photo before -> $selfiePhoto");
+    log("Selfie size before compress -> ${base64Decode(selfiePhoto).lengthInBytes}");
+    var compressedSelfie = await FlutterImageCompress.compressWithList(
+      base64Decode(selfiePhoto),
+      quality: 95,
+    );
+    selfiePhoto = base64Encode(compressedSelfie);
+
+    while (compressedSelfie.lengthInBytes / 1024 > 100) {
+      compressedSelfie = await FlutterImageCompress.compressWithList(
+        base64Decode(selfiePhoto),
+        quality: 95 - i,
+      );
+      selfiePhoto = base64Encode(compressedSelfie);
+    }
+    i = 5;
+
+    log("Selfie size after compress -> ${compressedSelfie.lengthInBytes / 1024} KB");
+
+    log("Selfie photo after -> $selfiePhoto");
+
     await storage.write(key: "selfiePhoto", value: selfiePhoto);
     storageSelfiePhoto = await storage.read(key: "selfiePhoto");
     image2.bitmap = base64Encode(base64Decode(selfiePhoto));

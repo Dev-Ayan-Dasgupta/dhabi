@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_face_api/face_api.dart' as regula;
 import 'package:intl/intl.dart';
@@ -32,6 +33,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   Image img1 = Image.asset(ImageConstants.passport);
 
   bool isScanning = false;
+
+  int i = 5;
 
   @override
   void initState() {
@@ -111,15 +114,56 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       photo =
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
       if (photo != null) {
+        log("photoString before -> $photo");
         image1.bitmap = base64Encode(base64Decode(photo!.replaceAll("\n", "")));
         image1.imageType = regula.ImageType.PRINTED;
         img1 = Image.memory(base64Decode(photo!.replaceAll("\n", "")));
+
+        log("User photo Size before compress -> ${base64Decode(photo!.replaceAll("\n", "")).lengthInBytes / 1024} KB");
+        var compressedPhoto = await FlutterImageCompress.compressWithList(
+          base64Decode(photo!.replaceAll("\n", "")),
+          quality: 95,
+        );
+        photo = base64Encode(compressedPhoto);
+        while (compressedPhoto.lengthInBytes / 1024 > 100) {
+          log("Compressing user photo");
+          compressedPhoto = await FlutterImageCompress.compressWithList(
+            base64Decode(photo!.replaceAll("\n", "")),
+            quality: 95 - i,
+          );
+          photo = base64Encode(compressedPhoto);
+        }
+        i = 5;
+
+        log("User photo Size after compress -> ${compressedPhoto.lengthInBytes / 1024} KB");
+        img1 = Image.memory(compressedPhoto);
+
+        log("photoString after -> $photo");
       }
       await storage.write(key: "photo", value: photo);
       storagePhoto = await storage.read(key: "photo");
 
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
+      log("docPhoto -> $docPhoto");
+      var compressedDocPhoto = await FlutterImageCompress.compressWithList(
+        base64Decode(docPhoto ?? ""),
+        quality: 95,
+      );
+      docPhoto = base64Encode(compressedDocPhoto);
+      while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
+        compressedDocPhoto = await FlutterImageCompress.compressWithList(
+          base64Decode(docPhoto ?? ""),
+          quality: 95 - i,
+        );
+        docPhoto = base64Encode(compressedDocPhoto);
+        log("Size after compress docphoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
+        i += 5;
+      }
+      i = 5;
+
+      log("Size after compress docphoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
+
       await storage.write(key: "docPhoto", value: docPhoto);
       storageDocPhoto = await storage.read(key: "docPhoto");
 

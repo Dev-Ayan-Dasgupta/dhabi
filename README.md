@@ -8,3 +8,4 @@ Digital Banking Application for Dhabi
 - Implemented login persistence of retail onboarding
 - Made UI modifications of download statement screen
 - Implemented v2 APIs for upload EID/Passport
+- Implemented image compression on passport/eid, document, selfie
