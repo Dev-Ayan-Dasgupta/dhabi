@@ -264,74 +264,78 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       await storage.write(key: "password", value: _passwordController.text);
       storagePassword = await storage.read(key: "password");
       log("storagePassword -> $storagePassword");
-      if (context.mounted) {
-        if (loginPasswordArgument.userTypeId == 1) {
-          await storage.write(key: "retailLoggedIn", value: true.toString());
-          storageRetailLoggedIn =
-              await storage.read(key: "retailLoggedIn") == "true";
+      await persistOnboardingState(result["onboardingState"]);
+      if (result["onboardingState"] == 5) {
+        if (context.mounted) {
+          if (loginPasswordArgument.userTypeId == 1) {
+            await storage.write(key: "retailLoggedIn", value: true.toString());
+            storageRetailLoggedIn =
+                await storage.read(key: "retailLoggedIn") == "true";
 
-          if (context.mounted) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.retailDashboard,
-              (route) => false,
-              arguments: RetailDashboardArgumentModel(
-                imgUrl: "",
-                name: result["customerName"],
-                isFirst: storageIsFirstLogin == true ? false : true,
-              ).toMap(),
-            );
-          }
-        } else {
-          if (storageCif == null || storageCif == "null") {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return CustomDialog(
-                  svgAssetPath: ImageConstants.warning,
-                  title: "Application approval pending",
-                  message:
-                      "You already have a registration pending. Please contact Dhabi support.",
-                  auxWidget: GradientButton(
-                    onTap: () async {
-                      if (context.mounted) {
-                        Navigator.pop(context);
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.onboarding,
-                          arguments: OnboardingArgumentModel(
-                            isInitial: true,
-                          ).toMap(),
-                        );
-                      }
-                    },
-                    text: labels[347]["labelText"],
-                  ),
-                  actionWidget: SolidButton(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    text: labels[166]["labelText"],
-                    color: AppColors.primaryBright17,
-                    fontColor: AppColors.primary,
-                  ),
-                );
-              },
-            );
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.retailDashboard,
+                (route) => false,
+                arguments: RetailDashboardArgumentModel(
+                  imgUrl: "",
+                  name: result["customerName"],
+                  isFirst: storageIsFirstLogin == true ? false : true,
+                ).toMap(),
+              );
+            }
           } else {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.businessDashboard,
-              (route) => false,
-              arguments: RetailDashboardArgumentModel(
-                imgUrl: "",
-                name: "",
-                isFirst: storageIsFirstLogin == true ? false : true,
-              ).toMap(),
-            );
+            if (storageCif == null || storageCif == "null") {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return CustomDialog(
+                    svgAssetPath: ImageConstants.warning,
+                    title: "Application approval pending",
+                    message:
+                        "You already have a registration pending. Please contact Dhabi support.",
+                    auxWidget: GradientButton(
+                      onTap: () async {
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          Navigator.pushReplacementNamed(
+                            context,
+                            Routes.onboarding,
+                            arguments: OnboardingArgumentModel(
+                              isInitial: true,
+                            ).toMap(),
+                          );
+                        }
+                      },
+                      text: labels[347]["labelText"],
+                    ),
+                    actionWidget: SolidButton(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      text: labels[166]["labelText"],
+                      color: AppColors.primaryBright17,
+                      fontColor: AppColors.primary,
+                    ),
+                  );
+                },
+              );
+            } else {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.businessDashboard,
+                (route) => false,
+                arguments: RetailDashboardArgumentModel(
+                  imgUrl: "",
+                  name: "",
+                  isFirst: storageIsFirstLogin == true ? false : true,
+                ).toMap(),
+              );
+            }
           }
         }
       }
+
       await storage.write(key: "cif", value: cif.toString());
       storageCif = await storage.read(key: "cif");
       log("storageCif -> $storageCif");
@@ -419,103 +423,108 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
             builder: (context, state) {
               return GradientButton(
                 onTap: () async {
-                  isLoading = true;
-                  final ShowButtonBloc showButtonBloc =
-                      context.read<ShowButtonBloc>();
-                  showButtonBloc.add(ShowButtonEvent(show: isLoading));
-                  var result = await MapLogin.mapLogin({
-                    "emailId": loginPasswordArgument.emailId,
-                    "userTypeId": loginPasswordArgument.userTypeId,
-                    "userId": loginPasswordArgument.userId,
-                    "companyId": loginPasswordArgument.companyId,
-                    "password": _passwordController.text,
-                    "deviceId": deviceId,
-                    "registerDevice": true,
-                    "deviceName": deviceName,
-                    "deviceType": deviceType,
-                    "appVersion": appVersion
-                  });
-                  log("Login API Response -> $result");
-                  token = result["token"];
-                  log("token -> $token");
-                  if (result["success"]) {
-                    await storage.write(
-                        key: "password", value: _passwordController.text);
-                    storagePassword = await storage.read(key: "password");
-                    log("storagePassword -> $storagePassword");
-                    await storage.write(
-                        key: "newInstall", value: true.toString());
-                    storageIsNotNewInstall =
-                        (await storage.read(key: "newInstall")) == "true";
-                    customerName = result["customerName"];
-                    await storage.write(
-                        key: "customerName", value: customerName);
-                    storageCustomerName =
-                        await storage.read(key: "customerName");
-                    if (context.mounted) {
-                      if (loginPasswordArgument.userTypeId == 1) {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          Routes.retailDashboard,
-                          (route) => false,
-                          arguments: RetailDashboardArgumentModel(
-                            imgUrl: "",
-                            name: result["customerName"],
-                            isFirst: storageIsFirstLogin == true ? false : true,
-                          ).toMap(),
-                        );
-                      } else {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          Routes.businessDashboard,
-                          (route) => false,
-                          arguments: RetailDashboardArgumentModel(
-                            imgUrl: "",
-                            name: "",
-                            isFirst: storageIsFirstLogin == true ? false : true,
-                          ).toMap(),
-                        );
+                  if (!isLoading) {
+                    isLoading = true;
+                    final ShowButtonBloc showButtonBloc =
+                        context.read<ShowButtonBloc>();
+                    showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                    var result = await MapLogin.mapLogin({
+                      "emailId": loginPasswordArgument.emailId,
+                      "userTypeId": loginPasswordArgument.userTypeId,
+                      "userId": loginPasswordArgument.userId,
+                      "companyId": loginPasswordArgument.companyId,
+                      "password": _passwordController.text,
+                      "deviceId": deviceId,
+                      "registerDevice": true,
+                      "deviceName": deviceName,
+                      "deviceType": deviceType,
+                      "appVersion": appVersion
+                    });
+                    log("Login API Response -> $result");
+                    token = result["token"];
+                    log("token -> $token");
+                    if (result["success"]) {
+                      persistOnboardingState(result["onboardingState"]);
+                      await storage.write(
+                          key: "password", value: _passwordController.text);
+                      storagePassword = await storage.read(key: "password");
+                      log("storagePassword -> $storagePassword");
+                      await storage.write(
+                          key: "newInstall", value: true.toString());
+                      storageIsNotNewInstall =
+                          (await storage.read(key: "newInstall")) == "true";
+                      customerName = result["customerName"];
+                      await storage.write(
+                          key: "customerName", value: customerName);
+                      storageCustomerName =
+                          await storage.read(key: "customerName");
+                      if (context.mounted) {
+                        if (loginPasswordArgument.userTypeId == 1) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.retailDashboard,
+                            (route) => false,
+                            arguments: RetailDashboardArgumentModel(
+                              imgUrl: "",
+                              name: result["customerName"],
+                              isFirst:
+                                  storageIsFirstLogin == true ? false : true,
+                            ).toMap(),
+                          );
+                        } else {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.businessDashboard,
+                            (route) => false,
+                            arguments: RetailDashboardArgumentModel(
+                              imgUrl: "",
+                              name: "",
+                              isFirst:
+                                  storageIsFirstLogin == true ? false : true,
+                            ).toMap(),
+                          );
+                        }
                       }
-                    }
 
-                    await storage.write(
-                        key: "isFirstLogin", value: true.toString());
-                    storageIsFirstLogin =
-                        (await storage.read(key: "isFirstLogin")) == "true";
-                  } else {
-                    log("Reason Code -> ${result["reasonCode"]}");
-                    if (context.mounted) {
-                      switch (result["reasonCode"]) {
-                        case 1:
-                          // promptWrongCredentials();
-                          break;
-                        case 2:
-                          promptWrongCredentials();
-                          break;
-                        case 3:
-                          promptWrongCredentials();
-                          break;
-                        case 4:
-                          promptWrongCredentials();
-                          break;
-                        case 5:
-                          promptWrongCredentials();
-                          break;
-                        case 6:
-                          promptKycExpired();
-                          break;
-                        case 7:
-                          promptVerifySession();
-                          break;
-                        case 9:
-                          promptMaxRetries();
-                          break;
-                        default:
+                      await storage.write(
+                          key: "isFirstLogin", value: true.toString());
+                      storageIsFirstLogin =
+                          (await storage.read(key: "isFirstLogin")) == "true";
+                    } else {
+                      log("Reason Code -> ${result["reasonCode"]}");
+                      if (context.mounted) {
+                        switch (result["reasonCode"]) {
+                          case 1:
+                            // promptWrongCredentials();
+                            break;
+                          case 2:
+                            promptWrongCredentials();
+                            break;
+                          case 3:
+                            promptWrongCredentials();
+                            break;
+                          case 4:
+                            promptWrongCredentials();
+                            break;
+                          case 5:
+                            promptWrongCredentials();
+                            break;
+                          case 6:
+                            promptKycExpired();
+                            break;
+                          case 7:
+                            promptVerifySession();
+                            break;
+                          case 9:
+                            promptMaxRetries();
+                            break;
+                          default:
+                        }
                       }
                     }
+                    isLoading = false;
+                    showButtonBloc.add(ShowButtonEvent(show: isLoading));
                   }
-                  isLoading = false;
-                  showButtonBloc.add(ShowButtonEvent(show: isLoading));
                 },
                 text: labels[31]["labelText"],
                 auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
@@ -622,23 +631,98 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
   }
 
   void onForgotEmailPwd() async {
-    // Navigator.pushNamed(context, Routes.registration,
-    //     arguments: RegistrationArgumentModel(isInitial: false).toMap());
-    var result =
-        await MapSendEmailOtp.mapSendEmailOtp({"emailID": storageEmail});
-    log("Send Email OTP Response -> $result");
+    if (!isLoading) {
+      isLoading = true;
+      var result =
+          await MapSendEmailOtp.mapSendEmailOtp({"emailID": storageEmail});
+      log("Send Email OTP Response -> $result");
 
-    if (result["success"]) {
+      if (result["success"]) {
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.otp,
+            arguments: OTPArgumentModel(
+              emailOrPhone: storageEmail ?? "",
+              isEmail: true,
+              isBusiness: false,
+              isInitial: false,
+              isLogin: false,
+            ).toMap(),
+          );
+        }
+      }
+      isLoading = false;
+    }
+  }
+
+  Future<void> persistOnboardingState(int state) async {
+    if (state == 1) {
+      await storage.write(key: "stepsCompleted", value: 2.toString());
+      storageStepsCompleted =
+          int.parse(await storage.read(key: "stepsCompleted") ?? "2");
+      log("storageStepsCompleted -> $storageStepsCompleted");
+      if (context.mounted) {
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.retailOnboardingStatus,
+          arguments: OnboardingStatusArgumentModel(
+            stepsCompleted: 1,
+            isFatca: false,
+            isPassport: false,
+            isRetail: true,
+          ).toMap(),
+        );
+      }
+    } else if (state == 2 || state == 3 || state == 7) {
+      await storage.write(key: "stepsCompleted", value: 4.toString());
+      storageStepsCompleted =
+          int.parse(await storage.read(key: "stepsCompleted") ?? "4");
+      log("storageStepsCompleted -> $storageStepsCompleted");
+      if (context.mounted) {
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.retailOnboardingStatus,
+          arguments: OnboardingStatusArgumentModel(
+            stepsCompleted: 2,
+            isFatca: false,
+            isPassport: false,
+            isRetail: true,
+          ).toMap(),
+        );
+      }
+    } else if (state == 6) {
+      await storage.write(key: "stepsCompleted", value: 9.toString());
+      storageStepsCompleted =
+          int.parse(await storage.read(key: "stepsCompleted") ?? "9");
+      log("storageStepsCompleted -> $storageStepsCompleted");
+      if (context.mounted) {
+        log("Testing for step 3");
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.retailOnboardingStatus,
+          arguments: OnboardingStatusArgumentModel(
+            stepsCompleted: 3,
+            isFatca: false,
+            isPassport: false,
+            isRetail: true,
+          ).toMap(),
+        );
+      }
+    } else if (state == 4) {
+      await storage.write(key: "stepsCompleted", value: 10.toString());
+      storageStepsCompleted =
+          int.parse(await storage.read(key: "stepsCompleted") ?? "10");
+      log("storageStepsCompleted -> $storageStepsCompleted");
       if (context.mounted) {
         Navigator.pushNamed(
           context,
-          Routes.otp,
-          arguments: OTPArgumentModel(
-            emailOrPhone: storageEmail ?? "",
-            isEmail: true,
-            isBusiness: false,
-            isInitial: false,
-            isLogin: false,
+          Routes.retailOnboardingStatus,
+          arguments: OnboardingStatusArgumentModel(
+            stepsCompleted: 4,
+            isFatca: false,
+            isPassport: false,
+            isRetail: true,
           ).toMap(),
         );
       }

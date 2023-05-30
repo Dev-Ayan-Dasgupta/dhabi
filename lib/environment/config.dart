@@ -202,6 +202,11 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['UPLOAD_PASSPORT'] ?? "";
   }
 
+  @override
+  String get createCustomer {
+    return dotenv.env['CREATE_CUSTOMER'] ?? "";
+  }
+
   // ? Corporate Onboarding APIs
 
   @override

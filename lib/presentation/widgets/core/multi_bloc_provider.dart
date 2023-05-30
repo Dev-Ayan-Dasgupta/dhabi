@@ -121,7 +121,7 @@ class _CustomMultiBlocProviderState extends State<CustomMultiBlocProvider> {
               );
               _initializeTimer();
             },
-            text: "Login",
+            text: labels[205]["labelText"],
           ),
         );
       },

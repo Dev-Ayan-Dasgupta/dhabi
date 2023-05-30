@@ -2,6 +2,9 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (22)
+## Release notes - 1.0.0 (23)
 
-- Implemented selection of subaccount for statement and add suffix account
+- Fixed UI design bug as pointed out by Tuqa for add suffix account
+- Implemented login persistence of retail onboarding
+- Made UI modifications of download statement screen
+- Implemented v2 APIs for upload EID/Passport

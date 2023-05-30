@@ -187,14 +187,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             builder: (context, state) {
                               return GradientButton(
                                 onTap: () async {
-                                  // Navigator.pushNamed(
-                                  //   context,
-                                  //   Routes.registration,
-                                  //   arguments: RegistrationArgumentModel(
-                                  //     isInitial: true,
-                                  //   ).toMap(),
-                                  // );
-
                                   log("storageStepsCompleted -> $storageStepsCompleted");
                                   switch (storageStepsCompleted) {
                                     case 0:
@@ -371,6 +363,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               Navigator.pushNamed(
                                   context, Routes.exploreDashboard);
                               // Navigator.pushNamed(context, Routes.loginUserId);
+                              // Navigator.pushNamed(
+                              //   context,
+                              //   Routes.applicationAccount,
+                              //   arguments: ApplicationAccountArgumentModel(
+                              //           isInitial: true)
+                              //       .toMap(),
+                              // );
                             },
                             text: labels[208]["labelText"],
                             color: const Color.fromRGBO(85, 85, 85, 0.2),

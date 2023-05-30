@@ -1167,7 +1167,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                             .copyWith(
                                                           color:
                                                               AppColors.dark50,
-                                                          fontSize: (16 /
+                                                          fontSize: (14 /
                                                                   Dimensions
                                                                       .designWidth)
                                                               .w,
@@ -1180,7 +1180,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                             .copyWith(
                                                           color:
                                                               AppColors.primary,
-                                                          fontSize: (16 /
+                                                          fontSize: (14 /
                                                                   Dimensions
                                                                       .designWidth)
                                                               .w,
@@ -1245,7 +1245,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                             .copyWith(
                                                           color:
                                                               AppColors.primary,
-                                                          fontSize: (16 /
+                                                          fontSize: (14 /
                                                                   Dimensions
                                                                       .designWidth)
                                                               .w,
@@ -1301,7 +1301,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                             .copyWith(
                                                           color:
                                                               AppColors.primary,
-                                                          fontSize: (16 /
+                                                          fontSize: (14 /
                                                                   Dimensions
                                                                       .designWidth)
                                                               .w,
@@ -1696,6 +1696,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                         isAmountHighest,
                                                         isAmountLowest,
                                                       );
+                                                      isShowSort = false;
                                                       showButtonBloc.add(
                                                         ShowButtonEvent(
                                                           show: isDateNewest &&
@@ -1738,6 +1739,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                         isAmountHighest,
                                                         isAmountLowest,
                                                       );
+                                                      isShowSort = false;
                                                       showButtonBloc.add(
                                                         ShowButtonEvent(
                                                           show: isDateNewest &&
@@ -1793,6 +1795,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                         isAmountHighest,
                                                         isAmountLowest,
                                                       );
+                                                      isShowSort = false;
                                                       showButtonBloc.add(
                                                         ShowButtonEvent(
                                                           show: isDateNewest &&
@@ -1835,6 +1838,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                         isAmountHighest,
                                                         isAmountLowest,
                                                       );
+                                                      isShowSort = false;
                                                       showButtonBloc.add(
                                                         ShowButtonEvent(
                                                           show: isDateNewest &&
@@ -1848,21 +1852,21 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                 ],
                                               ),
                                             ),
-                                            GradientButton(
-                                              onTap: () {
-                                                final ShowButtonBloc
-                                                    showButtonBloc = context
-                                                        .read<ShowButtonBloc>();
-                                                isShowSort = false;
-                                                showButtonBloc.add(
-                                                  ShowButtonEvent(
-                                                    show: isShowFilter,
-                                                  ),
-                                                );
-                                              },
-                                              text:
-                                                  "Show ${displayStatementList.length} transactions",
-                                            ),
+                                            // GradientButton(
+                                            //   onTap: () {
+                                            //     final ShowButtonBloc
+                                            //         showButtonBloc = context
+                                            //             .read<ShowButtonBloc>();
+                                            //     isShowSort = false;
+                                            //     showButtonBloc.add(
+                                            //       ShowButtonEvent(
+                                            //         show: isShowFilter,
+                                            //       ),
+                                            //     );
+                                            //   },
+                                            //   text:
+                                            //       "Show ${displayStatementList.length} transactions",
+                                            // ),
                                           ],
                                         ),
                                       ),
@@ -1892,14 +1896,14 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     }
     if (isSent) {
       for (var statement in statementList) {
-        if (statement["creditAmount"] == 0) {
+        if (statement["creditAmount"] != 0) {
           displayStatementList.add(statement);
         }
       }
     }
     if (isReceived) {
       for (var statement in statementList) {
-        if (statement["creditAmount"] != 0) {
+        if (statement["creditAmount"] == 0) {
           displayStatementList.add(statement);
         }
       }

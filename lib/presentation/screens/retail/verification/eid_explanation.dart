@@ -217,6 +217,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
         await storage.write(key: "stepsCompleted", value: 3.toString());
         storageStepsCompleted =
             int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+
         if (context.mounted) {
           Navigator.pushNamed(
             context,
@@ -232,8 +233,6 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
               gender: gender,
               photo: photo,
               docPhoto: docPhoto,
-              // img1: img1,
-              // image1: image1,
             ).toMap(),
           );
         }

@@ -340,6 +340,7 @@ class _BusinessOnboardingStatusScreenState
     customerName = result["customerName"];
     await storage.write(key: "customerName", value: customerName);
     storageCustomerName = await storage.read(key: "customerName");
+
     isLoading = false;
     showButtonBloc.add(ShowButtonEvent(show: isLoading));
   }

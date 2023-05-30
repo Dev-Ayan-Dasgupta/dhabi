@@ -13,3 +13,4 @@ export './upload_customer_tax_information.dart';
 export './add_or_update_income_source.dart';
 export './if_eid_exists.dart';
 export './if_passport_exists.dart';
+export './create_customer.dart';

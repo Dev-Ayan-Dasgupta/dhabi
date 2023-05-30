@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DateDropdown extends StatelessWidget {
   const DateDropdown({
@@ -38,10 +39,10 @@ class DateDropdown extends StatelessWidget {
                 fontSize: (16 / Dimensions.designWidth).w,
               ),
             ),
-            Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: AppColors.primary,
-              size: (20 / Dimensions.designWidth).w,
+            SvgPicture.asset(
+              ImageConstants.date,
+              width: (14 / Dimensions.designWidth).w,
+              height: (16 / Dimensions.designWidth).w,
             ),
           ],
         ),

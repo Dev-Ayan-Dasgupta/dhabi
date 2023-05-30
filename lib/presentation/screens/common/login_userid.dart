@@ -372,26 +372,57 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                 }
               }
             } else {
-              // if (singleCifResult["hasValidCIF"]) {
-
-              // } else {
-              //   promptWrongCredentials();
-              // }
-              var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
-                  {"emailID": _emailController.text});
-              log("sendEmailOtpResult -> $sendEmailOtpResult");
-              if (context.mounted) {
-                Navigator.pushNamed(
-                  context,
-                  Routes.otp,
-                  arguments: OTPArgumentModel(
-                    emailOrPhone: _emailController.text,
-                    isEmail: true,
-                    isBusiness: false,
-                    isInitial: false,
-                    isLogin: true,
-                  ).toMap(),
-                );
+              if (singleCifResult["hasValidCIF"]) {
+                var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
+                    {"emailID": _emailController.text});
+                log("sendEmailOtpResult -> $sendEmailOtpResult");
+                if (context.mounted) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.otp,
+                    arguments: OTPArgumentModel(
+                      emailOrPhone: _emailController.text,
+                      isEmail: true,
+                      isBusiness: false,
+                      isInitial: false,
+                      isLogin: true,
+                    ).toMap(),
+                  );
+                }
+              } else {
+                // promptWrongCredentials();
+                if (singleCifResult["retailOnboardingState"] != 0) {
+                  if (context.mounted) {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      Routes.loginPassword,
+                      arguments: LoginPasswordArgumentModel(
+                        emailId: storageEmail ?? "",
+                        userId: storageUserId ?? 0,
+                        userTypeId: storageUserTypeId ?? 2,
+                        companyId: storageCompanyId ?? 0,
+                      ).toMap(),
+                    );
+                  }
+                } else {
+                  var sendEmailOtpResult =
+                      await MapSendEmailOtp.mapSendEmailOtp(
+                          {"emailID": _emailController.text});
+                  log("sendEmailOtpResult -> $sendEmailOtpResult");
+                  if (context.mounted) {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.otp,
+                      arguments: OTPArgumentModel(
+                        emailOrPhone: _emailController.text,
+                        isEmail: true,
+                        isBusiness: false,
+                        isInitial: false,
+                        isLogin: true,
+                      ).toMap(),
+                    );
+                  }
+                }
               }
             }
             isLoading = false;

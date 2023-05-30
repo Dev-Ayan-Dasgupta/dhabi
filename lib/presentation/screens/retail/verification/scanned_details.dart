@@ -713,32 +713,83 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
     await matchfaces();
 
-    isFaceScanning = false;
-    showButtonBloc.add(ShowButtonEvent(show: isFaceScanning));
-
-    // if (context.mounted) {
-    //   Navigator.pushNamed(context, Routes.faceCompare,
-    //       arguments: FaceCompareArgumentModel(
-    //               image1: image1, img1: img1, image2: image2, img2: img2)
-    //           .toMap());
-    // }
-
     if (photoMatchScore > 80) {
-      await storage.write(key: "stepsCompleted", value: 4.toString());
-      storageStepsCompleted =
-          int.parse(await storage.read(key: "stepsCompleted") ?? "0");
-      if (context.mounted) {
-        Navigator.pushNamed(
-          context,
-          Routes.retailOnboardingStatus,
-          arguments: OnboardingStatusArgumentModel(
-            stepsCompleted: 2,
-            isFatca: false,
-            isPassport: false,
-            isRetail: true,
-          ).toMap(),
+      Map<String, dynamic> response;
+      if (storageIsEid == true) {
+        response = await MapUploadEid.mapUploadEid(
+          {
+            "eidDocumentImage": storageDocPhoto,
+            "eidUserPhoto": storagePhoto,
+            "selfiePhoto": storageSelfiePhoto,
+            "photoMatchScore": storagePhotoMatchScore,
+            "eidNumber": storageEidNumber,
+            "fullName": storageFullName,
+            "dateOfBirth": DateFormat('yyyy-MM-dd').format(
+                DateFormat('dd MMMM yyyy')
+                    .parse(storageDob ?? "1 January 1900")),
+            "nationalityCountryCode": storageNationalityCode,
+            "genderId": storageGender == 'M' ? 1 : 2,
+            "expiresOn": DateFormat('yyyy-MM-dd').format(
+                DateFormat('dd MMMM yyyy')
+                    .parse(storageExpiryDate ?? "1 January 1900")),
+            "isReKYC": false
+          },
+          token ?? "",
         );
+
+        log("UploadEid API response -> $response");
+      } else {
+        log("storageNationalityCode -> $storageNationalityCode");
+        response = await MapUploadPassport.mapUploadPassport(
+          {
+            "passportDocumentImage": storageDocPhoto,
+            "passportUserPhoto": storagePhoto,
+            "selfiePhoto": storageSelfiePhoto,
+            "photoMatchScore": storagePhotoMatchScore,
+            "passportNumber": storagePassportNumber,
+            "passportIssuingCountryCode": storageIssuingStateCode,
+            "fullName": storageFullName,
+            "dateOfBirth": DateFormat('yyyy-MM-dd').format(
+                DateFormat('dd/MM/yyyy').parse(storageDob ?? "00/00/0000")),
+            "nationalityCountryCode": storageNationalityCode,
+            "genderId": storageGender == 'M' ? 1 : 2,
+            "expiresOn": DateFormat('yyyy-MM-dd').format(
+                DateFormat('dd/MM/yyyy')
+                    .parse(storageExpiryDate ?? "00/00/0000")),
+            "isReKYC": false
+          },
+          token ?? "",
+        );
+        log("UploadPassport API response -> $response");
       }
+
+      if (response["success"]) {
+        await storage.write(key: "stepsCompleted", value: 4.toString());
+        storageStepsCompleted =
+            int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+
+        if (context.mounted) {
+          Navigator.pushReplacementNamed(
+            context,
+            Routes.retailOnboardingStatus,
+            arguments: OnboardingStatusArgumentModel(
+              stepsCompleted: 2,
+              isFatca: false,
+              isPassport: false,
+              isRetail: true,
+            ).toMap(),
+          );
+        }
+      } else {
+        if (storageIsEid == true) {
+          log("Upload EID API error -> ${response["message"]}");
+        } else {
+          log("Upload Passport API error -> ${response["message"]}");
+        }
+      }
+
+      isFaceScanning = false;
+      showButtonBloc.add(ShowButtonEvent(show: isFaceScanning));
     } else {
       if (context.mounted) {
         showDialog(

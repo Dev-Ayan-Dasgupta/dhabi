@@ -58,28 +58,36 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushNamed(
-          context,
-          Routes.applicationTaxCRS,
-          arguments: TaxCrsArgumentModel(
-            isUSFATCA: storageIsUSFATCA ?? true,
-            ustin: storageUsTin ?? "",
-          ).toMap(),
-        );
+        if (applicationAccountArgument.isInitial) {
+          Navigator.pushNamed(
+            context,
+            Routes.applicationTaxCRS,
+            arguments: TaxCrsArgumentModel(
+              isUSFATCA: storageIsUSFATCA ?? true,
+              ustin: storageUsTin ?? "",
+            ).toMap(),
+          );
+        } else {
+          Navigator.pop(context);
+        }
         return false;
       },
       child: Scaffold(
         appBar: AppBar(
           leading: AppBarLeading(
             onTap: () {
-              Navigator.pushNamed(
-                context,
-                Routes.applicationTaxCRS,
-                arguments: TaxCrsArgumentModel(
-                  isUSFATCA: storageIsUSFATCA ?? true,
-                  ustin: storageUsTin ?? "",
-                ).toMap(),
-              );
+              if (applicationAccountArgument.isInitial) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.applicationTaxCRS,
+                  arguments: TaxCrsArgumentModel(
+                    isUSFATCA: storageIsUSFATCA ?? true,
+                    ustin: storageUsTin ?? "",
+                  ).toMap(),
+                );
+              } else {
+                Navigator.pop(context);
+              }
             },
           ),
           backgroundColor: Colors.transparent,
@@ -96,28 +104,51 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      labels[261]["labelText"],
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
+                    Ternary(
+                      condition: applicationAccountArgument.isInitial,
+                      truthy: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            labels[261]["labelText"],
+                            style: TextStyles.primaryBold.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (28 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          const SizeBox(height: 30),
+                          ApplicationProgress(progress: progress),
+                          const SizeBox(height: 30),
+                          Text(
+                            labels[195]["labelText"],
+                            style: TextStyles.primaryBold.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          const SizeBox(height: 20),
+                        ],
+                      ),
+                      falsy: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Select your acount type",
+                            style: TextStyles.primaryBold.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (28 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          const SizeBox(height: 30),
+                        ],
                       ),
                     ),
-                    const SizeBox(height: 30),
-                    ApplicationProgress(progress: progress),
-                    const SizeBox(height: 30),
-                    Text(
-                      labels[195]["labelText"],
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                    const SizeBox(height: 20),
                     Row(
                       children: [
                         Text(
-                          labels[285]["labelText"],
+                          applicationAccountArgument.isInitial
+                              ? labels[285]["labelText"]
+                              : "Select Account",
                           style: TextStyles.primaryMedium.copyWith(
                             color: AppColors.dark80,
                             fontSize: (16 / Dimensions.designWidth).w,
@@ -447,21 +478,70 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                   log("Create Account API response -> $responseAccount");
                   if (responseAccount["success"]) {
                     if (context.mounted) {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.retailDashboard,
-                        arguments: RetailDashboardArgumentModel(
-                          imgUrl: "",
-                          name: storageCustomerName ?? "",
-                          isFirst: false,
-                        ).toMap(),
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.checkCircleOutlined,
+                            title: "Account Opened",
+                            message: "Your current USD Account number is",
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  Routes.retailDashboard,
+                                  arguments: RetailDashboardArgumentModel(
+                                    imgUrl: "",
+                                    name: storageCustomerName ?? "",
+                                    isFirst: false,
+                                  ).toMap(),
+                                );
+                              },
+                              text: "Done",
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.warning,
+                            title: "Oops",
+                            message:
+                                "It seems like you have exceeded number of allowed CA or SA.",
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  Routes.retailDashboard,
+                                  arguments: RetailDashboardArgumentModel(
+                                    imgUrl: "",
+                                    name: storageCustomerName ?? "",
+                                    isFirst: false,
+                                  ).toMap(),
+                                );
+                              },
+                              text: "Close",
+                            ),
+                          );
+                        },
                       );
                     }
                   }
                 }
               }
             },
-            text: labels[288]["labelText"],
+            text: applicationAccountArgument.isInitial
+                ? labels[288]["labelText"]
+                : "Add Account",
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
           const SizeBox(height: PaddingConstants.bottomPadding),
@@ -470,7 +550,12 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
     } else {
       return Column(
         children: [
-          SolidButton(onTap: () {}, text: labels[127]["labelText"]),
+          SolidButton(
+            onTap: () {},
+            text: applicationAccountArgument.isInitial
+                ? labels[288]["labelText"]
+                : "Add Account",
+          ),
           const SizeBox(height: PaddingConstants.bottomPadding),
         ],
       );

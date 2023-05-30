@@ -7,6 +7,8 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_holo_date_picker/date_picker_theme.dart';
+import 'package:flutter_holo_date_picker/widget/date_picker_widget.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
@@ -108,32 +110,19 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                       fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
+
                   const SizeBox(height: 20),
-                  Text(
-                    "Please select the format in which you want to download the statement",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.grey40,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
-                  ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                    builder: (context, state) {
-                      return CustomDropDown(
-                        title: "Select File Format",
-                        items: items,
-                        value: selectedFormat,
-                        onChanged: onSelectFileFormat,
-                      );
-                    },
-                  ),
-                  const SizeBox(height: 20),
-                  Text(
-                    "Please select the date range from the below dropdown",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.grey40,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        "From Date",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 10),
                   BlocBuilder<DateSelectionBloc, DateSelectionState>(
@@ -144,6 +133,19 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                         text: fromDate,
                       );
                     },
+                  ),
+                  const SizeBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        "To Date",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 10),
                   BlocBuilder<DateSelectionBloc, DateSelectionState>(
@@ -156,46 +158,70 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                     },
                   ),
                   const SizeBox(height: 20),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Or",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.grey40,
-                        fontSize: (16 / Dimensions.designWidth).w,
+                  Row(
+                    children: [
+                      Text(
+                        "Select a File Format to Download",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
                       ),
-                    ),
+                      const Asterisk(),
+                    ],
                   ),
+
                   const SizeBox(height: 10),
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
                     builder: (context, state) {
-                      return ActionButton(
-                        onTap: onOneMonthTap,
-                        text: "Download Last 1 Month Statement",
-                        isSelected: isOneMonth,
+                      return CustomDropDown(
+                        title: "Select File Format",
+                        items: items,
+                        value: selectedFormat,
+                        onChanged: onSelectFileFormat,
                       );
                     },
                   ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      return ActionButton(
-                        onTap: onThreeMonthsTap,
-                        text: "Download Last 3 Months Statement",
-                        isSelected: isThreeMonths,
-                      );
-                    },
-                  ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      return ActionButton(
-                        onTap: onSixMonthsTap,
-                        text: "Download Last 6 Months Statement",
-                        isSelected: isSixMonths,
-                      );
-                    },
-                  ),
+                  // Align(
+                  //   alignment: Alignment.center,
+                  //   child: Text(
+                  //     "Or",
+                  //     style: TextStyles.primaryMedium.copyWith(
+                  //       color: AppColors.grey40,
+                  //       fontSize: (16 / Dimensions.designWidth).w,
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizeBox(height: 10),
+                  // BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  //   builder: (context, state) {
+                  //     return ActionButton(
+                  //       onTap: onOneMonthTap,
+                  //       text: "Download Last 1 Month Statement",
+                  //       isSelected: isOneMonth,
+                  //     );
+                  //   },
+                  // ),
+                  // const SizeBox(height: 10),
+                  // BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  //   builder: (context, state) {
+                  //     return ActionButton(
+                  //       onTap: onThreeMonthsTap,
+                  //       text: "Download Last 3 Months Statement",
+                  //       isSelected: isThreeMonths,
+                  //     );
+                  //   },
+                  // ),
+                  // const SizeBox(height: 10),
+                  // BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  //   builder: (context, state) {
+                  //     return ActionButton(
+                  //       onTap: onSixMonthsTap,
+                  //       text: "Download Last 6 Months Statement",
+                  //       isSelected: isSixMonths,
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),
@@ -233,6 +259,14 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                               );
                               // log("base64 xls -> $base64String");
                             } else if (selectedFormat == "PDF (.pdf)") {
+                              log("Pdf statement API request -> ${{
+                                "accountNumber":
+                                    downloadStatementArgument.accountNumber,
+                                "startDate": DateFormat('yyyy-MM-dd')
+                                    .format(auxFromDate),
+                                "endDate":
+                                    DateFormat('yyyy-MM-dd').format(auxToDate),
+                              }}");
                               base64String =
                                   await MapPdfCustomerAccountStatement
                                       .mapPdfCustomerAccountStatement(
@@ -333,7 +367,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
         return Material(
           color: Colors.transparent,
           child: Container(
-            height: (300 / Dimensions.designWidth).w,
+            height:
+                (((Platform.isIOS ? 300 : 360)) / Dimensions.designHeight).h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular((20 / Dimensions.designWidth).w),
@@ -357,12 +392,32 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                 ),
                 const SizeBox(height: 20),
                 SizedBox(
-                  height: (170 / Dimensions.designWidth).w,
-                  child: CupertinoDatePicker(
-                    initialDateTime: auxFromDate,
-                    maximumDate: DateTime.now(),
-                    mode: CupertinoDatePickerMode.date,
-                    onDateTimeChanged: onFromDateChanged,
+                  height:
+                      ((Platform.isIOS ? 170 : 230) / Dimensions.designHeight)
+                          .h,
+                  child: Ternary(
+                    condition: Platform.isIOS,
+                    truthy: CupertinoDatePicker(
+                      initialDateTime: auxFromDate,
+                      maximumDate: DateTime.now(),
+                      mode: CupertinoDatePickerMode.date,
+                      onDateTimeChanged: onFromDateChangediOS,
+                    ),
+                    falsy: DatePickerWidget(
+                      looping: false,
+                      initialDate: auxFromDate,
+                      // firstDate: auxFromDate,
+                      lastDate: DateTime.now(),
+                      dateFormat: "dd-MMMM-yyyy",
+                      onChange: onFromDateChangedAndroid,
+                      pickerTheme: DateTimePickerTheme(
+                        dividerColor: AppColors.dark30,
+                        itemTextStyle: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.primary,
+                          fontSize: (20 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 const SizeBox(height: 20),
@@ -419,7 +474,20 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     );
   }
 
-  onFromDateChanged(DateTime p0) {
+  onFromDateChangediOS(DateTime p0) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    tempFromDate = p0;
+    fromDate = DateFormat('d MMMM, yyyy').format(auxFromDate);
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
+      ),
+    );
+  }
+
+  onFromDateChangedAndroid(DateTime p0, _) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     tempFromDate = p0;
     fromDate = DateFormat('d MMMM, yyyy').format(auxFromDate);
@@ -465,7 +533,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
         return Material(
           color: Colors.transparent,
           child: Container(
-            height: (300 / Dimensions.designWidth).w,
+            height:
+                (((Platform.isIOS ? 300 : 360)) / Dimensions.designHeight).h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular((20 / Dimensions.designWidth).w),
@@ -489,13 +558,34 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                 ),
                 const SizeBox(height: 20),
                 SizedBox(
-                  height: (170 / Dimensions.designWidth).w,
-                  child: CupertinoDatePicker(
-                    initialDateTime: auxToDate.add(const Duration(seconds: 1)),
-                    minimumDate: auxFromDate,
-                    maximumDate: DateTime.now(),
-                    mode: CupertinoDatePickerMode.date,
-                    onDateTimeChanged: onToDateChanged,
+                  height:
+                      (((Platform.isIOS ? 170 : 230)) / Dimensions.designHeight)
+                          .h,
+                  child: Ternary(
+                    condition: Platform.isIOS,
+                    truthy: CupertinoDatePicker(
+                      initialDateTime:
+                          auxToDate.add(const Duration(seconds: 1)),
+                      minimumDate: auxFromDate,
+                      maximumDate: DateTime.now(),
+                      mode: CupertinoDatePickerMode.date,
+                      onDateTimeChanged: onToDateChangediOS,
+                    ),
+                    falsy: DatePickerWidget(
+                      looping: false,
+                      initialDate: auxToDate.add(const Duration(seconds: 1)),
+                      firstDate: auxFromDate,
+                      lastDate: DateTime.now(),
+                      dateFormat: "dd-MMMM-yyyy",
+                      onChange: onToDateChangedAndroid,
+                      pickerTheme: DateTimePickerTheme(
+                        dividerColor: AppColors.dark30,
+                        itemTextStyle: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.primary,
+                          fontSize: (20 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 const SizeBox(height: 20),
@@ -552,7 +642,20 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     );
   }
 
-  void onToDateChanged(DateTime p0) {
+  void onToDateChangediOS(DateTime p0) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    tempToDate = p0;
+    toDate = DateFormat('d MMMM, yyyy').format(auxToDate);
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
+      ),
+    );
+  }
+
+  onToDateChangedAndroid(DateTime p0, _) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     tempToDate = p0;
     toDate = DateFormat('d MMMM, yyyy').format(auxToDate);

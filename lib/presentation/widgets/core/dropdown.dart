@@ -60,8 +60,8 @@ class _CustomDropDownState extends State<CustomDropDown> {
         value: widget.value,
         onChanged: widget.onChanged,
         buttonStyleData: ButtonStyleData(
-          height: (50 / Dimensions.designWidth).w,
-          width: 90.w,
+          height: (50 / Dimensions.designHeight).h,
+          width: 100.w,
           padding:
               EdgeInsets.symmetric(horizontal: (14 / Dimensions.designWidth).w),
           decoration: BoxDecoration(

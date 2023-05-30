@@ -47,6 +47,7 @@ abstract class BaseConfig {
   String get registerRetailCustomer;
   String get uploadEid;
   String get uploadPassport;
+  String get createCustomer;
 
   // ? Corporate Onboarding APIs
 
