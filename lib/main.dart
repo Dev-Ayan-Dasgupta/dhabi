@@ -24,8 +24,6 @@ List<CameraDescription> cameras = [];
 
 const storage = FlutterSecureStorage();
 
-// Timer? _rootTimer;
-
 bool forceLogout = false;
 final navigatorKey = GlobalKey<NavigatorState>();
 

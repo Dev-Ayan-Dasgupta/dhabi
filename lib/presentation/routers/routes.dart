@@ -63,7 +63,8 @@ class Routes {
   static const String requestType = 'request-type';
   static const String updateAddress = 'update-address';
   static const String notifications = 'notifications';
-  static const String explore = 'explore';
+  static const String exploreRetail = 'explore-retail';
+  static const String exploreBusiness = 'explore-business';
   static const String businessDepositDetails = 'business-deposit-details';
   static const String dormant = 'dormant';
   static const String captureFace = 'capture-face';

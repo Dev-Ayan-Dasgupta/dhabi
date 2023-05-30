@@ -8,6 +8,7 @@ import 'package:dialup_mobile_app/presentation/screens/retail/cardsVault/index.d
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/deposits/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dormant/dormant.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/explore.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/insights.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/notifications/notifications.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/onboardingStatus/onboarding_status.dart';
@@ -339,9 +340,13 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const BusinessDepositDetailsScreen(),
         );
-      case Routes.explore:
+      case Routes.exploreBusiness:
         return MaterialPageRoute(
-          builder: (_) => const ExploreScreen(),
+          builder: (_) => const BusinessExploreScreen(),
+        );
+      case Routes.exploreRetail:
+        return MaterialPageRoute(
+          builder: (_) => const RetailExploreScreen(),
         );
       case Routes.termsAndConditions:
         return MaterialPageRoute(

@@ -166,9 +166,9 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
               const SizeBox(height: 20),
               SizedBox(
                 width: 100.w,
-                height: (164 / Dimensions.designHeight).h,
+                height: (109 / Dimensions.designHeight).h,
                 child: const DashboardBannerImage(
-                  imgUrl: ImageConstants.banner2,
+                  imgUrl: ImageConstants.banner3,
                 ),
               ),
               const SizeBox(height: 20),

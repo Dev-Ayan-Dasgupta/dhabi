@@ -232,18 +232,17 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         log("User photo Size before compress -> ${base64Decode(photo!.replaceAll("\n", "")).lengthInBytes / 1024} KB");
         var compressedPhoto = await FlutterImageCompress.compressWithList(
           base64Decode(photo!.replaceAll("\n", "")),
-          quality: 95,
+          quality: 30,
         );
-
         photo = base64Encode(compressedPhoto);
-        while (compressedPhoto.lengthInBytes / 1024 > 100) {
-          compressedPhoto = await FlutterImageCompress.compressWithList(
-            base64Decode(photo!.replaceAll("\n", "")),
-            quality: math.Random.secure().nextInt(10) + 85,
-            // 95 - i,
-          );
-          photo = base64Encode(compressedPhoto);
-        }
+        // while (compressedPhoto.lengthInBytes / 1024 > 100) {
+        //   compressedPhoto = await FlutterImageCompress.compressWithList(
+        //     base64Decode(photo!.replaceAll("\n", "")),
+        //     quality: math.Random.secure().nextInt(10) + 85,
+        //     // 95 - i,
+        //   );
+        //   photo = base64Encode(compressedPhoto);
+        // }
         // i = 5;
 
         log("User photo Size after compress -> ${compressedPhoto.lengthInBytes / 1024} KB");
@@ -258,17 +257,17 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
       var compressedDocPhoto = await FlutterImageCompress.compressWithList(
         base64Decode(docPhoto ?? ""),
-        quality: 95,
+        quality: 30,
       );
       docPhoto = base64Encode(compressedDocPhoto);
-      while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
-        compressedDocPhoto = await FlutterImageCompress.compressWithList(
-          base64Decode(docPhoto ?? ""),
-          quality: math.Random.secure().nextInt(10) + 85,
-          // 95 - i,
-        );
-        docPhoto = base64Encode(compressedDocPhoto);
-      }
+      // while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
+      //   compressedDocPhoto = await FlutterImageCompress.compressWithList(
+      //     base64Decode(docPhoto ?? ""),
+      //     quality: math.Random.secure().nextInt(10) + 85,
+      //     // 95 - i,
+      //   );
+      //   docPhoto = base64Encode(compressedDocPhoto);
+      // }
       // i = 5;
 
       log("Size after compress DocPhoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
@@ -531,17 +530,17 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         log("Size before compress -> ${base64Decode(photo!.replaceAll("\n", "")).lengthInBytes}");
         var compressedPhoto = await FlutterImageCompress.compressWithList(
           base64Decode(photo!.replaceAll("\n", "")),
-          quality: 95,
+          quality: 30,
         );
         photo = base64Encode(compressedPhoto);
-        while (compressedPhoto.lengthInBytes / 1024 > 100) {
-          compressedPhoto = await FlutterImageCompress.compressWithList(
-            base64Decode(photo!.replaceAll("\n", "")),
-            quality: math.Random.secure().nextInt(10) + 85,
-            // 95 - i,
-          );
-          photo = base64Encode(compressedPhoto);
-        }
+        // while (compressedPhoto.lengthInBytes / 1024 > 100) {
+        //   compressedPhoto = await FlutterImageCompress.compressWithList(
+        //     base64Decode(photo!.replaceAll("\n", "")),
+        //     quality: math.Random.secure().nextInt(10) + 85,
+        //     // 95 - i,
+        //   );
+        //   photo = base64Encode(compressedPhoto);
+        // }
         // i = 5;
 
         log("User Photo Size after compress -> ${compressedPhoto.lengthInBytes / 1024} KB");
@@ -556,17 +555,17 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
       var compressedDocPhoto = await FlutterImageCompress.compressWithList(
         base64Decode(docPhoto ?? ""),
-        quality: 95,
+        quality: 30,
       );
-      docPhoto = base64Encode(compressedDocPhoto);
-      while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
-        compressedDocPhoto = await FlutterImageCompress.compressWithList(
-          base64Decode(docPhoto ?? ""),
-          quality: math.Random.secure().nextInt(10) + 85,
-          // 95 - i,
-        );
-        docPhoto = base64Encode(compressedDocPhoto);
-      }
+      // docPhoto = base64Encode(compressedDocPhoto);
+      // while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
+      //   compressedDocPhoto = await FlutterImageCompress.compressWithList(
+      //     base64Decode(docPhoto ?? ""),
+      //     quality: math.Random.secure().nextInt(10) + 85,
+      //     // 95 - i,
+      //   );
+      //   docPhoto = base64Encode(compressedDocPhoto);
+      // }
       // i = 5;
 
       log("Size after compress DocPhoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
@@ -778,18 +777,18 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     log("Selfie size before compress -> ${base64Decode(selfiePhoto).lengthInBytes}");
     var compressedSelfie = await FlutterImageCompress.compressWithList(
       base64Decode(selfiePhoto),
-      quality: 95,
+      quality: 30,
     );
     selfiePhoto = base64Encode(compressedSelfie);
 
-    while (compressedSelfie.lengthInBytes / 1024 > 100) {
-      compressedSelfie = await FlutterImageCompress.compressWithList(
-        base64Decode(selfiePhoto),
-        quality: math.Random.secure().nextInt(10) + 85,
-        // 95 - i,
-      );
-      selfiePhoto = base64Encode(compressedSelfie);
-    }
+    // while (compressedSelfie.lengthInBytes / 1024 > 100) {
+    //   compressedSelfie = await FlutterImageCompress.compressWithList(
+    //     base64Decode(selfiePhoto),
+    //     quality: math.Random.secure().nextInt(10) + 85,
+    //     // 95 - i,
+    //   );
+    //   selfiePhoto = base64Encode(compressedSelfie);
+    // }
     // i = 5;
 
     log("Selfie size after compress -> ${compressedSelfie.lengthInBytes / 1024} KB");

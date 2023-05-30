@@ -1,23 +1,27 @@
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class BusinessExploreScreen extends StatefulWidget {
-  const BusinessExploreScreen({Key? key}) : super(key: key);
+class RetailExploreScreen extends StatefulWidget {
+  const RetailExploreScreen({Key? key}) : super(key: key);
 
   @override
-  State<BusinessExploreScreen> createState() => _BusinessExploreScreenState();
+  State<RetailExploreScreen> createState() => _RetailExploreScreenState();
 }
 
-class _BusinessExploreScreenState extends State<BusinessExploreScreen> {
+class _RetailExploreScreenState extends State<RetailExploreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const AppBarMenu(),
-        title: SvgPicture.asset(ImageConstants.dhabiBusinessText),
+        leading: AppBarAvatar(
+          imgUrl: "",
+          name: customerName ?? "",
+        ),
+        title: SvgPicture.asset(ImageConstants.dhabiText),
         actions: const [AppBarAction()],
         backgroundColor: Colors.transparent,
         centerTitle: true,
@@ -33,16 +37,21 @@ class _BusinessExploreScreenState extends State<BusinessExploreScreen> {
             const SizeBox(height: 10),
             Expanded(
               child: ListView.builder(
-                itemCount: 4,
+                itemCount: 1,
                 itemBuilder: (context, index) {
                   return Container(
                     margin: EdgeInsets.symmetric(
                         vertical: (5 / Dimensions.designWidth).w),
                     width: 100.w,
-                    height: (131.47 / Dimensions.designWidth).w,
-                    child: Image.asset(
-                      ImageConstants.banner3,
-                      fit: BoxFit.fill,
+                    height: (163 / Dimensions.designHeight).h,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.errorSuccessScreen);
+                      },
+                      child: Image.asset(
+                        ImageConstants.banner2,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   );
                 },

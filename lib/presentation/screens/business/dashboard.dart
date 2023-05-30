@@ -47,6 +47,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
   List accountDetails = [];
   List statementList = [];
 
+  bool isShowExplore = false;
+
   @override
   void initState() {
     super.initState();
@@ -188,8 +190,11 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                 controller: tabController,
                                 onTap: (index) {
                                   if (index == 3) {
+                                    setState(() {
+                                      isShowExplore = true;
+                                    });
                                     Navigator.pushNamed(
-                                        context, Routes.explore);
+                                        context, Routes.exploreBusiness);
                                   }
                                   _scrollOffset = 0;
                                   _scrollIndex = 0;
@@ -669,222 +674,235 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                   const SizeBox(height: 265)
                 ],
               ),
-              DraggableScrollableSheet(
-                initialChildSize: 0.39,
-                minChildSize: 0.39,
-                maxChildSize: 1,
-                builder: (context, scrollController) {
-                  return Container(
-                    height: 85.h,
-                    width: 100.w,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: (PaddingConstants.horizontalPadding /
-                              Dimensions.designWidth)
-                          .w,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft:
-                            Radius.circular((20 / Dimensions.designWidth).w),
-                        topRight:
-                            Radius.circular((20 / Dimensions.designWidth).w),
+              Ternary(
+                condition: isShowExplore,
+                truthy: const SizeBox(),
+                falsy: DraggableScrollableSheet(
+                  initialChildSize: 0.39,
+                  minChildSize: 0.39,
+                  maxChildSize: 1,
+                  builder: (context, scrollController) {
+                    return Container(
+                      height: 85.h,
+                      width: 100.w,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: (PaddingConstants.horizontalPadding /
+                                Dimensions.designWidth)
+                            .w,
                       ),
-                      boxShadow: [BoxShadows.primary],
-                      color: Colors.white,
-                    ),
-                    child: Column(
-                      children: [
-                        const SizeBox(height: 15),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: (10 / Dimensions.designWidth).w,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft:
+                              Radius.circular((20 / Dimensions.designWidth).w),
+                          topRight:
+                              Radius.circular((20 / Dimensions.designWidth).w),
+                        ),
+                        boxShadow: [BoxShadows.primary],
+                        color: Colors.white,
+                      ),
+                      child: Column(
+                        children: [
+                          const SizeBox(height: 15),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: (10 / Dimensions.designWidth).w,
+                            ),
+                            height: (7 / Dimensions.designWidth).w,
+                            width: (50 / Dimensions.designWidth).w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                    (10 / Dimensions.designWidth).w),
+                              ),
+                              color: const Color(0xFFD9D9D9),
+                            ),
                           ),
-                          height: (7 / Dimensions.designWidth).w,
-                          width: (50 / Dimensions.designWidth).w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular((10 / Dimensions.designWidth).w),
-                            ),
-                            color: const Color(0xFFD9D9D9),
-                          ),
-                        ),
-                        const SizeBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              labels[10]["labelText"],
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.dark50,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                SvgPicture.asset(
-                                  ImageConstants.download,
-                                  width: (15 / Dimensions.designWidth).w,
-                                  height: (15 / Dimensions.designWidth).w,
-                                ),
-                                const SizeBox(width: 10),
-                                Text(
-                                  labels[89]["labelText"],
-                                  style: TextStyles.primary.copyWith(
-                                    color: AppColors.dark50,
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizeBox(height: 15),
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: () {},
-                              child: Container(
-                                width: (236 / Dimensions.designWidth).w,
-                                height: (39 / Dimensions.designHeight).h,
-                                decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(34, 97, 105, 0.1),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      (10 / Dimensions.designWidth).w,
-                                    ),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      ImageConstants.pyramid,
-                                      width: (10 / Dimensions.designHeight).w,
-                                      height: (10 / Dimensions.designHeight).h,
-                                    ),
-                                    const SizeBox(width: 10),
-                                    Text(
-                                      "Filter: ",
-                                      style: TextStyles.primary.copyWith(
-                                        color: AppColors.dark50,
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                    Text(
-                                      "All",
-                                      style: TextStyles.primaryMedium.copyWith(
-                                        color: AppColors.primary,
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizeBox(width: 10),
-                            InkWell(
-                              onTap: () {},
-                              child: Container(
-                                width: (150 / Dimensions.designWidth).w,
-                                height: (39 / Dimensions.designHeight).h,
-                                decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(34, 97, 105, 0.1),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      (10 / Dimensions.designWidth).w,
-                                    ),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      ImageConstants.pyramid,
-                                      width: (10 / Dimensions.designHeight).w,
-                                      height: (10 / Dimensions.designHeight).h,
-                                    ),
-                                    const SizeBox(width: 10),
-                                    Text(
-                                      "Sort: ",
-                                      style: TextStyles.primary.copyWith(
-                                        color: AppColors.dark50,
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Date",
-                                      style: TextStyles.primaryMedium.copyWith(
-                                        color: AppColors.primary,
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizeBox(height: 15),
-                        Ternary(
-                          condition: statementList.isEmpty,
-                          truthy: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          const SizeBox(height: 15),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const SizeBox(height: 70),
                               Text(
-                                "No transactions",
-                                style: TextStyles.primaryBold.copyWith(
-                                  color: AppColors.dark30,
-                                  fontSize: (24 / Dimensions.designWidth).w,
+                                labels[10]["labelText"],
+                                style: TextStyles.primary.copyWith(
+                                  color: AppColors.dark50,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    ImageConstants.download,
+                                    width: (15 / Dimensions.designWidth).w,
+                                    height: (15 / Dimensions.designWidth).w,
+                                  ),
+                                  const SizeBox(width: 10),
+                                  Text(
+                                    labels[89]["labelText"],
+                                    style: TextStyles.primary.copyWith(
+                                      color: AppColors.dark50,
+                                      fontSize: (16 / Dimensions.designWidth).w,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizeBox(height: 15),
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  width: (236 / Dimensions.designWidth).w,
+                                  height: (39 / Dimensions.designHeight).h,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromRGBO(34, 97, 105, 0.1),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        (10 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        ImageConstants.pyramid,
+                                        width: (10 / Dimensions.designHeight).w,
+                                        height:
+                                            (10 / Dimensions.designHeight).h,
+                                      ),
+                                      const SizeBox(width: 10),
+                                      Text(
+                                        "Filter: ",
+                                        style: TextStyles.primary.copyWith(
+                                          color: AppColors.dark50,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                      Text(
+                                        "All",
+                                        style:
+                                            TextStyles.primaryMedium.copyWith(
+                                          color: AppColors.primary,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizeBox(width: 10),
+                              InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  width: (150 / Dimensions.designWidth).w,
+                                  height: (39 / Dimensions.designHeight).h,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        const Color.fromRGBO(34, 97, 105, 0.1),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        (10 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        ImageConstants.pyramid,
+                                        width: (10 / Dimensions.designHeight).w,
+                                        height:
+                                            (10 / Dimensions.designHeight).h,
+                                      ),
+                                      const SizeBox(width: 10),
+                                      Text(
+                                        "Sort: ",
+                                        style: TextStyles.primary.copyWith(
+                                          color: AppColors.dark50,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Date",
+                                        style:
+                                            TextStyles.primaryMedium.copyWith(
+                                          color: AppColors.primary,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          falsy: Expanded(
-                            child: ListView.builder(
-                              controller: scrollController,
-                              itemCount: statementList.length,
-                              itemBuilder: (context, index) {
-                                return DashboardTransactionListTile(
-                                  onTap: () {},
-                                  isCredit:
-                                      // true,
-                                      statementList[index]["creditAmount"] == 0,
-                                  title:
-                                      // "Tax non filer debit Tax non filer debit",
-                                      statementList[index]["transactionType"],
-                                  name: "Alexander Doe",
-                                  amount:
-                                      // 50.23,
-                                      (statementList[index]["creditAmount"] != 0
-                                              ? statementList[index]
-                                                  ["creditAmount"]
-                                              : statementList[index]
-                                                  ["debitAmount"])
-                                          .toDouble(),
-                                  currency:
-                                      // "AED",
-                                      statementList[index]["amountCurrency"],
-                                  date:
-                                      // "Tue, Apr 1 2022",
-                                      DateFormat('EEE, MMM dd yyyy').format(
-                                    DateTime.parse(
-                                      statementList[index]["bookingDate"],
-                                    ),
+                          const SizeBox(height: 15),
+                          Ternary(
+                            condition: statementList.isEmpty,
+                            truthy: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const SizeBox(height: 70),
+                                Text(
+                                  "No transactions",
+                                  style: TextStyles.primaryBold.copyWith(
+                                    color: AppColors.dark30,
+                                    fontSize: (24 / Dimensions.designWidth).w,
                                   ),
-                                );
-                              },
+                                ),
+                              ],
+                            ),
+                            falsy: Expanded(
+                              child: ListView.builder(
+                                controller: scrollController,
+                                itemCount: statementList.length,
+                                itemBuilder: (context, index) {
+                                  return DashboardTransactionListTile(
+                                    onTap: () {},
+                                    isCredit:
+                                        // true,
+                                        statementList[index]["creditAmount"] ==
+                                            0,
+                                    title:
+                                        // "Tax non filer debit Tax non filer debit",
+                                        statementList[index]["transactionType"],
+                                    name: "Alexander Doe",
+                                    amount:
+                                        // 50.23,
+                                        (statementList[index]["creditAmount"] !=
+                                                    0
+                                                ? statementList[index]
+                                                    ["creditAmount"]
+                                                : statementList[index]
+                                                    ["debitAmount"])
+                                            .toDouble(),
+                                    currency:
+                                        // "AED",
+                                        statementList[index]["amountCurrency"],
+                                    date:
+                                        // "Tue, Apr 1 2022",
+                                        DateFormat('EEE, MMM dd yyyy').format(
+                                      DateTime.parse(
+                                        statementList[index]["bookingDate"],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           );

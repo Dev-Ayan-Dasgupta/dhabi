@@ -55,8 +55,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   final DraggableScrollableController _dsController =
       DraggableScrollableController();
 
-  // final bool hasOnboarded = true;
-
   bool isFetchingAccountDetails = false;
 
   List accountDetails = [];
@@ -81,6 +79,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   String sortText = "Latest";
 
   bool isChangingAccount = false;
+
+  bool isShowExplore = false;
 
   @override
   void initState() {
@@ -189,7 +189,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   void tabbarInitialization() {
     final TabbarBloc tabbarBloc = context.read<TabbarBloc>();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     tabController.animation!.addListener(() {
       // print(
       //     "tabController animation value -> ${tabController.animation!.value}");
@@ -294,7 +294,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                 Column(
                   children: [
                     DefaultTabController(
-                      length: 3,
+                      length: 2,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -302,52 +302,70 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                             padding: EdgeInsets.symmetric(
                               horizontal: (15 / Dimensions.designWidth).w,
                             ),
-                            child: BlocBuilder<TabbarBloc, TabbarState>(
-                              builder: (context, state) {
-                                return TabBar(
-                                  splashFactory: NoSplash.splashFactory,
-                                  overlayColor:
-                                      MaterialStateProperty.all<Color>(
-                                    Colors.transparent,
-                                  ),
-                                  controller: tabController,
-                                  onTap: (index) {
-                                    _scrollOffset = 0;
-                                    _scrollIndex = 0;
-                                    tabbarBloc.add(TabbarEvent(index: index));
+                            child: Row(
+                              children: [
+                                BlocBuilder<TabbarBloc, TabbarState>(
+                                  builder: (context, state) {
+                                    return TabBar(
+                                      splashFactory: NoSplash.splashFactory,
+                                      overlayColor:
+                                          MaterialStateProperty.all<Color>(
+                                        Colors.transparent,
+                                      ),
+                                      controller: tabController,
+                                      onTap: (index) {
+                                        _scrollOffset = 0;
+                                        _scrollIndex = 0;
+                                        tabbarBloc
+                                            .add(TabbarEvent(index: index));
+                                      },
+                                      indicatorColor: Colors.transparent,
+                                      tabs: [
+                                        Tab(
+                                          child: tabController.index == 0
+                                              ? const CustomTab(title: "Home")
+                                              : const Text("Home"),
+                                        ),
+                                        Tab(
+                                          child: tabController.index == 1
+                                              ? const CustomTab(
+                                                  title: "Deposits")
+                                              : const Text("Deposits"),
+                                        ),
+                                      ],
+                                      isScrollable: true,
+                                      labelColor: Colors.black,
+                                      labelStyle:
+                                          TextStyles.primaryMedium.copyWith(
+                                        color: const Color(0xFF000000),
+                                        fontSize:
+                                            (16 / Dimensions.designWidth).w,
+                                      ),
+                                      unselectedLabelColor: Colors.black,
+                                      unselectedLabelStyle:
+                                          TextStyles.primaryMedium.copyWith(
+                                        color: const Color(0xFF000000),
+                                        fontSize:
+                                            (16 / Dimensions.designWidth).w,
+                                      ),
+                                    );
                                   },
-                                  indicatorColor: Colors.transparent,
-                                  tabs: [
-                                    Tab(
-                                      child: tabController.index == 0
-                                          ? const CustomTab(title: "Home")
-                                          : const Text("Home"),
+                                ),
+                                const SizeBox(width: 20),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.exploreRetail);
+                                  },
+                                  child: Text(
+                                    "Explore",
+                                    style: TextStyles.primaryMedium.copyWith(
+                                      color: const Color(0xFF000000),
+                                      fontSize: (16 / Dimensions.designWidth).w,
                                     ),
-                                    Tab(
-                                      child: tabController.index == 1
-                                          ? const CustomTab(title: "Deposits")
-                                          : const Text("Deposits"),
-                                    ),
-                                    Tab(
-                                      child: tabController.index == 2
-                                          ? const CustomTab(title: "Explore")
-                                          : const Text("Explore"),
-                                    ),
-                                  ],
-                                  isScrollable: true,
-                                  labelColor: Colors.black,
-                                  labelStyle: TextStyles.primaryMedium.copyWith(
-                                    color: const Color(0xFF000000),
-                                    fontSize: (16 / Dimensions.designWidth).w,
                                   ),
-                                  unselectedLabelColor: Colors.black,
-                                  unselectedLabelStyle:
-                                      TextStyles.primaryMedium.copyWith(
-                                    color: const Color(0xFF000000),
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                );
-                              },
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(
@@ -358,7 +376,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                 // ! Home Tab View
                                 Column(
                                   children: [
-                                    // const SizeBox(height: 5.5),
                                     Expanded(
                                       child: ListView.builder(
                                         padding: EdgeInsets.only(
@@ -611,98 +628,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                     ),
                                   ],
                                 ),
-                                // ! Explore Tab View
-                                Column(
-                                  children: [
-                                    const SizeBox(height: 9.5),
-                                    Expanded(
-                                      child: ListView.builder(
-                                        controller: _scrollController,
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: 6,
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                            padding: EdgeInsets.only(
-                                              left: (index == 0)
-                                                  ? (15 /
-                                                          Dimensions
-                                                              .designWidth)
-                                                      .w
-                                                  : 0,
-                                            ),
-                                            child: AccountSummaryTile(
-                                              onTap: () {},
-                                              imgUrl: "",
-                                              accountType: "Savings",
-                                              currency: "AED",
-                                              amount: "0.00",
-                                              subText: "Powered by FH",
-                                              subImgUrl:
-                                                  "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    const SizeBox(height: 10),
-                                    BlocBuilder<SummaryTileBloc,
-                                        SummaryTileState>(
-                                      builder: (context, state) {
-                                        return Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 47.w -
-                                                ((6 - 1) *
-                                                    (6.5 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w),
-                                          ),
-                                          child: SizedBox(
-                                            width: 90.w,
-                                            height:
-                                                (9 / Dimensions.designWidth).w,
-                                            child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              physics:
-                                                  const NeverScrollableScrollPhysics(),
-                                              itemCount: 6,
-                                              itemBuilder: (context, index) {
-                                                return ScrollIndicator(
-                                                  isCurrent:
-                                                      (index == _scrollIndex),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    const SizeBox(height: 15),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        DashboardActivityTile(
-                                          iconPath: ImageConstants.add,
-                                          activityText: "Add Money",
-                                          onTap: () {},
-                                        ),
-                                        const SizeBox(width: 40),
-                                        DashboardActivityTile(
-                                          iconPath: ImageConstants.arrowOutward,
-                                          activityText: "Send Money",
-                                          onTap: () {},
-                                        ),
-                                        const SizeBox(width: 40),
-                                        DashboardActivityTile(
-                                          iconPath: ImageConstants.barChart,
-                                          activityText: "Insights",
-                                          onTap: () {},
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )
                               ],
                             ),
                           ),
@@ -834,182 +759,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                               ),
                                             ],
                                           ),
-                                          // const SizeBox(height: 15),
-                                          // Row(
-                                          //   children: [
-                                          //     InkWell(
-                                          //       onTap: () {
-                                          //         final ShowButtonBloc
-                                          //             showButtonBloc =
-                                          //             context.read<
-                                          //                 ShowButtonBloc>();
-                                          //         isShowFilter = true;
-                                          //         showButtonBloc.add(
-                                          //           ShowButtonEvent(
-                                          //               show: isShowFilter),
-                                          //         );
-                                          //       },
-                                          //       child: Container(
-                                          //         width: (236 /
-                                          //                 Dimensions
-                                          //                     .designWidth)
-                                          //             .w,
-                                          //         height: (39 /
-                                          //                 Dimensions
-                                          //                     .designHeight)
-                                          //             .h,
-                                          //         decoration: BoxDecoration(
-                                          //           color: const Color.fromRGBO(
-                                          //               34, 97, 105, 0.1),
-                                          //           borderRadius:
-                                          //               BorderRadius.all(
-                                          //             Radius.circular(
-                                          //               (10 /
-                                          //                       Dimensions
-                                          //                           .designWidth)
-                                          //                   .w,
-                                          //             ),
-                                          //           ),
-                                          //         ),
-                                          //         child: Row(
-                                          //           mainAxisAlignment:
-                                          //               MainAxisAlignment
-                                          //                   .center,
-                                          //           children: [
-                                          //             SvgPicture.asset(
-                                          //               ImageConstants.pyramid,
-                                          //               width: (10 /
-                                          //                       Dimensions
-                                          //                           .designHeight)
-                                          //                   .w,
-                                          //               height: (10 /
-                                          //                       Dimensions
-                                          //                           .designHeight)
-                                          //                   .h,
-                                          //             ),
-                                          //             const SizeBox(width: 10),
-                                          //             Text(
-                                          //               "Filter: ",
-                                          //               style: TextStyles
-                                          //                   .primary
-                                          //                   .copyWith(
-                                          //                 color:
-                                          //                     AppColors.dark50,
-                                          //                 fontSize: (16 /
-                                          //                         Dimensions
-                                          //                             .designWidth)
-                                          //                     .w,
-                                          //               ),
-                                          //             ),
-                                          //             Text(
-                                          //               (!isAllSelected &&
-                                          //                       !isSentSelected &&
-                                          //                       !isReceivedSelected)
-                                          //                   ? "All"
-                                          //                   : isAllSelected
-                                          //                       ? "All"
-                                          //                       : isSentSelected
-                                          //                           ? "Sent"
-                                          //                           : "Received",
-                                          //               style: TextStyles
-                                          //                   .primaryMedium
-                                          //                   .copyWith(
-                                          //                 color:
-                                          //                     AppColors.primary,
-                                          //                 fontSize: (16 /
-                                          //                         Dimensions
-                                          //                             .designWidth)
-                                          //                     .w,
-                                          //               ),
-                                          //             ),
-                                          //           ],
-                                          //         ),
-                                          //       ),
-                                          //     ),
-                                          //     const SizeBox(width: 10),
-                                          //     InkWell(
-                                          //       onTap: () {
-                                          //         final ShowButtonBloc
-                                          //             showButtonBloc =
-                                          //             context.read<
-                                          //                 ShowButtonBloc>();
-                                          //         isShowSort = true;
-                                          //         showButtonBloc.add(
-                                          //           ShowButtonEvent(
-                                          //               show: isShowSort),
-                                          //         );
-                                          //       },
-                                          //       child: Container(
-                                          //         width: (147 /
-                                          //                 Dimensions
-                                          //                     .designWidth)
-                                          //             .w,
-                                          //         height: (39 /
-                                          //                 Dimensions
-                                          //                     .designHeight)
-                                          //             .h,
-                                          //         decoration: BoxDecoration(
-                                          //           color: const Color.fromRGBO(
-                                          //               34, 97, 105, 0.1),
-                                          //           borderRadius:
-                                          //               BorderRadius.all(
-                                          //             Radius.circular(
-                                          //               (10 /
-                                          //                       Dimensions
-                                          //                           .designWidth)
-                                          //                   .w,
-                                          //             ),
-                                          //           ),
-                                          //         ),
-                                          //         child: Row(
-                                          //           mainAxisAlignment:
-                                          //               MainAxisAlignment
-                                          //                   .center,
-                                          //           children: [
-                                          //             SvgPicture.asset(
-                                          //               ImageConstants.pyramid,
-                                          //               width: (10 /
-                                          //                       Dimensions
-                                          //                           .designHeight)
-                                          //                   .w,
-                                          //               height: (10 /
-                                          //                       Dimensions
-                                          //                           .designHeight)
-                                          //                   .h,
-                                          //             ),
-                                          //             const SizeBox(width: 10),
-                                          //             Text(
-                                          //               "Sort: ",
-                                          //               style: TextStyles
-                                          //                   .primary
-                                          //                   .copyWith(
-                                          //                 color:
-                                          //                     AppColors.dark50,
-                                          //                 fontSize: (16 /
-                                          //                         Dimensions
-                                          //                             .designWidth)
-                                          //                     .w,
-                                          //               ),
-                                          //             ),
-                                          //             Text(
-                                          //               "Date",
-                                          //               style: TextStyles
-                                          //                   .primaryMedium
-                                          //                   .copyWith(
-                                          //                 color:
-                                          //                     AppColors.primary,
-                                          //                 fontSize: (16 /
-                                          //                         Dimensions
-                                          //                             .designWidth)
-                                          //                     .w,
-                                          //               ),
-                                          //             ),
-                                          //           ],
-                                          //         ),
-                                          //       ),
-                                          //     ),
-                                          //   ],
-                                          // ),
                                           const SizeBox(height: 15),
                                           Container(
                                             width: 100.w,

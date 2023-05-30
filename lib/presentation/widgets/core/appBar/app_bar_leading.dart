@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +24,17 @@ class AppBarLeading extends StatelessWidget {
       child: InkWell(
         onTap: onTap ??
             () {
-              // Navigator.of(context, rootNavigator: true).pop(context);
               bool canPop = Navigator.canPop(context);
               log("canPop -> $canPop");
               if (canPop) {
                 Navigator.pop(context);
               } else {
-                SystemNavigator.pop();
+                if (Platform.isAndroid) {
+                  SystemNavigator.pop();
+                }
+                if (Platform.isIOS) {
+                  exit(0);
+                }
               }
             },
         child: SvgPicture.asset(

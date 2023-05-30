@@ -123,18 +123,19 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
         log("User photo Size before compress -> ${base64Decode(photo!.replaceAll("\n", "")).lengthInBytes / 1024} KB");
         var compressedPhoto = await FlutterImageCompress.compressWithList(
           base64Decode(photo!.replaceAll("\n", "")),
-          quality: 95,
+          quality: 30,
         );
         photo = base64Encode(compressedPhoto);
-        while (compressedPhoto.lengthInBytes / 1024 > 100) {
-          log("Compressing user photo");
-          compressedPhoto = await FlutterImageCompress.compressWithList(
-            base64Decode(photo!.replaceAll("\n", "")),
-            quality: math.Random.secure().nextInt(10) + 85,
-            // 95 - i,
-          );
-          photo = base64Encode(compressedPhoto);
-        }
+        // while (compressedPhoto.lengthInBytes / 1024 > 100) {
+        //   log("Compressing user photo");
+        //   compressedPhoto = await FlutterImageCompress.compressWithList(
+        //     base64Decode(photo!.replaceAll("\n", "")),
+        //     quality: 30,
+        //     // math.Random.secure().nextInt(10) + 85,
+        //     // 95 - i,
+        //   );
+        //   photo = base64Encode(compressedPhoto);
+        // }
         // i = 5;
 
         log("User photo Size after compress -> ${compressedPhoto.lengthInBytes / 1024} KB");
@@ -150,18 +151,18 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       log("docPhoto -> $docPhoto");
       var compressedDocPhoto = await FlutterImageCompress.compressWithList(
         base64Decode(docPhoto ?? ""),
-        quality: 95,
+        quality: 30,
       );
       docPhoto = base64Encode(compressedDocPhoto);
-      while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
-        compressedDocPhoto = await FlutterImageCompress.compressWithList(
-          base64Decode(docPhoto ?? ""),
-          quality: math.Random.secure().nextInt(10) + 85,
-        );
-        docPhoto = base64Encode(compressedDocPhoto);
-        log("Size after compress docphoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
-        // i += 5;
-      }
+      // while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
+      //   compressedDocPhoto = await FlutterImageCompress.compressWithList(
+      //     base64Decode(docPhoto ?? ""),
+      //     quality: math.Random.secure().nextInt(10) + 85,
+      //   );
+      //   docPhoto = base64Encode(compressedDocPhoto);
+      //   log("Size after compress docphoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
+      //   // i += 5;
+      // }
       // i = 5;
 
       log("Size after compress docphoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
