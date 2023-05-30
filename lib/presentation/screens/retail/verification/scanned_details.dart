@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
@@ -55,7 +56,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
   bool isFaceScanning = false;
 
-  int i = 5;
+  // int i = 5;
 
   @override
   void initState() {
@@ -238,11 +239,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         while (compressedPhoto.lengthInBytes / 1024 > 100) {
           compressedPhoto = await FlutterImageCompress.compressWithList(
             base64Decode(photo!.replaceAll("\n", "")),
-            quality: 95 - i,
+            quality: math.Random.secure().nextInt(10) + 85,
+            // 95 - i,
           );
           photo = base64Encode(compressedPhoto);
         }
-        i = 5;
+        // i = 5;
 
         log("User photo Size after compress -> ${compressedPhoto.lengthInBytes / 1024} KB");
         img1 = Image.memory(compressedPhoto);
@@ -262,11 +264,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
         compressedDocPhoto = await FlutterImageCompress.compressWithList(
           base64Decode(docPhoto ?? ""),
-          quality: 95 - i,
+          quality: math.Random.secure().nextInt(10) + 85,
+          // 95 - i,
         );
         docPhoto = base64Encode(compressedDocPhoto);
       }
-      i = 5;
+      // i = 5;
 
       log("Size after compress DocPhoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
 
@@ -534,11 +537,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         while (compressedPhoto.lengthInBytes / 1024 > 100) {
           compressedPhoto = await FlutterImageCompress.compressWithList(
             base64Decode(photo!.replaceAll("\n", "")),
-            quality: 95 - i,
+            quality: math.Random.secure().nextInt(10) + 85,
+            // 95 - i,
           );
           photo = base64Encode(compressedPhoto);
         }
-        i = 5;
+        // i = 5;
 
         log("User Photo Size after compress -> ${compressedPhoto.lengthInBytes / 1024} KB");
         img1 = Image.memory(compressedPhoto);
@@ -558,11 +562,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
         compressedDocPhoto = await FlutterImageCompress.compressWithList(
           base64Decode(docPhoto ?? ""),
-          quality: 95 - i,
+          quality: math.Random.secure().nextInt(10) + 85,
+          // 95 - i,
         );
         docPhoto = base64Encode(compressedDocPhoto);
       }
-      i = 5;
+      // i = 5;
 
       log("Size after compress DocPhoto -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
 
@@ -780,11 +785,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     while (compressedSelfie.lengthInBytes / 1024 > 100) {
       compressedSelfie = await FlutterImageCompress.compressWithList(
         base64Decode(selfiePhoto),
-        quality: 95 - i,
+        quality: math.Random.secure().nextInt(10) + 85,
+        // 95 - i,
       );
       selfiePhoto = base64Encode(compressedSelfie);
     }
-    i = 5;
+    // i = 5;
 
     log("Selfie size after compress -> ${compressedSelfie.lengthInBytes / 1024} KB");
 

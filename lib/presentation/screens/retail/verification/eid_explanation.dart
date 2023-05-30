@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
@@ -32,7 +33,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
 
   bool isScanning = false;
 
-  int i = 5;
+  // int i = 5;
 
   @override
   void initState() {
@@ -105,11 +106,12 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
         while (compressedPhoto.lengthInBytes / 1024 > 100) {
           compressedPhoto = await FlutterImageCompress.compressWithList(
             base64Decode(photo!.replaceAll("\n", "")),
-            quality: 95 - i,
+            quality: math.Random.secure().nextInt(10) + 85,
+            // 95 - i,
           );
           photo = base64Encode(compressedPhoto);
         }
-        i = 5;
+        // i = 5;
 
         log("User photo Size after compress -> ${compressedPhoto.lengthInBytes / 1024} KB");
         img1 = Image.memory(compressedPhoto);
@@ -129,11 +131,12 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       while (compressedDocPhoto.lengthInBytes / 1024 > 100) {
         compressedDocPhoto = await FlutterImageCompress.compressWithList(
           base64Decode(docPhoto ?? ""),
-          quality: 95 - i,
+          quality: math.Random.secure().nextInt(10) + 85,
+          // 95 - i,
         );
         docPhoto = base64Encode(compressedDocPhoto);
       }
-      i = 5;
+      // i = 5;
 
       log("Size after compress doc photo -> ${compressedDocPhoto.lengthInBytes / 1024} KB");
 
