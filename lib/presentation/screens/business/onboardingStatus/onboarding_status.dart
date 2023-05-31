@@ -111,99 +111,100 @@ class _BusinessOnboardingStatusScreenState
               condition: onboardingStatusArgument.stepsCompleted == 3,
               truthy: Column(
                 children: [
-                  Row(
-                    children: [
-                      BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                        builder: buildTC,
-                      ),
-                      const SizeBox(width: 10),
-                      Row(
-                        children: [
-                          Text(
-                            'I agree to the ',
-                            style: TextStyles.primary.copyWith(
-                              color: const Color.fromRGBO(0, 0, 0, 0.5),
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, Routes.termsAndConditions);
-                            },
-                            child: Text(
-                              'Terms & Conditions',
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            ' and ',
-                            style: TextStyles.primary.copyWith(
-                              color: const Color.fromRGBO(0, 0, 0, 0.5),
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, Routes.privacyStatement);
-                            },
-                            child: Text(
-                              'Privacy Policy',
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizeBox(height: 15),
+                  // Row(
+                  //   children: [
+                  //     BlocBuilder<CheckBoxBloc, CheckBoxState>(
+                  //       builder: buildTC,
+                  //     ),
+                  //     const SizeBox(width: 10),
+                  //     Row(
+                  //       children: [
+                  //         Text(
+                  //           'I agree to the ',
+                  //           style: TextStyles.primary.copyWith(
+                  //             color: const Color.fromRGBO(0, 0, 0, 0.5),
+                  //             fontSize: (16 / Dimensions.designWidth).w,
+                  //           ),
+                  //         ),
+                  //         InkWell(
+                  //           onTap: () {
+                  //             Navigator.pushNamed(
+                  //                 context, Routes.termsAndConditions);
+                  //           },
+                  //           child: Text(
+                  //             'Terms & Conditions',
+                  //             style: TextStyles.primary.copyWith(
+                  //               color: AppColors.primary,
+                  //               fontSize: (16 / Dimensions.designWidth).w,
+                  //               decoration: TextDecoration.underline,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //         Text(
+                  //           ' and ',
+                  //           style: TextStyles.primary.copyWith(
+                  //             color: const Color.fromRGBO(0, 0, 0, 0.5),
+                  //             fontSize: (16 / Dimensions.designWidth).w,
+                  //           ),
+                  //         ),
+                  //         InkWell(
+                  //           onTap: () {
+                  //             Navigator.pushNamed(
+                  //                 context, Routes.privacyStatement);
+                  //           },
+                  //           child: Text(
+                  //             'Privacy Policy',
+                  //             style: TextStyles.primary.copyWith(
+                  //               color: AppColors.primary,
+                  //               fontSize: (16 / Dimensions.designWidth).w,
+                  //               decoration: TextDecoration.underline,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                  // const SizeBox(height: 15),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
-                      if (isChecked) {
-                        return Column(
-                          children: [
-                            GradientButton(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  Routes.acceptTermsAndConditions,
-                                  arguments: CreateAccountArgumentModel(
-                                    email: emailAddress,
-                                    isRetail: true,
-                                    userTypeId: 1,
-                                    companyId: 0,
-                                  ).toMap(),
-                                );
-                              },
-                              text: labels[288]["labelText"],
-                            ),
-                            SizeBox(
-                              height: PaddingConstants.bottomPadding +
-                                  MediaQuery.of(context).padding.bottom,
-                            ),
-                          ],
-                        );
-                      } else {
-                        return Column(
-                          children: [
-                            SolidButton(
-                                onTap: () {}, text: labels[288]["labelText"]),
-                            SizeBox(
-                              height: PaddingConstants.bottomPadding +
-                                  MediaQuery.of(context).padding.bottom,
-                            ),
-                          ],
-                        );
-                      }
+                      // if (isChecked) {
+                      return Column(
+                        children: [
+                          GradientButton(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.acceptTermsAndConditions,
+                                arguments: CreateAccountArgumentModel(
+                                  email: emailAddress,
+                                  isRetail: true,
+                                  userTypeId: 1,
+                                  companyId: 0,
+                                ).toMap(),
+                              );
+                            },
+                            text: labels[288]["labelText"],
+                          ),
+                          SizeBox(
+                            height: PaddingConstants.bottomPadding +
+                                MediaQuery.of(context).padding.bottom,
+                          ),
+                        ],
+                      );
+                      // }
+                      // else {
+                      //   return Column(
+                      //     children: [
+                      //       SolidButton(
+                      //           onTap: () {}, text: labels[288]["labelText"]),
+                      //       SizeBox(
+                      //         height: PaddingConstants.bottomPadding +
+                      //             MediaQuery.of(context).padding.bottom,
+                      //       ),
+                      //     ],
+                      //   );
+                      // }
                     },
                   ),
                 ],

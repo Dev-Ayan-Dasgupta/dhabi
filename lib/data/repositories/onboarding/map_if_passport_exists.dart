@@ -5,10 +5,13 @@ import 'package:http/http.dart' as http;
 
 class MapIfPassportExists {
   static Future<Map<String, dynamic>> mapIfPassportExists(
-      Map<String, dynamic> body, String token) async {
+    Map<String, dynamic> body,
+    String token,
+  ) async {
     try {
       http.Response response =
           await IfPassportExists.ifPassportExists(body, token);
+
       return jsonDecode(response.body);
     } catch (_) {
       rethrow;

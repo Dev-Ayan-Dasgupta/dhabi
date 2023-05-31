@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -46,7 +47,23 @@ class _RetailExploreScreenState extends State<RetailExploreScreen> {
                     height: (163 / Dimensions.designHeight).h,
                     child: InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, Routes.errorSuccessScreen);
+                        Navigator.pushNamed(
+                          context,
+                          Routes.errorSuccessScreen,
+                          arguments: ErrorArgumentModel(
+                            hasSecondaryButton: false,
+                            iconPath: ImageConstants.happy,
+                            title: "You're all caught up",
+                            message: labels[66]["labelText"],
+                            buttonText: labels[347]["labelText"],
+                            onTap: () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            buttonTextSecondary: "",
+                            onTapSecondary: () {},
+                          ).toMap(),
+                        );
                       },
                       child: Image.asset(
                         ImageConstants.banner2,

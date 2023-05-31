@@ -37,6 +37,8 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
 
   // int i = 5;
 
+  bool isDialogOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -175,98 +177,34 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
       log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
 
-      var result = await MapIfPassportExists.mapIfPassportExists(
-          {"passportNumber": passportNumber}, token ?? "");
-      log("If Passport Exists API response -> $result");
+      if (passportNumber != null) {
+        var result = await MapIfPassportExists.mapIfPassportExists(
+          {"passportNumber": passportNumber},
+          token ?? "",
+        );
+        log("If Passport Exists API response -> $result");
 
-      // ? Check for expired
-      if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
-                  DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")))
-              .difference(DateTime.now())
-              .inDays <
-          0) {
-        if (context.mounted) {
-          Navigator.pushNamed(
-            context,
-            Routes.errorSuccessScreen,
-            arguments: ErrorArgumentModel(
-              hasSecondaryButton: false,
-              iconPath: ImageConstants.errorOutlined,
-              title: messages[81]["messageText"],
-              message: messages[29]["messageText"],
-              buttonText: "Go Home",
-              // labels[1]["labelText"],
-              onTap: () {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  Routes.retailOnboardingStatus,
-                  (route) => false,
-                  arguments: OnboardingStatusArgumentModel(
-                    stepsCompleted: 1,
-                    isFatca: false,
-                    isPassport: false,
-                    isRetail: true,
-                  ).toMap(),
-                );
-              },
-              buttonTextSecondary: "",
-              onTapSecondary: () {},
-            ).toMap(),
-          );
-        }
-      }
-
-      // ? Check for age
-      else if (DateTime.now()
-              .difference(DateTime.parse(DateFormat('yyyy-MM-dd')
-                  .format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000"))))
-              .inDays <
-          ((18 * 365) + 4)) {
-        if (context.mounted) {
-          Navigator.pushNamed(
-            context,
-            Routes.errorSuccessScreen,
-            arguments: ErrorArgumentModel(
-              hasSecondaryButton: false,
-              iconPath: ImageConstants.errorOutlined,
-              title: messages[80]["messageText"],
-              message: messages[33]["messageText"],
-              buttonText: "Go Home",
-              // labels[1]["labelText"],
-              onTap: () {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  Routes.retailOnboardingStatus,
-                  (route) => false,
-                  arguments: OnboardingStatusArgumentModel(
-                    stepsCompleted: 1,
-                    isFatca: false,
-                    isPassport: false,
-                    isRetail: true,
-                  ).toMap(),
-                );
-              },
-              buttonTextSecondary: "",
-              onTapSecondary: () {},
-            ).toMap(),
-          );
-        }
-      }
-
-      // ? Check for previous existence
-      else if (result["exists"]) {
-        if (context.mounted) {
-          Navigator.pushNamed(context, Routes.errorSuccessScreen,
+        // ? Check for expired
+        if (DateTime.parse(DateFormat('yyyy-MM-dd').format(
+                    DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000")))
+                .difference(DateTime.now())
+                .inDays <
+            0) {
+          if (context.mounted) {
+            Navigator.pushNamed(
+              context,
+              Routes.errorSuccessScreen,
               arguments: ErrorArgumentModel(
                 hasSecondaryButton: false,
-                iconPath: ImageConstants.warningRed,
-                title: messages[76]["messageText"],
-                message: messages[21]["messageText"],
-                buttonText: labels[205]["labelText"],
+                iconPath: ImageConstants.errorOutlined,
+                title: messages[81]["messageText"],
+                message: messages[29]["messageText"],
+                buttonText: "Go Home",
+                // labels[1]["labelText"],
                 onTap: () {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
-                    Routes.loginUserId,
+                    Routes.retailOnboardingStatus,
                     (route) => false,
                     arguments: OnboardingStatusArgumentModel(
                       stepsCompleted: 1,
@@ -278,33 +216,105 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                 },
                 buttonTextSecondary: "",
                 onTapSecondary: () {},
-              ).toMap());
+              ).toMap(),
+            );
+          }
+        }
+
+        // ? Check for age
+        else if (DateTime.now()
+                .difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(
+                    DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000"))))
+                .inDays <
+            ((18 * 365) + 4)) {
+          if (context.mounted) {
+            Navigator.pushNamed(
+              context,
+              Routes.errorSuccessScreen,
+              arguments: ErrorArgumentModel(
+                hasSecondaryButton: false,
+                iconPath: ImageConstants.errorOutlined,
+                title: messages[80]["messageText"],
+                message: messages[33]["messageText"],
+                buttonText: "Go Home",
+                // labels[1]["labelText"],
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    Routes.retailOnboardingStatus,
+                    (route) => false,
+                    arguments: OnboardingStatusArgumentModel(
+                      stepsCompleted: 1,
+                      isFatca: false,
+                      isPassport: false,
+                      isRetail: true,
+                    ).toMap(),
+                  );
+                },
+                buttonTextSecondary: "",
+                onTapSecondary: () {},
+              ).toMap(),
+            );
+          }
+        }
+
+        // ? Check for previous existence
+        else if (result["exists"]) {
+          if (context.mounted) {
+            Navigator.pushNamed(context, Routes.errorSuccessScreen,
+                arguments: ErrorArgumentModel(
+                  hasSecondaryButton: false,
+                  iconPath: ImageConstants.warningRed,
+                  title: messages[76]["messageText"],
+                  message: messages[21]["messageText"],
+                  buttonText: labels[205]["labelText"],
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.loginUserId,
+                      (route) => false,
+                      arguments: OnboardingStatusArgumentModel(
+                        stepsCompleted: 1,
+                        isFatca: false,
+                        isPassport: false,
+                        isRetail: true,
+                      ).toMap(),
+                    );
+                  },
+                  buttonTextSecondary: "",
+                  onTapSecondary: () {},
+                ).toMap());
+          }
+        } else {
+          await storage.write(key: "isEid", value: false.toString());
+          // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
+          storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
+          await storage.write(key: "stepsCompleted", value: 3.toString());
+          storageStepsCompleted =
+              int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+
+          if (context.mounted) {
+            Navigator.pushNamed(
+              context,
+              Routes.scannedDetails,
+              arguments: ScannedDetailsArgumentModel(
+                isEID: false,
+                fullName: fullName,
+                idNumber: passportNumber,
+                nationality: nationality,
+                nationalityCode: nationalityCode,
+                expiryDate: expiryDate,
+                dob: dob,
+                gender: gender,
+                photo: photo,
+                docPhoto: docPhoto,
+              ).toMap(),
+            );
+          }
         }
       } else {
-        await storage.write(key: "isEid", value: false.toString());
-        // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
-        storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
-        await storage.write(key: "stepsCompleted", value: 3.toString());
-        storageStepsCompleted =
-            int.parse(await storage.read(key: "stepsCompleted") ?? "0");
-
         if (context.mounted) {
-          Navigator.pushNamed(
-            context,
-            Routes.scannedDetails,
-            arguments: ScannedDetailsArgumentModel(
-              isEID: false,
-              fullName: fullName,
-              idNumber: passportNumber,
-              nationality: nationality,
-              nationalityCode: nationalityCode,
-              expiryDate: expiryDate,
-              dob: dob,
-              gender: gender,
-              photo: photo,
-              docPhoto: docPhoto,
-            ).toMap(),
-          );
+          promptScanError();
         }
       }
     } else if (completion.action == DocReaderAction.TIMEOUT) {
@@ -340,23 +350,20 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       }
     } else if (completion.action == DocReaderAction.ERROR) {
       if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return CustomDialog(
-              svgAssetPath: ImageConstants.warning,
-              title: "Scanning Error",
-              message:
-                  "There was an error while scanning your passport. Please try again.",
-              actionWidget: GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: "Try Again",
-              ),
-            );
-          },
-        );
+        promptScanError();
+      }
+    } else if (completion.action == DocReaderAction.CANCEL ||
+        completion.action == DocReaderAction.MORE_PAGES_AVAILABLE ||
+        completion.action == DocReaderAction.NOTIFICATION ||
+        completion.action == DocReaderAction.PROCESS ||
+        completion.action == DocReaderAction.PROCESSING_ON_SERVICE ||
+        completion.action == DocReaderAction.PROCESS_IR_FRAME ||
+        completion.action == DocReaderAction.PROCESS_WHITE_FLASHLIGHT ||
+        completion.action == DocReaderAction.PROCESS_WHITE_UV_IMAGES) {
+      // ! Don't do anthing for now
+    } else {
+      if (context.mounted) {
+        promptScanError();
       }
     }
   }
@@ -423,6 +430,10 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
               children: [
                 GradientButton(
                   onTap: () {
+                    setState(() {
+                      isDialogOpen = false;
+                    });
+
                     if (!isScanning) {
                       final ShowButtonBloc showButtonBloc =
                           context.read<ShowButtonBloc>();
@@ -460,6 +471,26 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void promptScanError() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Scanning Error",
+          message:
+              "There was an error while scanning your Passport. Please try again.",
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: "Try Again",
+          ),
+        );
+      },
     );
   }
 

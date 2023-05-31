@@ -292,14 +292,14 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
     if (isCurrentSelected || isSavingsSelected) {
       return Column(
         children: [
-          Text(
-            "You will be receiving a free Prepaid Card! Available in the \"Cards\" tab.",
-            style: TextStyles.primary.copyWith(
-              color: const Color(0XFF252525),
-              fontSize: (12 / Dimensions.designWidth).w,
-            ),
-          ),
-          const SizeBox(height: 10),
+          // Text(
+          //   "You will be receiving a free Prepaid Card! Available in the \"Cards\" tab.",
+          //   style: TextStyles.primary.copyWith(
+          //     color: const Color(0XFF252525),
+          //     fontSize: (12 / Dimensions.designWidth).w,
+          //   ),
+          // ),
+          // const SizeBox(height: 10),
           GradientButton(
             onTap: () async {
               if (applicationAccountArgument.isInitial) {
@@ -390,7 +390,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                                       ).toMap(),
                                     );
                                   },
-                                  text: "Go Back",
+                                  text: labels[347]["labelText"],
                                 ),
                               );
                             },
@@ -418,7 +418,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                                     Routes.applicationAddress,
                                   );
                                 },
-                                text: "Go Back",
+                                text: labels[347]["labelText"],
                               ),
                             );
                           },
@@ -452,7 +452,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                                   ).toMap(),
                                 );
                               },
-                              text: "Go Back",
+                              text: labels[347]["labelText"],
                             ),
                           );
                         },

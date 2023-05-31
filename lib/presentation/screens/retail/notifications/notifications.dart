@@ -92,7 +92,7 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
                     padding: EdgeInsets.symmetric(
                         horizontal: (34 / Dimensions.designWidth).w),
                     child: Text(
-                      "Check back later for promotions and recommendations to keep your account up to date.",
+                      labels[66]["labelText"],
                       style: TextStyles.primaryMedium.copyWith(
                         color: const Color(0XFF414141),
                         fontSize: (18 / Dimensions.designWidth).w,

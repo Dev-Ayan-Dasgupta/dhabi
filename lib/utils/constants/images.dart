@@ -94,6 +94,7 @@ class ImageConstants {
   static const String filter = "${iconsRoot}filter.svg";
   static const String sort = "${iconsRoot}sort.svg";
   static const String date = "${iconsRoot}date.svg";
+  static const String happy = "${iconsRoot}happy.svg";
 
   // * BANNERS
   static const String banner3 = "${bannersRoot}banner3.png";
