@@ -232,7 +232,9 @@ class _BusinessOnboardingStatusScreenState
                             case 1:
                               callLoginApi();
                               Navigator.pushNamed(
-                                  context, Routes.basicCompanyDetails);
+                                context,
+                                Routes.basicCompanyDetails,
+                              );
                               break;
                             case 2:
                               callLoginApi();

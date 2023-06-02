@@ -2,6 +2,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/basic_company_details/basic_company_details.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/select_entity_for_persistent_onboarding.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/accountDetails/download_statement.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/cardsVault/index.dart';
@@ -363,6 +364,10 @@ class AppRouter {
       case Routes.dormant:
         return MaterialPageRoute(
           builder: (_) => const DormantScreen(),
+        );
+      case Routes.entityForOnboarding:
+        return MaterialPageRoute(
+          builder: (_) => const SelectEntityForOnboardingPersistence(),
         );
       default:
         return MaterialPageRoute(

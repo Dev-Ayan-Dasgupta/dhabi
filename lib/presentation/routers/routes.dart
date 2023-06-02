@@ -72,6 +72,7 @@ class Routes {
   static const String termsAndConditions = 'terms-and-conditions';
   static const String privacyStatement = 'privacy-statement';
   static const String setPassword = 'set-password';
+  static const String entityForOnboarding = 'entity-for-onboarding';
 
   static const String faceCompare = 'face-compare';
 }

@@ -395,9 +395,13 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                 if ((singleCifResult["retailOnboardingState"] != 0 &&
                         singleCifResult["corporateOnboardingState"] == 0) ||
                     (singleCifResult["retailOnboardingState"] == 0 &&
+                        singleCifResult["corporateOnboardingState"] != 0) ||
+                    (singleCifResult["retailOnboardingState"] != 0 &&
+                        singleCifResult["corporateOnboardingState"] == 4) ||
+                    (singleCifResult["retailOnboardingState"] == 5 &&
                         singleCifResult["corporateOnboardingState"] != 0)) {
                   if (context.mounted) {
-                    Navigator.pushReplacementNamed(
+                    Navigator.pushNamed(
                       context,
                       Routes.loginPassword,
                       arguments: LoginPasswordArgumentModel(
@@ -408,9 +412,11 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                       ).toMap(),
                     );
                   }
-                } else if (singleCifResult["retailOnboardingState"] != 0 &&
-                    singleCifResult["corporateOnboardingState"] != 0) {
-                  // TODO: Sir will ask Kanhai
+                } else if (singleCifResult["retailOnboardingState"] != 5 &&
+                    singleCifResult["corporateOnboardingState"] != 4) {
+                  if (context.mounted) {
+                    Navigator.pushNamed(context, Routes.entityForOnboarding);
+                  }
                 } else {
                   var sendEmailOtpResult =
                       await MapSendEmailOtp.mapSendEmailOtp(
