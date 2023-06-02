@@ -78,6 +78,11 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['RENEW_TOKEN'] ?? "";
   }
 
+  @override
+  String get registeredMobileOTPRequest {
+    return dotenv.env['REGISTERED_MOBILE_OTP_REQUEST'] ?? "";
+  }
+
   // ? Configuration APIs
 
   @override

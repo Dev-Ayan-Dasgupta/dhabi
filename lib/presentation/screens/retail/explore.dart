@@ -36,44 +36,45 @@ class _RetailExploreScreenState extends State<RetailExploreScreen> {
         child: Column(
           children: [
             const SizeBox(height: 10),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 1,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: (5 / Dimensions.designWidth).w),
-                    width: 100.w,
-                    height: (163 / Dimensions.designHeight).h,
-                    child: InkWell(
+            Container(
+              margin: EdgeInsets.symmetric(
+                  vertical: (5 / Dimensions.designWidth).w),
+              width: 100.w,
+              height: (163 / Dimensions.designHeight).h,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.errorSuccessScreen,
+                    arguments: ErrorArgumentModel(
+                      hasSecondaryButton: false,
+                      iconPath: ImageConstants.happy,
+                      title: "You're all caught up",
+                      message: labels[66]["labelText"],
+                      buttonText: labels[347]["labelText"],
                       onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          Routes.errorSuccessScreen,
-                          arguments: ErrorArgumentModel(
-                            hasSecondaryButton: false,
-                            iconPath: ImageConstants.happy,
-                            title: "You're all caught up",
-                            message: labels[66]["labelText"],
-                            buttonText: labels[347]["labelText"],
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            buttonTextSecondary: "",
-                            onTapSecondary: () {},
-                          ).toMap(),
-                        );
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                       },
-                      child: Image.asset(
-                        ImageConstants.banner2,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+                      buttonTextSecondary: "",
+                      onTapSecondary: () {},
+                    ).toMap(),
                   );
                 },
+                child: Image.asset(
+                  ImageConstants.banner2,
+                  fit: BoxFit.fill,
+                ),
               ),
-            )
+            ),
+            // Expanded(
+            //   child: ListView.builder(
+            //     itemCount: 1,
+            //     itemBuilder: (context, index) {
+            //       return ;
+            //     },
+            //   ),
+            // )
           ],
         ),
       ),

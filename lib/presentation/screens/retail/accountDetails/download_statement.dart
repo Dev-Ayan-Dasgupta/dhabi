@@ -14,15 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_bloc.dart';
-import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_event.dart';
-import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_state.dart';
-import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
-import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
-import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';

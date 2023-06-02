@@ -10,3 +10,6 @@ bool isCompanyRegistered = false;
 bool isOtpFrozen = false;
 
 bool checkBiometric = false;
+
+int maxSavingAccountAllowed = 0;
+int maxCurrentAccountAllowed = 0;

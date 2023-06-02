@@ -1,14 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:math' as math;
+// import 'dart:math' as math;
 
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';

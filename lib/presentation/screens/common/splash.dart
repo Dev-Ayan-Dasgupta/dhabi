@@ -62,6 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> initConfigurations() async {
     log("Init conf started");
+    getApplicationConfigurations();
     labels = await MapAppLabels.mapAppLabels({"languageCode": "en"});
     messages = await MapAppMessages.mapAppMessages({"languageCode": "en"});
     dhabiCountries = await MapAllCountries.mapAllCountries();
@@ -78,6 +79,16 @@ class _SplashScreenState extends State<SplashScreen> {
     populateEmirates();
     getPolicies();
     log("Init conf ended");
+  }
+
+  void getApplicationConfigurations() async {
+    var result =
+        await MapApplicationConfigurations.mapApplicationConfigurations();
+    log("Application Config API response -> $result");
+    maxSavingAccountAllowed = result["maxSavingAccountAllowed"];
+    maxCurrentAccountAllowed = result["maxCurrentAccountAllowed"];
+    log("maxSavingAccountAllowed -> $maxSavingAccountAllowed");
+    log("maxCurrentAccountAllowed -> $maxCurrentAccountAllowed");
   }
 
   void getDhabiCountryNames() {

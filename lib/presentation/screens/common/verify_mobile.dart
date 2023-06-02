@@ -198,8 +198,9 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                     emailOrPhone: "+971${_phoneController.text}",
                     isEmail: false,
                     isBusiness: verifyMobileArgumentModel.isBusiness,
-                    isInitial: true, // TODO: check this later
+                    isInitial: true,
                     isLogin: false,
+                    isIncompleteOnboarding: false,
                   ).toMap(),
                 );
               }

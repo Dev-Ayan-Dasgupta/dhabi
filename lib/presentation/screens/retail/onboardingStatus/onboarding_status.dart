@@ -1,12 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -287,6 +282,8 @@ class _RetailOnboardingStatusScreenState
                                   Routes.applicationAccount,
                                   arguments: ApplicationAccountArgumentModel(
                                     isInitial: true,
+                                    savingsAccountsCreated: 0,
+                                    currentAccountsCreated: 0,
                                   ).toMap(),
                                 );
                               }

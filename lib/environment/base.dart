@@ -17,6 +17,7 @@ abstract class BaseConfig {
   String get changePassword;
   String get isDeviceValid;
   String get renewToken;
+  String get registeredMobileOTPRequest;
 
   // ? Configuration APIs
 

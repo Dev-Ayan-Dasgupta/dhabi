@@ -45,7 +45,7 @@ class AppRouter {
         );
       // case Routes.login:
       //   return MaterialPageRoute(
-      //     builder: (_) => const LoginScreen(), // Deprecated
+      //     builder: (_) => const LoginScreen(), // ! Deprecated
       //   );
       case Routes.loginUserId:
         return MaterialPageRoute(

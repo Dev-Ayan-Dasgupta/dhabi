@@ -8,11 +8,13 @@ class SelectAccountArgumentModel {
   final List cifDetails;
   final bool isPwChange;
   final bool isLogin;
+  final bool isIncompleteOnboarding;
   SelectAccountArgumentModel({
     required this.emailId,
     required this.cifDetails,
     required this.isPwChange,
     required this.isLogin,
+    required this.isIncompleteOnboarding,
   });
 
   SelectAccountArgumentModel copyWith({
@@ -20,12 +22,15 @@ class SelectAccountArgumentModel {
     List? cifDetails,
     bool? isPwChange,
     bool? isLogin,
+    bool? isIncompleteOnboarding,
   }) {
     return SelectAccountArgumentModel(
       emailId: emailId ?? this.emailId,
       cifDetails: cifDetails ?? this.cifDetails,
       isPwChange: isPwChange ?? this.isPwChange,
       isLogin: isLogin ?? this.isLogin,
+      isIncompleteOnboarding:
+          isIncompleteOnboarding ?? this.isIncompleteOnboarding,
     );
   }
 
@@ -35,6 +40,7 @@ class SelectAccountArgumentModel {
       'cifDetails': cifDetails,
       'isPwChange': isPwChange,
       'isLogin': isLogin,
+      'isIncompleteOnboarding': isIncompleteOnboarding,
     };
   }
 
@@ -44,6 +50,7 @@ class SelectAccountArgumentModel {
       cifDetails: List.from((map['cifDetails'] as List)),
       isPwChange: map['isPwChange'] as bool,
       isLogin: map['isLogin'] as bool,
+      isIncompleteOnboarding: map['isIncompleteOnboarding'] as bool,
     );
   }
 
@@ -55,7 +62,7 @@ class SelectAccountArgumentModel {
 
   @override
   String toString() {
-    return 'SelectAccountArgumentModel(emailId: $emailId, cifDetails: $cifDetails, isPwChange: $isPwChange, isLogin: $isLogin)';
+    return 'SelectAccountArgumentModel(emailId: $emailId, cifDetails: $cifDetails, isPwChange: $isPwChange, isLogin: $isLogin, isIncompleteOnboarding: $isIncompleteOnboarding)';
   }
 
   @override
@@ -65,7 +72,8 @@ class SelectAccountArgumentModel {
     return other.emailId == emailId &&
         listEquals(other.cifDetails, cifDetails) &&
         other.isPwChange == isPwChange &&
-        other.isLogin == isLogin;
+        other.isLogin == isLogin &&
+        other.isIncompleteOnboarding == isIncompleteOnboarding;
   }
 
   @override
@@ -73,6 +81,7 @@ class SelectAccountArgumentModel {
     return emailId.hashCode ^
         cifDetails.hashCode ^
         isPwChange.hashCode ^
-        isLogin.hashCode;
+        isLogin.hashCode ^
+        isIncompleteOnboarding.hashCode;
   }
 }

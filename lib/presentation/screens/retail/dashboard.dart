@@ -2,15 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_bloc.dart';
-import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_event.dart';
-import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
-import 'package:dialup_mobile_app/bloc/tabBar/tabbar_bloc.dart';
-import 'package:dialup_mobile_app/bloc/tabBar/tabbar_event.dart';
-import 'package:dialup_mobile_app/bloc/tabBar/tabbar_state.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -58,6 +50,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   bool isFetchingAccountDetails = false;
 
   List accountDetails = [];
+  int savingsAccountCount = 0;
+  int currentAccountCount = 0;
   List depositDetails = [];
 
   List statementList = [];
@@ -237,6 +231,15 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       log("Customer Account Details API response -> $customerDetails");
       accountDetails =
           customerDetails["crCustomerProfileRes"]["body"]["accountDetails"];
+      for (var account in accountDetails) {
+        if (account["productCode"] == "1001") {
+          currentAccountCount++;
+        } else {
+          savingsAccountCount++;
+        }
+      }
+      log("Current Accounts -> $currentAccountCount");
+      log("Savings Accounts -> $savingsAccountCount");
       depositDetails =
           customerDetails["crCustomerProfileRes"]["body"]["depositDetails"];
     } catch (_) {
@@ -409,6 +412,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                         arguments:
                                                             ApplicationAccountArgumentModel(
                                                           isInitial: false,
+                                                          savingsAccountsCreated:
+                                                              savingsAccountCount,
+                                                          currentAccountsCreated:
+                                                              currentAccountCount,
                                                         ).toMap(),
                                                       );
                                                     },

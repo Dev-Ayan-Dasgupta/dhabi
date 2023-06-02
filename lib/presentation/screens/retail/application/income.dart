@@ -1,6 +1,4 @@
-import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
-import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
-import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';

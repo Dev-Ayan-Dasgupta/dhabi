@@ -8,12 +8,14 @@ class OTPArgumentModel {
   final bool isBusiness;
   final bool isInitial;
   final bool isLogin;
+  final bool isIncompleteOnboarding;
   OTPArgumentModel({
     required this.emailOrPhone,
     required this.isEmail,
     required this.isBusiness,
     required this.isInitial,
     required this.isLogin,
+    required this.isIncompleteOnboarding,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +25,7 @@ class OTPArgumentModel {
       'isBusiness': isBusiness,
       'isInitial': isInitial,
       'isLogin': isLogin,
+      'isIncompleteOnboarding': isIncompleteOnboarding,
     };
   }
 
@@ -33,6 +36,7 @@ class OTPArgumentModel {
       isBusiness: map['isBusiness'] as bool,
       isInitial: map['isInitial'] as bool,
       isLogin: map['isLogin'] as bool,
+      isIncompleteOnboarding: map['isIncompleteOnboarding'] as bool,
     );
   }
 
@@ -47,6 +51,7 @@ class OTPArgumentModel {
     bool? isBusiness,
     bool? isInitial,
     bool? isLogin,
+    bool? isIncompleteOnboarding,
   }) {
     return OTPArgumentModel(
       emailOrPhone: emailOrPhone ?? this.emailOrPhone,
@@ -54,12 +59,14 @@ class OTPArgumentModel {
       isBusiness: isBusiness ?? this.isBusiness,
       isInitial: isInitial ?? this.isInitial,
       isLogin: isLogin ?? this.isLogin,
+      isIncompleteOnboarding:
+          isIncompleteOnboarding ?? this.isIncompleteOnboarding,
     );
   }
 
   @override
   String toString() {
-    return 'OTPArgumentModel(emailOrPhone: $emailOrPhone, isEmail: $isEmail, isBusiness: $isBusiness, isInitial: $isInitial, isLogin: $isLogin)';
+    return 'OTPArgumentModel(emailOrPhone: $emailOrPhone, isEmail: $isEmail, isBusiness: $isBusiness, isInitial: $isInitial, isLogin: $isLogin, isIncompleteOnboarding: $isIncompleteOnboarding)';
   }
 
   @override
@@ -70,7 +77,8 @@ class OTPArgumentModel {
         other.isEmail == isEmail &&
         other.isBusiness == isBusiness &&
         other.isInitial == isInitial &&
-        other.isLogin == isLogin;
+        other.isLogin == isLogin &&
+        other.isIncompleteOnboarding == isIncompleteOnboarding;
   }
 
   @override
@@ -79,6 +87,7 @@ class OTPArgumentModel {
         isEmail.hashCode ^
         isBusiness.hashCode ^
         isInitial.hashCode ^
-        isLogin.hashCode;
+        isLogin.hashCode ^
+        isIncompleteOnboarding.hashCode;
   }
 }

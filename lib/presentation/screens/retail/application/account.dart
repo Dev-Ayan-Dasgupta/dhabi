@@ -6,12 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
-import 'package:dialup_mobile_app/bloc/multiSelect/multi_select_bloc.dart';
-import 'package:dialup_mobile_app/bloc/multiSelect/multi_select_event.dart';
-import 'package:dialup_mobile_app/bloc/multiSelect/multi_select_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -473,69 +468,44 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                       context.read<ShowButtonBloc>();
                   isUploading = true;
                   showButtonBloc.add(ShowButtonEvent(show: isUploading));
-                  var responseAccount = await MapCreateAccount.mapCreateAccount(
-                      {"accountType": storageAccountType}, token ?? "");
-                  log("Create Account API response -> $responseAccount");
-                  if (responseAccount["success"]) {
-                    if (context.mounted) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CustomDialog(
-                            svgAssetPath: ImageConstants.checkCircleOutlined,
-                            title: "Account Opened",
-                            message: "Your current USD Account number is",
-                            actionWidget: GradientButton(
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  Routes.retailDashboard,
-                                  arguments: RetailDashboardArgumentModel(
-                                    imgUrl: "",
-                                    name: storageCustomerName ?? "",
-                                    isFirst: false,
-                                  ).toMap(),
-                                );
-                              },
-                              text: "Done",
-                            ),
-                          );
-                        },
-                      );
+                  if (accountType == 1) {
+                    if (applicationAccountArgument.savingsAccountsCreated >=
+                        maxSavingAccountAllowed) {
+                      if (context.mounted) {
+                        promptMaxLimit();
+                      }
+                    } else {
+                      if (context.mounted) {
+                        callCreateAccountApi();
+                      }
+                    }
+                  } else if (accountType == 2) {
+                    if (applicationAccountArgument.currentAccountsCreated >=
+                        maxCurrentAccountAllowed) {
+                      if (context.mounted) {
+                        promptMaxLimit();
+                      }
+                    } else {
+                      if (context.mounted) {
+                        callCreateAccountApi();
+                      }
                     }
                   } else {
-                    if (context.mounted) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CustomDialog(
-                            svgAssetPath: ImageConstants.warning,
-                            title: "Oops",
-                            message:
-                                "It seems like you have exceeded number of allowed CA or SA.",
-                            actionWidget: GradientButton(
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  Routes.retailDashboard,
-                                  arguments: RetailDashboardArgumentModel(
-                                    imgUrl: "",
-                                    name: storageCustomerName ?? "",
-                                    isFirst: false,
-                                  ).toMap(),
-                                );
-                              },
-                              text: "Close",
-                            ),
-                          );
-                        },
-                      );
+                    if (applicationAccountArgument.savingsAccountsCreated >=
+                            maxSavingAccountAllowed ||
+                        applicationAccountArgument.currentAccountsCreated >=
+                            maxCurrentAccountAllowed) {
+                      if (context.mounted) {
+                        promptMaxLimit();
+                      }
+                    } else {
+                      if (context.mounted) {
+                        callCreateAccountApi();
+                      }
                     }
                   }
+                  isUploading = false;
+                  showButtonBloc.add(ShowButtonEvent(show: isUploading));
                 }
               }
             },
@@ -560,5 +530,67 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
         ],
       );
     }
+  }
+
+  void promptMaxLimit() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Oops",
+          message:
+              "It seems like you have exceeded number of allowed CA or SA.",
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              // Navigator.pop(context);
+            },
+            text: "Close",
+          ),
+        );
+      },
+    );
+  }
+
+  void callCreateAccountApi() async {
+    var responseAccount = await MapCreateAccount.mapCreateAccount(
+        {"accountType": storageAccountType}, token ?? "");
+    log("Create Account API response -> $responseAccount");
+    if (responseAccount["success"]) {
+      if (context.mounted) {
+        promptAccountCreated();
+      }
+    } else {}
+  }
+
+  void promptAccountCreated() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.checkCircleOutlined,
+          title: "Account Opened",
+          message:
+              "Congratulations! Your account(s) has been created successfully.",
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.retailDashboard,
+                arguments: RetailDashboardArgumentModel(
+                  imgUrl: "",
+                  name: storageCustomerName ?? "",
+                  isFirst: false,
+                ).toMap(),
+              );
+            },
+            text: "Done",
+          ),
+        );
+      },
+    );
   }
 }

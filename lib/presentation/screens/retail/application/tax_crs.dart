@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dialup_mobile_app/data/models/arguments/tax_crs.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
@@ -10,15 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
-import 'package:dialup_mobile_app/bloc/applicationCRS/application_crs_bloc.dart';
-import 'package:dialup_mobile_app/bloc/applicationCRS/application_crs_event.dart';
-import 'package:dialup_mobile_app/bloc/applicationCRS/application_crs_state.dart';
-import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_bloc.dart';
-import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_event.dart';
-import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/application/progress.dart';
@@ -1713,6 +1704,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                     Routes.applicationAccount,
                     arguments: ApplicationAccountArgumentModel(
                       isInitial: true,
+                      savingsAccountsCreated: 0,
+                      currentAccountsCreated: 0,
                     ).toMap(),
                   );
                 }

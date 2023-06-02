@@ -386,12 +386,16 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                       isBusiness: false,
                       isInitial: false,
                       isLogin: true,
+                      isIncompleteOnboarding: false,
                     ).toMap(),
                   );
                 }
               } else {
                 // promptWrongCredentials();
-                if (singleCifResult["retailOnboardingState"] != 0) {
+                if ((singleCifResult["retailOnboardingState"] != 0 &&
+                        singleCifResult["corporateOnboardingState"] == 0) ||
+                    (singleCifResult["retailOnboardingState"] == 0 &&
+                        singleCifResult["corporateOnboardingState"] != 0)) {
                   if (context.mounted) {
                     Navigator.pushReplacementNamed(
                       context,
@@ -399,11 +403,14 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                       arguments: LoginPasswordArgumentModel(
                         emailId: storageEmail ?? "",
                         userId: storageUserId ?? 0,
-                        userTypeId: storageUserTypeId ?? 2,
+                        userTypeId: singleCifResult["userType"],
                         companyId: storageCompanyId ?? 0,
                       ).toMap(),
                     );
                   }
+                } else if (singleCifResult["retailOnboardingState"] != 0 &&
+                    singleCifResult["corporateOnboardingState"] != 0) {
+                  // TODO: Sir will ask Kanhai
                 } else {
                   var sendEmailOtpResult =
                       await MapSendEmailOtp.mapSendEmailOtp(
@@ -419,6 +426,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                         isBusiness: false,
                         isInitial: false,
                         isLogin: true,
+                        isIncompleteOnboarding: false,
                       ).toMap(),
                     );
                   }

@@ -648,6 +648,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               isBusiness: false,
               isInitial: false,
               isLogin: false,
+              isIncompleteOnboarding: false,
             ).toMap(),
           );
         }
@@ -665,12 +666,14 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       if (context.mounted) {
         Navigator.pushReplacementNamed(
           context,
-          Routes.retailOnboardingStatus,
+          loginPasswordArgument.userTypeId == 1
+              ? Routes.retailOnboardingStatus
+              : Routes.businessOnboardingStatus,
           arguments: OnboardingStatusArgumentModel(
             stepsCompleted: 1,
             isFatca: false,
             isPassport: false,
-            isRetail: true,
+            isRetail: loginPasswordArgument.userTypeId == 1 ? true : false,
           ).toMap(),
         );
       }
@@ -697,7 +700,6 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           int.parse(await storage.read(key: "stepsCompleted") ?? "9");
       log("storageStepsCompleted -> $storageStepsCompleted");
       if (context.mounted) {
-        log("Testing for step 3");
         Navigator.pushReplacementNamed(
           context,
           Routes.retailOnboardingStatus,
@@ -709,22 +711,95 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           ).toMap(),
         );
       }
-    } else if (state == 4) {
-      await storage.write(key: "stepsCompleted", value: 10.toString());
+    } else if (state == 9) {
+      await storage.write(key: "stepsCompleted", value: 11.toString());
       storageStepsCompleted =
-          int.parse(await storage.read(key: "stepsCompleted") ?? "10");
+          int.parse(await storage.read(key: "stepsCompleted") ?? "11");
       log("storageStepsCompleted -> $storageStepsCompleted");
       if (context.mounted) {
-        Navigator.pushNamed(
+        Navigator.pushReplacementNamed(
           context,
-          Routes.retailOnboardingStatus,
+          Routes.businessOnboardingStatus,
           arguments: OnboardingStatusArgumentModel(
-            stepsCompleted: 4,
+            stepsCompleted: 2,
             isFatca: false,
             isPassport: false,
-            isRetail: true,
+            isRetail: false,
           ).toMap(),
         );
+      }
+    } else if (state == 4) {
+      if (loginPasswordArgument.userTypeId == 1) {
+        await storage.write(key: "stepsCompleted", value: 10.toString());
+        storageStepsCompleted =
+            int.parse(await storage.read(key: "stepsCompleted") ?? "10");
+        log("storageStepsCompleted -> $storageStepsCompleted");
+        if (context.mounted) {
+          Navigator.pushNamed(
+            context,
+            Routes.retailOnboardingStatus,
+            arguments: OnboardingStatusArgumentModel(
+              stepsCompleted: 4,
+              isFatca: false,
+              isPassport: false,
+              isRetail: true,
+            ).toMap(),
+          );
+        }
+      } else {
+        await storage.write(key: "stepsCompleted", value: 0.toString());
+        storageStepsCompleted =
+            int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+        log("storageStepsCompleted -> $storageStepsCompleted");
+        if (context.mounted) {
+          if (storageCif == null || storageCif == "null") {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return CustomDialog(
+                  svgAssetPath: ImageConstants.warning,
+                  title: "Application approval pending",
+                  message:
+                      "You already have a registration pending. Please contact Dhabi support.",
+                  auxWidget: GradientButton(
+                    onTap: () async {
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.onboarding,
+                          arguments: OnboardingArgumentModel(
+                            isInitial: true,
+                          ).toMap(),
+                        );
+                      }
+                    },
+                    text: labels[347]["labelText"],
+                  ),
+                  actionWidget: SolidButton(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    text: labels[166]["labelText"],
+                    color: AppColors.primaryBright17,
+                    fontColor: AppColors.primary,
+                  ),
+                );
+              },
+            );
+          } else {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.businessDashboard,
+              (route) => false,
+              arguments: RetailDashboardArgumentModel(
+                imgUrl: "",
+                name: "",
+                isFirst: storageIsFirstLogin == true ? false : true,
+              ).toMap(),
+            );
+          }
+        }
       }
     }
   }

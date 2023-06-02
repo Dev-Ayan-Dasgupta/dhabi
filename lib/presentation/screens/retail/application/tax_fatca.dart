@@ -1,14 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dialup_mobile_app/bloc/applicationTax/application_tax_bloc.dart';
-import 'package:dialup_mobile_app/bloc/applicationTax/application_tax_event.dart';
-import 'package:dialup_mobile_app/bloc/applicationTax/application_tax_state.dart';
-import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_bloc.dart';
-import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_event.dart';
-import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
-import 'package:dialup_mobile_app/data/models/arguments/tax_crs.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -165,6 +156,8 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                 Routes.applicationAccount,
                                 arguments: ApplicationAccountArgumentModel(
                                   isInitial: true,
+                                  savingsAccountsCreated: 0,
+                                  currentAccountsCreated: 0,
                                 ).toMap(),
                               );
                             } else {

@@ -181,31 +181,86 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                       }
                                     }
                                   } else {
-                                    if (context.mounted) {
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (context) {
-                                          return CustomDialog(
-                                            svgAssetPath:
-                                                ImageConstants.warning,
-                                            title: "Device Invalid",
-                                            message:
-                                                "You are trying to login from an unregistered device.",
-                                            actionWidget: GradientButton(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacementNamed(
-                                                  context,
-                                                  Routes.loginUserId,
-                                                );
-                                              },
-                                              text: labels[347]["labelText"],
-                                            ),
-                                          );
-                                        },
-                                      );
+                                    var rmorResult =
+                                        await MapRegisteredMobileOtpRequest
+                                            .mapRegisteredMobileOtpRequest(
+                                      {
+                                        "emailId": storageEmail,
+                                        "cif": cif,
+                                      },
+                                      tokenCP ?? "",
+                                    );
+                                    if (rmorResult["success"]) {
+                                      if (context.mounted) {
+                                        Navigator.pushReplacementNamed(
+                                          context,
+                                          Routes.otp,
+                                          arguments: OTPArgumentModel(
+                                            emailOrPhone:
+                                                rmorResult["mobileNumber"],
+                                            isEmail: false,
+                                            isBusiness: isCompany,
+                                            isInitial: false,
+                                            isLogin: false,
+                                            isIncompleteOnboarding: false,
+                                          ).toMap(),
+                                        );
+                                      }
+                                    } else {
+                                      if (context.mounted) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return CustomDialog(
+                                              svgAssetPath:
+                                                  ImageConstants.warning,
+                                              title: "Mobile Not Registered",
+                                              message:
+                                                  "You do not have an account registered with this mobile number. Please register an account.",
+                                              actionWidget: GradientButton(
+                                                onTap: () {
+                                                  Navigator
+                                                      .pushReplacementNamed(
+                                                    context,
+                                                    Routes.onboarding,
+                                                    arguments:
+                                                        OnboardingArgumentModel(
+                                                                isInitial: true)
+                                                            .toMap(),
+                                                  );
+                                                },
+                                                text: "Register",
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
                                     }
+                                    // if (context.mounted) {
+                                    //   showDialog(
+                                    //     context: context,
+                                    //     barrierDismissible: false,
+                                    //     builder: (context) {
+                                    //       return CustomDialog(
+                                    //         svgAssetPath:
+                                    //             ImageConstants.warning,
+                                    //         title: "Device Invalid",
+                                    //         message:
+                                    //             "You are trying to login from an unregistered device.",
+                                    //         actionWidget: GradientButton(
+                                    //           onTap: () {
+                                    //             Navigator.pop(context);
+                                    //             Navigator.pushReplacementNamed(
+                                    //               context,
+                                    //               Routes.loginUserId,
+                                    //             );
+                                    //           },
+                                    //           text: labels[347]["labelText"],
+                                    //         ),
+                                    //       );
+                                    //     },
+                                    //   );
+                                    // }
                                   }
                                 } else {
                                   if (selectAccountArgument.isLogin) {

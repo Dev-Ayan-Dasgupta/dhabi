@@ -288,6 +288,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                         arguments:
                                             ApplicationAccountArgumentModel(
                                           isInitial: true,
+                                          savingsAccountsCreated: 0,
+                                          currentAccountsCreated: 0,
                                         ).toMap(),
                                       );
                                       break;
@@ -516,35 +518,5 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         }
       }
     }
-    // if (persistBiometric!) {
-    //   bool isBiometricSupported =
-    //       await LocalAuthentication().isDeviceSupported();
-    //   log("isBiometricSupported -> $isBiometricSupported");
-
-    //   if (deviceId == "bf8e43a90970f33c") {
-    //     if (context.mounted) {
-    //       Navigator.pushNamed(context, Routes.loginUserId);
-    //     }
-    //   }
-
-    //   if (!isBiometricSupported) {
-    //     if (context.mounted) {
-    //       Navigator.pushNamed(context, Routes.loginUserId);
-    //     }
-    //   } else {
-    //     bool isAuthenticated = await BiometricHelper.authenticateUser();
-
-    //     if (isAuthenticated) {
-    //       if (context.mounted) {
-    //         Navigator.pushNamed(context, Routes.loginUserId);
-    //       }
-    //     } else {
-    //       // TODO: Verify from client if they want a dialog box to enable biometric
-    //       OpenSettings.openBiometricEnrollSetting();
-    //     }
-    //   }
-    // } else {
-    //   Navigator.pushNamed(context, Routes.loginUserId);
-    // }
   }
 }
