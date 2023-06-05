@@ -1,11 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
-class CustomDropDown extends StatefulWidget {
-  const CustomDropDown({
+class CustomDropdownCountries extends StatefulWidget {
+  const CustomDropdownCountries({
     Key? key,
     required this.title,
     required this.items,
@@ -14,15 +19,16 @@ class CustomDropDown extends StatefulWidget {
   }) : super(key: key);
 
   final String title;
-  final List<String> items;
+  final List<DropDownCountriesModel> items;
   final Object? value;
   final Function(Object?) onChanged;
 
   @override
-  State<CustomDropDown> createState() => _CustomDropDownState();
+  State<CustomDropdownCountries> createState() =>
+      _CustomDropdownCountriesState();
 }
 
-class _CustomDropDownState extends State<CustomDropDown> {
+class _CustomDropdownCountriesState extends State<CustomDropdownCountries> {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
@@ -44,15 +50,26 @@ class _CustomDropDownState extends State<CustomDropDown> {
         ),
         items: widget.items
             .map(
-              (item) => DropdownMenuItem<String>(
+              (item) => DropdownMenuItem<DropDownCountriesModel>(
                 value: item,
-                child: Text(
-                  item,
-                  style: TextStyles.primary.copyWith(
-                    color: const Color(0xFF292929),
-                    fontSize: (14 / Dimensions.designWidth).w,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+                child: Row(
+                  children: [
+                    const SizeBox(width: 5),
+                    CircleAvatar(
+                      backgroundImage: MemoryImage(
+                        base64Decode(item.countryFlagBase64 ?? ""),
+                      ),
+                      radius: (12.5 / Dimensions.designWidth).w,
+                    ),
+                    const SizeBox(width: 10),
+                    Text(
+                      item.countrynameOrCode ?? "",
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.dark80,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )
@@ -101,8 +118,9 @@ class _CustomDropDownState extends State<CustomDropDown> {
         ),
         menuItemStyleData: MenuItemStyleData(
           height: (40 / Dimensions.designWidth).w,
-          padding:
-              EdgeInsets.symmetric(horizontal: (14 / Dimensions.designWidth).w),
+          padding: EdgeInsets.symmetric(
+            horizontal: (14 / Dimensions.designWidth).w,
+          ),
         ),
       ),
     );

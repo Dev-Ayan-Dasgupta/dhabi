@@ -16,6 +16,7 @@ class AccountSummaryTile extends StatelessWidget {
     required this.subText,
     required this.subImgUrl,
     this.fontSize,
+    this.space,
   }) : super(key: key);
 
   final VoidCallback onTap;
@@ -26,6 +27,7 @@ class AccountSummaryTile extends StatelessWidget {
   final String subText;
   final String subImgUrl;
   final double? fontSize;
+  final double? space;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,7 @@ class AccountSummaryTile extends StatelessWidget {
                 ),
               ],
             ),
-            SizeBox(height: subText.isEmpty ? 40 : 15),
+            SizeBox(height: subText.isEmpty ? space ?? 40 : 15),
             RichText(
               text: TextSpan(
                 text: "$currency ",

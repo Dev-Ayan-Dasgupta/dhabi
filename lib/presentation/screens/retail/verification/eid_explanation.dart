@@ -73,6 +73,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       await storage.write(key: "nationalityCode", value: nationalityCode);
       storageNationalityCode = await storage.read(key: "nationalityCode");
+      log("storageNationalityCode -> $storageNationalityCode");
 
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
@@ -147,7 +148,15 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
 
       log("Request -> ${{"eidNumber": eiDNumber}}");
 
-      if (eiDNumber != null) {
+      if (eiDNumber != null &&
+          storageNationalityCode != null &&
+          storageFullName != null &&
+          storageNationality != null &&
+          storageExpiryDate != null &&
+          storageDob != null &&
+          storageGender != null &&
+          storagePhoto != null &&
+          storageDocPhoto != null) {
         bool result = await MapIfEidExists.mapIfEidExists(
             {"eidNumber": eiDNumber}, token ?? "");
 

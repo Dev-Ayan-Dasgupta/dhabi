@@ -364,13 +364,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             onTap: () {
                               Navigator.pushNamed(
                                   context, Routes.exploreDashboard);
-                              // Navigator.pushNamed(context, Routes.loginUserId);
+                              // Navigator.pushNamed(
+                              //   context,
+                              //   Routes.verifyMobile,
+                              //   arguments: VerifyMobileArgumentModel(
+                              //     isBusiness: false,
+                              //   ).toMap(),
+                              // );
                               // Navigator.pushNamed(
                               //   context,
                               //   Routes.applicationAccount,
                               //   arguments: ApplicationAccountArgumentModel(
                               //           isInitial: true)
                               //       .toMap(),
+                              // );
+                              // Navigator.pushNamed(
+                              //     context, Routes.applicationAddress);
+                              // Navigator.pushNamed(
+                              //   context,
+                              //   Routes.applicationTaxCRS,
+                              //   arguments: TaxCrsArgumentModel(
+                              //     isUSFATCA: storageIsUSFATCA ?? true,
+                              //     ustin: storageUsTin ?? "",
+                              //   ).toMap(),
                               // );
                             },
                             text: labels[208]["labelText"],

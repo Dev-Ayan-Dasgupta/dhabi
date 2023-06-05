@@ -46,6 +46,26 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['GET_PDF_CUSTOMER_ACCOUNT_STATEMENT'] ?? "";
   }
 
+  @override
+  String get getFdRates {
+    return dotenv.env['GET_FD_RATES'] ?? "";
+  }
+
+  @override
+  String get createBeneficiary {
+    return dotenv.env['CREATE_BENEFICIARY'] ?? "";
+  }
+
+  @override
+  String get getBeneficiaries {
+    return dotenv.env['GET_BENEFICIARIES'] ?? "";
+  }
+
+  @override
+  String get createFd {
+    return dotenv.env['CREATE_FD'] ?? "";
+  }
+
   // ? Authentication APIs
 
   @override
@@ -128,6 +148,11 @@ class EnvConfig implements BaseConfig {
   @override
   String get getApplicationConfigurations {
     return dotenv.env['GET_APPLICATION_CONFIGURATIONS'] ?? "";
+  }
+
+  @override
+  String get getBankDetails {
+    return dotenv.env['GET_BANK_DETAILS'] ?? "";
   }
 
   // ? Onboarding APIs

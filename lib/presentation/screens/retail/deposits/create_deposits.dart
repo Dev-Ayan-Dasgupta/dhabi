@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_bloc.dart';
 import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_event.dart';
 import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_state.dart';
@@ -24,6 +26,7 @@ import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_holo_date_picker/widget/date_picker_widget.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -69,18 +72,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     'Item8',
   ];
 
-  List<DetailsTileModel> rates = [
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-  ];
+  List<DetailsTileModel> rates = [];
+
+  bool _keyboardVisible = false;
 
   @override
   void initState() {
@@ -96,12 +90,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _keyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
         actions: [
           InkWell(
-            onTap: promptUser,
+            onTap: () {
+              populateFdRates();
+              promptUserForRates();
+            },
             child: Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: (15 / Dimensions.designWidth).w,
@@ -125,7 +123,6 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
                     "Create Deposits",
                     style: TextStyles.primaryBold.copyWith(
@@ -134,22 +131,55 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     ),
                   ),
                   const SizeBox(height: 10),
-                  SizedBox(
-                    height: (146 / Dimensions.designWidth).w,
+                  Text(
+                    "Please fill out the following to create a deposit account.",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.dark50,
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        "Select an Account",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
+                  ),
+                  const SizeBox(height: 10),
+                  Expanded(
                     child: ListView.builder(
+                      padding: EdgeInsets.only(
+                          top: (5 / Dimensions.designHeight).h,
+                          bottom: (12 / Dimensions.designHeight).h),
                       controller: _scrollController,
                       scrollDirection: Axis.horizontal,
-                      itemCount: 5,
+                      itemCount: (accountDetails.length),
                       itemBuilder: (context, index) {
                         return AccountSummaryTile(
                           onTap: () {},
                           imgUrl:
-                              "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                          accountType: "Savings",
-                          currency: "USD",
-                          amount: "0.00",
+                              accountDetails[index]["accountCurrency"] == "AED"
+                                  ? ImageConstants.uaeFlag
+                                  : ImageConstants.usaFlag,
+                          accountType:
+                              accountDetails[index]["productCode"] == "1001"
+                                  ? "Current"
+                                  : "Savings",
+                          currency: accountDetails[index]["currentBalance"]
+                              .split(" ")
+                              .first,
+                          amount: accountDetails[index]["currentBalance"]
+                              .split(" ")
+                              .last,
                           subText: "",
                           subImgUrl: "",
+                          space: _keyboardVisible ? 17 : 45,
                         );
                       },
                     ),
@@ -160,6 +190,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                   ),
                   const SizeBox(height: 20),
                   Expanded(
+                    flex: _keyboardVisible ? 2 : 3,
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,18 +264,24 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                               ],
                             ),
                           ),
-                          const SizeBox(height: 10),
-                          Text(
-                            "Deposit Amount (USD)",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.black63,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
+                          const SizeBox(height: 15),
+                          Row(
+                            children: [
+                              Text(
+                                "Deposit Amount (USD)",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
                           ),
                           const SizeBox(height: 7),
                           CustomTextField(
                             controller: _depositController,
-                            hintText: "E.g., 500",
+                            keyboardType: TextInputType.number,
+                            hintText: "E.g., 20000",
                             onChanged: onDepositChanged,
                           ),
                           const SizeBox(height: 5),
@@ -252,52 +289,51 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                             builder: buildErrorMessage,
                           ),
                           const SizeBox(height: 10),
-                          Text(
-                            "Tenure",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.black63,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                labels[110]["labelText"],
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
                           ),
                           const SizeBox(height: 10),
                           InkWell(
                             onTap: showDatePickerWidget,
                             child: Container(
+                              height: (60 / Dimensions.designHeight).h,
                               padding: EdgeInsets.all(
                                   (15 / Dimensions.designWidth).w),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    (10 / Dimensions.designWidth).w)),
-                                boxShadow: [BoxShadows.primary],
-                                color: Colors.white,
-                              ),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          (10 / Dimensions.designWidth).w)),
+                                  boxShadow: const [],
+                                  color: Colors.white,
+                                  border: Border.all(
+                                      width: 1,
+                                      color: const Color(0XFFEEEEEE))),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "Date",
+                                    date.isNotEmpty ? date : "Select Date",
                                     style: TextStyles.primaryMedium.copyWith(
-                                      color: AppColors.black63,
+                                      color: date.isNotEmpty
+                                          ? AppColors.dark80
+                                          : AppColors.dark50,
                                       fontSize: (16 / Dimensions.designWidth).w,
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      BlocBuilder<DateSelectionBloc,
-                                          DateSelectionState>(
-                                        builder: buildCurrentDate,
-                                      ),
-                                      SvgPicture.asset(
-                                        ImageConstants.arrowForwardIos,
-                                        width: (10 / Dimensions.designWidth).w,
-                                        height: (16 / Dimensions.designWidth).w,
-                                        colorFilter: const ColorFilter.mode(
-                                          AppColors.primary,
-                                          BlendMode.srcIn,
-                                        ),
-                                      ),
-                                    ],
+                                  SvgPicture.asset(
+                                    ImageConstants.date,
+                                    width: (10 / Dimensions.designWidth).w,
+                                    height: (16 / Dimensions.designWidth).w,
                                   ),
                                 ],
                               ),
@@ -322,31 +358,72 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     );
   }
 
-  void promptUser() {
+  void populateFdRates() {
+    rates.clear();
+    for (var fdRate in fdRates) {
+      rates.add(
+          DetailsTileModel(key: fdRate["label"], value: "${fdRate["rate"]}%"));
+    }
+  }
+
+  void promptUserForRates() {
     showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: (22 / Dimensions.designWidth).w,
-            right: (22 / Dimensions.designWidth).w,
-            top: (192 / Dimensions.designWidth).w,
-            bottom: (32 / Dimensions.designWidth).w,
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: SizedBox(
-              height: (100 / Dimensions.designWidth).w,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: DetailsTile(length: 10, details: rates),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: (PaddingConstants.horizontalPadding /
+                        Dimensions.designWidth)
+                    .w,
+                vertical: PaddingConstants.bottomPadding +
+                    MediaQuery.of(context).padding.bottom,
+              ),
+              child: Container(
+                width: 100.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular((10 / Dimensions.designWidth).w),
                   ),
-                ],
+                  color: Colors.white,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: SizedBox(
+                    height: 52.5.h,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizeBox(height: 20),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: (22 / Dimensions.designWidth).w,
+                          ),
+                          // vertical: (22 / Dimensions.designHeight).h),
+                          child: Text(
+                            labels[104]["labelText"],
+                            style: TextStyles.primaryBold.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (28 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ),
+                        const SizeBox(height: 20),
+                        Expanded(
+                          child:
+                              DetailsTile(length: rates.length, details: rates),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         );
       },
     );
@@ -357,14 +434,14 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
       padding: EdgeInsets.symmetric(
           horizontal: 47.w -
               (22 / Dimensions.designWidth).w -
-              ((5 - 1) * (6.5 / Dimensions.designWidth).w)),
+              ((accountDetails.length - 1) * (6.5 / Dimensions.designWidth).w)),
       child: SizedBox(
         width: 90.w,
         height: (9 / Dimensions.designWidth).w,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: 5,
+          itemCount: accountDetails.length,
           itemBuilder: (context, index) {
             return ScrollIndicator(
               isCurrent: (index == _scrollIndex),
@@ -396,7 +473,8 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
         return Material(
           color: Colors.transparent,
           child: Container(
-            height: (300 / Dimensions.designWidth).w,
+            height:
+                (((Platform.isIOS ? 310 : 370)) / Dimensions.designHeight).h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular((20 / Dimensions.designWidth).w),
@@ -407,6 +485,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                const SizeBox(height: 20),
                 Text(
                   DateFormat('EEE, d MMM, yyyy').format(DateTime.now()),
                   style: TextStyles.primaryBold.copyWith(
@@ -416,12 +495,28 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                 ),
                 const SizeBox(height: 20),
                 SizedBox(
-                  height: (170 / Dimensions.designWidth).w,
-                  child: CupertinoDatePicker(
-                    mode: CupertinoDatePickerMode.date,
-                    onDateTimeChanged: (p0) {
-                      date = DateFormat('d MMMM, yyyy').format(p0);
-                    },
+                  height:
+                      ((Platform.isIOS ? 170 : 230) / Dimensions.designHeight)
+                          .h,
+                  child: Ternary(
+                    condition: Platform.isIOS,
+                    truthy: CupertinoDatePicker(
+                      maximumDate:
+                          DateTime.now().add(const Duration(days: 30 * 60)),
+                      mode: CupertinoDatePickerMode.date,
+                      onDateTimeChanged: (p0) {
+                        date = DateFormat('d MMMM, yyyy').format(p0);
+                      },
+                    ),
+                    falsy: DatePickerWidget(
+                      looping: false,
+                      lastDate:
+                          DateTime.now().add(const Duration(days: 30 * 60)),
+                      dateFormat: "dd-MMMM-yyyy",
+                      onChange: (p0, _) {
+                        date = DateFormat('d MMMM, yyyy').format(p0);
+                      },
+                    ),
                   ),
                 ),
                 const SizeBox(height: 20),

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,9 +37,13 @@ String deviceType = "";
 String appVersion = "";
 
 List dhabiCountries = [];
+List<DropDownCountriesModel> dhabiCountriesWithFlags = [];
+List<DropDownCountriesModel> dhabiCountryCodesWithFlags = [];
 
 List uaeDetails = [];
 List<String> emirates = [];
+
+List banks = [];
 
 class _SplashScreenState extends State<SplashScreen> {
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
@@ -66,6 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
     labels = await MapAppLabels.mapAppLabels({"languageCode": "en"});
     messages = await MapAppMessages.mapAppMessages({"languageCode": "en"});
     dhabiCountries = await MapAllCountries.mapAllCountries();
+    getDhabiCountriesFlagsAndCodes();
     getDhabiCountryNames();
     allDDs = await MapDropdownLists.mapDropdownLists({"languageCode": "en"});
     populateDD(serviceRequestDDs, 0);
@@ -78,6 +84,8 @@ class _SplashScreenState extends State<SplashScreen> {
     populateDD(statementDurationDDs, 7);
     populateEmirates();
     getPolicies();
+    banks = await MapBankDetails.mapBankDetails();
+    populateBankNames();
     log("Init conf ended");
   }
 
@@ -91,14 +99,40 @@ class _SplashScreenState extends State<SplashScreen> {
     log("maxCurrentAccountAllowed -> $maxCurrentAccountAllowed");
   }
 
+  void getDhabiCountriesFlagsAndCodes() {
+    dhabiCountriesWithFlags.clear();
+    dhabiCountryCodesWithFlags.clear();
+    for (var country in dhabiCountries) {
+      if (country["countryFlagBase64"] != null &&
+          country["dialCode"] != null &&
+          country["countryName"] != null) {
+        dhabiCountriesWithFlags.add(
+          DropDownCountriesModel(
+            countryFlagBase64: country["countryFlagBase64"],
+            countrynameOrCode: country["countryName"],
+          ),
+        );
+        dhabiCountryCodesWithFlags.add(
+          DropDownCountriesModel(
+            countryFlagBase64: country["countryFlagBase64"],
+            countrynameOrCode: "+${country["dialCode"]}",
+          ),
+        );
+      }
+    }
+  }
+
   void getDhabiCountryNames() {
     dhabiCountryNames.clear();
     countryLongCodes.clear();
     for (var country in dhabiCountries) {
-      dhabiCountryNames.add(country["countryName"]);
-      countryLongCodes.add(country["longCode"]);
+      if (country["countryFlagBase64"] != null &&
+          country["dialCode"] != null &&
+          country["countryName"] != null) {
+        dhabiCountryNames.add(country["countryName"]);
+        countryLongCodes.add(country["longCode"]);
+      }
     }
-    // log("dhabiCountryNames -> $dhabiCountryNames");
   }
 
   void populateDD(List dropdownList, int dropdownIndex) {
@@ -106,7 +140,6 @@ class _SplashScreenState extends State<SplashScreen> {
     for (Map<String, dynamic> item in allDDs[dropdownIndex]["items"]) {
       dropdownList.add(item["value"]);
     }
-    // print(dropdownList);
   }
 
   void populateEmirates() async {
@@ -116,7 +149,6 @@ class _SplashScreenState extends State<SplashScreen> {
     for (Map<String, dynamic> emirate in uaeDetails) {
       emirates.add(emirate["city_Name"]);
     }
-    // log("Emirates -> $emirates");
   }
 
   void getPolicies() async {
@@ -124,15 +156,19 @@ class _SplashScreenState extends State<SplashScreen> {
         {"languageCode": "en"});
     statement =
         await MapPrivacyStatement.mapPrivacyStatement({"languageCode": "en"});
-    // log("Terms -> $terms");
-    // log("statement -> $statement");
+  }
+
+  void populateBankNames() {
+    bankNames.clear();
+    for (var bank in banks) {
+      bankNames.add(bank["displayName"]);
+    }
+    log("bankNames -> $bankNames");
   }
 
   Future<void> getDeviceId() async {
-    // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       deviceId = await PlatformDeviceId.getDeviceId;
-      // deviceId = await FlutterUdid.consistentUdid;
     } on PlatformException {
       deviceId = 'Failed to get deviceId.';
     }
@@ -170,7 +206,6 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     _deviceData = deviceData;
-    // log("_deviceData -> $_deviceData");
 
     if (Platform.isAndroid) {
       deviceType = "Android";

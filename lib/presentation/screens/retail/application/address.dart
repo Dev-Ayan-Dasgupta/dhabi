@@ -1,4 +1,6 @@
 import 'package:dialup_mobile_app/bloc/index.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
@@ -30,12 +32,16 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
 
   bool isAddress1Entered = false;
   bool isEmirateSelected = false;
+  bool isCountrySelected = false;
 
   int toggles = 0;
 
   String? selectedValue;
+  DropDownCountriesModel? selectedCountry;
+  String? selectedCountryName;
 
   int emirateIndex = -1;
+  int dhabiCountryIndex = -1;
 
   bool isUploading = false;
 
@@ -100,13 +106,42 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       ],
                     ),
                     const SizeBox(height: 9),
-                    CustomTextField(
-                      controller: _countryController,
-                      onChanged: (p0) {},
-                      enabled: false,
-                      color: const Color(0xFFF9F9F9),
-                      fontColor: const Color(0xFFAAAAAA),
+                    BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                      builder: (context, state) {
+                        return CustomDropdownCountries(
+                          title: "Select a country",
+                          items: dhabiCountriesWithFlags,
+                          value: selectedCountry,
+                          onChanged: (value) {
+                            toggles++;
+                            isCountrySelected = true;
+                            selectedCountry = value as DropDownCountriesModel;
+                            selectedCountryName =
+                                selectedCountry?.countrynameOrCode;
+                            dhabiCountryIndex =
+                                dhabiCountryNames.indexOf(selectedCountryName!);
+                            // emirateIndex = emirates.indexOf(selectedValue!);
+                            residenceSelectedBloc.add(
+                              DropdownSelectedEvent(
+                                isDropdownSelected: isEmirateSelected &&
+                                    isCountrySelected &&
+                                    (isAddress1Entered
+                                    // && isCityEntered
+                                    ),
+                                toggles: toggles,
+                              ),
+                            );
+                          },
+                        );
+                      },
                     ),
+                    // CustomTextField(
+                    //   controller: _countryController,
+                    //   onChanged: (p0) {},
+                    //   enabled: false,
+                    //   color: const Color(0xFFF9F9F9),
+                    //   fontColor: const Color(0xFFAAAAAA),
+                    // ),
                     const SizeBox(height: 20),
                     Row(
                       children: [
@@ -160,7 +195,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     Row(
                       children: [
                         Text(
-                          labels[267]["labelText"],
+                          "State/Province",
                           style: TextStyles.primary.copyWith(
                             color: AppColors.dark80,
                             fontSize: (16 / Dimensions.designWidth).w,
@@ -184,6 +219,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                             residenceSelectedBloc.add(
                               DropdownSelectedEvent(
                                 isDropdownSelected: isEmirateSelected &&
+                                    isCountrySelected &&
                                     (isAddress1Entered
                                     // && isCityEntered
                                     ),
@@ -207,23 +243,10 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       builder: (context, state) {
                         return CustomTextField(
                           controller: _zipController,
-                          keyboardType: TextInputType.number,
-                          borderColor:
-                              (isPoValid || _zipController.text.isEmpty)
-                                  ? const Color(0xFFEEEEEE)
-                                  : AppColors.red100,
-                          onChanged: (p0) {
-                            final ShowButtonBloc showButtonBloc =
-                                context.read<ShowButtonBloc>();
-                            if (p0.length == 4) {
-                              isPoValid = true;
-                            } else {
-                              isPoValid = false;
-                            }
-                            showButtonBloc
-                                .add(ShowButtonEvent(show: isPoValid));
-                          },
-                          hintText: "0000",
+                          // keyboardType: TextInputType.number,
+                          borderColor: const Color(0xFFEEEEEE),
+                          onChanged: (p0) {},
+                          // hintText: "0000",
                         );
                       },
                     ),
@@ -262,7 +285,9 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
             const SizeBox(height: 20),
             BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
               builder: (context, state) {
-                if (isEmirateSelected && isAddress1Entered) {
+                if (isEmirateSelected &&
+                    isAddress1Entered &&
+                    isCountrySelected) {
                   return Column(
                     children: [
                       GradientButton(
@@ -313,8 +338,19 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                             // }, token ?? "");
                             // log("RegisterRetailCustomerAddress API Response -> $result");
                             if (context.mounted) {
-                              Navigator.pushNamed(
-                                  context, Routes.applicationIncome);
+                              if (dhabiCountryIndex == 0) {
+                                Navigator.pushNamed(
+                                    context, Routes.applicationIncome);
+                              } else {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.notAvailable,
+                                  arguments: NotAvailableArgumentModel(
+                                    country: dhabiCountries[dhabiCountryIndex]
+                                        ["countryName"],
+                                  ).toMap(),
+                                );
+                              }
                             }
                             isUploading = false;
                             showButtonBloc.add(
@@ -327,7 +363,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                                 key: "stepsCompleted", value: 5.toString());
                             storageStepsCompleted = int.parse(
                                 await storage.read(key: "stepsCompleted") ??
-                                    "0");
+                                    "5");
                           }
                         },
                         text: labels[127]["labelText"],

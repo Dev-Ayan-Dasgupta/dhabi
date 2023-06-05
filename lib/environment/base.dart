@@ -8,6 +8,10 @@ abstract class BaseConfig {
   String get getCustomerAccountStatement;
   String get getExcelCustomerAccountStatement;
   String get getPdfCustomerAccountStatement;
+  String get getFdRates;
+  String get createBeneficiary;
+  String get getBeneficiaries;
+  String get createFd;
 
   // ? Authentication APIs
 
@@ -30,6 +34,7 @@ abstract class BaseConfig {
   String get getTermsAndConditions;
   String get getPrivacyStatement;
   String get getApplicationConfigurations;
+  String get getBankDetails;
 
   // ? Onboarding APIs
 

@@ -7,3 +7,4 @@ export './get_dropdown_lists.dart';
 export './get_terms_and_conditions.dart';
 export './get_privacy_statement.dart';
 export './get_application_configurations.dart';
+export './get_bank_details.dart';

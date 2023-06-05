@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
@@ -58,10 +59,14 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
 
   int toggles = 0;
 
-  String? selectedCountry;
-  String? selectedCountry2;
-  String? selectedCountry3;
-  String? selectedCountry4;
+  DropDownCountriesModel? selectedCountry;
+  DropDownCountriesModel? selectedCountry2;
+  DropDownCountriesModel? selectedCountry3;
+  DropDownCountriesModel? selectedCountry4;
+  String? selectedCountryName;
+  String? selectedCountryName2;
+  String? selectedCountryName3;
+  String? selectedCountryName4;
   int dhabiCountryIndex = -1;
   int dhabiCountryIndex2 = -1;
   int dhabiCountryIndex3 = -1;
@@ -416,22 +421,27 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             ],
           ),
           const SizeBox(height: 10),
-          CustomDropDown(
+          CustomDropdownCountries(
             title: labels[264]["labelText"],
-            items: dhabiCountryNames,
+            items: dhabiCountriesWithFlags,
             value: selectedCountry,
             onChanged: (value) {
               log("selectedCountries before -> $selectedCountries");
               if (selectedCountries.contains(value)) {
                 log("selectedCountries.contains(value) -> ${selectedCountries.contains(value)}");
-                promptSelectedCountryError(value as String);
+                promptSelectedCountryError(value as DropDownCountriesModel);
               } else {
+                if (selectedCountries.contains(selectedCountry)) {
+                  selectedCountries.remove(selectedCountry);
+                }
                 selectedCountries.add(value);
                 log("selectedCountries after -> $selectedCountries");
                 toggles++;
                 isCountrySelected = true;
-                selectedCountry = value as String;
-                dhabiCountryIndex = dhabiCountryNames.indexOf(selectedCountry!);
+                selectedCountry = value as DropDownCountriesModel;
+                selectedCountryName = selectedCountry?.countrynameOrCode;
+                dhabiCountryIndex =
+                    dhabiCountryNames.indexOf(selectedCountryName!);
                 log("dhabiCountryIndex -> $dhabiCountryIndex");
                 // isCountrySelected = true;
                 showTinPrompt = true;
@@ -476,23 +486,27 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             ],
           ),
           const SizeBox(height: 10),
-          CustomDropDown(
+          CustomDropdownCountries(
             title: labels[264]["labelText"],
-            items: dhabiCountryNames,
+            items: dhabiCountriesWithFlags,
             value: selectedCountry2,
             onChanged: (value) {
               log("selectedCountries before -> $selectedCountries");
               if (selectedCountries.contains(value)) {
                 log("selectedCountries.contains(value) -> ${selectedCountries.contains(value)}");
-                promptSelectedCountryError(value as String);
+                promptSelectedCountryError(value as DropDownCountriesModel);
               } else {
+                if (selectedCountries.contains(selectedCountry2)) {
+                  selectedCountries.remove(selectedCountry2);
+                }
                 selectedCountries.add(value);
                 log("selectedCountries after -> $selectedCountries");
                 toggles++;
                 isCountrySelected2 = true;
-                selectedCountry2 = value as String;
+                selectedCountry2 = value as DropDownCountriesModel;
+                selectedCountryName2 = selectedCountry2?.countrynameOrCode;
                 dhabiCountryIndex2 =
-                    dhabiCountryNames.indexOf(selectedCountry2!);
+                    dhabiCountryNames.indexOf(selectedCountryName2!);
                 log("dhabiCountryIndex -> $dhabiCountryIndex2");
                 // isCountrySelected = true;
                 showTinPrompt2 = true;
@@ -537,23 +551,27 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             ],
           ),
           const SizeBox(height: 10),
-          CustomDropDown(
+          CustomDropdownCountries(
             title: labels[264]["labelText"],
-            items: dhabiCountryNames,
+            items: dhabiCountriesWithFlags,
             value: selectedCountry3,
             onChanged: (value) {
               log("selectedCountries before -> $selectedCountries");
               if (selectedCountries.contains(value)) {
                 log("selectedCountries.contains(value) -> ${selectedCountries.contains(value)}");
-                promptSelectedCountryError(value as String);
+                promptSelectedCountryError(value as DropDownCountriesModel);
               } else {
+                if (selectedCountries.contains(selectedCountry3)) {
+                  selectedCountries.remove(selectedCountry3);
+                }
                 selectedCountries.add(value);
                 log("selectedCountries after -> $selectedCountries");
                 toggles++;
                 isCountrySelected3 = true;
-                selectedCountry3 = value as String;
+                selectedCountry3 = value as DropDownCountriesModel;
+                selectedCountryName3 = selectedCountry3?.countrynameOrCode;
                 dhabiCountryIndex3 =
-                    dhabiCountryNames.indexOf(selectedCountry3!);
+                    dhabiCountryNames.indexOf(selectedCountryName3!);
                 log("dhabiCountryIndex -> $dhabiCountryIndex3");
                 // isCountrySelected = true;
                 showTinPrompt3 = true;
@@ -598,23 +616,28 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             ],
           ),
           const SizeBox(height: 10),
-          CustomDropDown(
+          CustomDropdownCountries(
             title: labels[264]["labelText"],
-            items: dhabiCountryNames,
+            items: dhabiCountriesWithFlags,
             value: selectedCountry4,
             onChanged: (value) {
               log("selectedCountries before -> $selectedCountries");
               if (selectedCountries.contains(value)) {
                 log("selectedCountries.contains(value) -> ${selectedCountries.contains(value)}");
-                promptSelectedCountryError(value as String);
+                promptSelectedCountryError(value as DropDownCountriesModel);
               } else {
+                if (selectedCountries.contains(selectedCountry4)) {
+                  selectedCountries.remove(selectedCountry4);
+                }
                 selectedCountries.add(value);
                 log("selectedCountries after -> $selectedCountries");
                 toggles++;
                 isCountrySelected4 = true;
-                selectedCountry4 = value as String;
+                selectedCountry4 = value as DropDownCountriesModel;
+                selectedCountryName4 = selectedCountry4?.countrynameOrCode;
+
                 dhabiCountryIndex4 =
-                    dhabiCountryNames.indexOf(selectedCountry4!);
+                    dhabiCountryNames.indexOf(selectedCountryName4!);
                 log("dhabiCountryIndex -> $dhabiCountryIndex4");
                 // isCountrySelected = true;
                 showTinPrompt4 = true;
@@ -1167,7 +1190,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                 );
               }
             },
-            hintText: "000000000",
+            // hintText: "000000000",
           ),
           const SizeBox(height: 10),
         ],
@@ -1215,7 +1238,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                 );
               }
             },
-            hintText: "000000000",
+            // hintText: "000000000",
           ),
           const SizeBox(height: 10),
         ],
@@ -1263,7 +1286,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                 );
               }
             },
-            hintText: "000000000",
+            // hintText: "000000000",
           ),
           const SizeBox(height: 10),
         ],
@@ -1311,7 +1334,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                 );
               }
             },
-            hintText: "000000000",
+            // hintText: "000000000",
           ),
           const SizeBox(height: 10),
         ],
@@ -1620,7 +1643,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                   }
                 }
 
-                await storage.write(key: "taxCountry", value: selectedCountry);
+                await storage.write(
+                    key: "taxCountry", value: selectedCountryName);
                 storageTaxCountry = await storage.read(key: "taxCountry");
                 await storage.write(
                     key: "isTinYes", value: isTinYes.toString());
@@ -1634,11 +1658,11 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                   if (i == 0) {
                     internationalTaxes.add(
                       {
-                        "countryCode":
-                            !dhabiCountryNames.contains(selectedCountry ?? "")
-                                ? ""
-                                : dhabiCountries[dhabiCountryNames
-                                    .indexOf(selectedCountry!)]["shortCode"],
+                        "countryCode": !dhabiCountryNames
+                                .contains(selectedCountry ?? "")
+                            ? ""
+                            : dhabiCountries[dhabiCountryNames
+                                .indexOf(selectedCountryName!)]["shortCode"],
                         "isTIN": isTinYes,
                         "tin": _tinController.text,
                         "noTINReason": selectedReason,
@@ -1648,11 +1672,11 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                   if (i == 1) {
                     internationalTaxes.add(
                       {
-                        "countryCode":
-                            !dhabiCountryNames.contains(selectedCountry2 ?? "")
-                                ? ""
-                                : dhabiCountries[dhabiCountryNames
-                                    .indexOf(selectedCountry2!)]["shortCode"],
+                        "countryCode": !dhabiCountryNames
+                                .contains(selectedCountry2 ?? "")
+                            ? ""
+                            : dhabiCountries[dhabiCountryNames
+                                .indexOf(selectedCountryName2!)]["shortCode"],
                         "isTIN": isTinYes2,
                         "tin": _tinController2.text,
                         "noTINReason": selectedReason2,
@@ -1662,11 +1686,11 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                   if (i == 2) {
                     internationalTaxes.add(
                       {
-                        "countryCode":
-                            !dhabiCountryNames.contains(selectedCountry3 ?? "")
-                                ? ""
-                                : dhabiCountries[dhabiCountryNames
-                                    .indexOf(selectedCountry3!)]["shortCode"],
+                        "countryCode": !dhabiCountryNames
+                                .contains(selectedCountry3 ?? "")
+                            ? ""
+                            : dhabiCountries[dhabiCountryNames
+                                .indexOf(selectedCountryName3!)]["shortCode"],
                         "isTIN": isTinYes3,
                         "tin": _tinController3.text,
                         "noTINReason": selectedReason3,
@@ -1676,11 +1700,11 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                   if (i == 3) {
                     internationalTaxes.add(
                       {
-                        "countryCode":
-                            !dhabiCountryNames.contains(selectedCountry4 ?? "")
-                                ? ""
-                                : dhabiCountries[dhabiCountryNames
-                                    .indexOf(selectedCountry4!)]["shortCode"],
+                        "countryCode": !dhabiCountryNames
+                                .contains(selectedCountry4 ?? "")
+                            ? ""
+                            : dhabiCountries[dhabiCountryNames
+                                .indexOf(selectedCountryName4!)]["shortCode"],
                         "isTIN": isTinYes4,
                         "tin": _tinController4.text,
                         "noTINReason": selectedReason4,
@@ -1733,7 +1757,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
     }
   }
 
-  void promptSelectedCountryError(String country) {
+  void promptSelectedCountryError(DropDownCountriesModel country) {
     showDialog(
       context: context,
       builder: (context) {
@@ -1741,7 +1765,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           svgAssetPath: ImageConstants.warning,
           title: "Duplicate Country Selected",
           message:
-              "Your tax information for $country has already been submitted.",
+              "Your tax information for ${country.countrynameOrCode} has already been submitted.",
           actionWidget: GradientButton(
             onTap: () {
               Navigator.pop(context);

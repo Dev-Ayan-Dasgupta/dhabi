@@ -203,6 +203,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       await storage.write(key: "nationalityCode", value: nationalityCode);
       storageNationalityCode = await storage.read(key: "nationalityCode");
+      log("storageNationalityCode -> $storageNationalityCode");
 
       expiryDate = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
@@ -274,7 +275,15 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
-      if (eiDNumber != null) {
+      if (eiDNumber != null &&
+          storageNationalityCode != null &&
+          storageFullName != null &&
+          storageNationality != null &&
+          storageExpiryDate != null &&
+          storageDob != null &&
+          storageGender != null &&
+          storagePhoto != null &&
+          storageDocPhoto != null) {
         bool result = await MapIfEidExists.mapIfEidExists(
           {"eidNumber": eiDNumber},
           token ?? "",
@@ -582,7 +591,16 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 
-      if (passportNumber != null) {
+      if (passportNumber != null &&
+          storageNationalityCode != null &&
+          storageFullName != null &&
+          storageNationality != null &&
+          storageExpiryDate != null &&
+          storageDob != null &&
+          storageGender != null &&
+          storagePhoto != null &&
+          storageDocPhoto != null &&
+          storageIssuingStateCode != null) {
         var result = await MapIfPassportExists.mapIfPassportExists(
           {"passportNumber": passportNumber},
           token ?? "",
@@ -820,6 +838,22 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     if (photoMatchScore > 80) {
       Map<String, dynamic> response;
       if (storageIsEid == true) {
+        log("Upload EID Request -> ${{
+          "eidDocumentImage": storageDocPhoto,
+          "eidUserPhoto": storagePhoto,
+          "selfiePhoto": storageSelfiePhoto,
+          "photoMatchScore": storagePhotoMatchScore,
+          "eidNumber": storageEidNumber,
+          "fullName": storageFullName,
+          "dateOfBirth": DateFormat('yyyy-MM-dd').format(
+              DateFormat('dd MMMM yyyy').parse(storageDob ?? "1 January 1900")),
+          "nationalityCountryCode": storageNationalityCode,
+          "genderId": storageGender == 'M' ? 1 : 2,
+          "expiresOn": DateFormat('yyyy-MM-dd').format(
+              DateFormat('dd MMMM yyyy')
+                  .parse(storageExpiryDate ?? "1 January 1900")),
+          "isReKYC": false
+        }}");
         response = await MapUploadEid.mapUploadEid(
           {
             "eidDocumentImage": storageDocPhoto,
@@ -914,7 +948,10 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                 fontColor: AppColors.primary,
               ),
               actionWidget: GradientButton(
-                onTap: liveliness,
+                onTap: () {
+                  Navigator.pop(context);
+                  liveliness();
+                },
                 text: "Retake Selfie",
               ),
             );

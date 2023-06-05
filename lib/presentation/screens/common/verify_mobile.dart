@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -33,6 +33,13 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
   bool _isPhoneValid = false;
 
   bool isLoading = false;
+  DropDownCountriesModel selectedCountry = DropDownCountriesModel(
+    countryFlagBase64: dhabiCountryCodesWithFlags[0].countryFlagBase64,
+    countrynameOrCode: dhabiCountryCodesWithFlags[0].countrynameOrCode,
+  );
+  String? selectedIsd = "+971";
+  int toggles = 0;
+  int dhabiCountryIndex = 0;
 
   @override
   void initState() {
@@ -88,25 +95,57 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
                     // isDense: true,
-                    prefixIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomCircleAvatarAsset(
-                          width: (25 / Dimensions.designWidth).w,
-                          height: (25 / Dimensions.designWidth).w,
-                          imgUrl: ImageConstants.uaeFlag,
-                        ),
-                        const SizeBox(width: 7),
-                        Text(
-                          "+971",
-                          style: TextStyles.primaryMedium.copyWith(
-                            color: AppColors.black63,
-                            fontSize: (16 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                        const SizeBox(width: 7),
-                      ],
+                    prefixIcon: BlocBuilder<DropdownSelectedBloc,
+                        DropdownSelectedState>(
+                      builder: (context, state) {
+                        return CustomDropdownIsds(
+                          title: "Select a country",
+                          items: dhabiCountryCodesWithFlags,
+                          value: selectedCountry,
+                          onChanged: (value) {
+                            final DropdownSelectedBloc residenceSelectedBloc =
+                                context.read<DropdownSelectedBloc>();
+                            toggles++;
+
+                            selectedCountry = value as DropDownCountriesModel;
+                            selectedIsd = selectedCountry.countrynameOrCode;
+                            for (int i = 0; i < dhabiCountries.length; i++) {
+                              if (selectedIsd ==
+                                  "+${dhabiCountries[i]["dialCode"]}") {
+                                dhabiCountryIndex = i;
+                                break;
+                              }
+                            }
+
+                            residenceSelectedBloc.add(
+                              DropdownSelectedEvent(
+                                isDropdownSelected: true,
+                                toggles: toggles,
+                              ),
+                            );
+                          },
+                        );
+                      },
                     ),
+                    // Row(
+                    //   mainAxisSize: MainAxisSize.min,
+                    //   children: [
+                    //     CustomCircleAvatarAsset(
+                    //       width: (25 / Dimensions.designWidth).w,
+                    //       height: (25 / Dimensions.designWidth).w,
+                    //       imgUrl: ImageConstants.uaeFlag,
+                    //     ),
+                    //     const SizeBox(width: 7),
+                    //     Text(
+                    //       "+971",
+                    //       style: TextStyles.primaryMedium.copyWith(
+                    //         color: AppColors.black63,
+                    //         fontSize: (16 / Dimensions.designWidth).w,
+                    //       ),
+                    //     ),
+                    //     const SizeBox(width: 7),
+                    //   ],
+                    // ),
                     suffixIcon: BlocBuilder<ShowButtonBloc, ShowButtonState>(
                       builder: buildCheckCircle,
                     ),
@@ -180,60 +219,78 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
     } else {
       return GradientButton(
         onTap: () async {
-          isLoading = true;
-          final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-          showButtonBloc.add(ShowButtonEvent(show: isLoading));
-          // TODO: Call Send Mobile OTP API here
-          var result = await MapSendMobileOtp.mapSendMobileOtp(
-              {"mobileNo": "+971${_phoneController.text}"}, token ?? "");
-          log("Send Mobile OTP API response -> $result");
-
-          if (result["success"]) {
-            if (isLoading) {
-              if (context.mounted) {
-                Navigator.pushNamed(
-                  context,
-                  Routes.otp,
-                  arguments: OTPArgumentModel(
-                    emailOrPhone: "+971${_phoneController.text}",
-                    isEmail: false,
-                    isBusiness: verifyMobileArgumentModel.isBusiness,
-                    isInitial: true,
-                    isLogin: false,
-                    isIncompleteOnboarding: false,
-                  ).toMap(),
-                );
-              }
-            }
-            isLoading = false;
-            showButtonBloc.add(ShowButtonEvent(show: isLoading));
+          log("dhabiCountryIndex -> $dhabiCountryIndex");
+          if (dhabiCountryIndex != 0) {
+            Navigator.pushNamed(
+              context,
+              Routes.notAvailable,
+              arguments: NotAvailableArgumentModel(
+                country: dhabiCountries[dhabiCountryIndex]["countryName"],
+              ).toMap(),
+            );
           } else {
-            if (context.mounted) {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return CustomDialog(
-                    svgAssetPath: ImageConstants.warning,
-                    title: "Retry Limit Reached",
-                    message: result["message"],
-                    actionWidget: GradientButton(
-                      onTap: () {
-                        Navigator.pop(context);
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.onboarding,
-                          arguments: OnboardingArgumentModel(
-                            isInitial: true,
-                          ).toMap(),
-                        );
-                      },
-                      text: "Go Home",
-                    ),
-                  );
-                },
-              );
-              isLoading = false;
+            if (!isLoading) {
+              isLoading = true;
+              final ShowButtonBloc showButtonBloc =
+                  context.read<ShowButtonBloc>();
               showButtonBloc.add(ShowButtonEvent(show: isLoading));
+
+              var result = await MapSendMobileOtp.mapSendMobileOtp(
+                {
+                  "mobileNo": "$selectedIsd${_phoneController.text}",
+                },
+                token ?? "",
+              );
+              log("Send Mobile OTP API response -> $result");
+
+              if (result["success"]) {
+                if (isLoading) {
+                  if (context.mounted) {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.otp,
+                      arguments: OTPArgumentModel(
+                        emailOrPhone: "+971${_phoneController.text}",
+                        isEmail: false,
+                        isBusiness: verifyMobileArgumentModel.isBusiness,
+                        isInitial: true,
+                        isLogin: false,
+                        isIncompleteOnboarding: false,
+                      ).toMap(),
+                    );
+                  }
+                }
+                isLoading = false;
+                showButtonBloc.add(ShowButtonEvent(show: isLoading));
+              } else {
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CustomDialog(
+                        svgAssetPath: ImageConstants.warning,
+                        title: "Retry Limit Reached",
+                        message: result["message"],
+                        actionWidget: GradientButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              Routes.onboarding,
+                              arguments: OnboardingArgumentModel(
+                                isInitial: true,
+                              ).toMap(),
+                            );
+                          },
+                          text: "Go Home",
+                        ),
+                      );
+                    },
+                  );
+                  isLoading = false;
+                  showButtonBloc.add(ShowButtonEvent(show: isLoading));
+                }
+              }
             }
           }
         },

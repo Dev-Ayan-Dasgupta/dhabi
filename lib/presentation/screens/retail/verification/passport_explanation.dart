@@ -176,7 +176,16 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       log("Doc Expired check -> ${DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(expiryDate ?? "00/00/0000"))).difference(DateTime.now()).inDays}");
       log("Age check -> ${DateTime.now().difference(DateTime.parse(DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/yyyy').parse(dob ?? "00/00/0000")))).inDays}");
 
-      if (passportNumber != null) {
+      if (passportNumber != null &&
+          storageNationalityCode != null &&
+          storageFullName != null &&
+          storageNationality != null &&
+          storageExpiryDate != null &&
+          storageDob != null &&
+          storageGender != null &&
+          storagePhoto != null &&
+          storageDocPhoto != null &&
+          storageIssuingStateCode != null) {
         var result = await MapIfPassportExists.mapIfPassportExists(
           {"passportNumber": passportNumber},
           token ?? "",

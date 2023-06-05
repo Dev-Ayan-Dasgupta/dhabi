@@ -5,3 +5,7 @@ export './map_customer_account_details.dart';
 export './map_customer_account_statement.dart';
 export './map_excel_customer_account_statement.dart';
 export './map_pdf_customer_account_statement.dart';
+export './map_create_fd.dart';
+export './map_get_fds.dart';
+export './map_create_beneficiaries.dart';
+export './map_get_beneficiaries.dart';

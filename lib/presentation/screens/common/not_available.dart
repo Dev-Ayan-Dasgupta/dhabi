@@ -47,7 +47,7 @@ class _NotAvaiableScreenState extends State<NotAvaiableScreen> {
                 children: [
                   const SizeBox(height: 10),
                   Text(
-                    "We’re not availabe in your Country",
+                    messages[69]["messageText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,

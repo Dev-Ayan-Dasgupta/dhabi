@@ -360,7 +360,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
           color: Colors.transparent,
           child: Container(
             height:
-                (((Platform.isIOS ? 300 : 360)) / Dimensions.designHeight).h,
+                (((Platform.isIOS ? 310 : 370)) / Dimensions.designHeight).h,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular((20 / Dimensions.designWidth).w),
@@ -371,6 +371,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                const SizeBox(height: 20),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: (context, state) {
                     return Text(

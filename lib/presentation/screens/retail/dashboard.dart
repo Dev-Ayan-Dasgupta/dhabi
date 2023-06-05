@@ -49,13 +49,14 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   bool isFetchingAccountDetails = false;
 
-  List accountDetails = [];
   int savingsAccountCount = 0;
   int currentAccountCount = 0;
   List depositDetails = [];
 
   List statementList = [];
   List displayStatementList = [];
+
+  List<DetailsTileModel> rates = [];
 
   bool isShowFilter = false;
   bool isShowSort = false;
@@ -107,7 +108,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
         return CustomDialog(
           svgAssetPath: ImageConstants.warningGreen,
           title: messages[99]["messageText"],
-          message: messages[58]["messageText"],
+          message:
+              "Enhance Security with Biometric Authentication! You can enable/disable biometric authentication anytime by going to the profile menu.",
           actionWidget: SolidButton(
             onTap: () async {
               await storage.write(
@@ -220,6 +222,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     await getCustomerAccountStatement();
     isFetchingAccountDetails = false;
     showButtonBloc.add(ShowButtonEvent(show: isFetchingAccountDetails));
+    await getFdRates();
   }
 
   Future<void> getCustomerAcountDetails() async {
@@ -266,6 +269,18 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
             ["statementList"];
         displayStatementList.clear();
         displayStatementList.addAll(statementList);
+      }
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<void> getFdRates() async {
+    try {
+      var getFdResult = await MapGetFds.mapGetFds(token ?? "");
+      log("getFdResult -> $getFdResult");
+      if (getFdResult["success"]) {
+        fdRates = getFdResult["fdRates"];
       }
     } catch (_) {
       rethrow;
@@ -538,7 +553,12 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                             child: index ==
                                                     depositDetails.length
                                                 ? AccountSummaryTile(
-                                                    onTap: () {},
+                                                    onTap: () {
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        Routes.createDeposits,
+                                                      );
+                                                    },
                                                     imgUrl: ImageConstants
                                                         .addAccount,
                                                     accountType: "",
@@ -618,8 +638,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                           iconPath: ImageConstants.percent,
                                           activityText: "Rates",
                                           onTap: () {
-                                            Navigator.pushNamed(
-                                                context, Routes.interestRates);
+                                            populateFdRates();
+                                            promptUserForRates();
+                                            // Navigator.pushNamed(
+                                            //     context, Routes.interestRates);
                                           },
                                         ),
                                         // const SizeBox(width: 40),
@@ -1684,6 +1706,77 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       displayStatementList
           .sort((a, b) => (a["creditAmount"]).compareTo(b["creditAmount"]));
     }
+  }
+
+  void populateFdRates() {
+    rates.clear();
+    for (var fdRate in fdRates) {
+      rates.add(
+          DetailsTileModel(key: fdRate["label"], value: "${fdRate["rate"]}%"));
+    }
+  }
+
+  void promptUserForRates() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: (PaddingConstants.horizontalPadding /
+                        Dimensions.designWidth)
+                    .w,
+                vertical: PaddingConstants.bottomPadding +
+                    MediaQuery.of(context).padding.bottom,
+              ),
+              child: Container(
+                width: 100.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular((10 / Dimensions.designWidth).w),
+                  ),
+                  color: Colors.white,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: SizedBox(
+                    height: 52.5.h,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizeBox(height: 20),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: (22 / Dimensions.designWidth).w,
+                          ),
+                          // vertical: (22 / Dimensions.designHeight).h),
+                          child: Text(
+                            labels[104]["labelText"],
+                            style: TextStyles.primaryBold.copyWith(
+                              color: AppColors.primary,
+                              fontSize: (28 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ),
+                        const SizeBox(height: 20),
+                        Expanded(
+                          child:
+                              DetailsTile(length: rates.length, details: rates),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

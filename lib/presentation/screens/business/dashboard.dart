@@ -103,7 +103,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
         return CustomDialog(
           svgAssetPath: ImageConstants.warningGreen,
           title: messages[99]["messageText"],
-          message: messages[58]["messageText"],
+          message:
+              "Enhance Security with Biometric Authentication! You can enable/disable biometric authentication anytime by going to the profile menu.",
           actionWidget: SolidButton(
             onTap: () {
               Navigator.pop(context);

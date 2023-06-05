@@ -12,18 +12,21 @@ class InterestRatesScreen extends StatefulWidget {
 }
 
 class _InterestRatesScreenState extends State<InterestRatesScreen> {
-  List<DetailsTileModel> rates = [
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-    DetailsTileModel(key: "1wk (7-29 days)", value: "0.0500"),
-  ];
+  List<DetailsTileModel> rates = [];
+
+  @override
+  void initState() {
+    super.initState();
+    populateFdRates();
+  }
+
+  void populateFdRates() {
+    rates.clear();
+    for (var fdRate in fdRates) {
+      rates.add(
+          DetailsTileModel(key: fdRate["label"], value: "${fdRate["rate"]}%"));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,12 @@ class _InterestRatesScreenState extends State<InterestRatesScreen> {
               ),
             ),
             const SizeBox(height: 30),
-            Expanded(child: DetailsTile(length: 10, details: rates)),
+            Expanded(
+              child: DetailsTile(
+                length: rates.length,
+                details: rates,
+              ),
+            ),
           ],
         ),
       ),

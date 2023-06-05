@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/data/repositories/corporateOnboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -31,7 +32,8 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
 
   int toggles = 0;
 
-  String? selectedCountry;
+  DropDownCountriesModel? selectedCountry;
+  String? selectedCountryName;
   int dhabiCountryIndex = -1;
 
   bool isCompany = false;
@@ -129,16 +131,19 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                           BlocBuilder<DropdownSelectedBloc,
                               DropdownSelectedState>(
                             builder: (context, state) {
-                              return CustomDropDown(
+                              return CustomDropdownCountries(
                                 title: "Select a Country",
-                                items: dhabiCountryNames,
+                                items: dhabiCountriesWithFlags,
                                 value: selectedCountry,
                                 onChanged: (value) {
                                   toggles++;
                                   isCountrySelected = true;
-                                  selectedCountry = value as String;
+                                  selectedCountry =
+                                      value as DropDownCountriesModel;
+                                  selectedCountryName =
+                                      selectedCountry?.countrynameOrCode;
                                   dhabiCountryIndex = dhabiCountryNames
-                                      .indexOf(selectedCountry!);
+                                      .indexOf(selectedCountryName!);
                                   log("dhabiCountryIndex -> $dhabiCountryIndex");
                                   countrySelectedBloc.add(
                                     DropdownSelectedEvent(

@@ -38,16 +38,16 @@ class DetailsTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: (index == 0)
-                        ? Radius.circular((5 / Dimensions.designWidth).w)
+                        ? Radius.circular((10 / Dimensions.designWidth).w)
                         : const Radius.circular(0),
                     topRight: (index == 0)
-                        ? Radius.circular((5 / Dimensions.designWidth).w)
+                        ? Radius.circular((10 / Dimensions.designWidth).w)
                         : const Radius.circular(0),
                     bottomLeft: (index == length - 1)
-                        ? Radius.circular((5 / Dimensions.designWidth).w)
+                        ? Radius.circular((10 / Dimensions.designWidth).w)
                         : const Radius.circular(0),
                     bottomRight: (index == length - 1)
-                        ? Radius.circular((5 / Dimensions.designWidth).w)
+                        ? Radius.circular((10 / Dimensions.designWidth).w)
                         : const Radius.circular(0),
                   ),
                   color: (index % 2 == 0)

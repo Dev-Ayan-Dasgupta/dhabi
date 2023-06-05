@@ -82,3 +82,5 @@ List statementDurationDDs = [
 List<String> dhabiCountryNames = [];
 
 List<String> countryLongCodes = [];
+
+List<String> bankNames = [];
