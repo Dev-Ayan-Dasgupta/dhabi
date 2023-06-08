@@ -47,7 +47,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
   regula.MatchFacesImage image2 = regula.MatchFacesImage();
 
   // late Image img1;
-  Image img1 = Image.memory(base64Decode(storagePhoto!.replaceAll("\n", "")));
+  Image img1 = Image.memory(base64Decode(
+      storagePhoto != null ? storagePhoto!.replaceAll("\n", "") : ""));
   Image img2 = Image.asset(ImageConstants.eidFront);
 
   bool isFaceScanning = false;

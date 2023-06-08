@@ -481,10 +481,6 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                 }
               } else {
                 if (!isUploading) {
-                  final ShowButtonBloc showButtonBloc =
-                      context.read<ShowButtonBloc>();
-                  isUploading = true;
-                  showButtonBloc.add(ShowButtonEvent(show: isUploading));
                   if (accountType == 1) {
                     if (applicationAccountArgument.savingsAccountsCreated >=
                         maxSavingAccountAllowed) {
@@ -521,8 +517,6 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                       }
                     }
                   }
-                  isUploading = false;
-                  showButtonBloc.add(ShowButtonEvent(show: isUploading));
                 }
               }
             },
@@ -571,10 +565,15 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
   }
 
   void callCreateAccountApi() async {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    isUploading = true;
+    showButtonBloc.add(ShowButtonEvent(show: isUploading));
     var responseAccount = await MapCreateAccount.mapCreateAccount(
         {"accountType": storageAccountType}, token ?? "");
     log("Create Account API response -> $responseAccount");
     if (responseAccount["success"]) {
+      isUploading = false;
+      showButtonBloc.add(ShowButtonEvent(show: isUploading));
       if (context.mounted) {
         promptAccountCreated();
       }

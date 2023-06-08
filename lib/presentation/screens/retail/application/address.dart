@@ -36,14 +36,14 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
 
   int toggles = 0;
 
-  String? selectedValue;
+  String selectedValue = "Dubai";
   DropDownCountriesModel selectedCountry = DropDownCountriesModel(
     countryFlagBase64: dhabiCountriesWithFlags[0].countryFlagBase64,
     countrynameOrCode: dhabiCountriesWithFlags[0].countrynameOrCode,
   );
   String? selectedCountryName = dhabiCountriesWithFlags[0].countrynameOrCode;
 
-  int emirateIndex = -1;
+  int emirateIndex = 0;
   int dhabiCountryIndex = 0;
 
   bool isUploading = false;
@@ -218,7 +218,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     Row(
                       children: [
                         Text(
-                          "City",
+                          "State/Province",
                           style: TextStyles.primary.copyWith(
                             color: AppColors.dark80,
                             fontSize: (16 / Dimensions.designWidth).w,
@@ -363,18 +363,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                                 key: "poBox", value: _zipController.text);
                             storageAddressPoBox =
                                 await storage.read(key: "poBox");
-                            // var result = await MapRegisterRetailCustomerAddress
-                            //     .mapRegisterRetailCustomerAddress({
-                            //   "addressLine_1": _address1Controller.text,
-                            //   "addressLine_2": _address2Controller.text,
-                            //   "areaId": uaeDetails[emirateIndex]["areas"][0]
-                            //       ["area_Id"],
-                            //   "cityId": uaeDetails[emirateIndex]["city_Id"],
-                            //   "stateId": 1,
-                            //   "countryId": 1,
-                            //   "pinCode": _zipController.text
-                            // }, token ?? "");
-                            // log("RegisterRetailCustomerAddress API Response -> $result");
+
                             if (context.mounted) {
                               if (dhabiCountryIndex == 0) {
                                 Navigator.pushNamed(
