@@ -58,6 +58,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       DocumentReaderResults? results = completion.results;
       String? firstName =
           await results?.textFieldValueByType(EVisualFieldType.FT_GIVEN_NAMES);
+
       String? surname =
           await results?.textFieldValueByType(EVisualFieldType.FT_SURNAME);
       // fullName = await results
@@ -65,6 +66,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       fullName = "$firstName $surname";
       await storage.write(key: "fullName", value: fullName);
       storageFullName = await storage.read(key: "fullName");
+      log("storageFullName -> $storageFullName");
 
       String? tempPassportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
@@ -77,6 +79,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       passportNumber =
           // tempPassportNumber;
           tempPassportNumber?.split("\n").last.split('<').first;
+      log("passportNumber -> $passportNumber");
 
       // passportNumber = await results
       //     ?.textFieldValueByType(EVisualFieldType.FT_PASSPORT_NUMBER);
@@ -89,6 +92,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
       await storage.write(key: "nationality", value: nationality);
       storageNationality = await storage.read(key: "nationality");
+      log("storageNationality -> $storageNationality");
 
       String? tempNationalityCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
@@ -96,6 +100,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           LongToShortCode.longToShortCode(tempNationalityCode ?? "");
       await storage.write(key: "nationalityCode", value: nationalityCode);
       storageNationalityCode = await storage.read(key: "nationalityCode");
+      log("storageNationalityCode -> $storageNationalityCode");
 
       String? tempIssuingStateCode = await results
           ?.textFieldValueByType(EVisualFieldType.FT_ISSUING_STATE_CODE);
@@ -103,6 +108,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       log("issuingState -> $issuingStateCode");
       await storage.write(key: "issuingStateCode", value: issuingStateCode);
       storageIssuingStateCode = await storage.read(key: "issuingStateCode");
+      log("storageIssuingStateCode -> $storageIssuingStateCode");
 
       String? issuingPlace = await results
           ?.textFieldValueByType(EVisualFieldType.FT_PLACE_OF_ISSUE);
@@ -118,13 +124,20 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);
       await storage.write(key: "dob", value: dob);
       storageDob = await storage.read(key: "dob");
+      log("storageDob -> $storageDob");
 
       gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
       await storage.write(key: "gender", value: gender);
       storageGender = await storage.read(key: "gender");
+      log("storageGender -> $storageGender");
 
       photo =
+          // (await (results?.graphicFieldImageByTypeSource(
+          //         EGraphicFieldType.GF_PORTRAIT,
+          //         ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED)))
+          //     .toString();
           results?.getGraphicFieldImageByType(EGraphicFieldType.GF_PORTRAIT);
+      log("photo -> $photo");
       if (photo != null) {
         log("photoString before -> $photo");
         image1.bitmap = base64Encode(base64Decode(photo!.replaceAll("\n", "")));
@@ -156,6 +169,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
       }
       await storage.write(key: "photo", value: photo);
       storagePhoto = await storage.read(key: "photo");
+      log("storagePhoto -> $storagePhoto");
 
       docPhoto = results
           ?.getGraphicFieldImageByType(EGraphicFieldType.GF_DOCUMENT_IMAGE);
@@ -180,6 +194,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
 
       await storage.write(key: "docPhoto", value: docPhoto);
       storageDocPhoto = await storage.read(key: "docPhoto");
+      log("storageDocPhoto -> $storageDocPhoto");
 
       // TODO: Run conditions for checks regarding Age, no. of tries, both sides match and expired ID
 

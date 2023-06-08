@@ -154,7 +154,7 @@ class _SelectEntityForOnboardingPersistenceState
     if (isPersonalFocussed || isBusinessFocussed) {
       return GradientButton(
         onTap: () async {
-          Navigator.pushReplacementNamed(
+          Navigator.pushNamed(
             context,
             Routes.loginPassword,
             arguments: LoginPasswordArgumentModel(
