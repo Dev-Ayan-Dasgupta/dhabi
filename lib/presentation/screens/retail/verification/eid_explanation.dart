@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -54,34 +55,38 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
     if (completion.action == DocReaderAction.COMPLETE) {
       DocumentReaderResults? results = completion.results;
 
-      fullName = await results
-          ?.textFieldValueByType(EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES);
+      fullName = await results?.textFieldValueByTypeLcidSource(
+          EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES,
+          LCID.LATIN,
+          ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED);
       await storage.write(key: "fullName", value: fullName);
       storageFullName = await storage.read(key: "fullName");
 
-      eiDNumber = await results
-          ?.textFieldValueByType(EVisualFieldType.FT_IDENTITY_CARD_NUMBER);
+      eiDNumber = await results?.textFieldValueByTypeLcidSource(
+          EVisualFieldType.FT_IDENTITY_CARD_NUMBER,
+          LCID.LATIN,
+          ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED);
       await storage.write(key: "eiDNumber", value: eiDNumber);
       storageEidNumber = await storage.read(key: "eiDNumber");
 
-      nationality =
-          // await results?.textFieldValueByTypeLcid(
-          // EVisualFieldType.FT_NATIONALITY, 55);
-          results?.getTextFieldValueByType(
-        EVisualFieldType.FT_NATIONALITY,
-        lcid: 0,
-      );
-      // await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+      nationality = await results?.textFieldValueByTypeLcidSource(
+          EVisualFieldType.FT_NATIONALITY,
+          LCID.LATIN,
+          ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED);
       await storage.write(key: "nationality", value: nationality);
       storageNationality = await storage.read(key: "nationality");
-      log("storageNationality -> $storageNationality");
 
-      nationalityCode =
-          // results?.getTextFieldValueByType(
-          //     EVisualFieldType.FT_NATIONALITY_CODE,
-          //     lcid: 0);
-          await results
-              ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
+      // nationalityCode = await results?.textFieldValueByTypeLcidSource(
+      //     EVisualFieldType.FT_NATIONALITY_CODE,
+      //     LCID.LATIN,
+      //     ERPRMResultType.RPRM_RESULT_TYPE_MRZ_OCR_EXTENDED);
+      String? nationalityUpper = nationality?.toUpperCase();
+      for (var country in dhabiCountries) {
+        if (nationalityUpper == country["countryName"]) {
+          nationalityCode = country["shortCode"];
+          break;
+        }
+      }
       await storage.write(key: "nationalityCode", value: nationalityCode);
       storageNationalityCode = await storage.read(key: "nationalityCode");
       log("storageNationalityCode -> $storageNationalityCode");
@@ -96,7 +101,10 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       await storage.write(key: "dob", value: dob);
       storageDob = await storage.read(key: "dob");
 
-      gender = await results?.textFieldValueByType(EVisualFieldType.FT_SEX);
+      gender = await results?.textFieldValueByTypeLcidSource(
+          EVisualFieldType.FT_SEX,
+          LCID.LATIN,
+          ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED);
       await storage.write(key: "gender", value: gender);
       storageGender = await storage.read(key: "gender");
 

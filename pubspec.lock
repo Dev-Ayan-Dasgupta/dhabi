@@ -342,14 +342,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.7.3"
-  flutter_document_reader_core_fullrfid:
+  flutter_document_reader_core_ocrandmrz:
     dependency: "direct main"
     description:
-      name: flutter_document_reader_core_fullrfid
-      sha256: a347c80adc5ecff1b1f1b0915e2df3a11ba8925bd9257925cc0dfdbc2fcdbef6
+      name: flutter_document_reader_core_ocrandmrz
+      sha256: "4236046f1219f17a16f4a09c6d881634e0d16e5b3dfc510cff38a0ebb8aa924f"
       url: "https://pub.dev"
     source: hosted
-    version: "6.7.0"
+    version: "6.8.1"
   flutter_dotenv:
     dependency: "direct main"
     description:
