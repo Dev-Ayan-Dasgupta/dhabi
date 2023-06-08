@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:typed_data';
 
+import 'package:cached_memory_image/provider/cached_memory_image_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
@@ -22,7 +23,8 @@ class CustomCircleAvatarImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: ((109 / 2) / Dimensions.designWidth).w,
-      backgroundImage: MemoryImage(bytes),
+      backgroundImage: CachedMemoryImageProvider("profilePhoto", bytes: bytes),
+      // MemoryImage(bytes),
     );
   }
 }

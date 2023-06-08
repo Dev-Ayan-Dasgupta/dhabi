@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cached_memory_image/provider/cached_memory_image_provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:uuid/uuid.dart';
 
 class CustomDropdownIsds extends StatefulWidget {
   const CustomDropdownIsds({
@@ -55,8 +57,9 @@ class _CustomDropdownIsdsState extends State<CustomDropdownIsds> {
                   children: [
                     // const SizeBox(width: 5),
                     CircleAvatar(
-                      backgroundImage: MemoryImage(
-                        base64Decode(item.countryFlagBase64 ?? ""),
+                      backgroundImage: CachedMemoryImageProvider(
+                        const Uuid().v4(),
+                        bytes: base64Decode(item.countryFlagBase64 ?? ""),
                       ),
                       radius: (12.5 / Dimensions.designWidth).w,
                     ),
