@@ -77,7 +77,7 @@ class _CustomDropdownCountriesState extends State<CustomDropdownCountries> {
         value: widget.value,
         onChanged: widget.onChanged,
         buttonStyleData: ButtonStyleData(
-          height: (60 / Dimensions.designHeight).h,
+          height: (55 / Dimensions.designHeight).h,
           width: 100.w,
           padding:
               EdgeInsets.symmetric(horizontal: (14 / Dimensions.designWidth).w),

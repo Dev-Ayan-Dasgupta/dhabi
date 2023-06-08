@@ -8,14 +8,16 @@ class OTPArgumentModel {
   final bool isBusiness;
   final bool isInitial;
   final bool isLogin;
-  final bool isIncompleteOnboarding;
+  final bool isEmailIdUpdate;
+  final bool isMobileUpdate;
   OTPArgumentModel({
     required this.emailOrPhone,
     required this.isEmail,
     required this.isBusiness,
     required this.isInitial,
     required this.isLogin,
-    required this.isIncompleteOnboarding,
+    required this.isEmailIdUpdate,
+    required this.isMobileUpdate,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,7 +27,8 @@ class OTPArgumentModel {
       'isBusiness': isBusiness,
       'isInitial': isInitial,
       'isLogin': isLogin,
-      'isIncompleteOnboarding': isIncompleteOnboarding,
+      'isEmailIdUpdate': isEmailIdUpdate,
+      'isMobileUpdate': isMobileUpdate,
     };
   }
 
@@ -36,7 +39,8 @@ class OTPArgumentModel {
       isBusiness: map['isBusiness'] as bool,
       isInitial: map['isInitial'] as bool,
       isLogin: map['isLogin'] as bool,
-      isIncompleteOnboarding: map['isIncompleteOnboarding'] as bool,
+      isEmailIdUpdate: map['isEmailIdUpdate'] as bool,
+      isMobileUpdate: map['isMobileUpdate'] as bool,
     );
   }
 
@@ -51,7 +55,8 @@ class OTPArgumentModel {
     bool? isBusiness,
     bool? isInitial,
     bool? isLogin,
-    bool? isIncompleteOnboarding,
+    bool? isEmailIdUpdate,
+    bool? isMobileUpdate,
   }) {
     return OTPArgumentModel(
       emailOrPhone: emailOrPhone ?? this.emailOrPhone,
@@ -59,14 +64,14 @@ class OTPArgumentModel {
       isBusiness: isBusiness ?? this.isBusiness,
       isInitial: isInitial ?? this.isInitial,
       isLogin: isLogin ?? this.isLogin,
-      isIncompleteOnboarding:
-          isIncompleteOnboarding ?? this.isIncompleteOnboarding,
+      isEmailIdUpdate: isEmailIdUpdate ?? this.isEmailIdUpdate,
+      isMobileUpdate: isMobileUpdate ?? this.isMobileUpdate,
     );
   }
 
   @override
   String toString() {
-    return 'OTPArgumentModel(emailOrPhone: $emailOrPhone, isEmail: $isEmail, isBusiness: $isBusiness, isInitial: $isInitial, isLogin: $isLogin, isIncompleteOnboarding: $isIncompleteOnboarding)';
+    return 'OTPArgumentModel(emailOrPhone: $emailOrPhone, isEmail: $isEmail, isBusiness: $isBusiness, isInitial: $isInitial, isLogin: $isLogin, isEmailIdUpdate: $isEmailIdUpdate, isMobileUpdate: $isMobileUpdate)';
   }
 
   @override
@@ -78,7 +83,8 @@ class OTPArgumentModel {
         other.isBusiness == isBusiness &&
         other.isInitial == isInitial &&
         other.isLogin == isLogin &&
-        other.isIncompleteOnboarding == isIncompleteOnboarding;
+        other.isEmailIdUpdate == isEmailIdUpdate &&
+        other.isMobileUpdate == isMobileUpdate;
   }
 
   @override
@@ -88,6 +94,7 @@ class OTPArgumentModel {
         isBusiness.hashCode ^
         isInitial.hashCode ^
         isLogin.hashCode ^
-        isIncompleteOnboarding.hashCode;
+        isEmailIdUpdate.hashCode ^
+        isMobileUpdate.hashCode;
   }
 }

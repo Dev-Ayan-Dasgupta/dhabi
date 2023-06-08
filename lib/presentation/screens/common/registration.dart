@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/bloc/index.dart';
-import 'package:dialup_mobile_app/data/repositories/onboarding/map_send_email_otp.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -35,6 +35,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool _isEmailValid = false;
 
   bool _isLoading = false;
+
+  bool isValidNewEmail = false;
 
   late RegistrationArgumentModel registrationArgument;
 
@@ -84,7 +86,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                       ),
                       falsy: Text(
-                        "Confirm Email",
+                        labels[37]["labelText"],
                         style: TextStyles.primaryBold.copyWith(
                           color: AppColors.primary,
                           fontSize: (28 / Dimensions.designWidth).w,
@@ -102,7 +104,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         ),
                       ),
                       falsy: Text(
-                        "We will send the OTP to your registered email address",
+                        "This Email address will be used as your User ID for your account",
                         style: TextStyles.primaryMedium.copyWith(
                           color: AppColors.dark50,
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -318,37 +320,84 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     } else {
       return GradientButton(
         onTap: () async {
-          await storage.write(
-              key: "emailAddress", value: _emailController.text);
-          emailAddress = _emailController.text;
-          storageEmail = await storage.read(key: "emailAddress");
           _isLoading = true;
           showButtonBloc.add(ShowButtonEvent(show: _isLoading));
+          if (registrationArgument.isInitial) {
+            await storage.write(
+                key: "emailAddress", value: _emailController.text);
+            emailAddress = _emailController.text;
+            storageEmail = await storage.read(key: "emailAddress");
+          } else {
+            updatedEmail = _emailController.text;
+          }
 
-          var result = await MapSendEmailOtp.mapSendEmailOtp(
-              {"emailID": _emailController.text});
-          log("Send Email OTP Response -> $result");
+          if (!(registrationArgument.isInitial)) {
+            var validateEmailResult = await MapValidateEmail.mapValidateEmail(
+                {"emailId": _emailController.text, "userTypeId": 1});
+            log("Validate Email API response -> $validateEmailResult");
+            isValidNewEmail = validateEmailResult["success"];
+            if (!isValidNewEmail) {
+              _isLoading = false;
+              showButtonBloc.add(ShowButtonEvent(show: _isLoading));
+            }
+          }
 
-          if (result["success"]) {
-            if (_isLoading) {
+          if (registrationArgument.isInitial ||
+              (!(registrationArgument.isInitial) && isValidNewEmail)) {
+            var result = await MapSendEmailOtp.mapSendEmailOtp(
+                {"emailID": _emailController.text});
+            log("Send Email OTP Response -> $result");
+
+            if (result["success"]) {
+              if (_isLoading) {
+                if (context.mounted) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.otp,
+                    arguments: OTPArgumentModel(
+                      emailOrPhone: storageEmail ?? "",
+                      isEmail: true,
+                      isBusiness: false,
+                      isInitial: registrationArgument.isInitial,
+                      isLogin: false,
+                      isEmailIdUpdate: !(registrationArgument.isInitial),
+                      isMobileUpdate: false,
+                    ).toMap(),
+                  );
+                }
+              }
+
+              _isLoading = false;
+              showButtonBloc.add(ShowButtonEvent(show: _isLoading));
+            } else {
               if (context.mounted) {
-                Navigator.pushNamed(
-                  context,
-                  Routes.otp,
-                  arguments: OTPArgumentModel(
-                    emailOrPhone: _emailController.text,
-                    isEmail: true,
-                    isBusiness: false,
-                    isInitial: registrationArgument.isInitial,
-                    isLogin: false,
-                    isIncompleteOnboarding: false,
-                  ).toMap(),
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialog(
+                      svgAssetPath: ImageConstants.warning,
+                      title: "Retry Limit Reached",
+                      message: result["message"],
+                      actionWidget: GradientButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pushReplacementNamed(
+                            context,
+                            Routes.onboarding,
+                            arguments: OnboardingArgumentModel(
+                              isInitial: true,
+                            ).toMap(),
+                          );
+                        },
+                        text: "Go Home",
+                      ),
+                    );
+                  },
                 );
+                _isLoading = false;
+                showButtonBloc.add(ShowButtonEvent(show: _isLoading));
               }
             }
-
-            _isLoading = false;
-            showButtonBloc.add(ShowButtonEvent(show: _isLoading));
           } else {
             if (context.mounted) {
               showDialog(
@@ -356,26 +405,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 builder: (context) {
                   return CustomDialog(
                     svgAssetPath: ImageConstants.warning,
-                    title: "Retry Limit Reached",
-                    message: result["message"],
+                    title: "Email in use",
+                    message:
+                        "The Email ID entered is already registered with another account. Please try again with a dfferent Email ID.",
                     actionWidget: GradientButton(
                       onTap: () {
                         Navigator.pop(context);
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.onboarding,
-                          arguments: OnboardingArgumentModel(
-                            isInitial: true,
-                          ).toMap(),
-                        );
                       },
-                      text: "Go Home",
+                      text: labels[347]["labelText"],
                     ),
                   );
                 },
               );
-              _isLoading = false;
-              showButtonBloc.add(ShowButtonEvent(show: _isLoading));
             }
           }
         },

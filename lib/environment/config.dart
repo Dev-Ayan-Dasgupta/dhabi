@@ -103,6 +103,31 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['REGISTERED_MOBILE_OTP_REQUEST'] ?? "";
   }
 
+  @override
+  String get uploadProfilePhoto {
+    return dotenv.env['UPLOAD_PROFILE_PHOTO'] ?? "";
+  }
+
+  @override
+  String get getProfileData {
+    return dotenv.env['GET_PROFILE_DATA'] ?? "";
+  }
+
+  @override
+  String get updateRetailEmailId {
+    return dotenv.env['UPDATE_RETAIL_EMAIL_ID'] ?? "";
+  }
+
+  @override
+  String get updateRetailMobileNumber {
+    return dotenv.env['UPDATE_RETAIL_MOBILE_NUMBER'] ?? "";
+  }
+
+  @override
+  String get updateRetailAddress {
+    return dotenv.env['UPDATE_RETAIL_ADDRESS'] ?? "";
+  }
+
   // ? Configuration APIs
 
   @override

@@ -294,6 +294,7 @@ class _RetailOnboardingStatusScreenState
                                 Routes.verifyMobile,
                                 arguments: VerifyMobileArgumentModel(
                                   isBusiness: false,
+                                  isUpdate: false,
                                 ).toMap(),
                               );
                               break;

@@ -15,3 +15,5 @@ export './registration.dart';
 export './select_account.dart';
 export './download_statement.dart';
 export './aaplication_account.dart';
+export './deposit_confirmation.dart';
+export './deposit_beneficiary.dart';

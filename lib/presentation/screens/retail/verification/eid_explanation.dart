@@ -65,12 +65,23 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
       storageEidNumber = await storage.read(key: "eiDNumber");
 
       nationality =
-          await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+          // await results?.textFieldValueByTypeLcid(
+          // EVisualFieldType.FT_NATIONALITY, 55);
+          results?.getTextFieldValueByType(
+        EVisualFieldType.FT_NATIONALITY,
+        lcid: 0,
+      );
+      // await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
       await storage.write(key: "nationality", value: nationality);
       storageNationality = await storage.read(key: "nationality");
+      log("storageNationality -> $storageNationality");
 
-      nationalityCode = await results
-          ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
+      nationalityCode =
+          // results?.getTextFieldValueByType(
+          //     EVisualFieldType.FT_NATIONALITY_CODE,
+          //     lcid: 0);
+          await results
+              ?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY_CODE);
       await storage.write(key: "nationalityCode", value: nationalityCode);
       storageNationalityCode = await storage.read(key: "nationalityCode");
       log("storageNationalityCode -> $storageNationalityCode");

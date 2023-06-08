@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -223,6 +224,12 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     isFetchingAccountDetails = false;
     showButtonBloc.add(ShowButtonEvent(show: isFetchingAccountDetails));
     await getFdRates();
+    fdRatesDates.clear();
+    for (var rate in fdRates) {
+      fdRatesDates.add(DateTime.parse(rate["maxMaturityDate"]));
+    }
+    log("fdRatesDates -> $fdRatesDates");
+    await getProfileData();
   }
 
   Future<void> getCustomerAcountDetails() async {
@@ -281,6 +288,61 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       log("getFdResult -> $getFdResult");
       if (getFdResult["success"]) {
         fdRates = getFdResult["fdRates"];
+      }
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<void> getProfileData() async {
+    try {
+      var getProfileDataResult =
+          await MapProfileData.mapProfileData(token ?? "");
+      log("getProfileDataResult -> $getProfileDataResult");
+      if (getProfileDataResult["success"]) {
+        profileName = getProfileDataResult["name"];
+        profilePhotoBase64 = getProfileDataResult["profileImageBase64"];
+        await storage.write(
+            key: "profilePhotoBase64", value: profilePhotoBase64);
+        storageProfilePhotoBase64 =
+            await storage.read(key: "profilePhotoBase64");
+        profileDoB = getProfileDataResult["dateOfBirth"];
+        profileEmailId = getProfileDataResult["emailID"];
+        profileMobileNumber = getProfileDataResult["mobileNumber"];
+        profileAddressLine1 = getProfileDataResult["addressLine_1"];
+        profileAddressLine2 = getProfileDataResult["addressLine_2"];
+        profileCity = getProfileDataResult["city"] ?? "";
+        profileState = getProfileDataResult["state"] ?? "";
+        profilePinCode = getProfileDataResult["pinCode"];
+
+        await storage.write(key: "emailAddress", value: profileEmailId);
+        storageEmail = await storage.read(key: "emailAddress");
+        await storage.write(key: "mobileNumber", value: profileMobileNumber);
+        storageMobileNumber = await storage.read(key: "mobileNumber");
+
+        await storage.write(key: "addressLine1", value: profileAddressLine1);
+        storageAddressLine1 = await storage.read(key: "addressLine1");
+        await storage.write(key: "addressLine2", value: profileAddressLine2);
+        storageAddressLine2 = await storage.read(key: "addressLine2");
+
+        await storage.write(key: "addressCity", value: profileCity);
+        storageAddressCity = await storage.read(key: "addressCity");
+        await storage.write(key: "addressState", value: profileState);
+        storageAddressState = await storage.read(key: "addressState");
+
+        await storage.write(key: "poBox", value: profilePinCode);
+        storageAddressPoBox = await storage.read(key: "poBox");
+
+        profileAddress =
+            "$profileAddressLine1, $profileAddressLine2, $profileCity, $profileState, $profilePinCode";
+        // "${getProfileDataResult["addressLine_1"]} ${getProfileDataResult["addressLine_2"]} ${getProfileDataResult["city"] ?? ""} ${getProfileDataResult["state"] ?? ""} ${getProfileDataResult["pinCode"]}";
+
+        log("profileName -> $profileName");
+        log("profilePhotoBase64 -> $profilePhotoBase64");
+        log("profileDoB -> $profileDoB");
+        log("profileEmailId -> $profileEmailId");
+        log("profileMobileNumber -> $profileMobileNumber");
+        log("profileAddress -> $profileAddress");
       }
     } catch (_) {
       rethrow;
@@ -629,7 +691,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                         );
                                       },
                                     ),
-                                    const SizeBox(height: 15),
+                                    const SizeBox(height: 10),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,

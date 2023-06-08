@@ -1,9 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/profile/edit_profile_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -18,6 +27,10 @@ class ProfileHomeScreen extends StatefulWidget {
 
 class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
   String? version;
+
+  bool isUploading = false;
+
+  bool hasProfilePicUpdated = false;
 
   @override
   void initState() {
@@ -35,111 +48,187 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: const AppBarLeading(),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal:
-              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+    return WillPopScope(
+      onWillPop: () async {
+        if (hasProfilePicUpdated) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.retailDashboard,
+            (route) => false,
+            arguments: RetailDashboardArgumentModel(
+              imgUrl: "",
+              name: profileName ?? "",
+              isFirst: storageIsFirstLogin == true ? false : true,
+            ).toMap(),
+          );
+        } else {
+          Navigator.pop(context);
+        }
+
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: AppBarLeading(
+            onTap: () {
+              if (hasProfilePicUpdated) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.retailDashboard,
+                  (route) => false,
+                  arguments: RetailDashboardArgumentModel(
+                    imgUrl: "",
+                    name: profileName ?? "",
+                    isFirst: storageIsFirstLogin == true ? false : true,
+                  ).toMap(),
+                );
+              } else {
+                Navigator.pop(context);
+              }
+            },
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-        child: Column(
+        body: Stack(
+          alignment: Alignment.center,
           children: [
-            Expanded(
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: (PaddingConstants.horizontalPadding /
+                        Dimensions.designWidth)
+                    .w,
+              ),
               child: Column(
                 children: [
-                  const SizeBox(height: 30),
-                  EditProfilePhoto(
-                    imgUrl:
-                        "https://media.gettyimages.com/id/492789142/photo/square-portrait-of-arab-man-in-traditional-clothing.jpg?s=1024x1024&w=gi&k=20&c=bRiHaqExbaNcOdyLTlrFpK-z04tH6npOz7SCR2yF7Ug=",
-                    onTap: () {},
-                  ),
-                  const SizeBox(height: 10),
-                  Text(
-                    "Ahmed Nasir",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (20 / Dimensions.designWidth).w,
+                  Expanded(
+                    child: Column(
+                      children: [
+                        const SizeBox(height: 10),
+                        EditProfilePhoto(
+                          isMemoryImage: profilePhotoBase64 != null,
+                          bytes: base64Decode(profilePhotoBase64 ?? ""),
+                          onTap: showImageUploadOptions,
+                        ),
+                        const SizeBox(height: 10),
+                        Text(
+                          profileName ?? "",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.primary,
+                            fontSize: (20 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const SizeBox(height: 30),
+                        TopicTile(
+                          color: const Color(0XFFFAFAFA),
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.profile);
+                          },
+                          iconPath: ImageConstants.settingsAccountBox,
+                          text: "Profile",
+                        ),
+                        const SizeBox(height: 10),
+                        TopicTile(
+                          color: const Color(0XFFFAFAFA),
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.security);
+                          },
+                          iconPath: ImageConstants.security,
+                          text: "Security",
+                        ),
+                        const SizeBox(height: 10),
+                        TopicTile(
+                          color: const Color(0XFFFAFAFA),
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.requestType);
+                          },
+                          iconPath: ImageConstants.handshake,
+                          text: "Service Request",
+                        ),
+                        const SizeBox(height: 10),
+                        TopicTile(
+                          color: const Color(0XFFFAFAFA),
+                          onTap: promptUserContactUs,
+                          iconPath: ImageConstants.atTheRate,
+                          text: "Contact Us",
+                        ),
+                        const SizeBox(height: 10),
+                        TopicTile(
+                          color: const Color(0XFFFAFAFA),
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, Routes.termsAndConditions);
+                          },
+                          iconPath: ImageConstants.termsAndConditions,
+                          text: "Terms & Conditions",
+                        ),
+                        const SizeBox(height: 10),
+                        TopicTile(
+                          color: const Color(0XFFFAFAFA),
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, Routes.privacyStatement);
+                          },
+                          iconPath: ImageConstants.privacyPolicy,
+                          text: "Privacy Policy",
+                        ),
+                        const SizeBox(height: 10),
+                        TopicTile(
+                          color: const Color(0XFFFAFAFA),
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.faq);
+                          },
+                          iconPath: ImageConstants.faq,
+                          text: "FAQs",
+                        ),
+                        const SizeBox(height: 10),
+                        TopicTile(
+                          color: const Color(0XFFFAFAFA),
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.selectAccount);
+                          },
+                          iconPath: ImageConstants.rotate,
+                          text: "Switch Entities",
+                        ),
+                        const SizeBox(height: 10),
+                        TopicTile(
+                          color: const Color(0XFFFAFAFA),
+                          onTap: promptUserLogout,
+                          iconPath: ImageConstants.logout,
+                          text: "Logout",
+                          fontColor: AppColors.red100,
+                          highlightColor:
+                              const Color.fromRGBO(201, 69, 64, 0.1),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizeBox(height: 30),
-                  TopicTile(
-                    color: const Color(0XFFFAFAFA),
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.profile);
-                    },
-                    iconPath: ImageConstants.settingsAccountBox,
-                    text: "Profile",
-                  ),
-                  const SizeBox(height: 10),
-                  TopicTile(
-                    color: const Color(0XFFFAFAFA),
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.security);
-                    },
-                    iconPath: ImageConstants.security,
-                    text: "Security",
-                  ),
-                  const SizeBox(height: 10),
-                  TopicTile(
-                    color: const Color(0XFFFAFAFA),
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.requestType);
-                    },
-                    iconPath: ImageConstants.handshake,
-                    text: "Service Request",
-                  ),
-                  const SizeBox(height: 10),
-                  TopicTile(
-                    color: const Color(0XFFFAFAFA),
-                    onTap: promptUserContactUs,
-                    iconPath: ImageConstants.atTheRate,
-                    text: "Contact Us",
-                  ),
-                  const SizeBox(height: 10),
-                  TopicTile(
-                    color: const Color(0XFFFAFAFA),
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.faq);
-                    },
-                    iconPath: ImageConstants.faq,
-                    text: "FAQs",
+                  Column(
+                    children: [
+                      const SizeBox(height: 20),
+                      Text(
+                        "App Version $version",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark50,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      SizeBox(
+                        height: PaddingConstants.bottomPadding +
+                            MediaQuery.of(context).padding.bottom,
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            Column(
-              children: [
-                TopicTile(
-                  color: const Color(0XFFFAFAFA),
-                  onTap: () {
-                    Navigator.pushNamed(context, Routes.selectAccount);
-                  },
-                  iconPath: ImageConstants.rotate,
-                  text: "Switch Entities",
-                ),
-                const SizeBox(height: 10),
-                TopicTile(
-                  color: const Color(0XFFFAFAFA),
-                  onTap: promptUserLogout,
-                  iconPath: ImageConstants.logout,
-                  text: "Logout",
-                  fontColor: AppColors.red100,
-                  highlightColor: const Color.fromRGBO(201, 69, 64, 0.1),
-                ),
-                const SizeBox(height: 20),
-                Text(
-                  "App Version $version",
-                  style: TextStyles.primaryMedium.copyWith(
-                    color: AppColors.dark50,
-                    fontSize: (16 / Dimensions.designWidth).w,
-                  ),
-                ),
-                const SizeBox(height: 45),
-              ],
+            Ternary(
+              condition: isUploading,
+              truthy: SpinKitFadingCircle(
+                color: AppColors.primary,
+                size: (50 / Dimensions.designWidth).w,
+              ),
+              falsy: const SizeBox(),
             ),
           ],
         ),
@@ -169,30 +258,173 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
   }
 
   void promptUserLogout() {
-    showDialog(
+    // showDialog(
+    //   context: context,
+    //   // barrierDismissible: false,
+    //   builder: (context) {
+    //     return CustomDialog(
+    //       svgAssetPath: ImageConstants.warning,
+    //       title: labels[250]["labelText"],
+    //       message: "If you log out you would need to re-login again",
+    //       actionWidget: GradientButton(
+    //         onTap: () {
+    //           Navigator.pop(context);
+    //           Navigator.pop(context);
+    //           Navigator.pushNamed(
+    //             context,
+    //             Routes.onboarding,
+    //             arguments: OnboardingArgumentModel(
+    //               isInitial: true,
+    //             ).toMap(),
+    //           );
+    //         },
+    //         text: "Yes, I am sure",
+    //       ),
+    //     );
+    //   },
+    // );
+  }
+
+  void showImageUploadOptions() {
+    showModalBottomSheet(
       context: context,
-      // barrierDismissible: false,
+      backgroundColor: Colors.transparent,
       builder: (context) {
-        return CustomDialog(
-          svgAssetPath: ImageConstants.warning,
-          title: labels[250]["labelText"],
-          message: "If you log out you would need to re-login again",
-          actionWidget: GradientButton(
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Navigator.pushNamed(
-                context,
-                Routes.onboarding,
-                arguments: OnboardingArgumentModel(
-                  isInitial: true,
-                ).toMap(),
-              );
-            },
-            text: "Yes, I am sure",
+        return Container(
+          height: (110 / Dimensions.designHeight).h,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular((10 / Dimensions.designWidth).w),
+              topRight: Radius.circular((10 / Dimensions.designWidth).w),
+            ),
+          ),
+          child: Column(
+            children: [
+              const SizeBox(height: 10),
+              ListTile(
+                dense: true,
+                onTap: () {
+                  uploadImage(ImageSource.camera);
+                },
+                leading: Container(
+                  width: (30 / Dimensions.designWidth).w,
+                  height: (30 / Dimensions.designWidth).w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 1,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.camera_alt_rounded,
+                    size: (15 / Dimensions.designWidth).w,
+                    color: AppColors.primary,
+                  ),
+                ),
+                title: Text(
+                  "Camera",
+                  style: TextStyles.primaryBold.copyWith(
+                    color: AppColors.primary,
+                    fontSize: (18 / Dimensions.designWidth).w,
+                  ),
+                ),
+              ),
+              ListTile(
+                dense: true,
+                onTap: () async {
+                  uploadImage(ImageSource.gallery);
+                },
+                leading: Container(
+                  width: (30 / Dimensions.designWidth).w,
+                  height: (30 / Dimensions.designWidth).w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      width: 1,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.collections_rounded,
+                    size: (15 / Dimensions.designWidth).w,
+                    color: AppColors.primary,
+                  ),
+                ),
+                title: Text(
+                  "Gallery",
+                  style: TextStyles.primaryBold.copyWith(
+                    color: AppColors.primary,
+                    fontSize: (18 / Dimensions.designWidth).w,
+                  ),
+                ),
+              ),
+            ],
           ),
         );
       },
     );
+  }
+
+  void promptUploadPhotoError() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: "Image Upload Failed",
+          message: "Your attempt to upload your profile photo failed.",
+          actionWidget: GradientButton(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[347]["labelText"],
+          ),
+        );
+      },
+    );
+  }
+
+  void uploadImage(ImageSource source) async {
+    Navigator.pop(context);
+    isUploading = true;
+    setState(() {});
+    XFile? pickedImageFile = await ImagePicker().pickImage(
+      source: source,
+      preferredCameraDevice: CameraDevice.front,
+    );
+    CroppedFile? croppedImageFile = await ImageCropper().cropImage(
+      sourcePath: pickedImageFile!.path,
+      aspectRatioPresets: [CropAspectRatioPreset.square],
+    );
+
+    String photoBase64 =
+        base64Encode(await croppedImageFile?.readAsBytes() as Uint8List);
+
+    var uploadPPResult = await MapUploadProfilePhoto.mapUploadProfilePhoto(
+      {
+        "photoBase64": photoBase64,
+      },
+      token ?? "",
+    );
+    log("Upload Profile Photo response -> $uploadPPResult");
+
+    if (uploadPPResult["success"]) {
+      var getProfileDataResult =
+          await MapProfileData.mapProfileData(token ?? "");
+      if (getProfileDataResult["success"]) {
+        profilePhotoBase64 = getProfileDataResult["profileImageBase64"];
+        await storage.write(
+            key: "profilePhotoBase64", value: profilePhotoBase64);
+        storageProfilePhotoBase64 =
+            await storage.read(key: "profilePhotoBase64");
+        hasProfilePicUpdated = true;
+      }
+    } else {
+      promptUploadPhotoError();
+    }
+    isUploading = false;
+    setState(() {});
   }
 }

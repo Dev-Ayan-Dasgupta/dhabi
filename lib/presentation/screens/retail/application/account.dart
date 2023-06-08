@@ -304,6 +304,21 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                   isUploading = true;
                   showButtonBloc.add(ShowButtonEvent(show: isUploading));
 
+                  log("Register customer address api request -> ${{
+                    "addressLine_1": storageAddressLine1,
+                    "addressLine_2": storageAddressLine2,
+                    "areaId":
+                        uaeDetails[emirates.indexOf(storageAddressEmirate!)]
+                            ["areas"][0]["area_Id"],
+                    "cityId":
+                        uaeDetails[emirates.indexOf(storageAddressEmirate!)]
+                            ["city_Id"],
+                    "city": storageAddressCity,
+                    "state": storageAddressState,
+                    "stateId": 1,
+                    "countryId": 1,
+                    "pinCode": storageAddressPoBox
+                  }}");
                   var addressApiResult = await MapRegisterRetailCustomerAddress
                       .mapRegisterRetailCustomerAddress(
                     {
@@ -315,6 +330,8 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                       "cityId":
                           uaeDetails[emirates.indexOf(storageAddressEmirate!)]
                               ["city_Id"],
+                      "city": storageAddressCity,
+                      "state": storageAddressState,
                       "stateId": 1,
                       "countryId": 1,
                       "pinCode": storageAddressPoBox

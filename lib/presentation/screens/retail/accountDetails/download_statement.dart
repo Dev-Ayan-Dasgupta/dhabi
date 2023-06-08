@@ -312,20 +312,6 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     await file.writeAsBytes(bytes.buffer.asUint8List());
     await OpenFile.open(
         "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}${format?.split(' ').last.substring(1, format.split(' ').last.length - 1)}");
-
-    // if (selectedFormat == "Excel (.xls)") {
-    //   file = File(
-    //       "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.xls");
-    //   await file.writeAsBytes(bytes.buffer.asUint8List());
-    //   await OpenFile.open(
-    //       "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.xls");
-    // } else if (selectedFormat == "PDF (.pdf)") {
-    //   file = File(
-    //       "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.pdf");
-    //   await file.writeAsBytes(bytes.buffer.asUint8List());
-    //   await OpenFile.open(
-    //       "${directory?.path}/Dhabi_${downloadStatementArgument.accountNumber}_${DateFormat('yyyy-MM-dd').format(auxFromDate)}_${DateFormat('yyyy-MM-dd').format(auxToDate)}.pdf");
-    // }
   }
 
   onSelectFileFormat(Object? value) {

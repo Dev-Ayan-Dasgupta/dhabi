@@ -82,6 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
     populateDD(sourceOfIncomeDDs, 5);
     populateDD(noTinReasonDDs, 6);
     populateDD(statementDurationDDs, 7);
+    populateDD(reasonOfSending, 9);
     populateEmirates();
     getPolicies();
     banks = await MapBankDetails.mapBankDetails();
@@ -214,6 +215,9 @@ class _SplashScreenState extends State<SplashScreen> {
       deviceName = _deviceData['name'];
     }
 
+    await storage.write(key: "deviceId", value: deviceId);
+    // storageDeviceId = await storage.read(key: "deviceId");
+
     log("deviceId -> $deviceId");
     log("deviceName -> $deviceName");
     log("deviceType -> $deviceType");
@@ -223,11 +227,51 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> initLocalStorageData() async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool('first_run') ?? true) {
-      await storage.deleteAll();
+      await storage.delete(key: "newInstall");
+      await storage.delete(key: "hasFirstLoggedIn");
+      await storage.delete(key: "isFirstLogin");
+      await storage.delete(key: "userId");
+      await storage.delete(key: "password");
+      await storage.delete(key: "emailAddress");
+      await storage.delete(key: "userTypeId");
+      await storage.delete(key: "companyId");
+      await storage.delete(key: "persistBiometric");
+      await storage.delete(key: "stepsCompleted");
+      await storage.delete(key: "isEid");
+      await storage.delete(key: "fullName");
+      await storage.delete(key: "eiDNumber");
+      await storage.delete(key: "passportNumber");
+      await storage.delete(key: "nationality");
+      await storage.delete(key: "nationalityCode");
+      await storage.delete(key: "issuingStateCode");
+      await storage.delete(key: "expiryDate");
+      await storage.delete(key: "dob");
+      await storage.delete(key: "gender");
+      await storage.delete(key: "photo");
+      await storage.delete(key: "docPhoto");
+      await storage.delete(key: "selfiePhoto");
+      await storage.delete(key: "photoMatchScore");
+      await storage.delete(key: "addressCountry");
+      await storage.delete(key: "poBox");
+      await storage.delete(key: "incomeSource");
+      await storage.delete(key: "isUSFatca");
+      await storage.delete(key: "taxCountry");
+      await storage.delete(key: "isTinYes");
+      await storage.delete(key: "crsTin");
+      await storage.delete(key: "noTinReason");
+      await storage.delete(key: "accountType");
+      await storage.delete(key: "cif");
+      await storage.delete(key: "isCompany");
+      await storage.delete(key: "isCompanyRegistered");
+      await storage.delete(key: "retailLoggedIn");
+      await storage.delete(key: "customerName");
+      await storage.delete(key: "chosenAccount");
       prefs.setBool('first_run', false);
     }
 
     try {
+      storageDeviceId = await storage.read(key: "deviceId");
+      log("storageDeviceId -> $storageDeviceId");
       storageIsNotNewInstall =
           (await storage.read(key: "newInstall")) == "true";
       log("storageIsNotNewInstall -> $storageIsNotNewInstall");
@@ -239,6 +283,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
       storageEmail = await storage.read(key: "emailAddress");
       log("storageEmail -> $storageEmail");
+      storageMobileNumber = await storage.read(key: "mobileNumber");
+      log("storageMobileNumber -> $storageMobileNumber");
       storagePassword = await storage.read(key: "password");
       log("storagePassword -> $storagePassword");
       storageUserId = int.parse(await storage.read(key: "userId") ?? "0");
@@ -292,6 +338,10 @@ class _SplashScreenState extends State<SplashScreen> {
       log("storageAddressLine1 -> $storageAddressLine1");
       storageAddressLine2 = await storage.read(key: "addressLine2");
       log("storageAddressLine2 -> $storageAddressLine2");
+      storageAddressCity = await storage.read(key: "addressCity");
+      log("storageAddressCity -> $storageAddressCity");
+      storageAddressState = await storage.read(key: "addressState");
+      log("storageAddressState -> $storageAddressState");
       storageAddressEmirate = await storage.read(key: "addressEmirate");
       log("storageAddressEmirate -> $storageAddressEmirate");
       storageAddressPoBox = await storage.read(key: "poBox");
@@ -300,7 +350,7 @@ class _SplashScreenState extends State<SplashScreen> {
       storageIncomeSource = await storage.read(key: "incomeSource");
       log("storageIncomeSource -> $storageIncomeSource");
 
-      storageIsUSFATCA = await storage.read(key: "incomeSource") == "true";
+      storageIsUSFATCA = await storage.read(key: "isUSFatca") == "true";
       log("storageIsUSFATCA -> $storageIsUSFATCA");
       storageUsTin = await storage.read(key: "usTin");
       log("storageUsTin -> $storageUsTin");
@@ -336,6 +386,9 @@ class _SplashScreenState extends State<SplashScreen> {
       storageChosenAccount =
           int.parse(await storage.read(key: "chosenAccount") ?? "0");
       log("storageChosenAccount -> $storageChosenAccount");
+
+      storageProfilePhotoBase64 = await storage.read(key: "profilePhotoBase64");
+      log("storageProfilePhotoBase64 -> $storageProfilePhotoBase64");
     } catch (_) {
       rethrow;
     }

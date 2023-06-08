@@ -1,9 +1,11 @@
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -66,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       Text(
-                        "Multazam Sohail Ismail Siddiqui",
+                        profileName ?? "",
                         style: TextStyles.primaryMedium.copyWith(
                           color: AppColors.primary,
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -86,7 +88,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       Text(
-                        "12/08/1987",
+                        DateFormat('dd MMMM yyyy')
+                            .format(DateTime.parse(profileDoB ?? "1900-01-01")),
                         style: TextStyles.primaryMedium.copyWith(
                           color: AppColors.primary,
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -130,7 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            "multazam@mail.com",
+                            profileEmailId ?? "",
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.primary,
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -138,7 +141,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizeBox(width: 20),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.errorSuccessScreen,
+                                arguments: ErrorArgumentModel(
+                                  hasSecondaryButton: true,
+                                  iconPath: ImageConstants.warning,
+                                  title: labels[250]["labelText"],
+                                  message: messages[53]["messageText"],
+                                  buttonText: labels[31]["labelText"],
+                                  onTap: () {
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      Routes.registration,
+                                      arguments: RegistrationArgumentModel(
+                                              isInitial: false)
+                                          .toMap(),
+                                    );
+                                  },
+                                  buttonTextSecondary: labels[347]["labelText"],
+                                  onTapSecondary: () {
+                                    Navigator.pop(context);
+                                  },
+                                ).toMap(),
+                              );
+                            },
                             child: SvgPicture.asset(
                               ImageConstants.edit,
                               width: (18 / Dimensions.designWidth).w,
@@ -164,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            "+971505470469",
+                            profileMobileNumber ?? "",
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.primary,
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -172,7 +200,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           const SizeBox(width: 20),
                           InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.verifyMobile,
+                                arguments: VerifyMobileArgumentModel(
+                                  isBusiness: false,
+                                  isUpdate: true,
+                                ).toMap(),
+                              );
+                            },
                             child: SvgPicture.asset(
                               ImageConstants.edit,
                               width: (18 / Dimensions.designWidth).w,
@@ -223,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           SizedBox(
                             width: 35.w,
                             child: Text(
-                              "Orjowan Tower Zayed 1st Street, Khalidya Area - Abu Dhabi",
+                              profileAddress ?? "",
                               style: TextStyles.primaryMedium.copyWith(
                                 color: AppColors.primary,
                                 fontSize: (16 / Dimensions.designWidth).w,

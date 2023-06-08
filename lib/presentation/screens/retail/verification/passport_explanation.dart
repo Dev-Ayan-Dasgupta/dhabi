@@ -68,13 +68,22 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
 
       String? tempPassportNumber =
           await results?.textFieldValueByType(EVisualFieldType.FT_MRZ_STRINGS);
-      passportNumber = tempPassportNumber?.split("\n").last.split('<').first;
-      // passportNumber = ppMrz!.substring(0, 9);
-      // print("passportNumber -> $passportNumber");
+      //   await results?.textFieldValueByTypeLcidSourceOriginal(
+      // EVisualFieldType.FT_DOCUMENT_NUMBER,
+      // 0,
+      // ERPRMResultType.RPRM_RESULT_TYPE_MRZ_OCR_EXTENDED,
+      // true,
+      // );
+      passportNumber =
+          // tempPassportNumber;
+          tempPassportNumber?.split("\n").last.split('<').first;
+
       // passportNumber = await results
       //     ?.textFieldValueByType(EVisualFieldType.FT_PASSPORT_NUMBER);
       await storage.write(key: "passportNumber", value: passportNumber);
       storagePassportNumber = await storage.read(key: "passportNumber");
+
+      log("storagePassportNumber -> $storagePassportNumber");
 
       nationality =
           await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
@@ -103,6 +112,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_EXPIRY);
       await storage.write(key: "expiryDate", value: expiryDate);
       storageExpiryDate = await storage.read(key: "expiryDate");
+      log("storageExpiryDate -> $storageExpiryDate");
 
       dob = await results
           ?.textFieldValueByType(EVisualFieldType.FT_DATE_OF_BIRTH);

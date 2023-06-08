@@ -12,7 +12,7 @@ List statementFileDDs = [
   // {"key": "DD_0002_002", "value": "XLS"}
 ];
 
-List moneyTransferReasonDDs = [
+List<String> moneyTransferReasonDDs = [
   // {"key": "DD_0003_001", "value": "Own Account Transfer"},
   // {"key": "DD_0003_002", "value": "Family Support"},
   // {"key": "DD_0003_003", "value": "Educational Support"},
@@ -35,7 +35,7 @@ List moneyTransferReasonDDs = [
   // {"key": "DD_0003_020", "value": "Commerical Investments"}
 ];
 
-List typeOfAccountDDs = [
+List<String> typeOfAccountDDs = [
   // {"key": "DD_0004_001", "value": "Current Account"},
   // {"key": "DD_0004_002", "value": "Savings Account"}
 ];
@@ -78,6 +78,8 @@ List statementDurationDDs = [
   // {"key": "DD_0008_002", "value": "3 Months"},
   // {"key": "DD_0008_003", "value": "6 Months"}
 ];
+
+List<String> reasonOfSending = [];
 
 List<String> dhabiCountryNames = [];
 

@@ -1,9 +1,12 @@
+String? storageDeviceId;
+
 bool? storageIsNotNewInstall;
 bool? storageHasFirstLoggedIn;
 
 bool? storageIsFirstLogin;
 
 String? storageEmail;
+String? storageMobileNumber;
 String? storagePassword;
 int? storageUserId;
 int? storageUserTypeId;
@@ -35,6 +38,8 @@ double? storagePhotoMatchScore;
 String? storageAddressCountry;
 String? storageAddressLine1;
 String? storageAddressLine2;
+String? storageAddressCity;
+String? storageAddressState;
 String? storageAddressEmirate;
 String? storageAddressPoBox;
 
@@ -64,3 +69,5 @@ bool? storageRetailLoggedIn;
 String? storageCustomerName;
 
 int? storageChosenAccount;
+
+String? storageProfilePhotoBase64;

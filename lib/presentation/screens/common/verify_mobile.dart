@@ -5,6 +5,7 @@ import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,28 +68,63 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    labels[227]["labelText"],
-                    style: TextStyles.primaryBold.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (28 / Dimensions.designWidth).w,
+                  Ternary(
+                    condition: verifyMobileArgumentModel.isUpdate,
+                    truthy: Text(
+                      labels[30]["labelText"],
+                      style: TextStyles.primaryBold.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (28 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                    falsy: Text(
+                      labels[227]["labelText"],
+                      style: TextStyles.primaryBold.copyWith(
+                        color: AppColors.primary,
+                        fontSize: (28 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                  ),
+                  const SizeBox(height: 20),
+                  Ternary(
+                    condition: verifyMobileArgumentModel.isUpdate,
+                    truthy: Text(
+                      "To update your mobile number, please fill out the form below.",
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.dark50,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                    falsy: Text(
+                      "We will send the OTP to your registered mobile number",
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.dark50,
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
                     ),
                   ),
                   const SizeBox(height: 22),
-                  Text(
-                    "We will send the OTP to your registered mobile number",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.dark50,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
-                  ),
-                  const SizeBox(height: 22),
-                  Text(
-                    labels[27]["labelText"],
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.dark80,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  Row(
+                    children: [
+                      Ternary(
+                        condition: verifyMobileArgumentModel.isUpdate,
+                        truthy: Text(
+                          "New Mobile Number",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.dark80,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        falsy: Text(
+                          labels[27]["labelText"],
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.dark80,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 9),
                   CustomTextField(
@@ -127,25 +163,6 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                         );
                       },
                     ),
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.min,
-                    //   children: [
-                    //     CustomCircleAvatarAsset(
-                    //       width: (25 / Dimensions.designWidth).w,
-                    //       height: (25 / Dimensions.designWidth).w,
-                    //       imgUrl: ImageConstants.uaeFlag,
-                    //     ),
-                    //     const SizeBox(width: 7),
-                    //     Text(
-                    //       "+971",
-                    //       style: TextStyles.primaryMedium.copyWith(
-                    //         color: AppColors.black63,
-                    //         fontSize: (16 / Dimensions.designWidth).w,
-                    //       ),
-                    //     ),
-                    //     const SizeBox(width: 7),
-                    //   ],
-                    // ),
                     suffixIcon: BlocBuilder<ShowButtonBloc, ShowButtonState>(
                       builder: buildCheckCircle,
                     ),
@@ -215,7 +232,10 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
     if (!_isPhoneValid) {
-      return const SizeBox();
+      return SolidButton(
+        onTap: () {},
+        text: labels[31]["labelText"],
+      );
     } else {
       return GradientButton(
         onTap: () async {
@@ -244,18 +264,27 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
               log("Send Mobile OTP API response -> $result");
 
               if (result["success"]) {
+                if (!(verifyMobileArgumentModel.isUpdate)) {
+                  await storage.write(
+                    key: "mobileNumber",
+                    value: "$selectedIsd${_phoneController.text}",
+                  );
+                  storageMobileNumber = await storage.read(key: "mobileNumber");
+                }
+
                 if (isLoading) {
                   if (context.mounted) {
                     Navigator.pushNamed(
                       context,
                       Routes.otp,
                       arguments: OTPArgumentModel(
-                        emailOrPhone: "+971${_phoneController.text}",
+                        emailOrPhone: "$selectedIsd${_phoneController.text}",
                         isEmail: false,
                         isBusiness: verifyMobileArgumentModel.isBusiness,
                         isInitial: true,
                         isLogin: false,
-                        isIncompleteOnboarding: false,
+                        isEmailIdUpdate: false,
+                        isMobileUpdate: verifyMobileArgumentModel.isUpdate,
                       ).toMap(),
                     );
                   }

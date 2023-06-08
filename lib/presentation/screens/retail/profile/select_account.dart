@@ -202,7 +202,8 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                             isBusiness: isCompany,
                                             isInitial: false,
                                             isLogin: false,
-                                            isIncompleteOnboarding: false,
+                                            isEmailIdUpdate: false,
+                                            isMobileUpdate: false,
                                           ).toMap(),
                                         );
                                       }

@@ -1,18 +1,24 @@
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+
 class EditProfilePhoto extends StatelessWidget {
   const EditProfilePhoto({
     Key? key,
-    required this.imgUrl,
     required this.onTap,
+    required this.isMemoryImage,
+    required this.bytes,
   }) : super(key: key);
 
-  final String imgUrl;
   final VoidCallback onTap;
+  final bool isMemoryImage;
+  final Uint8List bytes;
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +33,18 @@ class EditProfilePhoto extends StatelessWidget {
             boxShadow: [BoxShadows.primary],
           ),
           child: Center(
-            child: CustomCircleAvatarAsset(
-              imgUrl: imgUrl,
-              width: (109 / Dimensions.designWidth).w,
-              height: (109 / Dimensions.designWidth).w,
+            child: Ternary(
+              condition: isMemoryImage,
+              truthy: CustomCircleAvatarImage(
+                bytes: bytes,
+                width: (109 / Dimensions.designWidth).w,
+                height: (109 / Dimensions.designWidth).w,
+              ),
+              falsy: CustomCircleAvatarAsset(
+                imgUrl: ImageConstants.profilePictureDummy,
+                width: (109 / Dimensions.designWidth).w,
+                height: (109 / Dimensions.designWidth).w,
+              ),
             ),
           ),
         ),

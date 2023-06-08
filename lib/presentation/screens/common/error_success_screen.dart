@@ -72,24 +72,24 @@ class _ErrorSuccessScreenState extends State<ErrorSuccessScreen> {
             ),
             Column(
               children: [
+                GradientButton(
+                  onTap: errorArgumentModel.onTap,
+                  text: errorArgumentModel.buttonText,
+                ),
                 Ternary(
                   condition: errorArgumentModel.hasSecondaryButton,
                   truthy: Column(
                     children: [
+                      const SizeBox(height: 15),
                       SolidButton(
                         onTap: errorArgumentModel.onTapSecondary,
                         text: errorArgumentModel.buttonTextSecondary,
                         color: const Color.fromRGBO(34, 97, 105, 0.17),
                         fontColor: AppColors.primary,
                       ),
-                      const SizeBox(height: 20),
                     ],
                   ),
                   falsy: const SizeBox(),
-                ),
-                GradientButton(
-                  onTap: errorArgumentModel.onTap,
-                  text: errorArgumentModel.buttonText,
                 ),
                 SizeBox(
                   height: PaddingConstants.bottomPadding +

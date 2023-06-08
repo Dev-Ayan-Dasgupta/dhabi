@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -18,7 +21,7 @@ class SecurityScreen extends StatefulWidget {
 }
 
 class _SecurityScreenState extends State<SecurityScreen> {
-  bool isEnabled = true;
+  bool isEnabled = persistBiometric == true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,8 +116,13 @@ class _SecurityScreenState extends State<SecurityScreen> {
       inactiveColor: const Color(0XFFD7D9D8),
       toggleSize: (15 / Dimensions.designWidth).w,
       value: isEnabled,
-      onToggle: (val) {
+      onToggle: (val) async {
         isEnabled = val;
+        await storage.write(
+            key: "persistBiometric", value: isEnabled.toString());
+        persistBiometric =
+            await storage.read(key: "persistBiometric") == "true";
+        log("persistBiometric -> $persistBiometric");
         isEnabledBloc.add(ShowButtonEvent(show: isEnabled));
       },
     );

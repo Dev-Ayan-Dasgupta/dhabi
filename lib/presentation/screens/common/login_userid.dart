@@ -386,7 +386,8 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                       isBusiness: false,
                       isInitial: false,
                       isLogin: true,
-                      isIncompleteOnboarding: false,
+                      isEmailIdUpdate: false,
+                      isMobileUpdate: false,
                     ).toMap(),
                   );
                 }
@@ -432,7 +433,8 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                         isBusiness: false,
                         isInitial: false,
                         isLogin: true,
-                        isIncompleteOnboarding: false,
+                        isEmailIdUpdate: false,
+                        isMobileUpdate: false,
                       ).toMap(),
                     );
                   }

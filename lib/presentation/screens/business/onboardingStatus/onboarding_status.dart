@@ -243,6 +243,7 @@ class _BusinessOnboardingStatusScreenState
                                 Routes.verifyMobile,
                                 arguments: VerifyMobileArgumentModel(
                                   isBusiness: true,
+                                  isUpdate: false,
                                 ).toMap(),
                               );
                               break;

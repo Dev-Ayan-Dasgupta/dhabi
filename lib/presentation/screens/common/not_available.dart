@@ -87,7 +87,9 @@ class _NotAvaiableScreenState extends State<NotAvaiableScreen> {
               child: Column(
                 children: [
                   GradientButton(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                     text: "Exit",
                   ),
                   const SizeBox(height: 32),

@@ -31,17 +31,20 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
   final TextEditingController _zipController = TextEditingController();
 
   bool isAddress1Entered = false;
-  bool isEmirateSelected = false;
-  bool isCountrySelected = false;
+  // bool isEmirateSelected = false;
+  bool isCountrySelected = true;
 
   int toggles = 0;
 
   String? selectedValue;
-  DropDownCountriesModel? selectedCountry;
-  String? selectedCountryName;
+  DropDownCountriesModel selectedCountry = DropDownCountriesModel(
+    countryFlagBase64: dhabiCountriesWithFlags[0].countryFlagBase64,
+    countrynameOrCode: dhabiCountriesWithFlags[0].countrynameOrCode,
+  );
+  String? selectedCountryName = dhabiCountriesWithFlags[0].countrynameOrCode;
 
   int emirateIndex = -1;
-  int dhabiCountryIndex = -1;
+  int dhabiCountryIndex = 0;
 
   bool isUploading = false;
 
@@ -117,17 +120,18 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                             isCountrySelected = true;
                             selectedCountry = value as DropDownCountriesModel;
                             selectedCountryName =
-                                selectedCountry?.countrynameOrCode;
+                                selectedCountry.countrynameOrCode;
                             dhabiCountryIndex =
                                 dhabiCountryNames.indexOf(selectedCountryName!);
                             // emirateIndex = emirates.indexOf(selectedValue!);
                             residenceSelectedBloc.add(
                               DropdownSelectedEvent(
-                                isDropdownSelected: isEmirateSelected &&
+                                isDropdownSelected:
+                                    // isEmirateSelected &&
                                     isCountrySelected &&
-                                    (isAddress1Entered
-                                    // && isCityEntered
-                                    ),
+                                        (isAddress1Entered
+                                        // && isCityEntered
+                                        ),
                                 toggles: toggles,
                               ),
                             );
@@ -195,41 +199,65 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                     Row(
                       children: [
                         Text(
-                          "State/Province",
+                          "City",
                           style: TextStyles.primary.copyWith(
                             color: AppColors.dark80,
                             fontSize: (16 / Dimensions.designWidth).w,
                           ),
                         ),
-                        const Asterisk(),
+                        // const Asterisk(),
                       ],
                     ),
                     const SizeBox(height: 9),
-                    BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                      builder: (context, state) {
-                        return CustomDropDown(
-                          title: "Select from the list",
-                          items: emirates,
-                          value: selectedValue,
-                          onChanged: (value) {
-                            toggles++;
-                            isEmirateSelected = true;
-                            selectedValue = value as String;
-                            emirateIndex = emirates.indexOf(selectedValue!);
-                            residenceSelectedBloc.add(
-                              DropdownSelectedEvent(
-                                isDropdownSelected: isEmirateSelected &&
-                                    isCountrySelected &&
-                                    (isAddress1Entered
-                                    // && isCityEntered
-                                    ),
-                                toggles: toggles,
-                              ),
-                            );
-                          },
-                        );
-                      },
+                    CustomTextField(
+                      controller: _cityController,
+                      onChanged: (p0) {},
+                      hintText: "City",
                     ),
+                    const SizeBox(height: 20),
+                    Row(
+                      children: [
+                        Text(
+                          "City",
+                          style: TextStyles.primary.copyWith(
+                            color: AppColors.dark80,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        // const Asterisk(),
+                      ],
+                    ),
+                    const SizeBox(height: 9),
+                    CustomTextField(
+                      controller: _stateController,
+                      onChanged: (p0) {},
+                      hintText: "State/Province",
+                    ),
+                    // BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                    //   builder: (context, state) {
+                    //     return CustomDropDown(
+                    //       title: "Select from the list",
+                    //       items: emirates,
+                    //       value: selectedValue,
+                    //       onChanged: (value) {
+                    //         toggles++;
+                    //         isEmirateSelected = true;
+                    //         selectedValue = value as String;
+                    //         emirateIndex = emirates.indexOf(selectedValue!);
+                    //         residenceSelectedBloc.add(
+                    //           DropdownSelectedEvent(
+                    //             isDropdownSelected: isEmirateSelected &&
+                    //                 isCountrySelected &&
+                    //                 (isAddress1Entered
+                    //                 // && isCityEntered
+                    //                 ),
+                    //             toggles: toggles,
+                    //           ),
+                    //         );
+                    //       },
+                    //     );
+                    //   },
+                    // ),
                     const SizeBox(height: 20),
                     Text(
                       labels[269]["labelText"],
@@ -285,9 +313,9 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
             const SizeBox(height: 20),
             BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
               builder: (context, state) {
-                if (isEmirateSelected &&
-                    isAddress1Entered &&
-                    isCountrySelected) {
+                if (
+                    // isEmirateSelected &&
+                    isAddress1Entered && isCountrySelected) {
                   return Column(
                     children: [
                       GradientButton(
@@ -317,6 +345,16 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                                 value: _address2Controller.text);
                             storageAddressLine2 =
                                 await storage.read(key: "addressLine2");
+                            await storage.write(
+                                key: "addressCity",
+                                value: _cityController.text);
+                            storageAddressCity =
+                                await storage.read(key: "addressCity");
+                            await storage.write(
+                                key: "addressState",
+                                value: _stateController.text);
+                            storageAddressState =
+                                await storage.read(key: "addressState");
                             await storage.write(
                                 key: "addressEmirate", value: selectedValue);
                             storageAddressEmirate =

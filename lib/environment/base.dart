@@ -22,6 +22,11 @@ abstract class BaseConfig {
   String get isDeviceValid;
   String get renewToken;
   String get registeredMobileOTPRequest;
+  String get uploadProfilePhoto;
+  String get getProfileData;
+  String get updateRetailEmailId;
+  String get updateRetailMobileNumber;
+  String get updateRetailAddress;
 
   // ? Configuration APIs
 

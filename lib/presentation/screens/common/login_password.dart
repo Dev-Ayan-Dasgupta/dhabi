@@ -648,7 +648,8 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               isBusiness: false,
               isInitial: false,
               isLogin: false,
-              isIncompleteOnboarding: false,
+              isEmailIdUpdate: false,
+              isMobileUpdate: false,
             ).toMap(),
           );
         }

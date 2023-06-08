@@ -174,8 +174,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                 key: "isUSFatca",
                                 value: isUSCitizen.toString());
                             storageIsUSFATCA =
-                                await storage.read(key: "incomeSource") ==
-                                    "true";
+                                await storage.read(key: "isUSFatca") == "true";
                             await storage.write(
                                 key: "usTin", value: _tinssnController.text);
                             storageUsTin = await storage.read(key: "usTin");

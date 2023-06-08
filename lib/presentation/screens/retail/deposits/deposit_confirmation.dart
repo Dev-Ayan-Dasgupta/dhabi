@@ -1,3 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
+import 'dart:developer';
+
+import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
@@ -8,13 +18,15 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class DepositConfirmationScreen extends StatefulWidget {
-  const DepositConfirmationScreen({Key? key}) : super(key: key);
+  const DepositConfirmationScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<DepositConfirmationScreen> createState() =>
@@ -22,19 +34,53 @@ class DepositConfirmationScreen extends StatefulWidget {
 }
 
 class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
-  List<DetailsTileModel> depositDetails = [
-    DetailsTileModel(key: "Debit Account", value: "235437484001"),
-    DetailsTileModel(key: "Deposit Amount", value: "USD 12,400.00"),
-    DetailsTileModel(key: "Tenure", value: "13 months and 3 days"),
-    DetailsTileModel(key: "Interest Rate", value: "6.10%"),
-    DetailsTileModel(key: "Interest Amount", value: "USD 300"),
-    DetailsTileModel(key: "Interest Payout", value: "On maturity"),
-    DetailsTileModel(key: "On Maturity", value: "Auto renewal"),
-    DetailsTileModel(key: "Credit Account Number", value: "235437484001"),
-    DetailsTileModel(key: "Date of Maturity", value: "12 December 2022"),
-  ];
+  List<DetailsTileModel> depositDetails = [];
 
   bool isChecked = false;
+  bool isLoading = false;
+
+  late DepositConfirmationArgumentModel depositConfirmationModel;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+  }
+
+  void argumentInitialization() {
+    depositConfirmationModel = DepositConfirmationArgumentModel.fromMap(
+        widget.argument as dynamic ?? {});
+    depositDetails.add(DetailsTileModel(
+        key: "Debit Account", value: depositConfirmationModel.accountNumber));
+    depositDetails.add(DetailsTileModel(
+        key: "Deposit Amount",
+        value:
+            "USD ${depositConfirmationModel.depositAmount.toStringAsFixed(0)}"));
+    depositDetails.add(DetailsTileModel(
+        key: "Tenure", value: "${depositConfirmationModel.tenureDays} days"));
+    depositDetails.add(DetailsTileModel(
+        key: "Interest Rate",
+        value: "${depositConfirmationModel.interestRate}%"));
+    depositDetails.add(DetailsTileModel(
+        key: "Interest Amount",
+        value:
+            "USD ${depositConfirmationModel.interestAmount.toStringAsFixed(2)}"));
+    depositDetails.add(DetailsTileModel(
+        key: "Interest Payout",
+        value: depositConfirmationModel.interestPayout));
+    depositDetails.add(DetailsTileModel(
+        key: "On Maturity",
+        value: depositConfirmationModel.isAutoRenewal
+            ? labels[114]["labelText"]
+            : labels[115]["labelText"]));
+    depositDetails.add(DetailsTileModel(
+        key: "Credit Account Number",
+        value: depositConfirmationModel.creditAccountNumber));
+    depositDetails.add(DetailsTileModel(
+        key: "Date of Maturity",
+        value: DateFormat('MMM - dd - yyyy')
+            .format(depositConfirmationModel.dateOfMaturity)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,26 +129,29 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
             ),
             Column(
               children: [
-                Row(
-                  children: [
-                    BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                      builder: buildTC,
-                    ),
-                    const SizeBox(width: 10),
-                    Text(
-                      "I've read all the terms and conditions",
-                      style: TextStyles.primary.copyWith(
-                        color: const Color(0XFF414141),
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizeBox(height: 10),
+                // Row(
+                //   children: [
+                //     BlocBuilder<CheckBoxBloc, CheckBoxState>(
+                //       builder: buildTC,
+                //     ),
+                //     const SizeBox(width: 10),
+                //     Text(
+                //       "I've read all the terms and conditions",
+                //       style: TextStyles.primary.copyWith(
+                //         color: const Color(0XFF414141),
+                //         fontSize: (16 / Dimensions.designWidth).w,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // const SizeBox(height: 10),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: buildSubmitButton,
                 ),
-                const SizeBox(height: 20),
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.of(context).padding.bottom,
+                ),
               ],
             )
           ],
@@ -139,33 +188,106 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
   }
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
-    if (isChecked) {
-      return GradientButton(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            Routes.errorSuccessScreen,
-            arguments: ErrorArgumentModel(
-              hasSecondaryButton: false,
-              iconPath: ImageConstants.checkCircleOutlined,
-              title: "Congratulations!",
-              message:
-                  "Your deposit account has been created. Acc. 254455588800",
-              buttonText: "Home",
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.pop(context);
+    return GradientButton(
+      onTap: () async {
+        // TODO: call create FD API
+        if (!isLoading) {
+          final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+          isLoading = true;
+          showButtonBloc.add(ShowButtonEvent(show: isLoading));
+
+          log("Request -> ${{
+            "currency": depositConfirmationModel.currency,
+            "amount": depositConfirmationModel.depositAmount,
+            "maturityDate": DateFormat('yyyy-MM-dd')
+                .format(depositConfirmationModel.dateOfMaturity),
+            "interestRate": depositConfirmationModel.interestRate,
+            "accountNumber": depositConfirmationModel.accountNumber,
+            "autoRollover": depositConfirmationModel.isAutoRenewal,
+            "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
+            "beneficiary": {
+              "accountNumber":
+                  depositConfirmationModel.depositBeneficiary.accountNumber,
+              "name": depositConfirmationModel.depositBeneficiary.name,
+              "address": depositConfirmationModel.depositBeneficiary.address,
+              "accountType":
+                  depositConfirmationModel.depositBeneficiary.accountType,
+              "swiftReference":
+                  depositConfirmationModel.depositBeneficiary.swiftReference,
+            },
+            "saveBeneficiary":
+                depositConfirmationModel.depositBeneficiary.saveBeneficiary,
+            "reasonForSending":
+                depositConfirmationModel.depositBeneficiary.reasonForSending,
+          }}");
+
+          var createFDResult = await MapCreateFd.mapCreateFd(
+            {
+              "currency": depositConfirmationModel.currency,
+              "amount": depositConfirmationModel.depositAmount,
+              "maturityDate": DateFormat('yyyy-MM-dd')
+                  .format(depositConfirmationModel.dateOfMaturity),
+              "interestRate": depositConfirmationModel.interestRate,
+              "accountNumber": depositConfirmationModel.accountNumber,
+              "autoRollover": depositConfirmationModel.isAutoRenewal,
+              "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
+              "beneficiary": {
+                "accountNumber":
+                    depositConfirmationModel.depositBeneficiary.accountNumber,
+                "name": depositConfirmationModel.depositBeneficiary.name,
+                "address": depositConfirmationModel.depositBeneficiary.address,
+                "accountType":
+                    depositConfirmationModel.depositBeneficiary.accountType,
+                "swiftReference":
+                    depositConfirmationModel.depositBeneficiary.swiftReference,
               },
-              buttonTextSecondary: "",
-              onTapSecondary: () {},
-            ).toMap(),
+              "saveBeneficiary":
+                  depositConfirmationModel.depositBeneficiary.saveBeneficiary,
+              "reasonForSending":
+                  depositConfirmationModel.depositBeneficiary.reasonForSending,
+            },
+            token ?? "",
           );
-        },
-        text: "I Agree",
-      );
-    } else {
-      return const SizeBox();
-    }
+
+          log("Create FD API response -> $createFDResult");
+
+          if (createFDResult["success"]) {
+            if (context.mounted) {
+              Navigator.pushNamed(
+                context,
+                Routes.errorSuccessScreen,
+                arguments: ErrorArgumentModel(
+                  hasSecondaryButton: false,
+                  iconPath: ImageConstants.checkCircleOutlined,
+                  title: "Congratulations!",
+                  message:
+                      "Your deposit account has been created.\nAcc. ${createFDResult["accountNumber"]}",
+                  buttonText: labels[1]["labelText"],
+                  onTap: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.retailDashboard,
+                      (route) => false,
+                      arguments: RetailDashboardArgumentModel(
+                        imgUrl: "",
+                        name: customerName ?? "",
+                        isFirst: storageIsFirstLogin == true ? false : true,
+                      ).toMap(),
+                    );
+                  },
+                  buttonTextSecondary: "",
+                  onTapSecondary: () {},
+                ).toMap(),
+              );
+            }
+          }
+
+          isLoading = false;
+          showButtonBloc.add(ShowButtonEvent(show: isLoading));
+        }
+      },
+      text: labels[31]["labelText"],
+      auxWidget: isLoading ? const LoaderRow() : const SizeBox(),
+    );
   }
 }

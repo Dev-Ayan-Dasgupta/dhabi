@@ -73,6 +73,7 @@ class _VerificationInitializingScreenState
         "backgroundMaskAlpha": 0.6,
       },
       "processParams": {
+        "logs": true,
         "dateFormat": "dd/MM/yyyy",
         "scenario": "MrzOrOcr",
         "timeout": 30.0,

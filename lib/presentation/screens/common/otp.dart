@@ -272,16 +272,834 @@ class _OTPScreenState extends State<OTPScreen> {
       onChanged: (p0) async {
         if (_pinController.text.length == 6) {
           if (otpArgumentModel.isEmail) {
-            if (otpArgumentModel.isLogin) {
-              var result = await MapValidateEmailOtpForPassword
-                  .mapValidateEmailOtpForPassword({
-                "emailId": otpArgumentModel.emailOrPhone,
+            if (otpArgumentModel.isEmailIdUpdate) {
+              log("Update Email API request -> ${{
                 "otp": _pinController.text,
-              });
-              log("result -> $result");
-              tokenCP = result["token"];
-              log("tokenCP -> $tokenCP");
-              if (result["success"]) {
+                "emailID": updatedEmail,
+              }}");
+              var updateREmailResult =
+                  await MapUpdateRetailEmailId.mapUpdateRetailEmailId(
+                {
+                  "otp": _pinController.text,
+                  "emailID": updatedEmail,
+                },
+                token ?? "",
+              );
+              log("Update Email API response -> $updateREmailResult");
+
+              if (updateREmailResult["success"]) {
+                await storage.write(key: "email", value: updatedEmail);
+                storageEmail = await storage.read(key: "email");
+                profileEmailId = storageEmail;
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CustomDialog(
+                        svgAssetPath: ImageConstants.checkCircleOutlined,
+                        title: "Email ID Updated",
+                        message: messages[54]["messageText"],
+                        actionWidget: GradientButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              Routes.profile,
+                            );
+                            // Navigator.pop(context);
+                            // Navigator.pushReplacementNamed(
+                            //   context,
+                            //   Routes.loginPassword,
+                            //   arguments: LoginPasswordArgumentModel(
+                            //     emailId: storageEmail ?? "",
+                            //     userId: storageUserId ?? 0,
+                            //     userTypeId: 1,
+                            //     companyId: storageCompanyId ?? 0,
+                            //   ).toMap(),
+                            // );
+                          },
+                          text: labels[346]["labelText"],
+                        ),
+                      );
+                    },
+                  );
+                }
+              } else {
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CustomDialog(
+                        svgAssetPath: ImageConstants.warning,
+                        title: "Unable to Update",
+                        message: messages[51]["messageText"],
+                        actionWidget: GradientButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          text: labels[346]["labelText"],
+                        ),
+                      );
+                    },
+                  );
+                }
+              }
+            } else {
+              if (otpArgumentModel.isLogin) {
+                var result = await MapValidateEmailOtpForPassword
+                    .mapValidateEmailOtpForPassword({
+                  "emailId": otpArgumentModel.emailOrPhone,
+                  "otp": _pinController.text,
+                });
+                log("result -> $result");
+                tokenCP = result["token"];
+                log("tokenCP -> $tokenCP");
+                if (result["success"]) {
+                  pinputErrorBloc.add(
+                    PinputErrorEvent(
+                      isError: false,
+                      isComplete: true,
+                      errorCount: pinputErrorCount,
+                    ),
+                  );
+                  // TODO: Call API for getCustomer details and navigate to SelectAccountScreen
+                  var getCustomerDetailsResponse =
+                      await MapCustomerDetails.mapCustomerDetails(
+                          tokenCP ?? "");
+                  log("Get Customer Details API response -> $getCustomerDetailsResponse");
+
+                  List cifDetails = getCustomerDetailsResponse["cifDetails"];
+
+                  if (cifDetails.isEmpty) {
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        Routes.loginPassword,
+                        arguments: LoginPasswordArgumentModel(
+                          emailId: storageEmail ?? "",
+                          userId: storageUserId ?? 0,
+                          userTypeId: storageUserTypeId ?? 2,
+                          companyId: storageCompanyId ?? 0,
+                        ).toMap(),
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        Routes.selectAccount,
+                        arguments: SelectAccountArgumentModel(
+                          emailId: otpArgumentModel.emailOrPhone,
+                          cifDetails: cifDetails,
+                          isPwChange: false,
+                          isLogin: true,
+                          isIncompleteOnboarding: false,
+                        ).toMap(),
+                      );
+                    }
+                  }
+                } else {
+                  pinputErrorCount++;
+                  seconds = 0;
+                  showButtonBloc.add(const ShowButtonEvent(show: true));
+                  pinputErrorBloc.add(
+                    PinputErrorEvent(
+                      isError: true,
+                      isComplete: true,
+                      errorCount: pinputErrorCount,
+                    ),
+                  );
+                }
+              } else {
+                if (otpArgumentModel.isInitial) {
+                  var result = await MapVerifyEmailOtp.mapVerifyEmailOtp(
+                    {
+                      "emailId": otpArgumentModel.emailOrPhone,
+                      "otp": _pinController.text,
+                    },
+                  );
+                  log("Verify Email OTP Response -> $result");
+
+                  if (result["success"] == true) {
+                    pinputErrorBloc.add(
+                      PinputErrorEvent(
+                        isError: false,
+                        isComplete: true,
+                        errorCount: pinputErrorCount,
+                      ),
+                    );
+
+                    await Future.delayed(const Duration(milliseconds: 250));
+                    if (context.mounted) {
+                      if (otpArgumentModel.isEmail) {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.selectAccountType,
+                          arguments: CreateAccountArgumentModel(
+                            email: otpArgumentModel.emailOrPhone,
+                            isRetail: true,
+                            userTypeId: 1,
+                            companyId: 0,
+                          ).toMap(),
+                        );
+                      } else {
+                        if (otpArgumentModel.isBusiness) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return CustomDialog(
+                                svgAssetPath:
+                                    ImageConstants.checkCircleOutlined,
+                                title: "Thank You!",
+                                message:
+                                    "Your request is submitted with reference number $storagReferenceNumber. We will contact you on next steps.",
+                                actionWidget: BlocBuilder<ShowButtonBloc,
+                                    ShowButtonState>(
+                                  builder: (context, state) {
+                                    return GradientButton(
+                                      onTap: () async {
+                                        isLoading = true;
+                                        final ShowButtonBloc showButtonBloc =
+                                            context.read<ShowButtonBloc>();
+                                        showButtonBloc.add(
+                                            ShowButtonEvent(show: isLoading));
+                                        var getCustomerDetailsResponse =
+                                            await MapCustomerDetails
+                                                .mapCustomerDetails(
+                                                    token ?? "");
+                                        log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                        List cifDetails =
+                                            getCustomerDetailsResponse[
+                                                "cifDetails"];
+                                        if (context.mounted) {
+                                          if (cifDetails.length == 1) {
+                                            cif = getCustomerDetailsResponse[
+                                                "cifDetails"][0]["cif"];
+
+                                            isCompany =
+                                                getCustomerDetailsResponse[
+                                                        "cifDetails"][0]
+                                                    ["isCompany"];
+
+                                            isCompanyRegistered =
+                                                getCustomerDetailsResponse[
+                                                        "cifDetails"][0]
+                                                    ["isCompanyRegistered"];
+
+                                            if (cif == null || cif == "null") {
+                                              if (isCompany) {
+                                                if (isCompanyRegistered) {
+                                                  Navigator.pop(context);
+                                                  Navigator
+                                                      .pushReplacementNamed(
+                                                    context,
+                                                    Routes.loginPassword,
+                                                    arguments:
+                                                        LoginPasswordArgumentModel(
+                                                      emailId:
+                                                          storageEmail ?? "",
+                                                      userId:
+                                                          storageUserId ?? 0,
+                                                      userTypeId:
+                                                          storageUserTypeId ??
+                                                              2,
+                                                      companyId:
+                                                          storageCompanyId ?? 0,
+                                                    ).toMap(),
+                                                  );
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  Navigator
+                                                      .pushReplacementNamed(
+                                                    context,
+                                                    Routes.onboarding,
+                                                    arguments:
+                                                        OnboardingArgumentModel(
+                                                      isInitial: true,
+                                                    ).toMap(),
+                                                  );
+                                                }
+                                              } else {
+                                                Navigator.pop(context);
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  Routes.loginPassword,
+                                                  arguments:
+                                                      LoginPasswordArgumentModel(
+                                                    emailId: storageEmail ?? "",
+                                                    userId: storageUserId ?? 0,
+                                                    userTypeId:
+                                                        storageUserTypeId ?? 2,
+                                                    companyId:
+                                                        storageCompanyId ?? 0,
+                                                  ).toMap(),
+                                                );
+                                              }
+                                            }
+                                          } else {
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              Routes.selectAccount,
+                                              arguments:
+                                                  SelectAccountArgumentModel(
+                                                emailId: otpArgumentModel
+                                                    .emailOrPhone,
+                                                cifDetails: cifDetails,
+                                                isPwChange: false,
+                                                isLogin: false,
+                                                isIncompleteOnboarding: false,
+                                              ).toMap(),
+                                            );
+                                          }
+                                        }
+                                        isLoading = false;
+                                        showButtonBloc.add(
+                                            ShowButtonEvent(show: isLoading));
+
+                                        await storage.write(
+                                            key: "stepsCompleted",
+                                            value: 0.toString());
+                                        storageStepsCompleted = int.parse(
+                                            await storage.read(
+                                                    key: "stepsCompleted") ??
+                                                "0");
+                                        await storage.write(
+                                            key: "hasFirstLoggedIn",
+                                            value: true.toString());
+                                        storageHasFirstLoggedIn =
+                                            (await storage.read(
+                                                    key: "hasFirstLoggedIn")) ==
+                                                "true";
+                                      },
+                                      text: labels[31]["labelText"],
+                                      auxWidget: isLoading
+                                          ? const LoaderRow()
+                                          : const SizeBox(),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            Routes.retailOnboardingStatus,
+                            arguments: OnboardingStatusArgumentModel(
+                              stepsCompleted: 4,
+                              isFatca: false,
+                              isPassport: false,
+                              isRetail: !otpArgumentModel.isBusiness,
+                            ).toMap(),
+                          );
+                        }
+                      }
+                    }
+                  } else {
+                    pinputErrorCount++;
+                    seconds = 0;
+                    showButtonBloc.add(const ShowButtonEvent(show: true));
+                    pinputErrorBloc.add(PinputErrorEvent(
+                        isError: true,
+                        isComplete: true,
+                        errorCount: pinputErrorCount));
+                  }
+                } else {
+                  var result = await MapValidateEmailOtpForPassword
+                      .mapValidateEmailOtpForPassword(
+                    {
+                      "emailId": otpArgumentModel.emailOrPhone,
+                      "otp": _pinController.text,
+                    },
+                  );
+                  log("Validate Email OTP For Password Response -> $result");
+                  tokenCP = result["token"];
+                  log("tokenCP -> $tokenCP");
+
+                  if (result["success"] == true) {
+                    pinputErrorBloc.add(
+                      PinputErrorEvent(
+                        isError: false,
+                        isComplete: true,
+                        errorCount: pinputErrorCount,
+                      ),
+                    );
+
+                    // await Future.delayed(const Duration(milliseconds: 250));
+                    if (context.mounted) {
+                      if (otpArgumentModel.isEmail) {
+                        // Navigator.pop(context);
+                        // TODO: Check for new device
+
+                        // TODO: if not new device, go to select entity screen
+                        var getCustomerDetailsResponse =
+                            await MapCustomerDetails.mapCustomerDetails(
+                                tokenCP ?? "");
+                        log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                        List cifDetails =
+                            getCustomerDetailsResponse["cifDetails"];
+
+                        if (cifDetails.length == 1) {
+                          if (context.mounted) {
+                            cif = getCustomerDetailsResponse["cifDetails"][0]
+                                ["cif"];
+
+                            isCompany = getCustomerDetailsResponse["cifDetails"]
+                                [0]["isCompany"];
+
+                            isCompanyRegistered =
+                                getCustomerDetailsResponse["cifDetails"][0]
+                                    ["isCompanyRegistered"];
+
+                            log("cif -> $cif");
+                            log("cif RTT -> ${cif.runtimeType}");
+                            log("isCompany -> $isCompany");
+                            log("isCompanyRegistered -> $isCompanyRegistered");
+
+                            var isDeviceValidApiResult =
+                                await MapIsDeviceValid.mapIsDeviceValid({
+                              "userId": cifDetails[0]["userID"],
+                              "deviceId": deviceId,
+                            }, tokenCP ?? "");
+                            log("isDeviceValidApiResult -> $isDeviceValidApiResult");
+
+                            if (isDeviceValidApiResult["success"]) {
+                              if (context.mounted) {
+                                if (cif != null || cif != "null") {
+                                  if (isCompany) {
+                                    if (isCompanyRegistered) {
+                                      Navigator.pushReplacementNamed(
+                                        context,
+                                        Routes.setPassword,
+                                      );
+                                    }
+                                  } else {
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      Routes.setPassword,
+                                    );
+                                  }
+                                }
+                                if (cif == null) {
+                                  log("cif is null");
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return CustomDialog(
+                                        svgAssetPath: ImageConstants.warning,
+                                        title: "Application approval pending",
+                                        message:
+                                            "You already have a registration pending. Please contact Dhabi support.",
+                                        auxWidget: GradientButton(
+                                          onTap: () async {
+                                            if (context.mounted) {
+                                              Navigator.pop(context);
+                                              Navigator.pushReplacementNamed(
+                                                context,
+                                                Routes.registration,
+                                                arguments:
+                                                    RegistrationArgumentModel(
+                                                  isInitial: true,
+                                                ).toMap(),
+                                              );
+                                            }
+                                          },
+                                          text: "Go Home",
+                                        ),
+                                        actionWidget: SolidButton(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          text: labels[166]["labelText"],
+                                          color: AppColors.primaryBright17,
+                                          fontColor: AppColors.primary,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              }
+                            } else {
+                              var rmorResult =
+                                  await MapRegisteredMobileOtpRequest
+                                      .mapRegisteredMobileOtpRequest({
+                                "emailId": storageEmail,
+                                "cif": cif,
+                              }, tokenCP ?? "");
+                              log("rmorResult -> $rmorResult");
+                              if (rmorResult["success"]) {
+                                if (context.mounted) {
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    Routes.otp,
+                                    arguments: OTPArgumentModel(
+                                      emailOrPhone: rmorResult["mobileNumber"],
+                                      isEmail: false,
+                                      isBusiness: isCompany,
+                                      isInitial: false,
+                                      isLogin: false,
+                                      isEmailIdUpdate: false,
+                                      isMobileUpdate: false,
+                                    ).toMap(),
+                                  );
+                                }
+                              } else {
+                                if (context.mounted) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return CustomDialog(
+                                        svgAssetPath: ImageConstants.warning,
+                                        title: "Mobile Not Registered",
+                                        message:
+                                            "You do not have an account registered with this mobile number. Please register an account.",
+                                        actionWidget: GradientButton(
+                                          onTap: () {
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              Routes.onboarding,
+                                              arguments:
+                                                  OnboardingArgumentModel(
+                                                          isInitial: true)
+                                                      .toMap(),
+                                            );
+                                          },
+                                          text: "Register",
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              }
+                              // if (context.mounted) {
+                              //   showDialog(
+                              //     context: context,
+                              //     barrierDismissible: false,
+                              //     builder: (context) {
+                              //       return CustomDialog(
+                              //         svgAssetPath: ImageConstants.warning,
+                              //         title: "Device Invalid",
+                              //         message:
+                              //             "You are trying to login from an unregistered device.",
+                              //         actionWidget: GradientButton(
+                              //           onTap: () {
+                              //             Navigator.pop(context);
+                              //             Navigator.pushReplacementNamed(
+                              //               context,
+                              //               Routes.loginUserId,
+                              //             );
+                              //           },
+                              //           text: labels[347]["labelText"],
+                              //         ),
+                              //       );
+                              //     },
+                              //   );
+                              // }
+                            }
+                          }
+                        } else {
+                          if (cifDetails.isEmpty) {
+                            if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return CustomDialog(
+                                    svgAssetPath: ImageConstants.warning,
+                                    title: "Invalid Email",
+                                    message:
+                                        "There is no Dhabi Account associated with this email address.",
+                                    actionWidget: GradientButton(
+                                      onTap: () async {
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            Routes.registration,
+                                            arguments:
+                                                RegistrationArgumentModel(
+                                              isInitial: true,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      },
+                                      text: "Go Home",
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          } else {
+                            if (context.mounted) {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                Routes.selectAccount,
+                                arguments: SelectAccountArgumentModel(
+                                  emailId: otpArgumentModel.emailOrPhone,
+                                  cifDetails: cifDetails,
+                                  isPwChange: true,
+                                  isLogin: false,
+                                  isIncompleteOnboarding: false,
+                                ).toMap(),
+                              );
+                            }
+                          }
+                        }
+                      } else {
+                        if (otpArgumentModel.isBusiness) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return CustomDialog(
+                                svgAssetPath:
+                                    ImageConstants.checkCircleOutlined,
+                                title: "Thank You!",
+                                message:
+                                    "Your request is submitted with reference number $storagReferenceNumber. We will contact you on next steps.",
+                                actionWidget: BlocBuilder<ShowButtonBloc,
+                                    ShowButtonState>(
+                                  builder: (context, state) {
+                                    return GradientButton(
+                                      onTap: () async {
+                                        isLoading = true;
+                                        final ShowButtonBloc showButtonBloc =
+                                            context.read<ShowButtonBloc>();
+                                        showButtonBloc.add(
+                                            ShowButtonEvent(show: isLoading));
+                                        var getCustomerDetailsResponse =
+                                            await MapCustomerDetails
+                                                .mapCustomerDetails(
+                                                    token ?? "");
+                                        log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                        List cifDetails =
+                                            getCustomerDetailsResponse[
+                                                "cifDetails"];
+                                        if (context.mounted) {
+                                          if (cifDetails.length == 1) {
+                                            cif = getCustomerDetailsResponse[
+                                                "cifDetails"][0]["cif"];
+
+                                            isCompany =
+                                                getCustomerDetailsResponse[
+                                                        "cifDetails"][0]
+                                                    ["isCompany"];
+
+                                            isCompanyRegistered =
+                                                getCustomerDetailsResponse[
+                                                        "cifDetails"][0]
+                                                    ["isCompanyRegistered"];
+
+                                            if (cif == null || cif == "null") {
+                                              if (isCompany) {
+                                                if (isCompanyRegistered) {
+                                                  Navigator.pop(context);
+                                                  Navigator
+                                                      .pushReplacementNamed(
+                                                    context,
+                                                    Routes.loginPassword,
+                                                    arguments:
+                                                        LoginPasswordArgumentModel(
+                                                      emailId:
+                                                          storageEmail ?? "",
+                                                      userId:
+                                                          storageUserId ?? 0,
+                                                      userTypeId:
+                                                          storageUserTypeId ??
+                                                              2,
+                                                      companyId:
+                                                          storageCompanyId ?? 0,
+                                                    ).toMap(),
+                                                  );
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  Navigator
+                                                      .pushReplacementNamed(
+                                                    context,
+                                                    Routes.onboarding,
+                                                    arguments:
+                                                        OnboardingArgumentModel(
+                                                      isInitial: true,
+                                                    ).toMap(),
+                                                  );
+                                                }
+                                              } else {
+                                                Navigator.pop(context);
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  Routes.loginPassword,
+                                                  arguments:
+                                                      LoginPasswordArgumentModel(
+                                                    emailId: storageEmail ?? "",
+                                                    userId: storageUserId ?? 0,
+                                                    userTypeId:
+                                                        storageUserTypeId ?? 2,
+                                                    companyId:
+                                                        storageCompanyId ?? 0,
+                                                  ).toMap(),
+                                                );
+                                              }
+                                            }
+                                          } else {
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              Routes.selectAccount,
+                                              arguments:
+                                                  SelectAccountArgumentModel(
+                                                emailId: otpArgumentModel
+                                                    .emailOrPhone,
+                                                cifDetails: cifDetails,
+                                                isPwChange: false,
+                                                isLogin: false,
+                                                isIncompleteOnboarding: false,
+                                              ).toMap(),
+                                            );
+                                          }
+                                        }
+                                        isLoading = false;
+                                        showButtonBloc.add(
+                                            ShowButtonEvent(show: isLoading));
+
+                                        await storage.write(
+                                            key: "stepsCompleted",
+                                            value: 0.toString());
+                                        storageStepsCompleted = int.parse(
+                                            await storage.read(
+                                                    key: "stepsCompleted") ??
+                                                "0");
+                                        await storage.write(
+                                            key: "hasFirstLoggedIn",
+                                            value: true.toString());
+                                        storageHasFirstLoggedIn =
+                                            (await storage.read(
+                                                    key: "hasFirstLoggedIn")) ==
+                                                "true";
+                                      },
+                                      text: labels[31]["labelText"],
+                                      auxWidget: isLoading
+                                          ? const LoaderRow()
+                                          : const SizeBox(),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            Routes.retailOnboardingStatus,
+                            arguments: OnboardingStatusArgumentModel(
+                              stepsCompleted: 4,
+                              isFatca: false,
+                              isPassport: false,
+                              isRetail: !otpArgumentModel.isBusiness,
+                            ).toMap(),
+                          );
+                        }
+                      }
+                    }
+                  } else {
+                    pinputErrorCount++;
+                    seconds = 0;
+                    showButtonBloc.add(const ShowButtonEvent(show: true));
+                    pinputErrorBloc.add(
+                      PinputErrorEvent(
+                        isError: true,
+                        isComplete: true,
+                        errorCount: pinputErrorCount,
+                      ),
+                    );
+                  }
+                }
+              }
+            }
+          } else {
+            log("Phone no. -> ${otpArgumentModel.emailOrPhone}");
+            if (otpArgumentModel.isMobileUpdate) {
+              var mobileUpdateResult =
+                  await MapUpdateRetailMobileNumber.mapUpdateRetailMobileNumber(
+                {
+                  "otp": _pinController.text,
+                  "mobileNumber": otpArgumentModel.emailOrPhone,
+                },
+                token ?? "",
+              );
+              log("Update Mobile API response -> $mobileUpdateResult");
+              if (mobileUpdateResult["success"]) {
+                await storage.write(
+                  key: "mobileNumber",
+                  value: otpArgumentModel.emailOrPhone,
+                );
+                storageMobileNumber = await storage.read(key: "mobileNumber");
+                profileMobileNumber = storageMobileNumber;
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CustomDialog(
+                        svgAssetPath: ImageConstants.checkCircleOutlined,
+                        title: "Mobile Number Updated",
+                        message: messages[52]["messageText"],
+                        actionWidget: GradientButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              Routes.profile,
+                            );
+                          },
+                          text: labels[346]["labelText"],
+                        ),
+                      );
+                    },
+                  );
+                }
+              } else {
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CustomDialog(
+                        svgAssetPath: ImageConstants.warning,
+                        title: "Unable to Update",
+                        message: messages[51]["messageText"],
+                        actionWidget: GradientButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                          text: labels[346]["labelText"],
+                        ),
+                      );
+                    },
+                  );
+                }
+              }
+            } else {
+              log("Verify Otp Request -> ${{
+                "mobileNo": otpArgumentModel.emailOrPhone,
+                "otp": _pinController.text,
+              }}");
+              var result = await MapVerifyMobileOtp.mapVerifyMobileOtp(
+                {
+                  "mobileNo": otpArgumentModel.emailOrPhone,
+                  "otp": _pinController.text,
+                },
+                otpArgumentModel.isInitial ? token ?? "" : tokenCP ?? "",
+              );
+              log("Verify Mobile OTP Response -> $result");
+
+              if (result["success"] == true) {
                 pinputErrorBloc.add(
                   PinputErrorEvent(
                     isError: false,
@@ -289,837 +1107,186 @@ class _OTPScreenState extends State<OTPScreen> {
                     errorCount: pinputErrorCount,
                   ),
                 );
-                // TODO: Call API for getCustomer details and navigate to SelectAccountScreen
-                var getCustomerDetailsResponse =
-                    await MapCustomerDetails.mapCustomerDetails(tokenCP ?? "");
-                log("Get Customer Details API response -> $getCustomerDetailsResponse");
 
-                List cifDetails = getCustomerDetailsResponse["cifDetails"];
+                await Future.delayed(const Duration(milliseconds: 250));
 
-                if (cifDetails.isEmpty) {
+                if (otpArgumentModel.isInitial) {
                   if (context.mounted) {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      Routes.loginPassword,
-                      arguments: LoginPasswordArgumentModel(
-                        emailId: storageEmail ?? "",
-                        userId: storageUserId ?? 0,
-                        userTypeId: storageUserTypeId ?? 2,
-                        companyId: storageCompanyId ?? 0,
-                      ).toMap(),
-                    );
+                    if (otpArgumentModel.isEmail) {
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(
+                        context,
+                        Routes.retailOnboardingStatus,
+                        arguments: OnboardingStatusArgumentModel(
+                          stepsCompleted: 4,
+                          isFatca: false,
+                          isPassport: false,
+                          isRetail: true,
+                        ).toMap(),
+                      );
+                    } else {
+                      if (otpArgumentModel.isBusiness) {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return CustomDialog(
+                              svgAssetPath: ImageConstants.checkCircleOutlined,
+                              title: "Thank You!",
+                              message:
+                                  "Your request is submitted with reference number $storagReferenceNumber. We will contact you on next steps.",
+                              actionWidget:
+                                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                builder: (context, state) {
+                                  return GradientButton(
+                                    onTap: () async {
+                                      isLoading = true;
+                                      final ShowButtonBloc showButtonBloc =
+                                          context.read<ShowButtonBloc>();
+                                      showButtonBloc.add(
+                                          ShowButtonEvent(show: isLoading));
+                                      var getCustomerDetailsResponse =
+                                          await MapCustomerDetails
+                                              .mapCustomerDetails(token ?? "");
+                                      log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                      List cifDetails =
+                                          getCustomerDetailsResponse[
+                                              "cifDetails"];
+                                      if (context.mounted) {
+                                        if (cifDetails.length == 1) {
+                                          cif = getCustomerDetailsResponse[
+                                              "cifDetails"][0]["cif"];
+
+                                          isCompany =
+                                              getCustomerDetailsResponse[
+                                                  "cifDetails"][0]["isCompany"];
+
+                                          isCompanyRegistered =
+                                              getCustomerDetailsResponse[
+                                                      "cifDetails"][0]
+                                                  ["isCompanyRegistered"];
+
+                                          if (cif == null || cif == "null") {
+                                            if (isCompany) {
+                                              if (isCompanyRegistered) {
+                                                Navigator.pop(context);
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  Routes.loginPassword,
+                                                  arguments:
+                                                      LoginPasswordArgumentModel(
+                                                    emailId: storageEmail ?? "",
+                                                    userId: storageUserId ?? 0,
+                                                    userTypeId:
+                                                        storageUserTypeId ?? 2,
+                                                    companyId:
+                                                        storageCompanyId ?? 0,
+                                                  ).toMap(),
+                                                );
+                                              } else {
+                                                Navigator.pop(context);
+                                                Navigator.pushReplacementNamed(
+                                                  context,
+                                                  Routes.onboarding,
+                                                  arguments:
+                                                      OnboardingArgumentModel(
+                                                    isInitial: true,
+                                                  ).toMap(),
+                                                );
+                                              }
+                                            } else {
+                                              Navigator.pop(context);
+                                              Navigator.pushReplacementNamed(
+                                                context,
+                                                Routes.loginPassword,
+                                                arguments:
+                                                    LoginPasswordArgumentModel(
+                                                  emailId: storageEmail ?? "",
+                                                  userId: storageUserId ?? 0,
+                                                  userTypeId:
+                                                      storageUserTypeId ?? 2,
+                                                  companyId:
+                                                      storageCompanyId ?? 0,
+                                                ).toMap(),
+                                              );
+                                            }
+                                          }
+                                        } else {
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            Routes.selectAccount,
+                                            arguments:
+                                                SelectAccountArgumentModel(
+                                              emailId:
+                                                  otpArgumentModel.emailOrPhone,
+                                              cifDetails: cifDetails,
+                                              isPwChange: false,
+                                              isLogin: false,
+                                              isIncompleteOnboarding: false,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      }
+                                      isLoading = false;
+                                      showButtonBloc.add(
+                                          ShowButtonEvent(show: isLoading));
+
+                                      await storage.write(
+                                          key: "stepsCompleted",
+                                          value: 0.toString());
+                                      storageStepsCompleted = int.parse(
+                                          await storage.read(
+                                                  key: "stepsCompleted") ??
+                                              "0");
+                                      await storage.write(
+                                          key: "hasFirstLoggedIn",
+                                          value: true.toString());
+                                      storageHasFirstLoggedIn = (await storage
+                                              .read(key: "hasFirstLoggedIn")) ==
+                                          "true";
+                                    },
+                                    text: labels[31]["labelText"],
+                                    auxWidget: isLoading
+                                        ? const LoaderRow()
+                                        : const SizeBox(),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          Routes.retailOnboardingStatus,
+                          arguments: OnboardingStatusArgumentModel(
+                            stepsCompleted: 4,
+                            isFatca: true,
+                            isPassport: false,
+                            isRetail: !otpArgumentModel.isBusiness,
+                          ).toMap(),
+                        );
+                        await storage.write(
+                            key: "stepsCompleted", value: 10.toString());
+                        storageStepsCompleted = int.parse(
+                            await storage.read(key: "stepsCompleted") ?? "0");
+                      }
+                    }
                   }
                 } else {
                   if (context.mounted) {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      Routes.selectAccount,
-                      arguments: SelectAccountArgumentModel(
-                        emailId: otpArgumentModel.emailOrPhone,
-                        cifDetails: cifDetails,
-                        isPwChange: false,
-                        isLogin: true,
-                        isIncompleteOnboarding: false,
-                      ).toMap(),
-                    );
+                    Navigator.pushReplacementNamed(context, Routes.setPassword);
                   }
                 }
               } else {
                 pinputErrorCount++;
                 seconds = 0;
                 showButtonBloc.add(const ShowButtonEvent(show: true));
-                pinputErrorBloc.add(
-                  PinputErrorEvent(
+                pinputErrorBloc.add(PinputErrorEvent(
                     isError: true,
                     isComplete: true,
-                    errorCount: pinputErrorCount,
-                  ),
-                );
+                    errorCount: pinputErrorCount));
               }
-            } else {
-              if (otpArgumentModel.isInitial) {
-                var result = await MapVerifyEmailOtp.mapVerifyEmailOtp(
-                  {
-                    "emailId": otpArgumentModel.emailOrPhone,
-                    "otp": _pinController.text,
-                  },
-                );
-                log("Verify Email OTP Response -> $result");
-
-                if (result["success"] == true) {
-                  pinputErrorBloc.add(
-                    PinputErrorEvent(
-                      isError: false,
-                      isComplete: true,
-                      errorCount: pinputErrorCount,
-                    ),
-                  );
-
-                  await Future.delayed(const Duration(milliseconds: 250));
-                  if (context.mounted) {
-                    if (otpArgumentModel.isEmail) {
-                      Navigator.pop(context);
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.selectAccountType,
-                        arguments: CreateAccountArgumentModel(
-                          email: otpArgumentModel.emailOrPhone,
-                          isRetail: true,
-                          userTypeId: 1,
-                          companyId: 0,
-                        ).toMap(),
-                      );
-                    } else {
-                      if (otpArgumentModel.isBusiness) {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return CustomDialog(
-                              svgAssetPath: ImageConstants.checkCircleOutlined,
-                              title: "Thank You!",
-                              message:
-                                  "Your request is submitted with reference number $storagReferenceNumber. We will contact you on next steps.",
-                              actionWidget:
-                                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                                builder: (context, state) {
-                                  return GradientButton(
-                                    onTap: () async {
-                                      isLoading = true;
-                                      final ShowButtonBloc showButtonBloc =
-                                          context.read<ShowButtonBloc>();
-                                      showButtonBloc.add(
-                                          ShowButtonEvent(show: isLoading));
-                                      var getCustomerDetailsResponse =
-                                          await MapCustomerDetails
-                                              .mapCustomerDetails(token ?? "");
-                                      log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                                      List cifDetails =
-                                          getCustomerDetailsResponse[
-                                              "cifDetails"];
-                                      if (context.mounted) {
-                                        if (cifDetails.length == 1) {
-                                          cif = getCustomerDetailsResponse[
-                                              "cifDetails"][0]["cif"];
-
-                                          isCompany =
-                                              getCustomerDetailsResponse[
-                                                  "cifDetails"][0]["isCompany"];
-
-                                          isCompanyRegistered =
-                                              getCustomerDetailsResponse[
-                                                      "cifDetails"][0]
-                                                  ["isCompanyRegistered"];
-
-                                          if (cif == null || cif == "null") {
-                                            if (isCompany) {
-                                              if (isCompanyRegistered) {
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacementNamed(
-                                                  context,
-                                                  Routes.loginPassword,
-                                                  arguments:
-                                                      LoginPasswordArgumentModel(
-                                                    emailId: storageEmail ?? "",
-                                                    userId: storageUserId ?? 0,
-                                                    userTypeId:
-                                                        storageUserTypeId ?? 2,
-                                                    companyId:
-                                                        storageCompanyId ?? 0,
-                                                  ).toMap(),
-                                                );
-                                              } else {
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacementNamed(
-                                                  context,
-                                                  Routes.onboarding,
-                                                  arguments:
-                                                      OnboardingArgumentModel(
-                                                    isInitial: true,
-                                                  ).toMap(),
-                                                );
-                                              }
-                                            } else {
-                                              Navigator.pop(context);
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                Routes.loginPassword,
-                                                arguments:
-                                                    LoginPasswordArgumentModel(
-                                                  emailId: storageEmail ?? "",
-                                                  userId: storageUserId ?? 0,
-                                                  userTypeId:
-                                                      storageUserTypeId ?? 2,
-                                                  companyId:
-                                                      storageCompanyId ?? 0,
-                                                ).toMap(),
-                                              );
-                                            }
-                                          }
-                                        } else {
-                                          Navigator.pushReplacementNamed(
-                                            context,
-                                            Routes.selectAccount,
-                                            arguments:
-                                                SelectAccountArgumentModel(
-                                              emailId:
-                                                  otpArgumentModel.emailOrPhone,
-                                              cifDetails: cifDetails,
-                                              isPwChange: false,
-                                              isLogin: false,
-                                              isIncompleteOnboarding: false,
-                                            ).toMap(),
-                                          );
-                                        }
-                                      }
-                                      isLoading = false;
-                                      showButtonBloc.add(
-                                          ShowButtonEvent(show: isLoading));
-
-                                      await storage.write(
-                                          key: "stepsCompleted",
-                                          value: 0.toString());
-                                      storageStepsCompleted = int.parse(
-                                          await storage.read(
-                                                  key: "stepsCompleted") ??
-                                              "0");
-                                      await storage.write(
-                                          key: "hasFirstLoggedIn",
-                                          value: true.toString());
-                                      storageHasFirstLoggedIn = (await storage
-                                              .read(key: "hasFirstLoggedIn")) ==
-                                          "true";
-                                    },
-                                    text: labels[31]["labelText"],
-                                    auxWidget: isLoading
-                                        ? const LoaderRow()
-                                        : const SizeBox(),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      } else {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.retailOnboardingStatus,
-                          arguments: OnboardingStatusArgumentModel(
-                            stepsCompleted: 4,
-                            isFatca: false,
-                            isPassport: false,
-                            isRetail: !otpArgumentModel.isBusiness,
-                          ).toMap(),
-                        );
-                      }
-                    }
-                  }
-                } else {
-                  pinputErrorCount++;
-                  seconds = 0;
-                  showButtonBloc.add(const ShowButtonEvent(show: true));
-                  pinputErrorBloc.add(PinputErrorEvent(
-                      isError: true,
-                      isComplete: true,
-                      errorCount: pinputErrorCount));
-                }
-              } else {
-                var result = await MapValidateEmailOtpForPassword
-                    .mapValidateEmailOtpForPassword(
-                  {
-                    "emailId": otpArgumentModel.emailOrPhone,
-                    "otp": _pinController.text,
-                  },
-                );
-                log("Validate Email OTP For Password Response -> $result");
-                tokenCP = result["token"];
-                log("tokenCP -> $tokenCP");
-
-                if (result["success"] == true) {
-                  pinputErrorBloc.add(
-                    PinputErrorEvent(
-                      isError: false,
-                      isComplete: true,
-                      errorCount: pinputErrorCount,
-                    ),
-                  );
-
-                  // await Future.delayed(const Duration(milliseconds: 250));
-                  if (context.mounted) {
-                    if (otpArgumentModel.isEmail) {
-                      // Navigator.pop(context);
-                      // TODO: Check for new device
-
-                      // TODO: if not new device, go to select entity screen
-                      var getCustomerDetailsResponse =
-                          await MapCustomerDetails.mapCustomerDetails(
-                              tokenCP ?? "");
-                      log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                      List cifDetails =
-                          getCustomerDetailsResponse["cifDetails"];
-
-                      if (cifDetails.length == 1) {
-                        if (context.mounted) {
-                          cif = getCustomerDetailsResponse["cifDetails"][0]
-                              ["cif"];
-
-                          isCompany = getCustomerDetailsResponse["cifDetails"]
-                              [0]["isCompany"];
-
-                          isCompanyRegistered =
-                              getCustomerDetailsResponse["cifDetails"][0]
-                                  ["isCompanyRegistered"];
-
-                          log("cif -> $cif");
-                          log("cif RTT -> ${cif.runtimeType}");
-                          log("isCompany -> $isCompany");
-                          log("isCompanyRegistered -> $isCompanyRegistered");
-
-                          var isDeviceValidApiResult =
-                              await MapIsDeviceValid.mapIsDeviceValid({
-                            "userId": cifDetails[0]["userID"],
-                            "deviceId": deviceId,
-                          }, tokenCP ?? "");
-                          log("isDeviceValidApiResult -> $isDeviceValidApiResult");
-
-                          if (isDeviceValidApiResult["success"]) {
-                            if (context.mounted) {
-                              if (cif != null || cif != "null") {
-                                if (isCompany) {
-                                  if (isCompanyRegistered) {
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      Routes.setPassword,
-                                    );
-                                  }
-                                } else {
-                                  Navigator.pushReplacementNamed(
-                                    context,
-                                    Routes.setPassword,
-                                  );
-                                }
-                              }
-                              if (cif == null) {
-                                log("cif is null");
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) {
-                                    return CustomDialog(
-                                      svgAssetPath: ImageConstants.warning,
-                                      title: "Application approval pending",
-                                      message:
-                                          "You already have a registration pending. Please contact Dhabi support.",
-                                      auxWidget: GradientButton(
-                                        onTap: () async {
-                                          if (context.mounted) {
-                                            Navigator.pop(context);
-                                            Navigator.pushReplacementNamed(
-                                              context,
-                                              Routes.registration,
-                                              arguments:
-                                                  RegistrationArgumentModel(
-                                                isInitial: true,
-                                              ).toMap(),
-                                            );
-                                          }
-                                        },
-                                        text: "Go Home",
-                                      ),
-                                      actionWidget: SolidButton(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        text: labels[166]["labelText"],
-                                        color: AppColors.primaryBright17,
-                                        fontColor: AppColors.primary,
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
-                            }
-                          } else {
-                            var rmorResult = await MapRegisteredMobileOtpRequest
-                                .mapRegisteredMobileOtpRequest({
-                              "emailId": storageEmail,
-                              "cif": cif,
-                            }, tokenCP ?? "");
-                            log("rmorResult -> $rmorResult");
-                            if (rmorResult["success"]) {
-                              if (context.mounted) {
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  Routes.otp,
-                                  arguments: OTPArgumentModel(
-                                    emailOrPhone: rmorResult["mobileNumber"],
-                                    isEmail: false,
-                                    isBusiness: isCompany,
-                                    isInitial: false,
-                                    isLogin: false,
-                                    isIncompleteOnboarding: false,
-                                  ).toMap(),
-                                );
-                              }
-                            } else {
-                              if (context.mounted) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return CustomDialog(
-                                      svgAssetPath: ImageConstants.warning,
-                                      title: "Mobile Not Registered",
-                                      message:
-                                          "You do not have an account registered with this mobile number. Please register an account.",
-                                      actionWidget: GradientButton(
-                                        onTap: () {
-                                          Navigator.pushReplacementNamed(
-                                            context,
-                                            Routes.onboarding,
-                                            arguments: OnboardingArgumentModel(
-                                                    isInitial: true)
-                                                .toMap(),
-                                          );
-                                        },
-                                        text: "Register",
-                                      ),
-                                    );
-                                  },
-                                );
-                              }
-                            }
-                            // if (context.mounted) {
-                            //   showDialog(
-                            //     context: context,
-                            //     barrierDismissible: false,
-                            //     builder: (context) {
-                            //       return CustomDialog(
-                            //         svgAssetPath: ImageConstants.warning,
-                            //         title: "Device Invalid",
-                            //         message:
-                            //             "You are trying to login from an unregistered device.",
-                            //         actionWidget: GradientButton(
-                            //           onTap: () {
-                            //             Navigator.pop(context);
-                            //             Navigator.pushReplacementNamed(
-                            //               context,
-                            //               Routes.loginUserId,
-                            //             );
-                            //           },
-                            //           text: labels[347]["labelText"],
-                            //         ),
-                            //       );
-                            //     },
-                            //   );
-                            // }
-                          }
-                        }
-                      } else {
-                        if (cifDetails.isEmpty) {
-                          if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) {
-                                return CustomDialog(
-                                  svgAssetPath: ImageConstants.warning,
-                                  title: "Invalid Email",
-                                  message:
-                                      "There is no Dhabi Account associated with this email address.",
-                                  actionWidget: GradientButton(
-                                    onTap: () async {
-                                      if (context.mounted) {
-                                        Navigator.pop(context);
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          Routes.registration,
-                                          arguments: RegistrationArgumentModel(
-                                            isInitial: true,
-                                          ).toMap(),
-                                        );
-                                      }
-                                    },
-                                    text: "Go Home",
-                                  ),
-                                );
-                              },
-                            );
-                          }
-                        } else {
-                          if (context.mounted) {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              Routes.selectAccount,
-                              arguments: SelectAccountArgumentModel(
-                                emailId: otpArgumentModel.emailOrPhone,
-                                cifDetails: cifDetails,
-                                isPwChange: true,
-                                isLogin: false,
-                                isIncompleteOnboarding: false,
-                              ).toMap(),
-                            );
-                          }
-                        }
-                      }
-                    } else {
-                      if (otpArgumentModel.isBusiness) {
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return CustomDialog(
-                              svgAssetPath: ImageConstants.checkCircleOutlined,
-                              title: "Thank You!",
-                              message:
-                                  "Your request is submitted with reference number $storagReferenceNumber. We will contact you on next steps.",
-                              actionWidget:
-                                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                                builder: (context, state) {
-                                  return GradientButton(
-                                    onTap: () async {
-                                      isLoading = true;
-                                      final ShowButtonBloc showButtonBloc =
-                                          context.read<ShowButtonBloc>();
-                                      showButtonBloc.add(
-                                          ShowButtonEvent(show: isLoading));
-                                      var getCustomerDetailsResponse =
-                                          await MapCustomerDetails
-                                              .mapCustomerDetails(token ?? "");
-                                      log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                                      List cifDetails =
-                                          getCustomerDetailsResponse[
-                                              "cifDetails"];
-                                      if (context.mounted) {
-                                        if (cifDetails.length == 1) {
-                                          cif = getCustomerDetailsResponse[
-                                              "cifDetails"][0]["cif"];
-
-                                          isCompany =
-                                              getCustomerDetailsResponse[
-                                                  "cifDetails"][0]["isCompany"];
-
-                                          isCompanyRegistered =
-                                              getCustomerDetailsResponse[
-                                                      "cifDetails"][0]
-                                                  ["isCompanyRegistered"];
-
-                                          if (cif == null || cif == "null") {
-                                            if (isCompany) {
-                                              if (isCompanyRegistered) {
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacementNamed(
-                                                  context,
-                                                  Routes.loginPassword,
-                                                  arguments:
-                                                      LoginPasswordArgumentModel(
-                                                    emailId: storageEmail ?? "",
-                                                    userId: storageUserId ?? 0,
-                                                    userTypeId:
-                                                        storageUserTypeId ?? 2,
-                                                    companyId:
-                                                        storageCompanyId ?? 0,
-                                                  ).toMap(),
-                                                );
-                                              } else {
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacementNamed(
-                                                  context,
-                                                  Routes.onboarding,
-                                                  arguments:
-                                                      OnboardingArgumentModel(
-                                                    isInitial: true,
-                                                  ).toMap(),
-                                                );
-                                              }
-                                            } else {
-                                              Navigator.pop(context);
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                Routes.loginPassword,
-                                                arguments:
-                                                    LoginPasswordArgumentModel(
-                                                  emailId: storageEmail ?? "",
-                                                  userId: storageUserId ?? 0,
-                                                  userTypeId:
-                                                      storageUserTypeId ?? 2,
-                                                  companyId:
-                                                      storageCompanyId ?? 0,
-                                                ).toMap(),
-                                              );
-                                            }
-                                          }
-                                        } else {
-                                          Navigator.pushReplacementNamed(
-                                            context,
-                                            Routes.selectAccount,
-                                            arguments:
-                                                SelectAccountArgumentModel(
-                                              emailId:
-                                                  otpArgumentModel.emailOrPhone,
-                                              cifDetails: cifDetails,
-                                              isPwChange: false,
-                                              isLogin: false,
-                                              isIncompleteOnboarding: false,
-                                            ).toMap(),
-                                          );
-                                        }
-                                      }
-                                      isLoading = false;
-                                      showButtonBloc.add(
-                                          ShowButtonEvent(show: isLoading));
-
-                                      await storage.write(
-                                          key: "stepsCompleted",
-                                          value: 0.toString());
-                                      storageStepsCompleted = int.parse(
-                                          await storage.read(
-                                                  key: "stepsCompleted") ??
-                                              "0");
-                                      await storage.write(
-                                          key: "hasFirstLoggedIn",
-                                          value: true.toString());
-                                      storageHasFirstLoggedIn = (await storage
-                                              .read(key: "hasFirstLoggedIn")) ==
-                                          "true";
-                                    },
-                                    text: labels[31]["labelText"],
-                                    auxWidget: isLoading
-                                        ? const LoaderRow()
-                                        : const SizeBox(),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      } else {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          Routes.retailOnboardingStatus,
-                          arguments: OnboardingStatusArgumentModel(
-                            stepsCompleted: 4,
-                            isFatca: false,
-                            isPassport: false,
-                            isRetail: !otpArgumentModel.isBusiness,
-                          ).toMap(),
-                        );
-                      }
-                    }
-                  }
-                } else {
-                  pinputErrorCount++;
-                  seconds = 0;
-                  showButtonBloc.add(const ShowButtonEvent(show: true));
-                  pinputErrorBloc.add(
-                    PinputErrorEvent(
-                      isError: true,
-                      isComplete: true,
-                      errorCount: pinputErrorCount,
-                    ),
-                  );
-                }
-              }
-            }
-          } else {
-            log("Phone no. -> ${otpArgumentModel.emailOrPhone}");
-            log("Verify Otp Request -> ${{
-              "mobileNo": otpArgumentModel.emailOrPhone,
-              "otp": _pinController.text,
-            }}");
-            var result = await MapVerifyMobileOtp.mapVerifyMobileOtp(
-              {
-                "mobileNo": otpArgumentModel.emailOrPhone,
-                "otp": _pinController.text,
-              },
-              otpArgumentModel.isInitial ? token ?? "" : tokenCP ?? "",
-            );
-            log("Verify Mobile OTP Response -> $result");
-
-            if (result["success"] == true) {
-              pinputErrorBloc.add(
-                PinputErrorEvent(
-                  isError: false,
-                  isComplete: true,
-                  errorCount: pinputErrorCount,
-                ),
-              );
-
-              await Future.delayed(const Duration(milliseconds: 250));
-
-              if (otpArgumentModel.isInitial) {
-                if (context.mounted) {
-                  if (otpArgumentModel.isEmail) {
-                    Navigator.pop(context);
-                    Navigator.pushReplacementNamed(
-                      context,
-                      Routes.retailOnboardingStatus,
-                      arguments: OnboardingStatusArgumentModel(
-                        stepsCompleted: 4,
-                        isFatca: false,
-                        isPassport: false,
-                        isRetail: true,
-                      ).toMap(),
-                    );
-                  } else {
-                    if (otpArgumentModel.isBusiness) {
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) {
-                          return CustomDialog(
-                            svgAssetPath: ImageConstants.checkCircleOutlined,
-                            title: "Thank You!",
-                            message:
-                                "Your request is submitted with reference number $storagReferenceNumber. We will contact you on next steps.",
-                            actionWidget:
-                                BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                              builder: (context, state) {
-                                return GradientButton(
-                                  onTap: () async {
-                                    isLoading = true;
-                                    final ShowButtonBloc showButtonBloc =
-                                        context.read<ShowButtonBloc>();
-                                    showButtonBloc
-                                        .add(ShowButtonEvent(show: isLoading));
-                                    var getCustomerDetailsResponse =
-                                        await MapCustomerDetails
-                                            .mapCustomerDetails(token ?? "");
-                                    log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                                    List cifDetails =
-                                        getCustomerDetailsResponse[
-                                            "cifDetails"];
-                                    if (context.mounted) {
-                                      if (cifDetails.length == 1) {
-                                        cif = getCustomerDetailsResponse[
-                                            "cifDetails"][0]["cif"];
-
-                                        isCompany = getCustomerDetailsResponse[
-                                            "cifDetails"][0]["isCompany"];
-
-                                        isCompanyRegistered =
-                                            getCustomerDetailsResponse[
-                                                    "cifDetails"][0]
-                                                ["isCompanyRegistered"];
-
-                                        if (cif == null || cif == "null") {
-                                          if (isCompany) {
-                                            if (isCompanyRegistered) {
-                                              Navigator.pop(context);
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                Routes.loginPassword,
-                                                arguments:
-                                                    LoginPasswordArgumentModel(
-                                                  emailId: storageEmail ?? "",
-                                                  userId: storageUserId ?? 0,
-                                                  userTypeId:
-                                                      storageUserTypeId ?? 2,
-                                                  companyId:
-                                                      storageCompanyId ?? 0,
-                                                ).toMap(),
-                                              );
-                                            } else {
-                                              Navigator.pop(context);
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                Routes.onboarding,
-                                                arguments:
-                                                    OnboardingArgumentModel(
-                                                  isInitial: true,
-                                                ).toMap(),
-                                              );
-                                            }
-                                          } else {
-                                            Navigator.pop(context);
-                                            Navigator.pushReplacementNamed(
-                                              context,
-                                              Routes.loginPassword,
-                                              arguments:
-                                                  LoginPasswordArgumentModel(
-                                                emailId: storageEmail ?? "",
-                                                userId: storageUserId ?? 0,
-                                                userTypeId:
-                                                    storageUserTypeId ?? 2,
-                                                companyId:
-                                                    storageCompanyId ?? 0,
-                                              ).toMap(),
-                                            );
-                                          }
-                                        }
-                                      } else {
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          Routes.selectAccount,
-                                          arguments: SelectAccountArgumentModel(
-                                            emailId:
-                                                otpArgumentModel.emailOrPhone,
-                                            cifDetails: cifDetails,
-                                            isPwChange: false,
-                                            isLogin: false,
-                                            isIncompleteOnboarding: false,
-                                          ).toMap(),
-                                        );
-                                      }
-                                    }
-                                    isLoading = false;
-                                    showButtonBloc
-                                        .add(ShowButtonEvent(show: isLoading));
-
-                                    await storage.write(
-                                        key: "stepsCompleted",
-                                        value: 0.toString());
-                                    storageStepsCompleted = int.parse(
-                                        await storage.read(
-                                                key: "stepsCompleted") ??
-                                            "0");
-                                    await storage.write(
-                                        key: "hasFirstLoggedIn",
-                                        value: true.toString());
-                                    storageHasFirstLoggedIn = (await storage
-                                            .read(key: "hasFirstLoggedIn")) ==
-                                        "true";
-                                  },
-                                  text: labels[31]["labelText"],
-                                  auxWidget: isLoading
-                                      ? const LoaderRow()
-                                      : const SizeBox(),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.retailOnboardingStatus,
-                        arguments: OnboardingStatusArgumentModel(
-                          stepsCompleted: 4,
-                          isFatca: true,
-                          isPassport: false,
-                          isRetail: !otpArgumentModel.isBusiness,
-                        ).toMap(),
-                      );
-                      await storage.write(
-                          key: "stepsCompleted", value: 10.toString());
-                      storageStepsCompleted = int.parse(
-                          await storage.read(key: "stepsCompleted") ?? "0");
-                    }
-                  }
-                }
-              } else {
-                if (context.mounted) {
-                  Navigator.pushReplacementNamed(context, Routes.setPassword);
-                }
-              }
-            } else {
-              pinputErrorCount++;
-              seconds = 0;
-              showButtonBloc.add(const ShowButtonEvent(show: true));
-              pinputErrorBloc.add(PinputErrorEvent(
-                  isError: true,
-                  isComplete: true,
-                  errorCount: pinputErrorCount));
             }
           }
         } else {

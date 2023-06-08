@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -11,23 +12,29 @@ class AccountSummaryTile extends StatelessWidget {
     required this.onTap,
     required this.imgUrl,
     required this.accountType,
+    this.accountNumber,
     required this.currency,
     required this.amount,
     required this.subText,
     required this.subImgUrl,
     this.fontSize,
     this.space,
+    this.isShowCheckMark,
+    this.isSelected,
   }) : super(key: key);
 
   final VoidCallback onTap;
   final String imgUrl;
   final String accountType;
+  final String? accountNumber;
   final String currency;
   final String amount;
   final String subText;
   final String subImgUrl;
   final double? fontSize;
   final double? space;
+  final bool? isShowCheckMark;
+  final bool? isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -59,12 +66,60 @@ class AccountSummaryTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 CustomCircleAvatarAsset(imgUrl: imgUrl),
-                Text(
-                  accountType,
-                  style: TextStyles.primary.copyWith(
-                    color: const Color(0xFF9F9F9F),
-                    fontSize: (14 / Dimensions.designWidth).w,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          accountType,
+                          style: TextStyles.primary.copyWith(
+                            color: const Color(0xFF9F9F9F),
+                            fontSize: (14 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        Ternary(
+                          condition: isShowCheckMark ?? false,
+                          falsy: const SizeBox(),
+                          truthy: Text(
+                            accountNumber ?? "",
+                            style: TextStyles.primary.copyWith(
+                              color: const Color(0xFF9F9F9F),
+                              fontSize: (14 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Ternary(
+                      condition: isShowCheckMark ?? false,
+                      truthy: const SizeBox(width: 10),
+                      falsy: const SizeBox(),
+                    ),
+                    Ternary(
+                      condition: isShowCheckMark ?? false,
+                      truthy: Container(
+                        width: (15 / Dimensions.designWidth).w,
+                        height: (15 / Dimensions.designWidth).w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            width: isSelected == true ? 0 : 0.5,
+                            color: AppColors.dark50,
+                          ),
+                        ),
+                        child: isSelected == true
+                            ? SvgPicture.asset(
+                                ImageConstants.checkCircle,
+                                width: (15 / Dimensions.designWidth).w,
+                                height: (15 / Dimensions.designWidth).w,
+                              )
+                            : const SizeBox(),
+                      ),
+                      falsy: const SizeBox(),
+                    ),
+                  ],
                 ),
               ],
             ),

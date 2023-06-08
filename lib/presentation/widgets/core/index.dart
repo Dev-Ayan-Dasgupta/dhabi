@@ -25,3 +25,4 @@ export './loader_row.dart';
 export './asterisk.dart';
 export './dropdown_countries.dart';
 export './dropdown_country_isd.dart';
+export './circle_avatar_image.dart';

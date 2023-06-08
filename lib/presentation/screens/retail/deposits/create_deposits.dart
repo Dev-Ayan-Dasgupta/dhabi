@@ -1,23 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_bloc.dart';
-import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_event.dart';
-import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_state.dart';
-import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_bloc.dart';
-import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_event.dart';
-import 'package:dialup_mobile_app/bloc/dashboard/summary_tile_state.dart';
-import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_bloc.dart';
-import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_event.dart';
-import 'package:dialup_mobile_app/bloc/dateSelection/date_selection_state.dart';
-import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
-import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
-import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
-import 'package:dialup_mobile_app/bloc/errorMessage/error_message_bloc.dart';
-import 'package:dialup_mobile_app/bloc/errorMessage/error_message_event.dart';
-import 'package:dialup_mobile_app/bloc/errorMessage/error_message_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
@@ -47,7 +31,13 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   final double minAmtReq = 10000;
   final double maxAmtReq = 100000;
-  final double bal = 25000;
+  double bal = double.parse(accountDetails[0]["currentBalance"]
+          .split(' ')
+          .last
+          .replaceAll(',', ''))
+      .abs();
+
+  String currency = accountDetails[0]["accountCurrency"];
 
   String errorMsg = "";
 
@@ -57,9 +47,15 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
   bool isAutoRenewal = true;
   bool isAutoClosure = false;
 
+  bool isStandingDirNo = true;
+  bool isStandingDirYes = false;
+
   String? selectedPayout;
 
   String date = "";
+  DateTime auxToDate = DateTime.now();
+
+  double interestRate = 0;
 
   final List<String> items = [
     'Item1',
@@ -71,6 +67,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     'Item7',
     'Item8',
   ];
+
+  String chosenAccountNumber = accountDetails[0]["accountNumber"];
+  int chosenIndex = 0;
 
   List<DetailsTileModel> rates = [];
 
@@ -139,62 +138,97 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     ),
                   ),
                   const SizeBox(height: 20),
-                  Row(
-                    children: [
-                      Text(
-                        "Select an Account",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.dark80,
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const Asterisk(),
-                    ],
-                  ),
-                  const SizeBox(height: 10),
                   Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(
-                          top: (5 / Dimensions.designHeight).h,
-                          bottom: (12 / Dimensions.designHeight).h),
-                      controller: _scrollController,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: (accountDetails.length),
-                      itemBuilder: (context, index) {
-                        return AccountSummaryTile(
-                          onTap: () {},
-                          imgUrl:
-                              accountDetails[index]["accountCurrency"] == "AED"
-                                  ? ImageConstants.uaeFlag
-                                  : ImageConstants.usaFlag,
-                          accountType:
-                              accountDetails[index]["productCode"] == "1001"
-                                  ? "Current"
-                                  : "Savings",
-                          currency: accountDetails[index]["currentBalance"]
-                              .split(" ")
-                              .first,
-                          amount: accountDetails[index]["currentBalance"]
-                              .split(" ")
-                              .last,
-                          subText: "",
-                          subImgUrl: "",
-                          space: _keyboardVisible ? 17 : 45,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<SummaryTileBloc, SummaryTileState>(
-                    builder: buildSummaryTile,
-                  ),
-                  const SizeBox(height: 20),
-                  Expanded(
-                    flex: _keyboardVisible ? 2 : 3,
+                    // flex: _keyboardVisible ? 2 : 3,
                     child: SingleChildScrollView(
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Select an Account",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          const SizeBox(height: 10),
+                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: (context, state) {
+                              return Flexible(
+                                child: SizedBox(
+                                  height: (145 / Dimensions.designHeight).h,
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.only(
+                                        top: (5 / Dimensions.designHeight).h,
+                                        bottom:
+                                            (12 / Dimensions.designHeight).h),
+                                    controller: _scrollController,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: (accountDetails.length),
+                                    itemBuilder: (context, index) {
+                                      return AccountSummaryTile(
+                                        isShowCheckMark: true,
+                                        isSelected: chosenIndex == index,
+                                        accountNumber: accountDetails[index]
+                                            ["accountNumber"],
+                                        onTap: () {
+                                          final ShowButtonBloc showButtonBloc =
+                                              context.read<ShowButtonBloc>();
+                                          chosenIndex = index;
+                                          chosenAccountNumber =
+                                              accountDetails[index]
+                                                  ["accountNumber"];
+                                          bal = double.parse(
+                                                  accountDetails[index]
+                                                          ["currentBalance"]
+                                                      .split(' ')
+                                                      .last
+                                                      .replaceAll(',', ''))
+                                              .abs();
+                                          currency = accountDetails[index]
+                                              ["accountCurrency"];
+                                          showButtonBloc.add(ShowButtonEvent(
+                                              show: chosenIndex == index));
+                                        },
+                                        imgUrl: accountDetails[index]
+                                                    ["accountCurrency"] ==
+                                                "AED"
+                                            ? ImageConstants.uaeFlag
+                                            : ImageConstants.usaFlag,
+                                        accountType: accountDetails[index]
+                                                    ["productCode"] ==
+                                                "1001"
+                                            ? "Current"
+                                            : "Savings",
+                                        currency: accountDetails[index]
+                                                ["currentBalance"]
+                                            .split(" ")
+                                            .first,
+                                        amount: accountDetails[index]
+                                                ["currentBalance"]
+                                            .split(" ")
+                                            .last,
+                                        subText: "",
+                                        subImgUrl: "",
+                                        space: _keyboardVisible ? 17 : 21,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          const SizeBox(height: 10),
+                          BlocBuilder<SummaryTileBloc, SummaryTileState>(
+                            builder: buildSummaryTile,
+                          ),
+                          const SizeBox(height: 20),
                           Container(
                             padding:
                                 EdgeInsets.all((10 / Dimensions.designWidth).w),
@@ -294,7 +328,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                               Text(
                                 labels[110]["labelText"],
                                 style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.black63,
+                                  color: AppColors.dark80,
                                   fontSize: (16 / Dimensions.designWidth).w,
                                 ),
                               ),
@@ -304,39 +338,45 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                           const SizeBox(height: 10),
                           InkWell(
                             onTap: showDatePickerWidget,
-                            child: Container(
-                              height: (60 / Dimensions.designHeight).h,
-                              padding: EdgeInsets.all(
-                                  (15 / Dimensions.designWidth).w),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                          (10 / Dimensions.designWidth).w)),
-                                  boxShadow: const [],
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      width: 1,
-                                      color: const Color(0XFFEEEEEE))),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    date.isNotEmpty ? date : "Select Date",
-                                    style: TextStyles.primaryMedium.copyWith(
-                                      color: date.isNotEmpty
-                                          ? AppColors.dark80
-                                          : AppColors.dark50,
-                                      fontSize: (16 / Dimensions.designWidth).w,
-                                    ),
+                            child: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                              builder: (context, state) {
+                                return Container(
+                                  height: (60 / Dimensions.designHeight).h,
+                                  padding: EdgeInsets.all(
+                                      (15 / Dimensions.designWidth).w),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              (10 / Dimensions.designWidth).w)),
+                                      boxShadow: const [],
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          width: 1,
+                                          color: const Color(0XFFEEEEEE))),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        date.isNotEmpty ? date : "Select Date",
+                                        style:
+                                            TextStyles.primaryMedium.copyWith(
+                                          color: date.isNotEmpty
+                                              ? AppColors.dark80
+                                              : AppColors.dark50,
+                                          fontSize:
+                                              (16 / Dimensions.designWidth).w,
+                                        ),
+                                      ),
+                                      SvgPicture.asset(
+                                        ImageConstants.date,
+                                        width: (10 / Dimensions.designWidth).w,
+                                        height: (16 / Dimensions.designWidth).w,
+                                      ),
+                                    ],
                                   ),
-                                  SvgPicture.asset(
-                                    ImageConstants.date,
-                                    width: (10 / Dimensions.designWidth).w,
-                                    height: (16 / Dimensions.designWidth).w,
-                                  ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
                           ),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -487,7 +527,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               children: [
                 const SizeBox(height: 20),
                 Text(
-                  DateFormat('EEE, d MMM, yyyy').format(DateTime.now()),
+                  DateFormat('EEE, d MMM, yyyy').format(auxToDate),
                   style: TextStyles.primaryBold.copyWith(
                     color: AppColors.black25,
                     fontSize: (18 / Dimensions.designWidth).w,
@@ -501,20 +541,29 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                   child: Ternary(
                     condition: Platform.isIOS,
                     truthy: CupertinoDatePicker(
+                      initialDateTime:
+                          auxToDate.add(const Duration(seconds: 1)),
+                      minimumDate:
+                          DateTime.now().subtract(const Duration(minutes: 10)),
                       maximumDate:
                           DateTime.now().add(const Duration(days: 30 * 60)),
                       mode: CupertinoDatePickerMode.date,
                       onDateTimeChanged: (p0) {
                         date = DateFormat('d MMMM, yyyy').format(p0);
+                        auxToDate = p0;
                       },
                     ),
                     falsy: DatePickerWidget(
                       looping: false,
+                      initialDate: auxToDate.add(const Duration(seconds: 1)),
+                      firstDate:
+                          DateTime.now().subtract(const Duration(minutes: 10)),
                       lastDate:
                           DateTime.now().add(const Duration(days: 30 * 60)),
                       dateFormat: "dd-MMMM-yyyy",
                       onChange: (p0, _) {
                         date = DateFormat('d MMMM, yyyy').format(p0);
+                        auxToDate = p0;
                       },
                     ),
                   ),
@@ -576,27 +625,23 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     final DateSelectionBloc dateSelectionBloc =
         context.read<DateSelectionBloc>();
     final ShowButtonBloc showPeriodSection = context.read<ShowButtonBloc>();
-    if (date.isNotEmpty) {
-      dateSelectionBloc.add(const DateSelectionEvent(isDateSelected: true));
-      showPeriod = true;
-      showPeriodSection.add(
-        ShowButtonEvent(
-            show: showPeriod &&
-                errorMsg.isEmpty &&
-                _depositController.text.isNotEmpty),
-      );
+    for (int i = 0; i < fdRatesDates.length; i++) {
+      log("Days difference -> ${fdRatesDates[i].difference(auxToDate).inDays}");
+      if (fdRatesDates[i].difference(auxToDate).inDays >= 0) {
+        interestRate = (fdRates[i]["rate"]).toDouble();
+        break;
+      }
     }
-    Navigator.pop(context);
-  }
-
-  Widget buildCurrentDate(BuildContext context, DateSelectionState state) {
-    return Text(
-      "$date\t\t\t\t",
-      style: TextStyles.primaryMedium.copyWith(
-        color: AppColors.black63,
-        fontSize: (16 / Dimensions.designWidth).w,
-      ),
+    date = DateFormat('d MMMM, yyyy').format(auxToDate);
+    dateSelectionBloc.add(const DateSelectionEvent(isDateSelected: true));
+    showPeriod = true;
+    showPeriodSection.add(
+      ShowButtonEvent(
+          show: showPeriod &&
+              errorMsg.isEmpty &&
+              _depositController.text.isNotEmpty),
     );
+    Navigator.pop(context);
   }
 
   Widget buildDepositColumn(BuildContext context, ShowButtonState state) {
@@ -620,29 +665,25 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               children: [
                 Row(
                   children: [
-                    SvgPicture.asset(
-                      ImageConstants.warningSmall,
-                      width: (20 / Dimensions.designWidth).w,
-                      height: (20 / Dimensions.designWidth).w,
-                      colorFilter: const ColorFilter.mode(
-                        AppColors.primary,
-                        BlendMode.srcIn,
-                      ),
+                    Icon(
+                      Icons.info_outline_rounded,
+                      color: AppColors.primaryDark,
+                      size: (20 / Dimensions.designWidth).w,
                     ),
                     const SizeBox(width: 10),
                     Text(
-                      "Tenure",
+                      labels[104]["labelText"],
                       style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.primary,
+                        color: AppColors.primaryDark,
                         fontSize: (18 / Dimensions.designWidth).w,
                       ),
                     ),
                   ],
                 ),
                 Text(
-                  "6.10%",
+                  "$interestRate%",
                   style: TextStyles.primaryMedium.copyWith(
-                    color: AppColors.primary,
+                    color: AppColors.primaryDark,
                     fontSize: (18 / Dimensions.designWidth).w,
                   ),
                 ),
@@ -653,21 +694,21 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
           Row(
             children: [
               Text(
-                "Interest Payout ",
+                labels[112]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
-                  color: AppColors.black63,
+                  color: AppColors.dark80,
                   fontSize: (16 / Dimensions.designWidth).w,
                 ),
               ),
-              SvgPicture.asset(
-                ImageConstants.help,
-                width: (16.67 / Dimensions.designWidth).w,
-                height: (16.67 / Dimensions.designWidth).w,
-                colorFilter: const ColorFilter.mode(
-                  Color(0XFFA1A1A1),
-                  BlendMode.srcIn,
-                ),
-              ),
+              // SvgPicture.asset(
+              //   ImageConstants.help,
+              //   width: (16.67 / Dimensions.designWidth).w,
+              //   height: (16.67 / Dimensions.designWidth).w,
+              //   colorFilter: const ColorFilter.mode(
+              //     Color(0XFFA1A1A1),
+              //     BlendMode.srcIn,
+              //   ),
+              // ),
             ],
           ),
           const SizeBox(height: 7),
@@ -675,12 +716,17 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
             builder: buildInterestDropdown,
           ),
           const SizeBox(height: 20),
-          Text(
-            "On maturity",
-            style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.black63,
-              fontSize: (16 / Dimensions.designWidth).w,
-            ),
+          Row(
+            children: [
+              Text(
+                labels[113]["labelText"],
+                style: TextStyles.primaryMedium.copyWith(
+                  color: AppColors.dark80,
+                  fontSize: (16 / Dimensions.designWidth).w,
+                ),
+              ),
+              const Asterisk(),
+            ],
           ),
           const SizeBox(height: 10),
           Row(
@@ -690,7 +736,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               ),
               const SizeBox(width: 5),
               Text(
-                "Auto Rollover",
+                labels[114]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
                   color: AppColors.black63,
                   fontSize: (16 / Dimensions.designWidth).w,
@@ -702,7 +748,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               ),
               const SizeBox(width: 5),
               Text(
-                "Auto Closure",
+                labels[115]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
                   color: AppColors.black63,
                   fontSize: (16 / Dimensions.designWidth).w,
@@ -710,7 +756,65 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               ),
             ],
           ),
-          const SizeBox(height: 10),
+          const SizeBox(height: 20),
+          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+            builder: (context, state) {
+              if (isAutoClosure) {
+                return Column(
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: labels[116]["labelText"],
+                        style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.dark80,
+                            fontSize: (14 / Dimensions.designWidth).w),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: ' * ',
+                            style: TextStyles.primary.copyWith(
+                              color: AppColors.red100,
+                              fontSize: (14 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizeBox(height: 10),
+                    Row(
+                      children: [
+                        BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
+                          builder: buildStandingInstructionNo,
+                        ),
+                        const SizeBox(width: 5),
+                        Text(
+                          "No",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.black63,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const SizeBox(width: 30),
+                        BlocBuilder<ButtonFocussedBloc, ButtonFocussedState>(
+                          builder: buildStandingInstructionYes,
+                        ),
+                        const SizeBox(width: 5),
+                        Text(
+                          "Yes",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.black63,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizeBox(height: 10),
+                  ],
+                );
+              } else {
+                return const SizeBox();
+              }
+            },
+          ),
         ],
       );
     } else {
@@ -748,6 +852,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   Widget buildAutoRollover(BuildContext context, ButtonFocussedState state) {
     final ButtonFocussedBloc maturityBloc = context.read<ButtonFocussedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return InkWell(
       onTap: () {
         isAutoRenewal = true;
@@ -755,6 +860,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
         maturityBloc.add(
           ButtonFocussedEvent(isFocussed: isAutoRenewal, toggles: 1),
         );
+        showButtonBloc.add(ShowButtonEvent(show: isAutoRenewal));
       },
       child: Container(
         width: (18 / Dimensions.designWidth).w,
@@ -784,6 +890,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   Widget buildAutoClosure(BuildContext context, ButtonFocussedState state) {
     final ButtonFocussedBloc maturityBloc = context.read<ButtonFocussedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return InkWell(
       onTap: () {
         isAutoRenewal = false;
@@ -791,6 +898,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
         maturityBloc.add(
           ButtonFocussedEvent(isFocussed: isAutoRenewal, toggles: 1),
         );
+        showButtonBloc.add(ShowButtonEvent(show: isAutoClosure));
       },
       child: Container(
         width: (18 / Dimensions.designWidth).w,
@@ -818,6 +926,80 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     );
   }
 
+  Widget buildStandingInstructionNo(
+      BuildContext context, ButtonFocussedState state) {
+    final ButtonFocussedBloc maturityBloc = context.read<ButtonFocussedBloc>();
+    return InkWell(
+      onTap: () {
+        isStandingDirNo = true;
+        isStandingDirYes = false;
+        maturityBloc.add(
+          ButtonFocussedEvent(isFocussed: isAutoRenewal, toggles: 1),
+        );
+      },
+      child: Container(
+        width: (18 / Dimensions.designWidth).w,
+        height: (18 / Dimensions.designWidth).w,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(width: 1, color: const Color(0XFFDDDDDD)),
+        ),
+        child: Ternary(
+          condition: isStandingDirNo,
+          truthy: Center(
+            child: SvgPicture.asset(
+              ImageConstants.dot,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+              colorFilter: const ColorFilter.mode(
+                Color(0XFF00B894),
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          falsy: const SizeBox(),
+        ),
+      ),
+    );
+  }
+
+  Widget buildStandingInstructionYes(
+      BuildContext context, ButtonFocussedState state) {
+    final ButtonFocussedBloc maturityBloc = context.read<ButtonFocussedBloc>();
+    return InkWell(
+      onTap: () {
+        isStandingDirNo = false;
+        isStandingDirYes = true;
+        maturityBloc.add(
+          ButtonFocussedEvent(isFocussed: isAutoRenewal, toggles: 1),
+        );
+      },
+      child: Container(
+        width: (18 / Dimensions.designWidth).w,
+        height: (18 / Dimensions.designWidth).w,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(width: 1, color: const Color(0XFFDDDDDD)),
+        ),
+        child: Ternary(
+          condition: isStandingDirYes,
+          truthy: Center(
+            child: SvgPicture.asset(
+              ImageConstants.dot,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
+              colorFilter: const ColorFilter.mode(
+                Color(0XFF00B894),
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          falsy: const SizeBox(),
+        ),
+      ),
+    );
+  }
+
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
     if (isShowButton &&
         errorMsg.isEmpty &&
@@ -827,15 +1009,116 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
           const SizeBox(height: 20),
           GradientButton(
             onTap: () {
-              Navigator.pushNamed(context, Routes.depositConfirmation);
+              if (isAutoRenewal) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.depositConfirmation,
+                  arguments: DepositConfirmationArgumentModel(
+                    currency: currency,
+                    accountNumber: chosenAccountNumber,
+                    depositAmount: double.parse(_depositController.text),
+                    tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                    interestRate: interestRate,
+                    interestAmount: double.parse(_depositController.text) *
+                        (1 + interestRate),
+                    interestPayout: selectedPayout ?? "",
+                    isAutoRenewal: isAutoRenewal,
+                    isAutoTransfer: false,
+                    creditAccountNumber: chosenAccountNumber,
+                    dateOfMaturity: auxToDate,
+                    depositBeneficiary: DepositBeneficiaryModel(
+                      accountNumber: "",
+                      name: "",
+                      address: "",
+                      accountType: 0,
+                      swiftReference: 0,
+                      reasonForSending: "",
+                      saveBeneficiary: false,
+                    ),
+                  ).toMap(),
+                );
+              } else {
+                if (isStandingDirNo) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.depositConfirmation,
+                    arguments: DepositConfirmationArgumentModel(
+                      currency: currency,
+                      accountNumber: chosenAccountNumber,
+                      depositAmount: double.parse(_depositController.text),
+                      tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                      interestRate: interestRate,
+                      interestAmount: double.parse(_depositController.text) *
+                          ((interestRate / 100)),
+                      interestPayout: selectedPayout ?? "",
+                      isAutoRenewal: isAutoRenewal,
+                      isAutoTransfer: false,
+                      creditAccountNumber: chosenAccountNumber,
+                      dateOfMaturity: auxToDate,
+                      depositBeneficiary: DepositBeneficiaryModel(
+                        accountNumber: "",
+                        name: "",
+                        address: "",
+                        accountType: 0,
+                        swiftReference: 0,
+                        reasonForSending: "",
+                        saveBeneficiary: false,
+                      ),
+                    ).toMap(),
+                  );
+                } else {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.depositBeneficiary,
+                    arguments: DepositConfirmationArgumentModel(
+                      currency: currency,
+                      accountNumber: chosenAccountNumber,
+                      depositAmount: double.parse(_depositController.text),
+                      tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                      interestRate: interestRate,
+                      interestAmount: double.parse(_depositController.text) *
+                          ((interestRate / 100)),
+                      interestPayout: selectedPayout ?? "",
+                      isAutoRenewal: isAutoRenewal,
+                      isAutoTransfer: true,
+                      creditAccountNumber: chosenAccountNumber,
+                      dateOfMaturity: auxToDate,
+                      depositBeneficiary: DepositBeneficiaryModel(
+                        accountNumber: "",
+                        name: "",
+                        address: "",
+                        accountType: 0,
+                        swiftReference: 0,
+                        reasonForSending: "",
+                        saveBeneficiary: false,
+                      ),
+                    ).toMap(),
+                  );
+                }
+              }
             },
             text: labels[31]["labelText"],
           ),
-          const SizeBox(height: 20),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.of(context).padding.bottom,
+          ),
         ],
       );
     } else {
-      return const SizeBox();
+      return Column(
+        children: [
+          const SizeBox(height: 20),
+          SolidButton(
+            onTap: () {},
+            text: labels[31]["labelText"],
+          ),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.of(context).padding.bottom,
+          ),
+        ],
+      );
     }
   }
 

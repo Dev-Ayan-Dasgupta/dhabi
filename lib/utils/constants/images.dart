@@ -71,6 +71,9 @@ class ImageConstants {
       "${iconsRoot}settings_account_box.svg";
   static const String handshake = "${iconsRoot}handshake.svg";
   static const String atTheRate = "${iconsRoot}at_the_rate.svg";
+  static const String termsAndConditions =
+      "${iconsRoot}terms_and_conditions.svg";
+  static const String privacyPolicy = "${iconsRoot}privacy_policy.svg";
   static const String rotate = "${iconsRoot}rotate.svg";
   static const String logout = "${iconsRoot}logout.svg";
   static const String addAPhoto = "${iconsRoot}add_a_photo.svg";
@@ -105,4 +108,6 @@ class ImageConstants {
   static const String passport = "${bannersRoot}passport.png";
   static const String usaFlag = "${bannersRoot}usa_flag.png";
   static const String uaeFlag = "${bannersRoot}uae_flag.png";
+  static const String profilePictureDummy =
+      "${bannersRoot}profile_photo_dummy.png";
 }

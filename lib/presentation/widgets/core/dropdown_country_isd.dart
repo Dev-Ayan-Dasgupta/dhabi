@@ -77,7 +77,7 @@ class _CustomDropdownIsdsState extends State<CustomDropdownIsds> {
         onChanged: widget.onChanged,
         buttonStyleData: ButtonStyleData(
           height: (45 / Dimensions.designHeight).h,
-          width: 22.w,
+          width: 23.5.w,
           padding: EdgeInsets.only(right: (10 / Dimensions.designWidth).w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(

@@ -215,7 +215,7 @@ class AppRouter {
         );
       case Routes.depositConfirmation:
         return MaterialPageRoute(
-          builder: (_) => const DepositConfirmationScreen(),
+          builder: (_) => DepositConfirmationScreen(argument: args),
         );
       case Routes.depositDetails:
         return MaterialPageRoute(
@@ -280,6 +280,12 @@ class AppRouter {
       case Routes.addRecipDetUae:
         return MaterialPageRoute(
           builder: (_) => const AddRecipientDetailsUaeScreen(),
+        );
+      case Routes.depositBeneficiary:
+        return MaterialPageRoute(
+          builder: (_) => DepositBeneficiaryScreen(
+            argument: args,
+          ),
         );
       case Routes.password:
         return MaterialPageRoute(
