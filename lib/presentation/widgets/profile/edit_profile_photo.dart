@@ -35,7 +35,7 @@ class EditProfilePhoto extends StatelessWidget {
           child: Center(
             child: Ternary(
               condition: isMemoryImage,
-              truthy: CustomCircleAvatarImage(
+              truthy: CustomCircleAvatarMemory(
                 bytes: bytes,
                 width: (109 / Dimensions.designWidth).w,
                 height: (109 / Dimensions.designWidth).w,

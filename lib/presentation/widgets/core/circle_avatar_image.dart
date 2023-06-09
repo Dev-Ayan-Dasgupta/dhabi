@@ -7,8 +7,8 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 
-class CustomCircleAvatarImage extends StatelessWidget {
-  const CustomCircleAvatarImage({
+class CustomCircleAvatarMemory extends StatelessWidget {
+  const CustomCircleAvatarMemory({
     Key? key,
     this.width,
     this.height,

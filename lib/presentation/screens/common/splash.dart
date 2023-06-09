@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dialup_mobile_app/data/models/widgets/index.dart';
+import 'package:dialup_mobile_app/data/models/widgets/dropdown_countries.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
