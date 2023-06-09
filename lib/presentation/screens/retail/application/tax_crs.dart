@@ -1659,7 +1659,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                     internationalTaxes.add(
                       {
                         "countryCode": !dhabiCountryNames
-                                .contains(selectedCountry ?? "")
+                                .contains(selectedCountryName ?? "")
                             ? ""
                             : dhabiCountries[dhabiCountryNames
                                 .indexOf(selectedCountryName!)]["shortCode"],

@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
@@ -291,7 +290,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          height: (110 / Dimensions.designHeight).h,
+          height: (120 / Dimensions.designHeight).h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
@@ -394,37 +393,47 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );
-    CroppedFile? croppedImageFile = await ImageCropper().cropImage(
-      sourcePath: pickedImageFile!.path,
-      aspectRatioPresets: [CropAspectRatioPreset.square],
-    );
 
-    String photoBase64 =
-        base64Encode(await croppedImageFile?.readAsBytes() as Uint8List);
+    if (pickedImageFile != null) {
+      CroppedFile? croppedImageFile = await ImageCropper().cropImage(
+        sourcePath: pickedImageFile.path,
+        aspectRatioPresets: [CropAspectRatioPreset.square],
+      );
 
-    var uploadPPResult = await MapUploadProfilePhoto.mapUploadProfilePhoto(
-      {
-        "photoBase64": photoBase64,
-      },
-      token ?? "",
-    );
-    log("Upload Profile Photo response -> $uploadPPResult");
+      if (croppedImageFile != null) {
+        String photoBase64 = base64Encode(await croppedImageFile.readAsBytes());
 
-    if (uploadPPResult["success"]) {
-      var getProfileDataResult =
-          await MapProfileData.mapProfileData(token ?? "");
-      if (getProfileDataResult["success"]) {
-        profilePhotoBase64 = getProfileDataResult["profileImageBase64"];
-        await storage.write(
-            key: "profilePhotoBase64", value: profilePhotoBase64);
-        storageProfilePhotoBase64 =
-            await storage.read(key: "profilePhotoBase64");
-        hasProfilePicUpdated = true;
+        var uploadPPResult = await MapUploadProfilePhoto.mapUploadProfilePhoto(
+          {
+            "photoBase64": photoBase64,
+          },
+          token ?? "",
+        );
+        log("Upload Profile Photo response -> $uploadPPResult");
+
+        if (uploadPPResult["success"]) {
+          var getProfileDataResult =
+              await MapProfileData.mapProfileData(token ?? "");
+          if (getProfileDataResult["success"]) {
+            profilePhotoBase64 = getProfileDataResult["profileImageBase64"];
+            await storage.write(
+                key: "profilePhotoBase64", value: profilePhotoBase64);
+            storageProfilePhotoBase64 =
+                await storage.read(key: "profilePhotoBase64");
+            hasProfilePicUpdated = true;
+          }
+        } else {
+          promptUploadPhotoError();
+        }
+        isUploading = false;
+        setState(() {});
+      } else {
+        isUploading = false;
+        setState(() {});
       }
     } else {
-      promptUploadPhotoError();
+      isUploading = false;
+      setState(() {});
     }
-    isUploading = false;
-    setState(() {});
   }
 }

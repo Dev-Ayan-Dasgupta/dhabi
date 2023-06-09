@@ -1,22 +1,9 @@
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
-import 'package:dialup_mobile_app/bloc/createPassword/create_password_bloc.dart';
-import 'package:dialup_mobile_app/bloc/createPassword/create_password_event.dart';
-import 'package:dialup_mobile_app/bloc/createPassword/create_password_state.dart';
-import 'package:dialup_mobile_app/bloc/criteria/criteria_bloc.dart';
-import 'package:dialup_mobile_app/bloc/criteria/criteria_event.dart';
-import 'package:dialup_mobile_app/bloc/criteria/criteria_state.dart';
-import 'package:dialup_mobile_app/bloc/matchPassword/match_password_bloc.dart';
-import 'package:dialup_mobile_app/bloc/matchPassword/match_password_event.dart';
-import 'package:dialup_mobile_app/bloc/matchPassword/match_password_state.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
-import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
-import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
+import 'dart:developer';
+
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
@@ -60,7 +47,9 @@ class _ChangePasswordState extends State<ChangePassword> {
 
   bool allTrue = false;
 
-  String currentPassword = "AyanDg16@#";
+  String currentPassword = storagePassword ?? "";
+
+  bool isUpdating = false;
 
   @override
   Widget build(BuildContext context) {
@@ -82,13 +71,21 @@ class _ChangePasswordState extends State<ChangePassword> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Change Password",
+                    labels[45]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 30),
+                  const SizeBox(height: 20),
+                  Text(
+                    "Update your password by filling out the form below with your new password and confirmation.",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.dark50,
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 20),
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
@@ -97,29 +94,34 @@ class _ChangePasswordState extends State<ChangePassword> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                labels[46]["labelText"],
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.black63,
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.registration,
-                                      arguments: RegistrationArgumentModel(
-                                          isInitial: false));
-                                },
-                                child: Text(
-                                  labels[47]["labelText"],
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color:
-                                        const Color.fromRGBO(34, 97, 105, 0.5),
-                                    fontSize: (16 / Dimensions.designWidth).w,
+                              Row(
+                                children: [
+                                  Text(
+                                    labels[46]["labelText"],
+                                    style: TextStyles.primaryMedium.copyWith(
+                                      color: AppColors.dark80,
+                                      fontSize: (16 / Dimensions.designWidth).w,
+                                    ),
                                   ),
-                                ),
-                              )
+                                  const Asterisk(),
+                                ],
+                              ),
+                              // InkWell(
+                              //   onTap: () {
+                              //     Navigator.pushNamed(
+                              //         context, Routes.registration,
+                              //         arguments: RegistrationArgumentModel(
+                              //             isInitial: false));
+                              //   },
+                              //   child: Text(
+                              //     labels[47]["labelText"],
+                              //     style: TextStyles.primaryMedium.copyWith(
+                              //       color:
+                              //           const Color.fromRGBO(34, 97, 105, 0.5),
+                              //       fontSize: (16 / Dimensions.designWidth).w,
+                              //     ),
+                              //   ),
+                              // )
                             ],
                           ),
                           const SizeBox(height: 9),
@@ -131,12 +133,17 @@ class _ChangePasswordState extends State<ChangePassword> {
                             builder: buildCurrentPasswordError,
                           ),
                           const SizeBox(height: 15),
-                          Text(
-                            labels[48]["labelText"],
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.black63,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                labels[48]["labelText"],
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
                           ),
                           const SizeBox(height: 9),
                           BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
@@ -147,25 +154,21 @@ class _ChangePasswordState extends State<ChangePassword> {
                             builder: buildCriteriaError,
                           ),
                           const SizeBox(height: 15),
-                          Text(
-                            "Confirm New Password",
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.black63,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                "Confirm New Password",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
                           ),
                           const SizeBox(height: 9),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
-                                builder: buildConfirmNewPassword,
-                              ),
-                              BlocBuilder<MatchPasswordBloc,
-                                  MatchPasswordState>(
-                                builder: buildConfirmNewPasswordIcon,
-                              )
-                            ],
+                          BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
+                            builder: buildConfirmNewPassword,
                           ),
                           const SizeBox(height: 9),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -186,64 +189,13 @@ class _ChangePasswordState extends State<ChangePassword> {
             Column(
               children: [
                 const SizeBox(height: 20),
-                Row(
-                  children: [
-                    BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                      builder: buildTC,
-                    ),
-                    const SizeBox(width: 10),
-                    Row(
-                      children: [
-                        Text(
-                          'I agree to the ',
-                          style: TextStyles.primary.copyWith(
-                            color: const Color.fromRGBO(0, 0, 0, 0.5),
-                            fontSize: (16 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.termsAndConditions);
-                          },
-                          child: Text(
-                            'Terms & Conditions',
-                            style: TextStyles.primary.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          ' and ',
-                          style: TextStyles.primary.copyWith(
-                            color: const Color.fromRGBO(0, 0, 0, 0.5),
-                            fontSize: (16 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.privacyStatement);
-                          },
-                          child: Text(
-                            'Privacy Policy',
-                            style: TextStyles.primary.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
                 BlocBuilder<CreatePasswordBloc, CreatePasswordState>(
                   builder: buildSubmitButton,
                 ),
-                const SizeBox(height: 20),
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.of(context).padding.bottom,
+                ),
               ],
             ),
           ],
@@ -336,8 +288,7 @@ class _ChangePasswordState extends State<ChangePassword> {
         hasNumeric &&
         hasUpperLower &&
         hasSpecial &&
-        isMatch &&
-        isChecked;
+        isMatch;
     final CreatePasswordBloc createPasswordBloc =
         context.read<CreatePasswordBloc>();
     createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
@@ -346,56 +297,72 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget buildCurrentPassword(BuildContext context, ShowPasswordState state) {
     final ShowPasswordBloc passwordBloc = context.read<ShowPasswordBloc>();
     if (showCurrentPassword) {
-      return CustomTextField(
-        controller: _currentPasswordController,
-        minLines: 1,
-        maxLines: 1,
-        suffix: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: () {
-              passwordBloc.add(
-                  HidePasswordEvent(showPassword: false, toggle: ++toggle));
-              showCurrentPassword = !showCurrentPassword;
-            },
-            child: Icon(
-              Icons.visibility_off_outlined,
-              color: const Color.fromRGBO(34, 97, 105, 0.5),
-              size: (20 / Dimensions.designWidth).w,
+      return BlocBuilder<ShowButtonBloc, ShowButtonState>(
+        builder: (context, state) {
+          return CustomTextField(
+            borderColor:
+                !isCorrect && _currentPasswordController.text.length >= 8
+                    ? AppColors.red100
+                    : const Color(0XFFEEEEEE),
+            controller: _currentPasswordController,
+            minLines: 1,
+            maxLines: 1,
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+              child: InkWell(
+                onTap: () {
+                  passwordBloc.add(
+                      HidePasswordEvent(showPassword: false, toggle: ++toggle));
+                  showCurrentPassword = !showCurrentPassword;
+                },
+                child: Icon(
+                  Icons.visibility_off_outlined,
+                  color: const Color.fromRGBO(34, 97, 105, 0.5),
+                  size: (20 / Dimensions.designWidth).w,
+                ),
+              ),
             ),
-          ),
-        ),
-        onChanged: (p0) {
-          triggerValidityEvent(p0, currentPassword);
-          triggerAllTrueEvent();
+            onChanged: (p0) {
+              triggerValidityEvent(p0, currentPassword);
+              triggerAllTrueEvent();
+            },
+            obscureText: !showCurrentPassword,
+          );
         },
-        obscureText: !showCurrentPassword,
       );
     } else {
-      return CustomTextField(
-        controller: _currentPasswordController,
-        minLines: 1,
-        maxLines: 1,
-        suffix: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: () {
-              passwordBloc.add(
-                  DisplayPasswordEvent(showPassword: true, toggle: ++toggle));
-              showCurrentPassword = !showCurrentPassword;
-            },
-            child: Icon(
-              Icons.visibility_outlined,
-              color: const Color.fromRGBO(34, 97, 105, 0.5),
-              size: (20 / Dimensions.designWidth).w,
+      return BlocBuilder<ShowButtonBloc, ShowButtonState>(
+        builder: (context, state) {
+          return CustomTextField(
+            borderColor:
+                !isCorrect && _currentPasswordController.text.length >= 8
+                    ? AppColors.red100
+                    : const Color(0XFFEEEEEE),
+            controller: _currentPasswordController,
+            minLines: 1,
+            maxLines: 1,
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+              child: InkWell(
+                onTap: () {
+                  passwordBloc.add(DisplayPasswordEvent(
+                      showPassword: true, toggle: ++toggle));
+                  showCurrentPassword = !showCurrentPassword;
+                },
+                child: Icon(
+                  Icons.visibility_outlined,
+                  color: const Color.fromRGBO(34, 97, 105, 0.5),
+                  size: (20 / Dimensions.designWidth).w,
+                ),
+              ),
             ),
-          ),
-        ),
-        onChanged: (p0) {
-          triggerValidityEvent(p0, currentPassword);
-          triggerAllTrueEvent();
+            onChanged: (p0) {
+              triggerValidityEvent(p0, currentPassword);
+              triggerAllTrueEvent();
+            },
+            obscureText: !showCurrentPassword,
+          );
         },
-        obscureText: !showCurrentPassword,
       );
     }
   }
@@ -428,65 +395,83 @@ class _ChangePasswordState extends State<ChangePassword> {
   Widget buildShowNewPassword(BuildContext context, ShowPasswordState state) {
     final ShowPasswordBloc passwordBloc = context.read<ShowPasswordBloc>();
     if (showNewPassword) {
-      return CustomTextField(
-        controller: _newPasswordController,
-        minLines: 1,
-        maxLines: 1,
-        suffix: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: () {
-              passwordBloc.add(
-                  HidePasswordEvent(showPassword: false, toggle: ++toggle));
-              showNewPassword = !showNewPassword;
-            },
-            child: Icon(
-              Icons.visibility_off_outlined,
-              color: const Color.fromRGBO(34, 97, 105, 0.5),
-              size: (20 / Dimensions.designWidth).w,
+      return BlocBuilder<ShowButtonBloc, ShowButtonState>(
+        builder: (context, state) {
+          return CustomTextField(
+            borderColor:
+                !(hasMin8 && hasUpperLower && hasNumeric && hasSpecial) &&
+                        _newPasswordController.text.length >= 8
+                    ? AppColors.red100
+                    : const Color(0XFFEEEEEE),
+            controller: _newPasswordController,
+            minLines: 1,
+            maxLines: 1,
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+              child: InkWell(
+                onTap: () {
+                  passwordBloc.add(
+                      HidePasswordEvent(showPassword: false, toggle: ++toggle));
+                  showNewPassword = !showNewPassword;
+                },
+                child: Icon(
+                  Icons.visibility_off_outlined,
+                  color: const Color.fromRGBO(34, 97, 105, 0.5),
+                  size: (20 / Dimensions.designWidth).w,
+                ),
+              ),
             ),
-          ),
-        ),
-        onChanged: (p0) {
-          triggerCriteriaEvent(p0);
-          triggerPasswordMatchEvent();
-          triggerAllTrueEvent();
+            onChanged: (p0) {
+              triggerCriteriaEvent(p0);
+              triggerPasswordMatchEvent();
+              triggerAllTrueEvent();
+            },
+            obscureText: !showNewPassword,
+          );
         },
-        obscureText: !showNewPassword,
       );
     } else {
-      return CustomTextField(
-        controller: _newPasswordController,
-        minLines: 1,
-        maxLines: 1,
-        suffix: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: () {
-              passwordBloc.add(
-                  DisplayPasswordEvent(showPassword: true, toggle: ++toggle));
-              showNewPassword = !showNewPassword;
-            },
-            child: Icon(
-              Icons.visibility_outlined,
-              color: const Color.fromRGBO(34, 97, 105, 0.5),
-              size: (20 / Dimensions.designWidth).w,
+      return BlocBuilder<ShowButtonBloc, ShowButtonState>(
+        builder: (context, state) {
+          return CustomTextField(
+            borderColor:
+                !(hasMin8 && hasUpperLower && hasNumeric && hasSpecial) &&
+                        _newPasswordController.text.length >= 8
+                    ? AppColors.red100
+                    : const Color(0XFFEEEEEE),
+            controller: _newPasswordController,
+            minLines: 1,
+            maxLines: 1,
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+              child: InkWell(
+                onTap: () {
+                  passwordBloc.add(DisplayPasswordEvent(
+                      showPassword: true, toggle: ++toggle));
+                  showNewPassword = !showNewPassword;
+                },
+                child: Icon(
+                  Icons.visibility_outlined,
+                  color: const Color.fromRGBO(34, 97, 105, 0.5),
+                  size: (20 / Dimensions.designWidth).w,
+                ),
+              ),
             ),
-          ),
-        ),
-        onChanged: (p0) {
-          triggerCriteriaEvent(p0);
-          triggerPasswordMatchEvent();
-          triggerAllTrueEvent();
+            onChanged: (p0) {
+              triggerCriteriaEvent(p0);
+              triggerPasswordMatchEvent();
+              triggerAllTrueEvent();
+            },
+            obscureText: !showNewPassword,
+          );
         },
-        obscureText: !showNewPassword,
       );
     }
   }
 
   Widget buildCriteriaError(BuildContext context, ShowButtonState state) {
     if (!(hasMin8 && hasUpperLower && hasNumeric && hasSpecial) &&
-        _newPasswordController.text.isNotEmpty) {
+        _newPasswordController.text.length >= 8) {
       return Row(
         children: [
           SvgPicture.asset(
@@ -514,82 +499,79 @@ class _ChangePasswordState extends State<ChangePassword> {
     final ShowPasswordBloc confirmPasswordBloc =
         context.read<ShowPasswordBloc>();
     if (showConfirmNewPassword) {
-      return CustomTextField(
-        width: 83.w,
-        controller: _confirmNewPasswordController,
-        minLines: 1,
-        maxLines: 1,
-        suffix: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: () {
-              confirmPasswordBloc.add(
-                  HidePasswordEvent(showPassword: false, toggle: ++toggle));
-              showConfirmNewPassword = !showConfirmNewPassword;
-            },
-            child: Icon(
-              Icons.visibility_off_outlined,
-              color: const Color.fromRGBO(34, 97, 105, 0.5),
-              size: (20 / Dimensions.designWidth).w,
+      return BlocBuilder<ShowButtonBloc, ShowButtonState>(
+        builder: (context, state) {
+          return CustomTextField(
+            borderColor:
+                !isMatch && _confirmNewPasswordController.text.length >= 8
+                    ? AppColors.orange100
+                    : const Color(0xFFEEEEEE),
+            controller: _confirmNewPasswordController,
+            minLines: 1,
+            maxLines: 1,
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+              child: InkWell(
+                onTap: () {
+                  confirmPasswordBloc.add(
+                      HidePasswordEvent(showPassword: false, toggle: ++toggle));
+                  showConfirmNewPassword = !showConfirmNewPassword;
+                },
+                child: Icon(
+                  Icons.visibility_off_outlined,
+                  color: const Color.fromRGBO(34, 97, 105, 0.5),
+                  size: (20 / Dimensions.designWidth).w,
+                ),
+              ),
             ),
-          ),
-        ),
-        onChanged: (p0) {
-          triggerPasswordMatchEvent();
-          triggerAllTrueEvent();
+            onChanged: (p0) {
+              triggerPasswordMatchEvent();
+              triggerAllTrueEvent();
+            },
+            obscureText: !showConfirmNewPassword,
+          );
         },
-        obscureText: !showConfirmNewPassword,
       );
     } else {
-      return CustomTextField(
-        width: 83.w,
-        controller: _confirmNewPasswordController,
-        minLines: 1,
-        maxLines: 1,
-        suffix: Padding(
-          padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
-          child: InkWell(
-            onTap: () {
-              confirmPasswordBloc.add(
-                  DisplayPasswordEvent(showPassword: true, toggle: ++toggle));
-              showConfirmNewPassword = !showConfirmNewPassword;
-            },
-            child: Icon(
-              Icons.visibility_outlined,
-              color: const Color.fromRGBO(34, 97, 105, 0.5),
-              size: (20 / Dimensions.designWidth).w,
+      return BlocBuilder<ShowButtonBloc, ShowButtonState>(
+        builder: (context, state) {
+          return CustomTextField(
+            borderColor:
+                !isMatch && _confirmNewPasswordController.text.length >= 8
+                    ? AppColors.orange100
+                    : const Color(0xFFEEEEEE),
+            controller: _confirmNewPasswordController,
+            minLines: 1,
+            maxLines: 1,
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(left: (10 / Dimensions.designWidth).w),
+              child: InkWell(
+                onTap: () {
+                  confirmPasswordBloc.add(DisplayPasswordEvent(
+                      showPassword: true, toggle: ++toggle));
+                  showConfirmNewPassword = !showConfirmNewPassword;
+                },
+                child: Icon(
+                  Icons.visibility_outlined,
+                  color: const Color.fromRGBO(34, 97, 105, 0.5),
+                  size: (20 / Dimensions.designWidth).w,
+                ),
+              ),
             ),
-          ),
-        ),
-        onChanged: (p0) {
-          triggerPasswordMatchEvent();
-          triggerAllTrueEvent();
+            onChanged: (p0) {
+              triggerPasswordMatchEvent();
+              triggerAllTrueEvent();
+            },
+            obscureText: !showConfirmNewPassword,
+          );
         },
-        obscureText: !showConfirmNewPassword,
-      );
-    }
-  }
-
-  Widget buildConfirmNewPasswordIcon(
-      BuildContext context, MatchPasswordState state) {
-    if (isMatch) {
-      return SvgPicture.asset(
-        ImageConstants.checkCircle,
-        width: (20 / Dimensions.designWidth).w,
-        height: (20 / Dimensions.designWidth).w,
-      );
-    } else {
-      return SvgPicture.asset(
-        ImageConstants.warningSmall,
-        width: (20 / Dimensions.designWidth).w,
-        height: (20 / Dimensions.designWidth).w,
       );
     }
   }
 
   Widget buildConfirmNewPasswordError(
       BuildContext context, ShowButtonState state) {
-    if (!isMatch && _confirmNewPasswordController.text.isNotEmpty) {
+    if (!isMatch && _confirmNewPasswordController.text.length >= 8) {
       return Row(
         children: [
           SvgPicture.asset(
@@ -699,36 +681,94 @@ class _ChangePasswordState extends State<ChangePassword> {
     if (allTrue) {
       return Column(
         children: [
-          const SizeBox(height: 10),
-          GradientButton(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                Routes.errorSuccessScreen,
-                arguments: ErrorArgumentModel(
-                  hasSecondaryButton: false,
-                  iconPath: ImageConstants.checkCircleOutlined,
-                  title: "Password Changed!",
-                  message:
-                      "Your password updated successfully.\nPlease log in again with your new password.",
-                  buttonText: labels[205]["labelText"],
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, Routes.loginUserId);
-                  },
-                  buttonTextSecondary: "",
-                  onTapSecondary: () {},
-                ).toMap(),
+          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+            builder: (context, state) {
+              return GradientButton(
+                onTap: () async {
+                  if (!isUpdating) {
+                    final ShowButtonBloc showButtonBloc =
+                        context.read<ShowButtonBloc>();
+                    isUpdating = true;
+                    showButtonBloc.add(ShowButtonEvent(show: isUpdating));
+                    var changePasswordApiResult =
+                        await MapChangePassword.mapChangePassword(
+                      {
+                        "cif": storageCif,
+                        "password": _newPasswordController.text,
+                      },
+                      token ?? "",
+                    );
+                    log("Change Password API response -> $changePasswordApiResult");
+
+                    if (changePasswordApiResult["success"]) {
+                      await storage.write(
+                          key: "password",
+                          value: _confirmNewPasswordController.text);
+                      storagePassword = await storage.read(key: "password");
+                      log("storagePassword -> $storagePassword");
+                      if (context.mounted) {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.errorSuccessScreen,
+                          arguments: ErrorArgumentModel(
+                            hasSecondaryButton: false,
+                            iconPath: ImageConstants.checkCircleOutlined,
+                            title: messages[88]["messageText"],
+                            message: messages[44]["messageText"],
+                            buttonText: labels[205]["labelText"],
+                            onTap: () {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                Routes.loginPassword,
+                                (route) => false,
+                                arguments: LoginPasswordArgumentModel(
+                                  emailId: storageEmail ?? "",
+                                  userId: storageUserId ?? 0,
+                                  userTypeId: storageUserTypeId ?? 1,
+                                  companyId: storageCompanyId ?? 0,
+                                ).toMap(),
+                              );
+                            },
+                            buttonTextSecondary: "",
+                            onTapSecondary: () {},
+                          ).toMap(),
+                        );
+                      }
+                    } else {
+                      if (context.mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return CustomDialog(
+                              svgAssetPath: ImageConstants.warning,
+                              title: "Password Change Error",
+                              message: changePasswordApiResult["message"],
+                              actionWidget: GradientButton(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  // Navigator.pushReplacementNamed(
+                                  //     context, Routes.loginUserId);
+                                },
+                                text: "Understood",
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    }
+                    isUpdating = false;
+                    showButtonBloc.add(ShowButtonEvent(show: isUpdating));
+                  }
+                },
+                text: "Update",
+                auxWidget: isUpdating ? const LoaderRow() : const SizeBox(),
               );
             },
-            text: "Update",
           ),
         ],
       );
     } else {
-      return const SizeBox();
+      return SolidButton(onTap: () {}, text: "Update");
     }
   }
 

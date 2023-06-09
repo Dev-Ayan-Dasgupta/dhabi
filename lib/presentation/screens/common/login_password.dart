@@ -255,6 +255,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     log("token -> $token");
 
     if (result["success"]) {
+      await storage.write(key: "cif", value: result["cif"]);
+      storageCif = await storage.read(key: "cif");
+      log("storageCif -> $storageCif");
       await storage.write(key: "newInstall", value: true.toString());
       storageIsNotNewInstall =
           (await storage.read(key: "newInstall")) == "true";
@@ -336,9 +339,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
         }
       }
 
-      await storage.write(key: "cif", value: cif.toString());
-      storageCif = await storage.read(key: "cif");
-      log("storageCif -> $storageCif");
+      // await storage.write(key: "cif", value: cif.toString());
+      // storageCif = await storage.read(key: "cif");
+      // log("storageCif -> $storageCif");
 
       await storage.write(key: "isCompany", value: isCompany.toString());
       storageIsCompany = await storage.read(key: "isCompany") == "true";

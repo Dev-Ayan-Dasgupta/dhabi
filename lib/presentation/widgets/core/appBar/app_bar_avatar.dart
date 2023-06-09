@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:uuid/uuid.dart';
 
 class AppBarAvatar extends StatelessWidget {
   const AppBarAvatar({
@@ -23,8 +24,10 @@ class AppBarAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          left: (12 / Dimensions.designWidth).w,
-          top: (7 / Dimensions.designWidth).w),
+        left: (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+        top: (12 / Dimensions.designHeight).h,
+        bottom: (12 / Dimensions.designHeight).h,
+      ),
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(context, Routes.profileHome);
@@ -32,7 +35,7 @@ class AppBarAvatar extends StatelessWidget {
         child: CircleAvatar(
           backgroundColor: const Color(0xFFECECEC),
           backgroundImage: storageProfilePhotoBase64 != null
-              ? CachedMemoryImageProvider("avatarPhoto",
+              ? CachedMemoryImageProvider(const Uuid().v4(),
                   bytes: base64Decode(storageProfilePhotoBase64 ?? ""))
               : null,
           child: storageProfilePhotoBase64 != null

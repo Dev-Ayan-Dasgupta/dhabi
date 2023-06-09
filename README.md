@@ -2,9 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (28)
+## Release notes - 1.0.0 (29)
 
-- Profile management developed: Get profile details, upload profile picture, update email, mobile, toggle biometric.
-- Create fixed deposits via both beneficiary and non-beneficiary.
-- Replaced emirates dropdown with free text fields for both state and city in Address forms.
-- Replaced Regula Core plugin to capture mrzOrOcr
+- Fixed Regula passport scanning
+- Implemented change password

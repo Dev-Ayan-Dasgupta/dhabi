@@ -65,6 +65,29 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     initializeFaceSdk();
     // initPlatformState();
     if (scannedDetailsArgument.isEID) {
+      DocumentReader.setConfig({
+        "functionality": {
+          "showCaptureButton": true,
+          "showCaptureButtonDelayFromStart": 2,
+          "showCaptureButtonDelayFromDetect": 1,
+          "showCloseButton": true,
+          "showTorchButton": true,
+        },
+        "customization": {
+          "status": "Searching for document",
+          "showBackgroundMask": true,
+          "backgroundMaskAlpha": 0.6,
+        },
+        "processParams": {
+          // "logs": true,
+          "dateFormat": "dd/MM/yyyy",
+          "scenario": ScenarioIdentifier.SCENARIO_FULL_PROCESS,
+          "timeout": 30.0,
+          "timeoutFromFirstDetect": 30.0,
+          "timeoutFromFirstDocType": 30.0,
+          "multipageProcessing": true,
+        }
+      });
       const EventChannel('flutter_document_reader_api/event/completion')
           .receiveBroadcastStream()
           .listen(
@@ -75,6 +98,29 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             ),
           );
     } else {
+      DocumentReader.setConfig({
+        "functionality": {
+          "showCaptureButton": true,
+          "showCaptureButtonDelayFromStart": 2,
+          "showCaptureButtonDelayFromDetect": 1,
+          "showCloseButton": true,
+          "showTorchButton": true,
+        },
+        "customization": {
+          "status": "Searching for document",
+          "showBackgroundMask": true,
+          "backgroundMaskAlpha": 0.6,
+        },
+        "processParams": {
+          // "logs": true,
+          "dateFormat": "dd/MM/yyyy",
+          "scenario": ScenarioIdentifier.SCENARIO_FULL_PROCESS,
+          "timeout": 30.0,
+          "timeoutFromFirstDetect": 30.0,
+          "timeoutFromFirstDocType": 30.0,
+          "multipageProcessing": false,
+        }
+      });
       const EventChannel('flutter_document_reader_api/event/completion')
           .receiveBroadcastStream()
           .listen(
@@ -200,10 +246,11 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       await storage.write(key: "eiDNumber", value: eiDNumber);
       storageEidNumber = await storage.read(key: "eiDNumber");
 
-      nationality = await results?.textFieldValueByTypeLcidSource(
-          EVisualFieldType.FT_NATIONALITY,
-          LCID.LATIN,
-          ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED);
+      nationality = await results?.textFieldValueByTypeLcid(
+        EVisualFieldType.FT_NATIONALITY,
+        LCID.LATIN,
+        // ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED,
+      );
       await storage.write(key: "nationality", value: nationality);
       storageNationality = await storage.read(key: "nationality");
 

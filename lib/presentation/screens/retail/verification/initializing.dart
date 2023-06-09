@@ -59,29 +59,29 @@ class _VerificationInitializingScreenState
     setState(() {
       status = "Ready";
     });
-    DocumentReader.setConfig({
-      "functionality": {
-        "showCaptureButton": true,
-        "showCaptureButtonDelayFromStart": 2,
-        "showCaptureButtonDelayFromDetect": 1,
-        "showCloseButton": true,
-        "showTorchButton": true,
-      },
-      "customization": {
-        "status": "Searching for document",
-        "showBackgroundMask": true,
-        "backgroundMaskAlpha": 0.6,
-      },
-      "processParams": {
-        "logs": true,
-        "dateFormat": "dd/MM/yyyy",
-        "scenario": "MrzOrOcr",
-        "timeout": 30.0,
-        "timeoutFromFirstDetect": 30.0,
-        "timeoutFromFirstDocType": 30.0,
-        "multipageProcessing": true
-      }
-    });
+    // DocumentReader.setConfig({
+    //   "functionality": {
+    //     "showCaptureButton": true,
+    //     "showCaptureButtonDelayFromStart": 2,
+    //     "showCaptureButtonDelayFromDetect": 1,
+    //     "showCloseButton": true,
+    //     "showTorchButton": true,
+    //   },
+    //   "customization": {
+    //     "status": "Searching for document",
+    //     "showBackgroundMask": true,
+    //     "backgroundMaskAlpha": 0.6,
+    //   },
+    //   "processParams": {
+    //     "logs": true,
+    //     "dateFormat": "dd/MM/yyyy",
+    //     "scenario": "MrzOrOcr",
+    //     "timeout": 30.0,
+    //     "timeoutFromFirstDetect": 30.0,
+    //     "timeoutFromFirstDocType": 30.0,
+    //     "multipageProcessing": true
+    //   }
+    // });
 
     if (context.mounted) {
       if (storageStepsCompleted == 2) {

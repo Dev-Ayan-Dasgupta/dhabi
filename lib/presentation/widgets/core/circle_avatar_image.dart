@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:uuid/uuid.dart';
 
 class CustomCircleAvatarMemory extends StatelessWidget {
   const CustomCircleAvatarMemory({
@@ -23,7 +24,8 @@ class CustomCircleAvatarMemory extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: ((109 / 2) / Dimensions.designWidth).w,
-      backgroundImage: CachedMemoryImageProvider("profilePhoto", bytes: bytes),
+      backgroundImage:
+          CachedMemoryImageProvider(const Uuid().v4(), bytes: bytes),
       // MemoryImage(bytes),
     );
   }

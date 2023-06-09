@@ -42,6 +42,29 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   void initState() {
     super.initState();
     // initPlatformState();
+    DocumentReader.setConfig({
+      "functionality": {
+        "showCaptureButton": true,
+        "showCaptureButtonDelayFromStart": 2,
+        "showCaptureButtonDelayFromDetect": 1,
+        "showCloseButton": true,
+        "showTorchButton": true,
+      },
+      "customization": {
+        "status": "Searching for document",
+        "showBackgroundMask": true,
+        "backgroundMaskAlpha": 0.6,
+      },
+      "processParams": {
+        // "logs": true,
+        "dateFormat": "dd/MM/yyyy",
+        "scenario": ScenarioIdentifier.SCENARIO_FULL_PROCESS,
+        "timeout": 30.0,
+        "timeoutFromFirstDetect": 30.0,
+        "timeoutFromFirstDocType": 30.0,
+        "multipageProcessing": false,
+      }
+    });
     const EventChannel('flutter_document_reader_api/event/completion')
         .receiveBroadcastStream()
         .listen(
@@ -56,6 +79,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   void handleCompletion(DocumentReaderCompletion completion) async {
     if (completion.action == DocReaderAction.COMPLETE) {
       DocumentReaderResults? results = completion.results;
+
       String? firstName =
           await results?.textFieldValueByType(EVisualFieldType.FT_GIVEN_NAMES);
 
@@ -150,6 +174,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           quality: 30,
         );
         photo = base64Encode(compressedPhoto);
+        // log("photo -> $photo");
         // while (compressedPhoto.lengthInBytes / 1024 > 100) {
         //   log("Compressing user photo");
         //   compressedPhoto = await FlutterImageCompress.compressWithList(

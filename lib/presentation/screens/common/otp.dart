@@ -288,8 +288,9 @@ class _OTPScreenState extends State<OTPScreen> {
               log("Update Email API response -> $updateREmailResult");
 
               if (updateREmailResult["success"]) {
-                await storage.write(key: "email", value: updatedEmail);
-                storageEmail = await storage.read(key: "email");
+                await storage.write(key: "emailAddress", value: updatedEmail);
+                storageEmail = await storage.read(key: "emailAddress");
+                log("storageEmail -> $storageEmail");
                 profileEmailId = storageEmail;
                 if (context.mounted) {
                   showDialog(

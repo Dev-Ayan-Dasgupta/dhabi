@@ -82,16 +82,19 @@ class _SecurityScreenState extends State<SecurityScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  labels[45]["labelText"],
-                  style: TextStyles.primary.copyWith(
-                    color: const Color(0XFF1A3C40),
-                    fontSize: (16 / Dimensions.designWidth).w,
+                Expanded(
+                  child: Text(
+                    labels[45]["labelText"],
+                    style: TextStyles.primary.copyWith(
+                      color: const Color(0XFF1A3C40),
+                      fontSize: (16 / Dimensions.designWidth).w,
+                    ),
                   ),
                 ),
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, Routes.changePassword);
+                    log("Clicking");
                   },
                   child: SvgPicture.asset(
                     ImageConstants.arrowForwardIos,
@@ -99,6 +102,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
                     height: (11.3 / Dimensions.designWidth).w,
                   ),
                 ),
+                const SizeBox(width: 10),
               ],
             )
           ],

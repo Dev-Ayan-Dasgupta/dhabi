@@ -40,6 +40,29 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
   void initState() {
     super.initState();
     // initPlatformState();
+    DocumentReader.setConfig({
+      "functionality": {
+        "showCaptureButton": true,
+        "showCaptureButtonDelayFromStart": 2,
+        "showCaptureButtonDelayFromDetect": 1,
+        "showCloseButton": true,
+        "showTorchButton": true,
+      },
+      "customization": {
+        "status": "Searching for document",
+        "showBackgroundMask": true,
+        "backgroundMaskAlpha": 0.6,
+      },
+      "processParams": {
+        // "logs": true,
+        "dateFormat": "dd/MM/yyyy",
+        "scenario": ScenarioIdentifier.SCENARIO_FULL_PROCESS,
+        "timeout": 30.0,
+        "timeoutFromFirstDetect": 30.0,
+        "timeoutFromFirstDocType": 30.0,
+        "multipageProcessing": true,
+      }
+    });
     const EventChannel('flutter_document_reader_api/event/completion')
         .receiveBroadcastStream()
         .listen(
@@ -55,24 +78,25 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
     if (completion.action == DocReaderAction.COMPLETE) {
       DocumentReaderResults? results = completion.results;
 
-      fullName = await results?.textFieldValueByTypeLcidSource(
-          EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES,
-          LCID.LATIN,
-          ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED);
+      fullName = await results?.textFieldValueByTypeLcid(
+        EVisualFieldType.FT_SURNAME_AND_GIVEN_NAMES,
+        LCID.LATIN,
+      );
       await storage.write(key: "fullName", value: fullName);
       storageFullName = await storage.read(key: "fullName");
 
       eiDNumber = await results?.textFieldValueByTypeLcidSource(
-          EVisualFieldType.FT_IDENTITY_CARD_NUMBER,
-          LCID.LATIN,
-          ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED);
+        EVisualFieldType.FT_IDENTITY_CARD_NUMBER,
+        LCID.LATIN,
+        ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED,
+      );
       await storage.write(key: "eiDNumber", value: eiDNumber);
       storageEidNumber = await storage.read(key: "eiDNumber");
 
-      nationality = await results?.textFieldValueByTypeLcidSource(
-          EVisualFieldType.FT_NATIONALITY,
-          LCID.LATIN,
-          ERPRMResultType.RPRM_RESULT_TYPE_VISUAL_OCR_EXTENDED);
+      nationality = await results?.textFieldValueByTypeLcid(
+        EVisualFieldType.FT_NATIONALITY,
+        LCID.LATIN,
+      );
       await storage.write(key: "nationality", value: nationality);
       storageNationality = await storage.read(key: "nationality");
 
