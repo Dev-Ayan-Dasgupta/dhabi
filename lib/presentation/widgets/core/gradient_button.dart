@@ -1,12 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
-import 'package:dialup_mobile_app/utils/constants/dimensions.dart';
-import 'package:dialup_mobile_app/utils/constants/textstyles.dart';
-
-class GradientButton extends StatelessWidget {
+class GradientButton extends StatefulWidget {
   const GradientButton({
     Key? key,
     required this.onTap,
@@ -35,38 +33,67 @@ class GradientButton extends StatelessWidget {
   final FontWeight? fontWeight;
 
   @override
+  State<GradientButton> createState() => _GradientButtonState();
+}
+
+class _GradientButtonState extends State<GradientButton> {
+  bool isBeingTapped = false;
+  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      // onTapDown: (value) {
+      //   setState(() {
+      //     isBeingTapped = true;
+      //   });
+      // },
+      // onTapUp: (value) {
+      //   setState(() {
+      //     isBeingTapped = false;
+      //   });
+      // },
+      onTap: () {
+        setState(() {
+          isBeingTapped = true;
+        });
+        widget.onTap();
+      },
       child: Container(
-        width: width ?? 100.w,
-        height: height ?? (60 / Dimensions.designHeight).h,
+        width: widget.width ?? 100.w,
+        height: widget.height ?? (50 / Dimensions.designHeight).h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
-            Radius.circular(borderRadius ?? (10 / Dimensions.designHeight).h),
+            Radius.circular(
+                widget.borderRadius ?? (10 / Dimensions.designHeight).h),
           ),
-          gradient: gradient ??
-              const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF1A3C40),
-                  Color(0xFF236269),
-                  Color(0xFF1A3C40),
-                ],
-              ),
+          color: isBeingTapped ? AppColors.primaryDark : Colors.transparent,
+          image: isBeingTapped
+              ? null
+              : const DecorationImage(
+                  image: AssetImage(ImageConstants.buttonGradient),
+                  fit: BoxFit.fill,
+                ),
+          // gradient: gradient ??
+          //     const LinearGradient(
+          //       begin: Alignment.topLeft,
+          //       end: Alignment.bottomRight,
+          //       colors: [
+          //         Color(0xFF1A3C40),
+          //         Color(0xFF236269),
+          //         Color(0xFF1A3C40),
+          //       ],
+          //     ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              text,
+              widget.text,
               style: TextStyles.primary.copyWith(
-                fontSize: fontSize ?? (18 / Dimensions.designWidth).w,
-                fontWeight: fontWeight ?? FontWeight.w700,
+                fontSize: widget.fontSize ?? (18 / Dimensions.designWidth).w,
+                fontWeight: widget.fontWeight ?? FontWeight.w700,
               ),
             ),
-            auxWidget ?? const SizeBox(),
+            widget.auxWidget ?? const SizeBox(),
           ],
         ),
       ),

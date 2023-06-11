@@ -572,12 +572,32 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
         {"accountType": storageAccountType}, token ?? "");
     log("Create Account API response -> $responseAccount");
     if (responseAccount["success"]) {
-      isUploading = false;
-      showButtonBloc.add(ShowButtonEvent(show: isUploading));
       if (context.mounted) {
         promptAccountCreated();
       }
-    } else {}
+    } else {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return CustomDialog(
+              svgAssetPath: ImageConstants.warning,
+              title: "Error",
+              message: responseAccount["message"],
+              actionWidget: GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[347]["labelText"],
+              ),
+            );
+          },
+        );
+      }
+    }
+
+    isUploading = false;
+    showButtonBloc.add(ShowButtonEvent(show: isUploading));
   }
 
   void promptAccountCreated() {

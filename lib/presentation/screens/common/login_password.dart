@@ -585,9 +585,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       builder: (context) {
         return CustomDialog(
           svgAssetPath: ImageConstants.warning,
-          title: "KYC Expired",
+          title: "Identification Document Expired",
           message:
-              "Your KYC Documents have expired. Please verify your documents again.",
+              "${messages[9]["messageText"]} ${messages[10]["messageText"]}",
           actionWidget: GradientButton(
             onTap: () {
               Navigator.pushNamed(

@@ -45,7 +45,7 @@ class SolidButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: width ?? 100.w,
-        height: height ?? (60 / Dimensions.designHeight).h,
+        height: height ?? (50 / Dimensions.designHeight).h,
         decoration: BoxDecoration(
           border:
               Border.all(color: borderColor ?? Colors.transparent, width: 2),

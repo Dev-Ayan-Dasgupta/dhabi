@@ -316,10 +316,13 @@ class _AddRecipientDetailsUaeScreenState
                         isChecked = false;
                         triggerCheckBoxEvent(isChecked);
                       },
-                      child: SvgPicture.asset(
-                        ImageConstants.checkedBox,
-                        width: (14 / Dimensions.designWidth).w,
-                        height: (14 / Dimensions.designWidth).w,
+                      child: Padding(
+                        padding: EdgeInsets.all((5 / Dimensions.designWidth).w),
+                        child: SvgPicture.asset(
+                          ImageConstants.checkedBox,
+                          width: (14 / Dimensions.designWidth).w,
+                          height: (14 / Dimensions.designWidth).w,
+                        ),
                       ),
                     );
                   } else {
@@ -328,16 +331,19 @@ class _AddRecipientDetailsUaeScreenState
                         isChecked = true;
                         triggerCheckBoxEvent(isChecked);
                       },
-                      child: SvgPicture.asset(
-                        ImageConstants.uncheckedBox,
-                        width: (14 / Dimensions.designWidth).w,
-                        height: (14 / Dimensions.designWidth).w,
+                      child: Padding(
+                        padding: EdgeInsets.all((5 / Dimensions.designWidth).w),
+                        child: SvgPicture.asset(
+                          ImageConstants.uncheckedBox,
+                          width: (14 / Dimensions.designWidth).w,
+                          height: (14 / Dimensions.designWidth).w,
+                        ),
                       ),
                     );
                   }
                 },
               ),
-              const SizeBox(width: 10),
+              const SizeBox(width: 5),
               Text(
                 "Add this person to my recipient list",
                 style: TextStyles.primaryMedium.copyWith(

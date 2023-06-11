@@ -1295,7 +1295,8 @@ class _OTPScreenState extends State<OTPScreen> {
               isError: false, isComplete: false, errorCount: pinputErrorCount));
         }
       },
-      enabled: state.errorCount < 3 ? true : false,
+      enabled: pinputErrorCount < 1 ? true : false,
+      // state.errorCount < 1 ? true : false,
     );
   }
 

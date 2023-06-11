@@ -116,7 +116,7 @@ class _BusinessOnboardingStatusScreenState
                   //     BlocBuilder<CheckBoxBloc, CheckBoxState>(
                   //       builder: buildTC,
                   //     ),
-                  //     const SizeBox(width: 10),
+                  //     const SizeBox(width: 5),
                   //     Row(
                   //       children: [
                   //         Text(
@@ -290,10 +290,13 @@ class _BusinessOnboardingStatusScreenState
           triggerCheckBoxEvent(isChecked);
           triggerAllTrueEvent();
         },
-        child: SvgPicture.asset(
-          ImageConstants.checkedBox,
-          width: (14 / Dimensions.designWidth).w,
-          height: (14 / Dimensions.designWidth).w,
+        child: Padding(
+          padding: EdgeInsets.all((5 / Dimensions.designWidth).w),
+          child: SvgPicture.asset(
+            ImageConstants.checkedBox,
+            width: (14 / Dimensions.designWidth).w,
+            height: (14 / Dimensions.designWidth).w,
+          ),
         ),
       );
     } else {
@@ -303,10 +306,13 @@ class _BusinessOnboardingStatusScreenState
           triggerCheckBoxEvent(isChecked);
           triggerAllTrueEvent();
         },
-        child: SvgPicture.asset(
-          ImageConstants.uncheckedBox,
-          width: (14 / Dimensions.designWidth).w,
-          height: (14 / Dimensions.designWidth).w,
+        child: Padding(
+          padding: EdgeInsets.all((5 / Dimensions.designWidth).w),
+          child: SvgPicture.asset(
+            ImageConstants.uncheckedBox,
+            width: (14 / Dimensions.designWidth).w,
+            height: (14 / Dimensions.designWidth).w,
+          ),
         ),
       );
     }

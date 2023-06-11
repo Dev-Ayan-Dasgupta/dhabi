@@ -167,7 +167,10 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
           isChecked = false;
           triggerCheckBoxEvent(isChecked);
         },
-        child: SvgPicture.asset(ImageConstants.checkedBox),
+        child: Padding(
+          padding: EdgeInsets.all((5 / Dimensions.designWidth).w),
+          child: SvgPicture.asset(ImageConstants.checkedBox),
+        ),
       );
     } else {
       return InkWell(
@@ -175,7 +178,10 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
           isChecked = true;
           triggerCheckBoxEvent(isChecked);
         },
-        child: SvgPicture.asset(ImageConstants.uncheckedBox),
+        child: Padding(
+          padding: EdgeInsets.all((5 / Dimensions.designWidth).w),
+          child: SvgPicture.asset(ImageConstants.uncheckedBox),
+        ),
       );
     }
   }

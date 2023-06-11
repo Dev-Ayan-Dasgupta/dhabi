@@ -272,23 +272,22 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                   storageMobileNumber = await storage.read(key: "mobileNumber");
                 }
 
-                if (isLoading) {
-                  if (context.mounted) {
-                    Navigator.pushNamed(
-                      context,
-                      Routes.otp,
-                      arguments: OTPArgumentModel(
-                        emailOrPhone: "$selectedIsd${_phoneController.text}",
-                        isEmail: false,
-                        isBusiness: verifyMobileArgumentModel.isBusiness,
-                        isInitial: true,
-                        isLogin: false,
-                        isEmailIdUpdate: false,
-                        isMobileUpdate: verifyMobileArgumentModel.isUpdate,
-                      ).toMap(),
-                    );
-                  }
+                if (context.mounted) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.otp,
+                    arguments: OTPArgumentModel(
+                      emailOrPhone: "$selectedIsd${_phoneController.text}",
+                      isEmail: false,
+                      isBusiness: verifyMobileArgumentModel.isBusiness,
+                      isInitial: true,
+                      isLogin: false,
+                      isEmailIdUpdate: false,
+                      isMobileUpdate: verifyMobileArgumentModel.isUpdate,
+                    ).toMap(),
+                  );
                 }
+
                 isLoading = false;
                 showButtonBloc.add(ShowButtonEvent(show: isLoading));
               } else {

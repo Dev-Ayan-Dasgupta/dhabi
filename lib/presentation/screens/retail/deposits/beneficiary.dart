@@ -278,7 +278,7 @@ class _DepositBeneficiaryScreenState extends State<DepositBeneficiaryScreen> {
                     BlocBuilder<CheckBoxBloc, CheckBoxState>(
                       builder: buildCheckBox,
                     ),
-                    const SizeBox(width: 10),
+                    const SizeBox(width: 5),
                     Text(
                       'Add this person to my recipient list',
                       style: TextStyles.primary.copyWith(
@@ -403,10 +403,13 @@ class _DepositBeneficiaryScreenState extends State<DepositBeneficiaryScreen> {
           triggerCheckBoxEvent(isChecked);
           showButtonBloc.add(ShowButtonEvent(show: isChecked));
         },
-        child: SvgPicture.asset(
-          ImageConstants.checkedBox,
-          width: (14 / Dimensions.designWidth).w,
-          height: (14 / Dimensions.designWidth).w,
+        child: Padding(
+          padding: EdgeInsets.all((5 / Dimensions.designWidth).w),
+          child: SvgPicture.asset(
+            ImageConstants.checkedBox,
+            width: (14 / Dimensions.designWidth).w,
+            height: (14 / Dimensions.designWidth).w,
+          ),
         ),
       );
     } else {
@@ -416,10 +419,13 @@ class _DepositBeneficiaryScreenState extends State<DepositBeneficiaryScreen> {
           triggerCheckBoxEvent(isChecked);
           showButtonBloc.add(ShowButtonEvent(show: isChecked));
         },
-        child: SvgPicture.asset(
-          ImageConstants.uncheckedBox,
-          width: (14 / Dimensions.designWidth).w,
-          height: (14 / Dimensions.designWidth).w,
+        child: Padding(
+          padding: EdgeInsets.all((5 / Dimensions.designWidth).w),
+          child: SvgPicture.asset(
+            ImageConstants.uncheckedBox,
+            width: (14 / Dimensions.designWidth).w,
+            height: (14 / Dimensions.designWidth).w,
+          ),
         ),
       );
     }

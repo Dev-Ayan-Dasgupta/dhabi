@@ -260,8 +260,6 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                 );
               }
             } else {
-              // isInvalid = true;
-
               if (context.mounted) {
                 showDialog(
                   context: context,

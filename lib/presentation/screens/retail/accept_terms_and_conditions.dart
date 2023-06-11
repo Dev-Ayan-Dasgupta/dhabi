@@ -133,8 +133,12 @@ class _AcceptTermsAndConditionsScreenState
                                   isChecked = false;
                                   triggerCheckBoxEvent(isChecked);
                                 },
-                                child:
-                                    SvgPicture.asset(ImageConstants.checkedBox),
+                                child: Padding(
+                                  padding: EdgeInsets.all(
+                                      (5 / Dimensions.designWidth).w),
+                                  child: SvgPicture.asset(
+                                      ImageConstants.checkedBox),
+                                ),
                               );
                             } else {
                               return InkWell(
@@ -142,13 +146,17 @@ class _AcceptTermsAndConditionsScreenState
                                   isChecked = true;
                                   triggerCheckBoxEvent(isChecked);
                                 },
-                                child: SvgPicture.asset(
-                                    ImageConstants.uncheckedBox),
+                                child: Padding(
+                                  padding: EdgeInsets.all(
+                                      (5 / Dimensions.designWidth).w),
+                                  child: SvgPicture.asset(
+                                      ImageConstants.uncheckedBox),
+                                ),
                               );
                             }
                           },
                         ),
-                        const SizeBox(width: 10),
+                        const SizeBox(width: 5),
                         Text(
                           "I've read all the terms and conditions",
                           style: TextStyles.primary.copyWith(

@@ -360,10 +360,14 @@ class _AddRecipientDetailsRemittanceScreenState
                                     isChecked = false;
                                     triggerCheckBoxEvent(isChecked);
                                   },
-                                  child: SvgPicture.asset(
-                                    ImageConstants.checkedBox,
-                                    width: (14 / Dimensions.designWidth).w,
-                                    height: (14 / Dimensions.designWidth).w,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        (5 / Dimensions.designWidth).w),
+                                    child: SvgPicture.asset(
+                                      ImageConstants.checkedBox,
+                                      width: (14 / Dimensions.designWidth).w,
+                                      height: (14 / Dimensions.designWidth).w,
+                                    ),
                                   ),
                                 );
                               } else {
@@ -372,18 +376,22 @@ class _AddRecipientDetailsRemittanceScreenState
                                     isChecked = true;
                                     triggerCheckBoxEvent(isChecked);
                                   },
-                                  child: SvgPicture.asset(
-                                    ImageConstants.uncheckedBox,
-                                    width: (14 / Dimensions.designWidth).w,
-                                    height: (14 / Dimensions.designWidth).w,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        (5 / Dimensions.designWidth).w),
+                                    child: SvgPicture.asset(
+                                      ImageConstants.uncheckedBox,
+                                      width: (14 / Dimensions.designWidth).w,
+                                      height: (14 / Dimensions.designWidth).w,
+                                    ),
                                   ),
                                 );
                               }
                             },
                           ),
-                          const SizeBox(width: 10),
+                          const SizeBox(width: 5),
                           Text(
-                            "Add this person to my recipient list",
+                            labels[126]["labelText"],
                             style: TextStyles.primaryMedium.copyWith(
                               color: const Color(0XFF414141),
                               fontSize: (16 / Dimensions.designWidth).w,

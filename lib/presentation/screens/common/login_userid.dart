@@ -408,7 +408,18 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                       arguments: LoginPasswordArgumentModel(
                         emailId: storageEmail ?? "",
                         userId: storageUserId ?? 0,
-                        userTypeId: singleCifResult["userType"],
+                        userTypeId:
+                            ((singleCifResult["retailOnboardingState"] != 0 &&
+                                        singleCifResult[
+                                                "corporateOnboardingState"] ==
+                                            0) ||
+                                    (singleCifResult["retailOnboardingState"] !=
+                                            0 &&
+                                        singleCifResult[
+                                                "corporateOnboardingState"] ==
+                                            4))
+                                ? 1
+                                : 2,
                         companyId: storageCompanyId ?? 0,
                       ).toMap(),
                     );
