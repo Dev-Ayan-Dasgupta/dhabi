@@ -192,7 +192,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
               showNewPassword = !showNewPassword;
             },
             child: Icon(
-              Icons.visibility_off_outlined,
+              Icons.visibility_outlined,
               color: const Color.fromRGBO(34, 97, 105, 0.5),
               size: (20 / Dimensions.designWidth).w,
             ),
@@ -219,7 +219,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
               showNewPassword = !showNewPassword;
             },
             child: Icon(
-              Icons.visibility_outlined,
+              Icons.visibility_off_outlined,
               color: const Color.fromRGBO(34, 97, 105, 0.5),
               size: (20 / Dimensions.designWidth).w,
             ),
@@ -279,7 +279,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
               showConfirmNewPassword = !showConfirmNewPassword;
             },
             child: Icon(
-              Icons.visibility_off_outlined,
+              Icons.visibility_outlined,
               color: const Color.fromRGBO(34, 97, 105, 0.5),
               size: (20 / Dimensions.designWidth).w,
             ),
@@ -306,7 +306,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
               showConfirmNewPassword = !showConfirmNewPassword;
             },
             child: Icon(
-              Icons.visibility_outlined,
+              Icons.visibility_off_outlined,
               color: const Color.fromRGBO(34, 97, 105, 0.5),
               size: (20 / Dimensions.designWidth).w,
             ),

@@ -1,8 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:developer';
-// import 'dart:math' as math;
 
 import 'package:dialup_mobile_app/bloc/index.dart';
+import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -20,7 +21,12 @@ import 'package:flutter_face_api/face_api.dart' as regula;
 import 'package:intl/intl.dart';
 
 class PassportExplanationScreen extends StatefulWidget {
-  const PassportExplanationScreen({Key? key}) : super(key: key);
+  const PassportExplanationScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<PassportExplanationScreen> createState() =>
@@ -38,9 +44,12 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
 
   bool isDialogOpen = false;
 
+  late VerificationInitializationArgumentModel passportReKycArgument;
+
   @override
   void initState() {
     super.initState();
+    argumentInitialization();
     // initPlatformState();
     DocumentReader.setConfig({
       "functionality": {
@@ -74,6 +83,11 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
             )!,
           ),
         );
+  }
+
+  void argumentInitialization() {
+    passportReKycArgument = VerificationInitializationArgumentModel.fromMap(
+        widget.argument as dynamic ?? {});
   }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
@@ -366,6 +380,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
                 gender: gender,
                 photo: photo,
                 docPhoto: docPhoto,
+                isReKyc: passportReKycArgument.isReKyc,
               ).toMap(),
             );
           }

@@ -4,6 +4,7 @@ import 'dart:developer';
 // import 'dart:math' as math;
 
 import 'package:dialup_mobile_app/bloc/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -489,6 +490,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                 gender: gender,
                 photo: photo,
                 docPhoto: docPhoto,
+                isReKyc: scannedDetailsArgument.isReKyc,
               ).toMap(),
             );
           }
@@ -800,6 +802,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                 gender: gender,
                 photo: photo,
                 docPhoto: docPhoto,
+                isReKyc: scannedDetailsArgument.isReKyc,
               ).toMap(),
             );
           }
@@ -894,6 +897,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
     await storage.write(key: "selfiePhoto", value: selfiePhoto);
     storageSelfiePhoto = await storage.read(key: "selfiePhoto");
+    log("storageSelfiePhoto -> $storageSelfiePhoto");
     image2.bitmap = base64Encode(base64Decode(selfiePhoto));
     image2.imageType = regula.ImageType.LIVE;
 
@@ -905,22 +909,22 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     if (photoMatchScore > 80) {
       Map<String, dynamic> response;
       if (storageIsEid == true) {
-        log("Upload EID Request -> ${{
-          "eidDocumentImage": storageDocPhoto,
-          "eidUserPhoto": storagePhoto,
-          "selfiePhoto": storageSelfiePhoto,
-          "photoMatchScore": storagePhotoMatchScore,
-          "eidNumber": storageEidNumber,
-          "fullName": storageFullName,
-          "dateOfBirth": DateFormat('yyyy-MM-dd').format(
-              DateFormat('dd MMMM yyyy').parse(storageDob ?? "1 January 1900")),
-          "nationalityCountryCode": storageNationalityCode,
-          "genderId": storageGender == 'M' ? 1 : 2,
-          "expiresOn": DateFormat('yyyy-MM-dd').format(
-              DateFormat('dd MMMM yyyy')
-                  .parse(storageExpiryDate ?? "1 January 1900")),
-          "isReKYC": false
-        }}");
+        // log("Upload EID Request -> ${{
+        //   "eidDocumentImage": storageDocPhoto,
+        //   "eidUserPhoto": storagePhoto,
+        //   "selfiePhoto": storageSelfiePhoto,
+        //   "photoMatchScore": storagePhotoMatchScore,
+        //   "eidNumber": storageEidNumber,
+        //   "fullName": storageFullName,
+        //   "dateOfBirth": DateFormat('yyyy-MM-dd').format(
+        //       DateFormat('dd MMMM yyyy').parse(storageDob ?? "1 January 1900")),
+        //   "nationalityCountryCode": storageNationalityCode,
+        //   "genderId": storageGender == 'M' ? 1 : 2,
+        //   "expiresOn": DateFormat('yyyy-MM-dd').format(
+        //       DateFormat('dd MMMM yyyy')
+        //           .parse(storageExpiryDate ?? "1 January 1900")),
+        //   "isReKYC": scannedDetailsArgument.isReKyc,
+        // }}");
         response = await MapUploadEid.mapUploadEid(
           {
             "eidDocumentImage": storageDocPhoto,
@@ -937,7 +941,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             "expiresOn": DateFormat('yyyy-MM-dd').format(
                 DateFormat('dd MMMM yyyy')
                     .parse(storageExpiryDate ?? "1 January 1900")),
-            "isReKYC": false
+            "isReKYC": scannedDetailsArgument.isReKyc,
           },
           token ?? "",
         );
@@ -961,7 +965,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             "expiresOn": DateFormat('yyyy-MM-dd').format(
                 DateFormat('dd/MM/yyyy')
                     .parse(storageExpiryDate ?? "00/00/0000")),
-            "isReKYC": false
+            "isReKYC": scannedDetailsArgument.isReKyc,
           },
           token ?? "",
         );
@@ -969,21 +973,51 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       }
 
       if (response["success"]) {
-        await storage.write(key: "stepsCompleted", value: 4.toString());
-        storageStepsCompleted =
-            int.parse(await storage.read(key: "stepsCompleted") ?? "0");
-
         if (context.mounted) {
-          Navigator.pushReplacementNamed(
-            context,
-            Routes.retailOnboardingStatus,
-            arguments: OnboardingStatusArgumentModel(
-              stepsCompleted: 2,
-              isFatca: false,
-              isPassport: false,
-              isRetail: true,
-            ).toMap(),
-          );
+          if (scannedDetailsArgument.isReKyc) {
+            var loginApiResult = await MapLogin.mapLogin({
+              "emailId": storageEmail,
+              "userTypeId": storageUserTypeId,
+              "userId": storageUserId,
+              "companyId": storageCompanyId,
+              "password": storagePassword,
+              "deviceId": deviceId,
+              "registerDevice": false,
+              "deviceName": deviceName,
+              "deviceType": deviceType,
+              "appVersion": appVersion
+            });
+            if (loginApiResult["success"]) {
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.retailDashboard,
+                  (route) => false,
+                  arguments: RetailDashboardArgumentModel(
+                    imgUrl: "",
+                    name: loginApiResult["customerName"],
+                    isFirst: true,
+                  ).toMap(),
+                );
+              }
+            }
+          } else {
+            await storage.write(key: "stepsCompleted", value: 4.toString());
+            storageStepsCompleted =
+                int.parse(await storage.read(key: "stepsCompleted") ?? "4");
+            if (context.mounted) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.retailOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 2,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
+              );
+            }
+          }
         }
       } else {
         if (storageIsEid == true) {
@@ -1008,6 +1042,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                   "Your selfie does not match with the photo from your scanned document",
               auxWidget: SolidButton(
                 onTap: () {
+                  isFaceScanning = false;
+                  showButtonBloc.add(ShowButtonEvent(show: isFaceScanning));
                   Navigator.pop(context);
                 },
                 text: labels[347]["labelText"],

@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -242,8 +243,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       break;
                                     case 3:
                                       callLoginApi();
-                                      Navigator.pushNamed(context,
-                                          Routes.verificationInitializing);
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.verificationInitializing,
+                                        arguments:
+                                            VerificationInitializationArgumentModel(
+                                          isReKyc: false,
+                                        ).toMap(),
+                                      );
                                       break;
                                     case 4:
                                       callLoginApi();
@@ -362,11 +369,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           condition: onboardingArgumentModel.isInitial,
                           truthy: SolidButton(
                             onTap: () {
-                              Navigator.pushNamed(
-                                  context, Routes.exploreDashboard);
+                              // Navigator.pushNamed(
+                              //     context, Routes.exploreDashboard);
                               // Navigator.pushNamed(
                               //     context, Routes.verificationInitializing);
-                              // Navigator.pushNamed(context, Routes.loginUserId);
+                              Navigator.pushNamed(context, Routes.loginUserId);
                               // Navigator.pushNamed(
                               //     context, Routes.applicationAddress);
                               // Navigator.pushNamed(

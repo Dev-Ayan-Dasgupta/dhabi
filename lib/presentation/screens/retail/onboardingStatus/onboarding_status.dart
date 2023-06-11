@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/bloc/index.dart';
+import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -250,7 +251,13 @@ class _RetailOnboardingStatusScreenState
                             case 1:
                               callLoginApi();
                               Navigator.pushNamed(
-                                  context, Routes.verificationInitializing);
+                                context,
+                                Routes.verificationInitializing,
+                                arguments:
+                                    VerificationInitializationArgumentModel(
+                                  isReKyc: false,
+                                ).toMap(),
+                              );
                               break;
                             case 2:
                               if (storageStepsCompleted == 4) {

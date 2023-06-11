@@ -69,5 +69,6 @@ bool? storageRetailLoggedIn;
 String? storageCustomerName;
 
 int? storageChosenAccount;
+int? storageChosenFdAccount;
 
 String? storageProfilePhotoBase64;

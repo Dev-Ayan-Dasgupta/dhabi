@@ -15,6 +15,7 @@ class ScannedDetailsArgumentModel {
   final String? gender;
   final String? photo;
   final String? docPhoto;
+  final bool isReKyc;
   // final Image img1;
   // final regula.MatchFacesImage image1;
 
@@ -29,6 +30,7 @@ class ScannedDetailsArgumentModel {
     required this.gender,
     required this.photo,
     required this.docPhoto,
+    required this.isReKyc,
   });
 
   ScannedDetailsArgumentModel copyWith({
@@ -42,6 +44,7 @@ class ScannedDetailsArgumentModel {
     String? gender,
     String? photo,
     String? docPhoto,
+    bool? isReKyc,
   }) {
     return ScannedDetailsArgumentModel(
       isEID: isEID ?? this.isEID,
@@ -54,6 +57,7 @@ class ScannedDetailsArgumentModel {
       gender: gender ?? this.gender,
       photo: photo ?? this.photo,
       docPhoto: docPhoto ?? this.docPhoto,
+      isReKyc: isReKyc ?? this.isReKyc,
     );
   }
 
@@ -69,6 +73,7 @@ class ScannedDetailsArgumentModel {
       'gender': gender,
       'photo': photo,
       'docPhoto': docPhoto,
+      'isReKyc': isReKyc,
     };
   }
 
@@ -88,6 +93,7 @@ class ScannedDetailsArgumentModel {
       gender: map['gender'] != null ? map['gender'] as String : null,
       photo: map['photo'] != null ? map['photo'] as String : null,
       docPhoto: map['docPhoto'] != null ? map['docPhoto'] as String : null,
+      isReKyc: map['isReKyc'] as bool,
     );
   }
 
@@ -99,7 +105,7 @@ class ScannedDetailsArgumentModel {
 
   @override
   String toString() {
-    return 'ScannedDetailsArgumentModel(isEID: $isEID, fullName: $fullName, idNumber: $idNumber, nationality: $nationality, nationalityCode: $nationalityCode, expiryDate: $expiryDate, dob: $dob, gender: $gender, photo: $photo, docPhoto: $docPhoto)';
+    return 'ScannedDetailsArgumentModel(isEID: $isEID, fullName: $fullName, idNumber: $idNumber, nationality: $nationality, nationalityCode: $nationalityCode, expiryDate: $expiryDate, dob: $dob, gender: $gender, photo: $photo, docPhoto: $docPhoto, isReKyc: $isReKyc)';
   }
 
   @override
@@ -115,7 +121,8 @@ class ScannedDetailsArgumentModel {
         other.dob == dob &&
         other.gender == gender &&
         other.photo == photo &&
-        other.docPhoto == docPhoto;
+        other.docPhoto == docPhoto &&
+        other.isReKyc == isReKyc;
   }
 
   @override
@@ -129,6 +136,7 @@ class ScannedDetailsArgumentModel {
         dob.hashCode ^
         gender.hashCode ^
         photo.hashCode ^
-        docPhoto.hashCode;
+        docPhoto.hashCode ^
+        isReKyc.hashCode;
   }
 }

@@ -1,8 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:developer';
-// import 'dart:math' as math;
 
 import 'package:dialup_mobile_app/bloc/index.dart';
+import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -20,7 +21,12 @@ import 'package:flutter_face_api/face_api.dart' as regula;
 import 'package:intl/intl.dart';
 
 class EIDExplanationScreen extends StatefulWidget {
-  const EIDExplanationScreen({Key? key}) : super(key: key);
+  const EIDExplanationScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<EIDExplanationScreen> createState() => _EIDExplanationScreenState();
@@ -36,9 +42,12 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
   bool isDialogOpen = false;
   // int i = 5;
 
+  late VerificationInitializationArgumentModel eidReKycArgument;
+
   @override
   void initState() {
     super.initState();
+    argumentInitialization();
     // initPlatformState();
     DocumentReader.setConfig({
       "functionality": {
@@ -72,6 +81,11 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
             )!,
           ),
         );
+  }
+
+  void argumentInitialization() {
+    eidReKycArgument = VerificationInitializationArgumentModel.fromMap(
+        widget.argument as dynamic ?? {});
   }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
@@ -332,6 +346,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                 gender: gender,
                 photo: photo,
                 docPhoto: docPhoto,
+                isReKyc: eidReKycArgument.isReKyc,
               ).toMap(),
             );
           }
@@ -481,7 +496,13 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                 const SizeBox(height: 15),
                 SolidButton(
                   onTap: () {
-                    Navigator.pushNamed(context, Routes.passportExplanation);
+                    Navigator.pushNamed(
+                      context,
+                      Routes.passportExplanation,
+                      arguments: VerificationInitializationArgumentModel(
+                        isReKyc: eidReKycArgument.isReKyc,
+                      ).toMap(),
+                    );
                   },
                   text: labels[232]["labelText"],
                   color: AppColors.primaryBright17,

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -159,7 +160,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               child: InkWell(
                 onTap: hidePassword,
                 child: Icon(
-                  Icons.visibility_off_outlined,
+                  Icons.visibility_outlined,
                   color: const Color.fromRGBO(34, 97, 105, 0.5),
                   size: (20 / Dimensions.designWidth).w,
                 ),
@@ -184,7 +185,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               child: InkWell(
                 onTap: showsPassword,
                 child: Icon(
-                  Icons.visibility_outlined,
+                  Icons.visibility_off_outlined,
                   color: AppColors.primaryBright50,
                   size: (20 / Dimensions.designWidth).w,
                 ),
@@ -276,16 +277,19 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                 await storage.read(key: "retailLoggedIn") == "true";
 
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.retailDashboard,
-                (route) => false,
-                arguments: RetailDashboardArgumentModel(
-                  imgUrl: "",
-                  name: result["customerName"],
-                  isFirst: storageIsFirstLogin == true ? false : true,
-                ).toMap(),
-              );
+              await getProfileData();
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.retailDashboard,
+                  (route) => false,
+                  arguments: RetailDashboardArgumentModel(
+                    imgUrl: "",
+                    name: result["customerName"],
+                    isFirst: storageIsFirstLogin == true ? false : true,
+                  ).toMap(),
+                );
+              }
             }
           } else {
             if (storageCif == null || storageCif == "null") {
@@ -463,17 +467,20 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                           await storage.read(key: "customerName");
                       if (context.mounted) {
                         if (loginPasswordArgument.userTypeId == 1) {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            Routes.retailDashboard,
-                            (route) => false,
-                            arguments: RetailDashboardArgumentModel(
-                              imgUrl: "",
-                              name: result["customerName"],
-                              isFirst:
-                                  storageIsFirstLogin == true ? false : true,
-                            ).toMap(),
-                          );
+                          await getProfileData();
+                          if (context.mounted) {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.retailDashboard,
+                              (route) => false,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl: "",
+                                name: result["customerName"],
+                                isFirst:
+                                    storageIsFirstLogin == true ? false : true,
+                              ).toMap(),
+                            );
+                          }
                         } else {
                           Navigator.pushNamedAndRemoveUntil(
                             context,
@@ -583,7 +590,13 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               "Your KYC Documents have expired. Please verify your documents again.",
           actionWidget: GradientButton(
             onTap: () {
-              Navigator.pushNamed(context, Routes.verificationInitializing);
+              Navigator.pushNamed(
+                context,
+                Routes.verificationInitializing,
+                arguments: VerificationInitializationArgumentModel(
+                  isReKyc: true,
+                ).toMap(),
+              );
             },
             text: "Verify",
           ),
@@ -805,6 +818,61 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
           }
         }
       }
+    }
+  }
+
+  Future<void> getProfileData() async {
+    try {
+      var getProfileDataResult =
+          await MapProfileData.mapProfileData(token ?? "");
+      log("getProfileDataResult -> $getProfileDataResult");
+      if (getProfileDataResult["success"]) {
+        profileName = getProfileDataResult["name"];
+        profilePhotoBase64 = getProfileDataResult["profileImageBase64"];
+        await storage.write(
+            key: "profilePhotoBase64", value: profilePhotoBase64);
+        storageProfilePhotoBase64 =
+            await storage.read(key: "profilePhotoBase64");
+        profileDoB = getProfileDataResult["dateOfBirth"];
+        profileEmailId = getProfileDataResult["emailID"];
+        profileMobileNumber = getProfileDataResult["mobileNumber"];
+        profileAddressLine1 = getProfileDataResult["addressLine_1"];
+        profileAddressLine2 = getProfileDataResult["addressLine_2"];
+        profileCity = getProfileDataResult["city"] ?? "";
+        profileState = getProfileDataResult["state"] ?? "";
+        profilePinCode = getProfileDataResult["pinCode"];
+
+        await storage.write(key: "emailAddress", value: profileEmailId);
+        storageEmail = await storage.read(key: "emailAddress");
+        await storage.write(key: "mobileNumber", value: profileMobileNumber);
+        storageMobileNumber = await storage.read(key: "mobileNumber");
+
+        await storage.write(key: "addressLine1", value: profileAddressLine1);
+        storageAddressLine1 = await storage.read(key: "addressLine1");
+        await storage.write(key: "addressLine2", value: profileAddressLine2);
+        storageAddressLine2 = await storage.read(key: "addressLine2");
+
+        await storage.write(key: "addressCity", value: profileCity);
+        storageAddressCity = await storage.read(key: "addressCity");
+        await storage.write(key: "addressState", value: profileState);
+        storageAddressState = await storage.read(key: "addressState");
+
+        await storage.write(key: "poBox", value: profilePinCode);
+        storageAddressPoBox = await storage.read(key: "poBox");
+
+        profileAddress =
+            "$profileAddressLine1, $profileAddressLine2, $profileCity, $profileState, $profilePinCode";
+        // "${getProfileDataResult["addressLine_1"]} ${getProfileDataResult["addressLine_2"]} ${getProfileDataResult["city"] ?? ""} ${getProfileDataResult["state"] ?? ""} ${getProfileDataResult["pinCode"]}";
+
+        log("profileName -> $profileName");
+        log("profilePhotoBase64 -> $profilePhotoBase64");
+        log("profileDoB -> $profileDoB");
+        log("profileEmailId -> $profileEmailId");
+        log("profileMobileNumber -> $profileMobileNumber");
+        log("profileAddress -> $profileAddress");
+      }
+    } catch (_) {
+      rethrow;
     }
   }
 

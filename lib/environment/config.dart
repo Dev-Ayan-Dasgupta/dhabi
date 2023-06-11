@@ -66,6 +66,11 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['CREATE_FD'] ?? "";
   }
 
+  @override
+  String get getCustomerFdAccountStatement {
+    return dotenv.env['GET_CUSTOMER_FD_ACCOUNT_STATEMENT'] ?? "";
+  }
+
   // ? Authentication APIs
 
   @override

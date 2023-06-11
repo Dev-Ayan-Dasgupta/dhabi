@@ -19,6 +19,7 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_events.dart';
 import 'package:dialup_mobile_app/bloc/showPassword/show_password_states.dart';
+import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
@@ -369,7 +370,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               showPassword = !showPassword;
             },
             child: Icon(
-              Icons.visibility_off_outlined,
+              Icons.visibility_outlined,
               color: const Color.fromRGBO(34, 97, 105, 0.5),
               size: (20 / Dimensions.designWidth).w,
             ),
@@ -396,7 +397,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               showPassword = !showPassword;
             },
             child: Icon(
-              Icons.visibility_outlined,
+              Icons.visibility_off_outlined,
               color: const Color.fromRGBO(34, 97, 105, 0.5),
               size: (20 / Dimensions.designWidth).w,
             ),
@@ -432,7 +433,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               showConfirmPassword = !showConfirmPassword;
             },
             child: Icon(
-              Icons.visibility_off_outlined,
+              Icons.visibility_outlined,
               color: const Color.fromRGBO(34, 97, 105, 0.5),
               size: (20 / Dimensions.designWidth).w,
             ),
@@ -460,7 +461,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               showConfirmPassword = !showConfirmPassword;
             },
             child: Icon(
-              Icons.visibility_outlined,
+              Icons.visibility_off_outlined,
               color: const Color.fromRGBO(34, 97, 105, 0.5),
               size: (20 / Dimensions.designWidth).w,
             ),
@@ -1000,7 +1001,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
               "Your KYC Documents have expired. Please verify your documents again.",
           actionWidget: GradientButton(
             onTap: () {
-              Navigator.pushNamed(context, Routes.verificationInitializing);
+              Navigator.pushNamed(
+                context,
+                Routes.verificationInitializing,
+                arguments: VerificationInitializationArgumentModel(
+                  isReKyc: false,
+                ).toMap(),
+              );
             },
             text: "Verify",
           ),

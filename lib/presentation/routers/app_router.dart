@@ -96,11 +96,15 @@ class AppRouter {
         );
       case Routes.verificationInitializing:
         return MaterialPageRoute(
-          builder: (_) => const VerificationInitializingScreen(),
+          builder: (_) => VerificationInitializingScreen(
+            argument: args,
+          ),
         );
       case Routes.eidExplanation:
         return MaterialPageRoute(
-          builder: (_) => const EIDExplanationScreen(),
+          builder: (_) => EIDExplanationScreen(
+            argument: args,
+          ),
         );
       case Routes.passportExplanation:
         return MaterialPageRoute(

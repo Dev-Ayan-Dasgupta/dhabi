@@ -298,8 +298,8 @@ class _SplashScreenState extends State<SplashScreen> {
       persistBiometric = await storage.read(key: "persistBiometric") == "true";
       log("persistBiometric -> $persistBiometric");
 
-      storageStepsCompleted =
-          int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+      storageStepsCompleted = 0;
+      int.parse(await storage.read(key: "stepsCompleted") ?? "0");
       log("storageStepsCompleted -> $storageStepsCompleted");
 
       storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";

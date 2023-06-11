@@ -1,5 +1,5 @@
 abstract class BaseConfig {
-  // ? Authentication APIs
+  // ? Accounts APIs
 
   String get createAccount;
   String get getCustomerDetails;
@@ -12,6 +12,7 @@ abstract class BaseConfig {
   String get createBeneficiary;
   String get getBeneficiaries;
   String get createFd;
+  String get getCustomerFdAccountStatement;
 
   // ? Authentication APIs
 

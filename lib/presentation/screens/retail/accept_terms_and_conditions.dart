@@ -331,6 +331,13 @@ class _AcceptTermsAndConditionsScreenState
                                 storageHasFirstLoggedIn = (await storage.read(
                                         key: "hasFirstLoggedIn")) ==
                                     "true";
+
+                                profilePhotoBase64 = null;
+                                await storage.write(
+                                    key: "profilePhotoBase64",
+                                    value: profilePhotoBase64);
+                                storageProfilePhotoBase64 = await storage.read(
+                                    key: "profilePhotoBase64");
                               }
                             },
                             text: "I Agree",

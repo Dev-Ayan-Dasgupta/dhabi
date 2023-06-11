@@ -1,17 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dialup_mobile_app/data/models/index.dart';
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+
 class VerificationInitializingScreen extends StatefulWidget {
-  const VerificationInitializingScreen({Key? key}) : super(key: key);
+  const VerificationInitializingScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<VerificationInitializingScreen> createState() =>
@@ -24,9 +32,13 @@ class _VerificationInitializingScreenState
 
   dynamic progressValue = 0;
 
+  late VerificationInitializationArgumentModel
+      verificationInitializationArgument;
+
   @override
   void initState() {
     super.initState();
+    argumentInitialization();
     initPlatformState();
 
     const EventChannel('flutter_document_reader_api/event/database_progress')
@@ -41,6 +53,12 @@ class _VerificationInitializingScreenState
         );
       },
     );
+  }
+
+  void argumentInitialization() {
+    verificationInitializationArgument =
+        VerificationInitializationArgumentModel.fromMap(
+            widget.argument as dynamic ?? {});
   }
 
   Future<void> initPlatformState() async {
@@ -85,7 +103,13 @@ class _VerificationInitializingScreenState
 
     if (context.mounted) {
       if (storageStepsCompleted == 2) {
-        Navigator.pushReplacementNamed(context, Routes.eidExplanation);
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.eidExplanation,
+          arguments: VerificationInitializationArgumentModel(
+            isReKyc: verificationInitializationArgument.isReKyc,
+          ).toMap(),
+        );
       } else {
         Navigator.pushReplacementNamed(
           context,
@@ -101,6 +125,7 @@ class _VerificationInitializingScreenState
             gender: storageGender,
             photo: storagePhoto,
             docPhoto: storageDocPhoto,
+            isReKyc: verificationInitializationArgument.isReKyc,
             // img1: img1,
             // image1: image1,
           ).toMap(),
