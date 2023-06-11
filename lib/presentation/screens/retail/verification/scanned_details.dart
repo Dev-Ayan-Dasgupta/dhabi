@@ -909,22 +909,6 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     if (photoMatchScore > 80) {
       Map<String, dynamic> response;
       if (storageIsEid == true) {
-        // log("Upload EID Request -> ${{
-        //   "eidDocumentImage": storageDocPhoto,
-        //   "eidUserPhoto": storagePhoto,
-        //   "selfiePhoto": storageSelfiePhoto,
-        //   "photoMatchScore": storagePhotoMatchScore,
-        //   "eidNumber": storageEidNumber,
-        //   "fullName": storageFullName,
-        //   "dateOfBirth": DateFormat('yyyy-MM-dd').format(
-        //       DateFormat('dd MMMM yyyy').parse(storageDob ?? "1 January 1900")),
-        //   "nationalityCountryCode": storageNationalityCode,
-        //   "genderId": storageGender == 'M' ? 1 : 2,
-        //   "expiresOn": DateFormat('yyyy-MM-dd').format(
-        //       DateFormat('dd MMMM yyyy')
-        //           .parse(storageExpiryDate ?? "1 January 1900")),
-        //   "isReKYC": scannedDetailsArgument.isReKyc,
-        // }}");
         response = await MapUploadEid.mapUploadEid(
           {
             "eidDocumentImage": storageDocPhoto,
@@ -934,13 +918,12 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             "eidNumber": storageEidNumber,
             "fullName": storageFullName,
             "dateOfBirth": DateFormat('yyyy-MM-dd').format(
-                DateFormat('dd MMMM yyyy')
-                    .parse(storageDob ?? "1 January 1900")),
+                DateFormat('dd/MM/yyyy').parse(storageDob ?? "00/00/0000")),
             "nationalityCountryCode": storageNationalityCode,
             "genderId": storageGender == 'M' ? 1 : 2,
             "expiresOn": DateFormat('yyyy-MM-dd').format(
-                DateFormat('dd MMMM yyyy')
-                    .parse(storageExpiryDate ?? "1 January 1900")),
+                DateFormat('dd/MM/yyyy')
+                    .parse(storageExpiryDate ?? "00/00/0000")),
             "isReKYC": scannedDetailsArgument.isReKyc,
           },
           token ?? "",
