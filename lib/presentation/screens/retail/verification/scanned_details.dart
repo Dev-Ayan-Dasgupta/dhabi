@@ -906,7 +906,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
 
     await matchfaces();
 
-    if (photoMatchScore > 80) {
+    if (photoMatchScore > selfieScoreMatch) {
       Map<String, dynamic> response;
       if (storageIsEid == true) {
         response = await MapUploadEid.mapUploadEid(
@@ -1003,6 +1003,24 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           }
         }
       } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error",
+                message: response["message"],
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: "Okay",
+                ),
+              );
+            },
+          );
+        }
         if (storageIsEid == true) {
           log("Upload EID API error -> ${response["message"]}");
         } else {

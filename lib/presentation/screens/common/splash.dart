@@ -96,8 +96,10 @@ class _SplashScreenState extends State<SplashScreen> {
     log("Application Config API response -> $result");
     maxSavingAccountAllowed = result["maxSavingAccountAllowed"];
     maxCurrentAccountAllowed = result["maxCurrentAccountAllowed"];
+    selfieScoreMatch = result["selfieScoreMatch"];
     log("maxSavingAccountAllowed -> $maxSavingAccountAllowed");
     log("maxCurrentAccountAllowed -> $maxCurrentAccountAllowed");
+    log("selfieScoreMatch -> $selfieScoreMatch");
   }
 
   void getDhabiCountriesFlagsAndCodes() {

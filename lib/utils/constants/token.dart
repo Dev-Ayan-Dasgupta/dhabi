@@ -13,3 +13,4 @@ bool checkBiometric = false;
 
 int maxSavingAccountAllowed = 0;
 int maxCurrentAccountAllowed = 0;
+int selfieScoreMatch = 0;
