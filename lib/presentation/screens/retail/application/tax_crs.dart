@@ -505,6 +505,8 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                 isCountrySelected2 = true;
                 selectedCountry2 = value as DropDownCountriesModel;
                 selectedCountryName2 = selectedCountry2?.countrynameOrCode;
+                log("selectedCountry2 -> $selectedCountry2");
+                log("selectedCountryName2 -> $selectedCountryName2");
                 dhabiCountryIndex2 =
                     dhabiCountryNames.indexOf(selectedCountryName2!);
                 log("dhabiCountryIndex -> $dhabiCountryIndex2");
@@ -1673,7 +1675,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                     internationalTaxes.add(
                       {
                         "countryCode": !dhabiCountryNames
-                                .contains(selectedCountry2 ?? "")
+                                .contains(selectedCountryName2 ?? "")
                             ? ""
                             : dhabiCountries[dhabiCountryNames
                                 .indexOf(selectedCountryName2!)]["shortCode"],
@@ -1687,7 +1689,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                     internationalTaxes.add(
                       {
                         "countryCode": !dhabiCountryNames
-                                .contains(selectedCountry3 ?? "")
+                                .contains(selectedCountryName3 ?? "")
                             ? ""
                             : dhabiCountries[dhabiCountryNames
                                 .indexOf(selectedCountryName3!)]["shortCode"],
@@ -1701,7 +1703,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                     internationalTaxes.add(
                       {
                         "countryCode": !dhabiCountryNames
-                                .contains(selectedCountry4 ?? "")
+                                .contains(selectedCountryName4 ?? "")
                             ? ""
                             : dhabiCountries[dhabiCountryNames
                                 .indexOf(selectedCountryName4!)]["shortCode"],
@@ -1711,6 +1713,10 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                       },
                     );
                   }
+                }
+
+                for (int i = 0; i < countriesAdded; i++) {
+                  log("International Taxes -> ${internationalTaxes[i]}");
                 }
 
                 await storage.write(

@@ -208,7 +208,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
             "maturityDate": DateFormat('yyyy-MM-dd')
                 .format(depositConfirmationModel.dateOfMaturity),
             "interestRate": depositConfirmationModel.interestRate,
-            "interestPayoutPeriod": depositConfirmationModel.interestPayout,
+            "interestPayout": depositConfirmationModel.interestPayout,
             "accountNumber": depositConfirmationModel.accountNumber,
             "autoRollover": depositConfirmationModel.isAutoRenewal,
             "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
@@ -235,7 +235,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
               "maturityDate": DateFormat('yyyy-MM-dd')
                   .format(depositConfirmationModel.dateOfMaturity),
               "interestRate": depositConfirmationModel.interestRate,
-              "interestPayoutPeriod": depositConfirmationModel.interestPayout,
+              "interestPayout": depositConfirmationModel.interestPayout,
               "accountNumber": depositConfirmationModel.accountNumber,
               "autoRollover": depositConfirmationModel.isAutoRenewal,
               "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
@@ -286,6 +286,26 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                   buttonTextSecondary: "",
                   onTapSecondary: () {},
                 ).toMap(),
+              );
+            }
+          } else {
+            if (context.mounted) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return CustomDialog(
+                    svgAssetPath: ImageConstants.warning,
+                    title: "Error",
+                    message:
+                        "There was an error in creating a fixed deposit, please try again after some time.",
+                    actionWidget: GradientButton(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      text: labels[346]["labelText"],
+                    ),
+                  );
+                },
               );
             }
           }

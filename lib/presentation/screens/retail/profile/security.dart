@@ -94,7 +94,6 @@ class _SecurityScreenState extends State<SecurityScreen> {
                 InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, Routes.changePassword);
-                    log("Clicking");
                   },
                   child: SvgPicture.asset(
                     ImageConstants.arrowForwardIos,

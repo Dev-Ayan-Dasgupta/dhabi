@@ -254,7 +254,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           storageIssuingStateCode != null) {
         var result = await MapIfPassportExists.mapIfPassportExists(
           {"passportNumber": passportNumber},
-          token ?? "",
+          passportReKycArgument.isReKyc ? tokenCP ?? "" : token ?? "",
         );
         log("If Passport Exists API response -> $result");
 

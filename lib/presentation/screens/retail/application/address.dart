@@ -35,7 +35,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
   final TextEditingController _zipController =
       TextEditingController(text: storageAddressPoBox ?? "");
 
-  bool isAddress1Entered = false;
+  bool isAddress1Entered = storageAddressLine1 == null ? false : true;
   // bool isEmirateSelected = false;
   bool isCountrySelected = true;
 

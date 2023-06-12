@@ -299,31 +299,79 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
   }
 
   void promptUserLogout() {
-    // showDialog(
-    //   context: context,
-    //   // barrierDismissible: false,
-    //   builder: (context) {
-    //     return CustomDialog(
-    //       svgAssetPath: ImageConstants.warning,
-    //       title: labels[250]["labelText"],
-    //       message: "If you log out you would need to re-login again",
-    //       actionWidget: GradientButton(
-    //         onTap: () {
-    //           Navigator.pop(context);
-    //           Navigator.pop(context);
-    //           Navigator.pushNamed(
-    //             context,
-    //             Routes.onboarding,
-    //             arguments: OnboardingArgumentModel(
-    //               isInitial: true,
-    //             ).toMap(),
-    //           );
-    //         },
-    //         text: "Yes, I am sure",
-    //       ),
-    //     );
-    //   },
-    // );
+    showDialog(
+      context: context,
+      // barrierDismissible: false,
+      builder: (context) {
+        return CustomDialog(
+          svgAssetPath: ImageConstants.warning,
+          title: labels[250]["labelText"],
+          message: "If you log out you would need to re-login again",
+          auxWidget: GradientButton(
+            onTap: () async {
+              await storage.delete(key: "hasFirstLoggedIn");
+              await storage.delete(key: "isFirstLogin");
+              await storage.delete(key: "userId");
+              await storage.delete(key: "password");
+              await storage.delete(key: "emailAddress");
+              await storage.delete(key: "userTypeId");
+              await storage.delete(key: "companyId");
+              // await storage.delete(key: "persistBiometric");
+              await storage.delete(key: "stepsCompleted");
+              await storage.delete(key: "isEid");
+              await storage.delete(key: "fullName");
+              await storage.delete(key: "eiDNumber");
+              await storage.delete(key: "passportNumber");
+              await storage.delete(key: "nationality");
+              await storage.delete(key: "nationalityCode");
+              await storage.delete(key: "issuingStateCode");
+              await storage.delete(key: "expiryDate");
+              await storage.delete(key: "dob");
+              await storage.delete(key: "gender");
+              await storage.delete(key: "photo");
+              await storage.delete(key: "docPhoto");
+              await storage.delete(key: "selfiePhoto");
+              await storage.delete(key: "photoMatchScore");
+              await storage.delete(key: "addressCountry");
+              await storage.delete(key: "poBox");
+              await storage.delete(key: "incomeSource");
+              await storage.delete(key: "isUSFatca");
+              await storage.delete(key: "taxCountry");
+              await storage.delete(key: "isTinYes");
+              await storage.delete(key: "crsTin");
+              await storage.delete(key: "noTinReason");
+              await storage.delete(key: "accountType");
+              await storage.delete(key: "cif");
+              await storage.delete(key: "isCompany");
+              await storage.delete(key: "isCompanyRegistered");
+              await storage.delete(key: "retailLoggedIn");
+              await storage.delete(key: "customerName");
+              await storage.delete(key: "chosenAccount");
+              if (context.mounted) {
+                Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.onboarding,
+                  (routes) => false,
+                  arguments: OnboardingArgumentModel(
+                    isInitial: true,
+                  ).toMap(),
+                );
+              }
+            },
+            text: "Yes, I am sure",
+          ),
+          actionWidget: SolidButton(
+            color: AppColors.primaryBright17,
+            fontColor: AppColors.primary,
+            onTap: () {
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
+          ),
+        );
+      },
+    );
   }
 
   void showImageUploadOptions() {
@@ -332,7 +380,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return Container(
-          height: (120 / Dimensions.designHeight).h,
+          height: (127 / Dimensions.designHeight).h,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(

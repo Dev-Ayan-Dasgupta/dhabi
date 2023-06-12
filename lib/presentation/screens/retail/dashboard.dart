@@ -196,7 +196,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   void tabbarInitialization() {
     final TabbarBloc tabbarBloc = context.read<TabbarBloc>();
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     tabController.animation!.addListener(() {
       final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
       // print(
@@ -299,22 +299,23 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   Future<void> getCustomerFdAccountStatement() async {
     try {
-      var customerFdAccountApiResult =
-          await MapCustomerFdAccountStatement.mapCustomerFdAccountStatement(
-        {
-          "accountNumber": depositDetails[storageChosenFdAccount ?? 0]
-              ["depositAccountNumber"],
-          "startDate": DateFormat('yyyy-MM-dd')
-              .format(DateTime.now().subtract(const Duration(days: 90))),
-          "endDate": DateFormat('yyyy-MM-dd')
-              .format(DateTime.now().subtract(const Duration(days: 30))),
-        },
-        token ?? "",
-      );
-      log("Customer FD Account Statement API response -> $customerFdAccountApiResult");
-      fdStatementList = customerFdAccountApiResult["transactionList"];
-      displayFdStatementList.clear();
-      displayFdStatementList.addAll(fdStatementList);
+      if (depositDetails.isNotEmpty) {
+        var customerFdAccountApiResult =
+            await MapCustomerFdAccountStatement.mapCustomerFdAccountStatement(
+          {
+            "accountNumber": depositDetails[storageChosenFdAccount ?? 0]
+                ["depositAccountNumber"],
+            "startDate": DateFormat('yyyy-MM-dd')
+                .format(DateTime.now().subtract(const Duration(days: 90))),
+            "endDate": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          },
+          token ?? "",
+        );
+        log("Customer FD Account Statement API response -> $customerFdAccountApiResult");
+        fdStatementList = customerFdAccountApiResult["transactionList"];
+        displayFdStatementList.clear();
+        displayFdStatementList.addAll(fdStatementList);
+      }
     } catch (_) {
       rethrow;
     }
@@ -357,7 +358,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                 Column(
                   children: [
                     DefaultTabController(
-                      length: 2,
+                      length: 3,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -400,6 +401,12 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                   title: "Deposits")
                                               : const Text("Deposits"),
                                         ),
+                                        Tab(
+                                          child: tabController.index == 2
+                                              ? const CustomTab(
+                                                  title: "Explore")
+                                              : const Text("Explore"),
+                                        ),
                                       ],
                                       isScrollable: true,
                                       labelColor: Colors.black,
@@ -418,20 +425,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                       ),
                                     );
                                   },
-                                ),
-                                const SizeBox(width: 20),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, Routes.exploreRetail);
-                                  },
-                                  child: Text(
-                                    "Explore",
-                                    style: TextStyles.primaryMedium.copyWith(
-                                      color: const Color(0xFF000000),
-                                      fontSize: (16 / Dimensions.designWidth).w,
-                                    ),
-                                  ),
                                 ),
                               ],
                             ),
@@ -707,142 +700,260 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                     ),
                                   ],
                                 ),
+                                // ! Explore Tab View
+                                Column(
+                                  children: [
+                                    // Expanded(
+                                    //   child: ListView.builder(
+                                    //     padding: EdgeInsets.only(
+                                    //         top:
+                                    //             (5 / Dimensions.designHeight).h,
+                                    //         bottom:
+                                    //             (13 / Dimensions.designHeight)
+                                    //                 .h),
+                                    //     controller: _scrollController,
+                                    //     scrollDirection: Axis.horizontal,
+                                    //     itemCount: (accountDetails.length) + 1,
+                                    //     itemBuilder: (context, index) {
+                                    //       return Padding(
+                                    //         padding: EdgeInsets.only(
+                                    //           left: (index == 0)
+                                    //               ? (PaddingConstants
+                                    //                           .horizontalPadding /
+                                    //                       Dimensions
+                                    //                           .designWidth)
+                                    //                   .w
+                                    //               : 0,
+                                    //         ),
+                                    //         child: index ==
+                                    //                 accountDetails.length
+                                    //             ? AccountSummaryTile(
+                                    //                 onTap: () {
+                                    //                   Navigator.pushNamed(
+                                    //                     context,
+                                    //                     Routes
+                                    //                         .applicationAccount,
+                                    //                     arguments:
+                                    //                         ApplicationAccountArgumentModel(
+                                    //                       isInitial: false,
+                                    //                       savingsAccountsCreated:
+                                    //                           savingsAccountCount,
+                                    //                       currentAccountsCreated:
+                                    //                           currentAccountCount,
+                                    //                     ).toMap(),
+                                    //                   );
+                                    //                 },
+                                    //                 imgUrl: ImageConstants
+                                    //                     .addAccount,
+                                    //                 accountType: "",
+                                    //                 currency: "Open Account",
+                                    //                 amount: "",
+                                    //                 subText: "",
+                                    //                 subImgUrl: "",
+                                    //                 fontSize: 14,
+                                    //               )
+                                    //             : AccountSummaryTile(
+                                    //                 onTap: () {},
+                                    //                 imgUrl: accountDetails[
+                                    //                                 index][
+                                    //                             "accountCurrency"] ==
+                                    //                         "AED"
+                                    //                     ? ImageConstants.uaeFlag
+                                    //                     : ImageConstants
+                                    //                         .usaFlag,
+                                    //                 accountType: accountDetails[
+                                    //                                 index][
+                                    //                             "productCode"] ==
+                                    //                         "1001"
+                                    //                     ? "Current"
+                                    //                     : "Savings",
+                                    //                 currency: accountDetails[
+                                    //                             index]
+                                    //                         ["currentBalance"]
+                                    //                     .split(" ")
+                                    //                     .first,
+                                    //                 amount: accountDetails[
+                                    //                             index]
+                                    //                         ["currentBalance"]
+                                    //                     .split(" ")
+                                    //                     .last,
+                                    //                 subText: "",
+                                    //                 subImgUrl: "",
+                                    //               ),
+                                    //       );
+                                    //     },
+                                    //   ),
+                                    // ),
+                                    // const SizeBox(height: 10),
+                                    // BlocBuilder<SummaryTileBloc,
+                                    //     SummaryTileState>(
+                                    //   builder: (context, state) {
+                                    //     return Padding(
+                                    //       padding: EdgeInsets.symmetric(
+                                    //           horizontal: 47.w -
+                                    //               ((accountDetails.length - 1) *
+                                    //                   (6.5 /
+                                    //                           Dimensions
+                                    //                               .designWidth)
+                                    //                       .w)),
+                                    //       child: SizedBox(
+                                    //         width: 90.w,
+                                    //         height:
+                                    //             (9 / Dimensions.designWidth).w,
+                                    //         child: ListView.builder(
+                                    //           scrollDirection: Axis.horizontal,
+                                    //           physics:
+                                    //               const NeverScrollableScrollPhysics(),
+                                    //           itemCount: accountDetails.length,
+                                    //           itemBuilder: (context, index) {
+                                    //             return ScrollIndicator(
+                                    //               isCurrent:
+                                    //                   (index == _scrollIndex),
+                                    //             );
+                                    //           },
+                                    //         ),
+                                    //       ),
+                                    //     );
+                                    //   },
+                                    // ),
+                                    // const SizeBox(height: 10),
+                                    // Row(
+                                    //   mainAxisAlignment:
+                                    //       MainAxisAlignment.center,
+                                    //   children: [
+                                    //     DashboardActivityTile(
+                                    //       iconPath: ImageConstants.arrowOutward,
+                                    //       activityText: "Send Money",
+                                    //       onTap: () {
+                                    //         Navigator.pushNamed(
+                                    //             context, Routes.sendMoney);
+                                    //       },
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                    const SizeBox(height: 15),
+                                    InkWell(
+                                      onTap: () {
+                                        final ShowButtonBloc showButtonBloc =
+                                            context.read<ShowButtonBloc>();
+                                        tabController.animateTo(1);
+                                        showButtonBloc.add(
+                                            const ShowButtonEvent(show: true));
+                                      },
+                                      child: const DashboardBannerImage(
+                                        imgUrl: ImageConstants.banner3,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizeBox(height: 15),
-                    // ! Banner image
-                    InkWell(
-                      onTap: () {
-                        final ShowButtonBloc showButtonBloc =
-                            context.read<ShowButtonBloc>();
-                        tabController.animateTo(1);
-                        showButtonBloc.add(const ShowButtonEvent(show: true));
-                      },
-                      child: const DashboardBannerImage(
-                        imgUrl: ImageConstants.banner3,
+                    Ternary(
+                      condition: tabController.index == 2,
+                      truthy: const SizeBox(),
+                      falsy: Column(
+                        children: [
+                          const SizeBox(height: 15),
+                          // ! Banner image
+                          InkWell(
+                            onTap: () {
+                              final ShowButtonBloc showButtonBloc =
+                                  context.read<ShowButtonBloc>();
+                              tabController.animateTo(1);
+                              showButtonBloc
+                                  .add(const ShowButtonEvent(show: true));
+                            },
+                            child: const DashboardBannerImage(
+                              imgUrl: ImageConstants.banner3,
+                            ),
+                          ),
+                          const SizeBox(height: 15),
+                        ],
                       ),
                     ),
-                    const SizeBox(height: 15),
                     // const SizeBox(height: 265)
                   ],
                 ),
-                DraggableScrollableSheet(
-                  initialChildSize: 0.39,
-                  minChildSize: 0.39,
-                  maxChildSize: 1,
-                  controller: _dsController,
-                  builder: (context, scrollController) {
-                    return ListView(
-                      controller: scrollController,
-                      children: [
-                        // ! Outer Container
-                        Container(
-                          height: 90.h,
-                          width: 100.w,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: (PaddingConstants.horizontalPadding /
-                                    Dimensions.designWidth)
-                                .w,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1, color: const Color(0XFFEEEEEE)),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(
-                                  (20 / Dimensions.designWidth).w),
-                              topRight: Radius.circular(
-                                  (20 / Dimensions.designWidth).w),
-                            ),
-                            color: const Color(0xFFFFFFFF),
-                          ),
-                          child: Column(
+                tabController.index == 2
+                    ? const SizeBox()
+                    : DraggableScrollableSheet(
+                        initialChildSize: 0.39,
+                        minChildSize: 0.39,
+                        maxChildSize: 1,
+                        controller: _dsController,
+                        builder: (context, scrollController) {
+                          return ListView(
+                            controller: scrollController,
                             children: [
-                              const SizeBox(height: 15),
-                              // ! Clip widget for drag
+                              // ! Outer Container
                               Container(
+                                height: 90.h,
+                                width: 100.w,
                                 padding: EdgeInsets.symmetric(
-                                  vertical: (10 / Dimensions.designWidth).w,
+                                  horizontal:
+                                      (PaddingConstants.horizontalPadding /
+                                              Dimensions.designWidth)
+                                          .w,
                                 ),
-                                height: (7 / Dimensions.designWidth).w,
-                                width: (50 / Dimensions.designWidth).w,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                        (10 / Dimensions.designWidth).w),
+                                  border: Border.all(
+                                      width: 1, color: const Color(0XFFEEEEEE)),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(
+                                        (20 / Dimensions.designWidth).w),
+                                    topRight: Radius.circular(
+                                        (20 / Dimensions.designWidth).w),
                                   ),
-                                  color: const Color(0xFFD9D9D9),
+                                  color: const Color(0xFFFFFFFF),
                                 ),
-                              ),
-                              const SizeBox(height: 15),
+                                child: Column(
+                                  children: [
+                                    const SizeBox(height: 15),
+                                    // ! Clip widget for drag
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            (10 / Dimensions.designWidth).w,
+                                      ),
+                                      height: (7 / Dimensions.designWidth).w,
+                                      width: (50 / Dimensions.designWidth).w,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                              (10 / Dimensions.designWidth).w),
+                                        ),
+                                        color: const Color(0xFFD9D9D9),
+                                      ),
+                                    ),
+                                    const SizeBox(height: 15),
 
-                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                                builder: (context, state) {
-                                  return Ternary(
-                                    condition: tabController.index == 0,
-                                    // ! Home tab related draggable listview UI
-                                    truthy: BlocBuilder<ShowButtonBloc,
+                                    BlocBuilder<ShowButtonBloc,
                                         ShowButtonState>(
                                       builder: (context, state) {
                                         return Ternary(
-                                          condition:
-                                              !isShowFilter && !isShowSort,
-                                          truthy: SizedBox(
-                                            height: 85.h,
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      labels[10]["labelText"],
-                                                      style: TextStyles.primary
-                                                          .copyWith(
-                                                        color: AppColors.dark50,
-                                                        fontSize: (16 /
-                                                                Dimensions
-                                                                    .designWidth)
-                                                            .w,
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Navigator.pushNamed(
-                                                          context,
-                                                          Routes
-                                                              .downloadStatement,
-                                                          arguments:
-                                                              DownloadStatementArgumentModel(
-                                                            accountNumber:
-                                                                accountDetails[
-                                                                        0][
-                                                                    "accountNumber"],
-                                                          ).toMap(),
-                                                        );
-                                                      },
-                                                      child: Row(
+                                          condition: tabController.index == 0,
+                                          // ! Home tab related draggable listview UI
+                                          truthy: BlocBuilder<ShowButtonBloc,
+                                              ShowButtonState>(
+                                            builder: (context, state) {
+                                              return Ternary(
+                                                condition: !isShowFilter &&
+                                                    !isShowSort,
+                                                truthy: SizedBox(
+                                                  height: 85.h,
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
                                                         children: [
-                                                          SvgPicture.asset(
-                                                            ImageConstants
-                                                                .download,
-                                                            width: (15 /
-                                                                    Dimensions
-                                                                        .designWidth)
-                                                                .w,
-                                                            height: (15 /
-                                                                    Dimensions
-                                                                        .designWidth)
-                                                                .w,
-                                                          ),
-                                                          const SizeBox(
-                                                              width: 10),
                                                           Text(
-                                                            labels[89]
+                                                            labels[10]
                                                                 ["labelText"],
                                                             style: TextStyles
                                                                 .primary
@@ -855,1002 +966,999 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                   .w,
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizeBox(height: 15),
-                                                Container(
-                                                  width: 100.w,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular((10 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w),
-                                                    ),
-                                                    color: AppColors.primary10,
-                                                  ),
-                                                  padding: EdgeInsets.all(
-                                                    (10 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () {
-                                                          showModalBottomSheet(
-                                                            context: context,
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .transparent,
-                                                            builder: (context) {
-                                                              return Container(
-                                                                width: 100.w,
-                                                                height: (10.h) *
-                                                                    accountDetails
-                                                                        .length,
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                  vertical: (PaddingConstants
-                                                                              .horizontalPadding /
-                                                                          Dimensions
-                                                                              .designHeight)
-                                                                      .h,
-                                                                  horizontal:
-                                                                      (PaddingConstants.horizontalPadding /
-                                                                              Dimensions.designWidth)
-                                                                          .w,
-                                                                ),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .only(
-                                                                    topLeft: Radius
-                                                                        .circular((10 /
-                                                                                Dimensions.designWidth)
-                                                                            .w),
-                                                                    topRight: Radius
-                                                                        .circular((10 /
-                                                                                Dimensions.designWidth)
-                                                                            .w),
-                                                                  ),
-                                                                ),
-                                                                child: BlocBuilder<
-                                                                    ShowButtonBloc,
-                                                                    ShowButtonState>(
-                                                                  builder:
-                                                                      (context1,
-                                                                          state) {
-                                                                    return Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Ternary(
-                                                                          condition:
-                                                                              isChangingAccount,
-                                                                          truthy:
-                                                                              Center(
-                                                                            child:
-                                                                                SpinKitFadingCircle(
-                                                                              color: AppColors.primary,
-                                                                              size: (50 / Dimensions.designWidth).w,
-                                                                            ),
-                                                                          ),
-                                                                          falsy:
-                                                                              Expanded(
-                                                                            child:
-                                                                                ListView.builder(
-                                                                              itemCount: accountDetails.length,
-                                                                              itemBuilder: (context, index) {
-                                                                                return ListTile(
-                                                                                  dense: true,
-                                                                                  onTap: () async {
-                                                                                    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-                                                                                    isChangingAccount = true;
-                                                                                    showButtonBloc.add(
-                                                                                      ShowButtonEvent(show: isChangingAccount),
-                                                                                    );
-                                                                                    await storage.write(key: "chosenAccount", value: index.toString());
-                                                                                    storageChosenAccount = int.parse(await storage.read(key: "chosenAccount") ?? "0");
-                                                                                    log("storageChosenAccount -> $storageChosenAccount");
-
-                                                                                    getCustomerAccountStatement();
-
-                                                                                    isChangingAccount = false;
-                                                                                    showButtonBloc.add(
-                                                                                      ShowButtonEvent(show: isChangingAccount),
-                                                                                    );
-                                                                                    if (context1.mounted) {
-                                                                                      Navigator.pop(context1);
-                                                                                    }
-                                                                                  },
-                                                                                  leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.uaeFlag),
-                                                                                  title: Text(
-                                                                                    accountDetails[index]["accountNumber"],
-                                                                                    style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),
-                                                                                  ),
-                                                                                  subtitle: Text(
-                                                                                    accountDetails[index]["productCode"] == "1001" ? "Current" : "Savings",
-                                                                                    style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
-                                                                                  ),
-                                                                                  trailing: Text(
-                                                                                    accountDetails[index]["currentBalance"],
-                                                                                    style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
-                                                                                  ),
-                                                                                );
-                                                                              },
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  },
-                                                                ),
+                                                          InkWell(
+                                                            onTap: () {
+                                                              Navigator
+                                                                  .pushNamed(
+                                                                context,
+                                                                Routes
+                                                                    .downloadStatement,
+                                                                arguments:
+                                                                    DownloadStatementArgumentModel(
+                                                                  accountNumber:
+                                                                      accountDetails[
+                                                                              0]
+                                                                          [
+                                                                          "accountNumber"],
+                                                                ).toMap(),
                                                               );
                                                             },
-                                                          );
-                                                        },
+                                                            child: Row(
+                                                              children: [
+                                                                SvgPicture
+                                                                    .asset(
+                                                                  ImageConstants
+                                                                      .download,
+                                                                  width: (15 /
+                                                                          Dimensions
+                                                                              .designWidth)
+                                                                      .w,
+                                                                  height: (15 /
+                                                                          Dimensions
+                                                                              .designWidth)
+                                                                      .w,
+                                                                ),
+                                                                const SizeBox(
+                                                                    width: 10),
+                                                                Text(
+                                                                  labels[89][
+                                                                      "labelText"],
+                                                                  style: TextStyles
+                                                                      .primary
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .dark50,
+                                                                    fontSize:
+                                                                        (16 / Dimensions.designWidth)
+                                                                            .w,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizeBox(height: 15),
+                                                      Container(
+                                                        width: 100.w,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular((10 /
+                                                                    Dimensions
+                                                                        .designWidth)
+                                                                .w),
+                                                          ),
+                                                          color: AppColors
+                                                              .primary10,
+                                                        ),
+                                                        padding: EdgeInsets.all(
+                                                          (10 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w,
+                                                        ),
                                                         child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
                                                           children: [
+                                                            InkWell(
+                                                              onTap: () {
+                                                                showModalBottomSheet(
+                                                                  context:
+                                                                      context,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .transparent,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return Container(
+                                                                      width:
+                                                                          100.w,
+                                                                      height: (10
+                                                                              .h) *
+                                                                          accountDetails
+                                                                              .length,
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .symmetric(
+                                                                        vertical:
+                                                                            (PaddingConstants.horizontalPadding / Dimensions.designHeight).h,
+                                                                        horizontal:
+                                                                            (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+                                                                      ),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        borderRadius:
+                                                                            BorderRadius.only(
+                                                                          topLeft:
+                                                                              Radius.circular((10 / Dimensions.designWidth).w),
+                                                                          topRight:
+                                                                              Radius.circular((10 / Dimensions.designWidth).w),
+                                                                        ),
+                                                                      ),
+                                                                      child: BlocBuilder<
+                                                                          ShowButtonBloc,
+                                                                          ShowButtonState>(
+                                                                        builder:
+                                                                            (context1,
+                                                                                state) {
+                                                                          return Column(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.center,
+                                                                            children: [
+                                                                              Ternary(
+                                                                                condition: isChangingAccount,
+                                                                                truthy: Center(
+                                                                                  child: SpinKitFadingCircle(
+                                                                                    color: AppColors.primary,
+                                                                                    size: (50 / Dimensions.designWidth).w,
+                                                                                  ),
+                                                                                ),
+                                                                                falsy: Expanded(
+                                                                                  child: ListView.builder(
+                                                                                    itemCount: accountDetails.length,
+                                                                                    itemBuilder: (context, index) {
+                                                                                      return ListTile(
+                                                                                        dense: true,
+                                                                                        onTap: () async {
+                                                                                          final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+                                                                                          isChangingAccount = true;
+                                                                                          showButtonBloc.add(
+                                                                                            ShowButtonEvent(show: isChangingAccount),
+                                                                                          );
+                                                                                          await storage.write(key: "chosenAccount", value: index.toString());
+                                                                                          storageChosenAccount = int.parse(await storage.read(key: "chosenAccount") ?? "0");
+                                                                                          log("storageChosenAccount -> $storageChosenAccount");
+
+                                                                                          getCustomerAccountStatement();
+
+                                                                                          isChangingAccount = false;
+                                                                                          showButtonBloc.add(
+                                                                                            ShowButtonEvent(show: isChangingAccount),
+                                                                                          );
+                                                                                          if (context1.mounted) {
+                                                                                            Navigator.pop(context1);
+                                                                                          }
+                                                                                        },
+                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.uaeFlag),
+                                                                                        title: Text(
+                                                                                          accountDetails[index]["accountNumber"],
+                                                                                          style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),
+                                                                                        ),
+                                                                                        subtitle: Text(
+                                                                                          accountDetails[index]["productCode"] == "1001" ? "Current" : "Savings",
+                                                                                          style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
+                                                                                        ),
+                                                                                        trailing: Text(
+                                                                                          accountDetails[index]["currentBalance"],
+                                                                                          style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                );
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  Text(
+                                                                    "Account: ",
+                                                                    style: TextStyles
+                                                                        .primaryMedium
+                                                                        .copyWith(
+                                                                      color: AppColors
+                                                                          .dark50,
+                                                                      fontSize:
+                                                                          (14 / Dimensions.designWidth)
+                                                                              .w,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? "Current" : "Savings"} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
+                                                                    style: TextStyles
+                                                                        .primaryMedium
+                                                                        .copyWith(
+                                                                      color: AppColors
+                                                                          .primary,
+                                                                      fontSize:
+                                                                          (14 / Dimensions.designWidth)
+                                                                              .w,
+                                                                    ),
+                                                                  ),
+                                                                  Icon(
+                                                                    Icons
+                                                                        .arrow_drop_down_rounded,
+                                                                    color: AppColors
+                                                                        .dark80,
+                                                                    size: (20 /
+                                                                            Dimensions.designWidth)
+                                                                        .w,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            const SizeBox(
+                                                                width: 5),
                                                             Text(
-                                                              "Account: ",
+                                                              "|",
                                                               style: TextStyles
                                                                   .primaryMedium
                                                                   .copyWith(
                                                                 color: AppColors
                                                                     .dark50,
-                                                                fontSize: (14 /
+                                                                fontSize: (16 /
                                                                         Dimensions
                                                                             .designWidth)
                                                                     .w,
                                                               ),
-                                                            ),
-                                                            Text(
-                                                              "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? "Current" : "Savings"} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
-                                                              style: TextStyles
-                                                                  .primaryMedium
-                                                                  .copyWith(
-                                                                color: AppColors
-                                                                    .primary,
-                                                                fontSize: (14 /
-                                                                        Dimensions
-                                                                            .designWidth)
-                                                                    .w,
-                                                              ),
-                                                            ),
-                                                            Icon(
-                                                              Icons
-                                                                  .arrow_drop_down_rounded,
-                                                              color: AppColors
-                                                                  .dark80,
-                                                              size: (20 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizeBox(width: 5),
-                                                      Text(
-                                                        "|",
-                                                        style: TextStyles
-                                                            .primaryMedium
-                                                            .copyWith(
-                                                          color:
-                                                              AppColors.dark50,
-                                                          fontSize: (16 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                        ),
-                                                      ),
-                                                      const SizeBox(width: 10),
-                                                      InkWell(
-                                                        onTap: () {
-                                                          final ShowButtonBloc
-                                                              showButtonBloc =
-                                                              context.read<
-                                                                  ShowButtonBloc>();
-                                                          isShowFilter = true;
-                                                          showButtonBloc.add(
-                                                            ShowButtonEvent(
-                                                                show:
-                                                                    isShowFilter),
-                                                          );
-                                                        },
-                                                        child: Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              ImageConstants
-                                                                  .filter,
-                                                              width: (12 /
-                                                                      Dimensions
-                                                                          .designHeight)
-                                                                  .w,
-                                                              height: (12 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
                                                             ),
                                                             const SizeBox(
-                                                                width: 5),
-                                                            Text(
-                                                              filterText,
-                                                              style: TextStyles
-                                                                  .primaryMedium
-                                                                  .copyWith(
-                                                                color: AppColors
-                                                                    .primary,
-                                                                fontSize: (14 /
-                                                                        Dimensions
-                                                                            .designWidth)
-                                                                    .w,
+                                                                width: 10),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                final ShowButtonBloc
+                                                                    showButtonBloc =
+                                                                    context.read<
+                                                                        ShowButtonBloc>();
+                                                                isShowFilter =
+                                                                    true;
+                                                                showButtonBloc
+                                                                    .add(
+                                                                  ShowButtonEvent(
+                                                                      show:
+                                                                          isShowFilter),
+                                                                );
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture
+                                                                      .asset(
+                                                                    ImageConstants
+                                                                        .filter,
+                                                                    width: (12 /
+                                                                            Dimensions.designHeight)
+                                                                        .w,
+                                                                    height: (12 /
+                                                                            Dimensions.designWidth)
+                                                                        .w,
+                                                                  ),
+                                                                  const SizeBox(
+                                                                      width: 5),
+                                                                  Text(
+                                                                    filterText,
+                                                                    style: TextStyles
+                                                                        .primaryMedium
+                                                                        .copyWith(
+                                                                      color: AppColors
+                                                                          .primary,
+                                                                      fontSize:
+                                                                          (14 / Dimensions.designWidth)
+                                                                              .w,
+                                                                    ),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizeBox(width: 10),
-                                                      Text(
-                                                        "|",
-                                                        style: TextStyles
-                                                            .primaryMedium
-                                                            .copyWith(
-                                                          color:
-                                                              AppColors.dark50,
-                                                          fontSize: (16 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                        ),
-                                                      ),
-                                                      const SizeBox(width: 10),
-                                                      InkWell(
-                                                        onTap: () {
-                                                          final ShowButtonBloc
-                                                              showButtonBloc =
-                                                              context.read<
-                                                                  ShowButtonBloc>();
-                                                          isShowSort = true;
-                                                          showButtonBloc.add(
-                                                            ShowButtonEvent(
-                                                                show:
-                                                                    isShowSort),
-                                                          );
-                                                        },
-                                                        child: Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              ImageConstants
-                                                                  .sort,
-                                                              width: (10 /
-                                                                      Dimensions
-                                                                          .designHeight)
-                                                                  .w,
-                                                              height: (10 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
                                                             ),
                                                             const SizeBox(
-                                                                width: 5),
+                                                                width: 10),
                                                             Text(
-                                                              sortText,
+                                                              "|",
                                                               style: TextStyles
                                                                   .primaryMedium
                                                                   .copyWith(
                                                                 color: AppColors
-                                                                    .primary,
-                                                                fontSize: (14 /
+                                                                    .dark50,
+                                                                fontSize: (16 /
+                                                                        Dimensions
+                                                                            .designWidth)
+                                                                    .w,
+                                                              ),
+                                                            ),
+                                                            const SizeBox(
+                                                                width: 10),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                final ShowButtonBloc
+                                                                    showButtonBloc =
+                                                                    context.read<
+                                                                        ShowButtonBloc>();
+                                                                isShowSort =
+                                                                    true;
+                                                                showButtonBloc
+                                                                    .add(
+                                                                  ShowButtonEvent(
+                                                                      show:
+                                                                          isShowSort),
+                                                                );
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture
+                                                                      .asset(
+                                                                    ImageConstants
+                                                                        .sort,
+                                                                    width: (10 /
+                                                                            Dimensions.designHeight)
+                                                                        .w,
+                                                                    height: (10 /
+                                                                            Dimensions.designWidth)
+                                                                        .w,
+                                                                  ),
+                                                                  const SizeBox(
+                                                                      width: 5),
+                                                                  Text(
+                                                                    sortText,
+                                                                    style: TextStyles
+                                                                        .primaryMedium
+                                                                        .copyWith(
+                                                                      color: AppColors
+                                                                          .primary,
+                                                                      fontSize:
+                                                                          (14 / Dimensions.designWidth)
+                                                                              .w,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      const SizeBox(height: 15),
+                                                      Ternary(
+                                                        condition:
+                                                            displayStatementList
+                                                                .isEmpty,
+                                                        truthy: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            const SizeBox(
+                                                                height: 70),
+                                                            Text(
+                                                              "No transactions",
+                                                              style: TextStyles
+                                                                  .primaryBold
+                                                                  .copyWith(
+                                                                color: AppColors
+                                                                    .dark30,
+                                                                fontSize: (24 /
                                                                         Dimensions
                                                                             .designWidth)
                                                                     .w,
                                                               ),
                                                             ),
                                                           ],
+                                                        ),
+                                                        falsy: Expanded(
+                                                          child:
+                                                              ListView.builder(
+                                                            controller:
+                                                                scrollController,
+                                                            itemCount:
+                                                                displayStatementList
+                                                                    .length,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return DashboardTransactionListTile(
+                                                                onTap: () {},
+                                                                isCredit:
+                                                                    // true,
+                                                                    displayStatementList[index]
+                                                                            [
+                                                                            "debitAmount"] ==
+                                                                        0,
+                                                                title:
+                                                                    // "Tax non filer debit Tax non filer debit",
+                                                                    displayStatementList[
+                                                                            index]
+                                                                        [
+                                                                        "transactionType"],
+                                                                name:
+                                                                    "Alexander Doe",
+                                                                amount:
+                                                                    // 50.23,
+                                                                    (displayStatementList[index]["creditAmount"] !=
+                                                                                0
+                                                                            ? displayStatementList[index]["creditAmount"]
+                                                                            : displayStatementList[index]["debitAmount"])
+                                                                        .toDouble(),
+                                                                currency:
+                                                                    // "AED",
+                                                                    displayStatementList[
+                                                                            index]
+                                                                        [
+                                                                        "amountCurrency"],
+                                                                date:
+                                                                    // "Tue, Apr 1 2022",
+                                                                    DateFormat(
+                                                                            'EEE, MMM dd yyyy')
+                                                                        .format(
+                                                                  DateTime
+                                                                      .parse(
+                                                                    displayStatementList[
+                                                                            index]
+                                                                        [
+                                                                        "bookingDate"],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                                const SizeBox(height: 15),
-                                                Ternary(
-                                                  condition:
-                                                      displayStatementList
-                                                          .isEmpty,
-                                                  truthy: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
+                                                falsy: Ternary(
+                                                  condition: isShowFilter,
+                                                  truthy: SizedBox(
+                                                    height:
+                                                        // _dsController.size,
+                                                        29.h,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Text(
+                                                                    "Filter",
+                                                                    style: TextStyles
+                                                                        .primaryBold
+                                                                        .copyWith(
+                                                                            color:
+                                                                                AppColors.dark50,
+                                                                            fontSize: (20 / Dimensions.designWidth).w),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 20),
+                                                              Text(
+                                                                "Transaction type",
+                                                                style: TextStyles
+                                                                    .primaryMedium
+                                                                    .copyWith(
+                                                                        color: AppColors
+                                                                            .dark50,
+                                                                        fontSize:
+                                                                            (16 / Dimensions.designWidth).w),
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 15),
+                                                              Row(
+                                                                children: [
+                                                                  SolidButton(
+                                                                    width: (118 /
+                                                                            Dimensions.designWidth)
+                                                                        .w,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontColor:
+                                                                        AppColors
+                                                                            .primary,
+                                                                    boxShadow: [
+                                                                      BoxShadows
+                                                                          .primary
+                                                                    ],
+                                                                    borderColor: isAllSelected
+                                                                        ? const Color.fromRGBO(
+                                                                            0,
+                                                                            184,
+                                                                            148,
+                                                                            0.21)
+                                                                        : Colors
+                                                                            .transparent,
+                                                                    onTap: () {
+                                                                      final ShowButtonBloc
+                                                                          showButtonBloc =
+                                                                          context
+                                                                              .read<ShowButtonBloc>();
+                                                                      isAllSelected =
+                                                                          true;
+                                                                      isSentSelected =
+                                                                          false;
+                                                                      isReceivedSelected =
+                                                                          false;
+                                                                      filterText =
+                                                                          "All";
+                                                                      populateDisplayStatementList(
+                                                                        isAllSelected,
+                                                                        isSentSelected,
+                                                                        isReceivedSelected,
+                                                                      );
+                                                                      sortDisplayStatementList(
+                                                                        isDateNewest,
+                                                                        isDateOldest,
+                                                                        isAmountHighest,
+                                                                        isAmountLowest,
+                                                                      );
+                                                                      showButtonBloc
+                                                                          .add(
+                                                                        ShowButtonEvent(
+                                                                          show: isAllSelected &&
+                                                                              isSentSelected &&
+                                                                              isReceivedSelected,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    text: "All",
+                                                                  ),
+                                                                  const SizeBox(
+                                                                      width:
+                                                                          15),
+                                                                  SolidButton(
+                                                                    width: (118 /
+                                                                            Dimensions.designWidth)
+                                                                        .w,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontColor:
+                                                                        AppColors
+                                                                            .primary,
+                                                                    boxShadow: [
+                                                                      BoxShadows
+                                                                          .primary
+                                                                    ],
+                                                                    borderColor: isSentSelected
+                                                                        ? const Color.fromRGBO(
+                                                                            0,
+                                                                            184,
+                                                                            148,
+                                                                            0.21)
+                                                                        : Colors
+                                                                            .transparent,
+                                                                    onTap: () {
+                                                                      final ShowButtonBloc
+                                                                          showButtonBloc =
+                                                                          context
+                                                                              .read<ShowButtonBloc>();
+                                                                      isAllSelected =
+                                                                          false;
+                                                                      isSentSelected =
+                                                                          true;
+                                                                      isReceivedSelected =
+                                                                          false;
+                                                                      filterText =
+                                                                          "Sent";
+                                                                      populateDisplayStatementList(
+                                                                        isAllSelected,
+                                                                        isSentSelected,
+                                                                        isReceivedSelected,
+                                                                      );
+                                                                      sortDisplayStatementList(
+                                                                        isDateNewest,
+                                                                        isDateOldest,
+                                                                        isAmountHighest,
+                                                                        isAmountLowest,
+                                                                      );
+                                                                      showButtonBloc
+                                                                          .add(
+                                                                        ShowButtonEvent(
+                                                                          show: isAllSelected &&
+                                                                              isSentSelected &&
+                                                                              isReceivedSelected,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    text:
+                                                                        "Sent",
+                                                                  ),
+                                                                  const SizeBox(
+                                                                      width:
+                                                                          15),
+                                                                  SolidButton(
+                                                                    width: (118 /
+                                                                            Dimensions.designWidth)
+                                                                        .w,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontColor:
+                                                                        AppColors
+                                                                            .primary,
+                                                                    boxShadow: [
+                                                                      BoxShadows
+                                                                          .primary
+                                                                    ],
+                                                                    borderColor: isReceivedSelected
+                                                                        ? const Color.fromRGBO(
+                                                                            0,
+                                                                            184,
+                                                                            148,
+                                                                            0.21)
+                                                                        : Colors
+                                                                            .transparent,
+                                                                    onTap: () {
+                                                                      final ShowButtonBloc
+                                                                          showButtonBloc =
+                                                                          context
+                                                                              .read<ShowButtonBloc>();
+                                                                      isAllSelected =
+                                                                          false;
+                                                                      isSentSelected =
+                                                                          false;
+                                                                      isReceivedSelected =
+                                                                          true;
+                                                                      filterText =
+                                                                          "Received";
+                                                                      populateDisplayStatementList(
+                                                                        isAllSelected,
+                                                                        isSentSelected,
+                                                                        isReceivedSelected,
+                                                                      );
+                                                                      sortDisplayStatementList(
+                                                                        isDateNewest,
+                                                                        isDateOldest,
+                                                                        isAmountHighest,
+                                                                        isAmountLowest,
+                                                                      );
+                                                                      showButtonBloc
+                                                                          .add(
+                                                                        ShowButtonEvent(
+                                                                          show: isAllSelected &&
+                                                                              isSentSelected &&
+                                                                              isReceivedSelected,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    text:
+                                                                        "Received",
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        GradientButton(
+                                                          onTap: () {
+                                                            final ShowButtonBloc
+                                                                showButtonBloc =
+                                                                context.read<
+                                                                    ShowButtonBloc>();
+                                                            isShowFilter =
+                                                                false;
+                                                            showButtonBloc.add(
+                                                              ShowButtonEvent(
+                                                                show:
+                                                                    isShowFilter,
+                                                              ),
+                                                            );
+                                                          },
+                                                          text:
+                                                              "Show ${displayStatementList.length} transactions",
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  falsy: SizedBox(
+                                                    height:
+                                                        // _dsController.size,
+                                                        85.h,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Text(
+                                                                    "Sort",
+                                                                    style: TextStyles
+                                                                        .primaryBold
+                                                                        .copyWith(
+                                                                            color:
+                                                                                AppColors.dark50,
+                                                                            fontSize: (20 / Dimensions.designWidth).w),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 20),
+                                                              Text(
+                                                                "Date",
+                                                                style: TextStyles
+                                                                    .primaryMedium
+                                                                    .copyWith(
+                                                                        color: AppColors
+                                                                            .dark50,
+                                                                        fontSize:
+                                                                            (16 / Dimensions.designWidth).w),
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 15),
+                                                              MultiSelectButton(
+                                                                isSelected:
+                                                                    isDateNewest,
+                                                                content: Text(
+                                                                  "Newest first",
+                                                                  style: TextStyles
+                                                                      .primaryMedium
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .primaryDark,
+                                                                    fontSize:
+                                                                        (18 / Dimensions.designWidth)
+                                                                            .w,
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  final ShowButtonBloc
+                                                                      showButtonBloc =
+                                                                      context.read<
+                                                                          ShowButtonBloc>();
+                                                                  isDateNewest =
+                                                                      true;
+                                                                  isDateOldest =
+                                                                      false;
+                                                                  isAmountHighest =
+                                                                      false;
+                                                                  isAmountLowest =
+                                                                      false;
+                                                                  sortText =
+                                                                      "Latest";
+                                                                  sortDisplayStatementList(
+                                                                    isDateNewest,
+                                                                    isDateOldest,
+                                                                    isAmountHighest,
+                                                                    isAmountLowest,
+                                                                  );
+                                                                  isShowSort =
+                                                                      false;
+                                                                  showButtonBloc
+                                                                      .add(
+                                                                    ShowButtonEvent(
+                                                                      show: isDateNewest &&
+                                                                          isDateOldest &&
+                                                                          isAmountHighest &&
+                                                                          isAmountLowest,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 10),
+                                                              MultiSelectButton(
+                                                                isSelected:
+                                                                    isDateOldest,
+                                                                content: Text(
+                                                                  "Oldest first",
+                                                                  style: TextStyles
+                                                                      .primaryMedium
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .primaryDark,
+                                                                    fontSize:
+                                                                        (18 / Dimensions.designWidth)
+                                                                            .w,
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  final ShowButtonBloc
+                                                                      showButtonBloc =
+                                                                      context.read<
+                                                                          ShowButtonBloc>();
+                                                                  isDateNewest =
+                                                                      false;
+                                                                  isDateOldest =
+                                                                      true;
+                                                                  isAmountHighest =
+                                                                      false;
+                                                                  isAmountLowest =
+                                                                      false;
+                                                                  sortText =
+                                                                      "Oldest";
+                                                                  sortDisplayStatementList(
+                                                                    isDateNewest,
+                                                                    isDateOldest,
+                                                                    isAmountHighest,
+                                                                    isAmountLowest,
+                                                                  );
+                                                                  isShowSort =
+                                                                      false;
+                                                                  showButtonBloc
+                                                                      .add(
+                                                                    ShowButtonEvent(
+                                                                      show: isDateNewest &&
+                                                                          isDateOldest &&
+                                                                          isAmountHighest &&
+                                                                          isAmountLowest,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 20),
+                                                              Text(
+                                                                "Amount",
+                                                                style: TextStyles
+                                                                    .primaryMedium
+                                                                    .copyWith(
+                                                                        color: AppColors
+                                                                            .dark50,
+                                                                        fontSize:
+                                                                            (16 / Dimensions.designWidth).w),
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 15),
+                                                              MultiSelectButton(
+                                                                isSelected:
+                                                                    isAmountHighest,
+                                                                content: Text(
+                                                                  "Highest amount first",
+                                                                  style: TextStyles
+                                                                      .primaryMedium
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .primaryDark,
+                                                                    fontSize:
+                                                                        (18 / Dimensions.designWidth)
+                                                                            .w,
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  final ShowButtonBloc
+                                                                      showButtonBloc =
+                                                                      context.read<
+                                                                          ShowButtonBloc>();
+                                                                  isDateNewest =
+                                                                      false;
+                                                                  isDateOldest =
+                                                                      false;
+                                                                  isAmountHighest =
+                                                                      true;
+                                                                  isAmountLowest =
+                                                                      false;
+                                                                  sortText =
+                                                                      "Highest";
+                                                                  sortDisplayStatementList(
+                                                                    isDateNewest,
+                                                                    isDateOldest,
+                                                                    isAmountHighest,
+                                                                    isAmountLowest,
+                                                                  );
+                                                                  isShowSort =
+                                                                      false;
+                                                                  showButtonBloc
+                                                                      .add(
+                                                                    ShowButtonEvent(
+                                                                      show: isDateNewest &&
+                                                                          isDateOldest &&
+                                                                          isAmountHighest &&
+                                                                          isAmountLowest,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 10),
+                                                              MultiSelectButton(
+                                                                isSelected:
+                                                                    isAmountLowest,
+                                                                content: Text(
+                                                                  "Lowest amount first",
+                                                                  style: TextStyles
+                                                                      .primaryMedium
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .primaryDark,
+                                                                    fontSize:
+                                                                        (18 / Dimensions.designWidth)
+                                                                            .w,
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  final ShowButtonBloc
+                                                                      showButtonBloc =
+                                                                      context.read<
+                                                                          ShowButtonBloc>();
+                                                                  isDateNewest =
+                                                                      false;
+                                                                  isDateOldest =
+                                                                      false;
+                                                                  isAmountHighest =
+                                                                      false;
+                                                                  isAmountLowest =
+                                                                      true;
+                                                                  sortText =
+                                                                      "Lowest";
+                                                                  sortDisplayStatementList(
+                                                                    isDateNewest,
+                                                                    isDateOldest,
+                                                                    isAmountHighest,
+                                                                    isAmountLowest,
+                                                                  );
+                                                                  isShowSort =
+                                                                      false;
+                                                                  showButtonBloc
+                                                                      .add(
+                                                                    ShowButtonEvent(
+                                                                      show: isDateNewest &&
+                                                                          isDateOldest &&
+                                                                          isAmountHighest &&
+                                                                          isAmountLowest,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        // GradientButton(
+                                                        //   onTap: () {
+                                                        //     final ShowButtonBloc
+                                                        //         showButtonBloc = context
+                                                        //             .read<ShowButtonBloc>();
+                                                        //     isShowSort = false;
+                                                        //     showButtonBloc.add(
+                                                        //       ShowButtonEvent(
+                                                        //         show: isShowFilter,
+                                                        //       ),
+                                                        //     );
+                                                        //   },
+                                                        //   text:
+                                                        //       "Show ${displayStatementList.length} transactions",
+                                                        // ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          // ! Deposit tab related draggable listview UI
+                                          falsy: BlocBuilder<ShowButtonBloc,
+                                              ShowButtonState>(
+                                            builder: (context, state) {
+                                              return Ternary(
+                                                condition:
+                                                    !isShowDepositFilter &&
+                                                        !isShowDepositSort,
+                                                truthy: SizedBox(
+                                                  height: 85.h,
+                                                  child: Column(
                                                     children: [
-                                                      const SizeBox(height: 70),
-                                                      Text(
-                                                        "No transactions",
-                                                        style: TextStyles
-                                                            .primaryBold
-                                                            .copyWith(
-                                                          color:
-                                                              AppColors.dark30,
-                                                          fontSize: (24 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  falsy: Expanded(
-                                                    child: ListView.builder(
-                                                      controller:
-                                                          scrollController,
-                                                      itemCount:
-                                                          displayStatementList
-                                                              .length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return DashboardTransactionListTile(
-                                                          onTap: () {},
-                                                          isCredit:
-                                                              // true,
-                                                              displayStatementList[
-                                                                          index]
-                                                                      [
-                                                                      "debitAmount"] ==
-                                                                  0,
-                                                          title:
-                                                              // "Tax non filer debit Tax non filer debit",
-                                                              displayStatementList[
-                                                                      index][
-                                                                  "transactionType"],
-                                                          name: "Alexander Doe",
-                                                          amount:
-                                                              // 50.23,
-                                                              (displayStatementList[index]
-                                                                              [
-                                                                              "creditAmount"] !=
-                                                                          0
-                                                                      ? displayStatementList[
-                                                                              index]
-                                                                          [
-                                                                          "creditAmount"]
-                                                                      : displayStatementList[
-                                                                              index]
-                                                                          [
-                                                                          "debitAmount"])
-                                                                  .toDouble(),
-                                                          currency:
-                                                              // "AED",
-                                                              displayStatementList[
-                                                                      index][
-                                                                  "amountCurrency"],
-                                                          date:
-                                                              // "Tue, Apr 1 2022",
-                                                              DateFormat(
-                                                                      'EEE, MMM dd yyyy')
-                                                                  .format(
-                                                            DateTime.parse(
-                                                              displayStatementList[
-                                                                      index][
-                                                                  "bookingDate"],
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          falsy: Ternary(
-                                            condition: isShowFilter,
-                                            truthy: SizedBox(
-                                              height:
-                                                  // _dsController.size,
-                                                  29.h,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(
-                                                              "Filter",
-                                                              style: TextStyles
-                                                                  .primaryBold
-                                                                  .copyWith(
-                                                                      color: AppColors
-                                                                          .dark50,
-                                                                      fontSize:
-                                                                          (20 / Dimensions.designWidth)
-                                                                              .w),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 20),
-                                                        Text(
-                                                          "Transaction type",
-                                                          style: TextStyles
-                                                              .primaryMedium
-                                                              .copyWith(
-                                                                  color: AppColors
-                                                                      .dark50,
-                                                                  fontSize: (16 /
-                                                                          Dimensions
-                                                                              .designWidth)
-                                                                      .w),
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 15),
-                                                        Row(
-                                                          children: [
-                                                            SolidButton(
-                                                              width: (118 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontColor:
-                                                                  AppColors
-                                                                      .primary,
-                                                              boxShadow: [
-                                                                BoxShadows
-                                                                    .primary
-                                                              ],
-                                                              borderColor: isAllSelected
-                                                                  ? const Color
-                                                                          .fromRGBO(
-                                                                      0,
-                                                                      184,
-                                                                      148,
-                                                                      0.21)
-                                                                  : Colors
-                                                                      .transparent,
-                                                              onTap: () {
-                                                                final ShowButtonBloc
-                                                                    showButtonBloc =
-                                                                    context.read<
-                                                                        ShowButtonBloc>();
-                                                                isAllSelected =
-                                                                    true;
-                                                                isSentSelected =
-                                                                    false;
-                                                                isReceivedSelected =
-                                                                    false;
-                                                                filterText =
-                                                                    "All";
-                                                                populateDisplayStatementList(
-                                                                  isAllSelected,
-                                                                  isSentSelected,
-                                                                  isReceivedSelected,
-                                                                );
-                                                                sortDisplayStatementList(
-                                                                  isDateNewest,
-                                                                  isDateOldest,
-                                                                  isAmountHighest,
-                                                                  isAmountLowest,
-                                                                );
-                                                                showButtonBloc
-                                                                    .add(
-                                                                  ShowButtonEvent(
-                                                                    show: isAllSelected &&
-                                                                        isSentSelected &&
-                                                                        isReceivedSelected,
-                                                                  ),
-                                                                );
-                                                              },
-                                                              text: "All",
-                                                            ),
-                                                            const SizeBox(
-                                                                width: 15),
-                                                            SolidButton(
-                                                              width: (118 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontColor:
-                                                                  AppColors
-                                                                      .primary,
-                                                              boxShadow: [
-                                                                BoxShadows
-                                                                    .primary
-                                                              ],
-                                                              borderColor: isSentSelected
-                                                                  ? const Color
-                                                                          .fromRGBO(
-                                                                      0,
-                                                                      184,
-                                                                      148,
-                                                                      0.21)
-                                                                  : Colors
-                                                                      .transparent,
-                                                              onTap: () {
-                                                                final ShowButtonBloc
-                                                                    showButtonBloc =
-                                                                    context.read<
-                                                                        ShowButtonBloc>();
-                                                                isAllSelected =
-                                                                    false;
-                                                                isSentSelected =
-                                                                    true;
-                                                                isReceivedSelected =
-                                                                    false;
-                                                                filterText =
-                                                                    "Sent";
-                                                                populateDisplayStatementList(
-                                                                  isAllSelected,
-                                                                  isSentSelected,
-                                                                  isReceivedSelected,
-                                                                );
-                                                                sortDisplayStatementList(
-                                                                  isDateNewest,
-                                                                  isDateOldest,
-                                                                  isAmountHighest,
-                                                                  isAmountLowest,
-                                                                );
-                                                                showButtonBloc
-                                                                    .add(
-                                                                  ShowButtonEvent(
-                                                                    show: isAllSelected &&
-                                                                        isSentSelected &&
-                                                                        isReceivedSelected,
-                                                                  ),
-                                                                );
-                                                              },
-                                                              text: "Sent",
-                                                            ),
-                                                            const SizeBox(
-                                                                width: 15),
-                                                            SolidButton(
-                                                              width: (118 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontColor:
-                                                                  AppColors
-                                                                      .primary,
-                                                              boxShadow: [
-                                                                BoxShadows
-                                                                    .primary
-                                                              ],
-                                                              borderColor: isReceivedSelected
-                                                                  ? const Color
-                                                                          .fromRGBO(
-                                                                      0,
-                                                                      184,
-                                                                      148,
-                                                                      0.21)
-                                                                  : Colors
-                                                                      .transparent,
-                                                              onTap: () {
-                                                                final ShowButtonBloc
-                                                                    showButtonBloc =
-                                                                    context.read<
-                                                                        ShowButtonBloc>();
-                                                                isAllSelected =
-                                                                    false;
-                                                                isSentSelected =
-                                                                    false;
-                                                                isReceivedSelected =
-                                                                    true;
-                                                                filterText =
-                                                                    "Received";
-                                                                populateDisplayStatementList(
-                                                                  isAllSelected,
-                                                                  isSentSelected,
-                                                                  isReceivedSelected,
-                                                                );
-                                                                sortDisplayStatementList(
-                                                                  isDateNewest,
-                                                                  isDateOldest,
-                                                                  isAmountHighest,
-                                                                  isAmountLowest,
-                                                                );
-                                                                showButtonBloc
-                                                                    .add(
-                                                                  ShowButtonEvent(
-                                                                    show: isAllSelected &&
-                                                                        isSentSelected &&
-                                                                        isReceivedSelected,
-                                                                  ),
-                                                                );
-                                                              },
-                                                              text: "Received",
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  GradientButton(
-                                                    onTap: () {
-                                                      final ShowButtonBloc
-                                                          showButtonBloc =
-                                                          context.read<
-                                                              ShowButtonBloc>();
-                                                      isShowFilter = false;
-                                                      showButtonBloc.add(
-                                                        ShowButtonEvent(
-                                                          show: isShowFilter,
-                                                        ),
-                                                      );
-                                                    },
-                                                    text:
-                                                        "Show ${displayStatementList.length} transactions",
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            falsy: SizedBox(
-                                              height:
-                                                  // _dsController.size,
-                                                  85.h,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Expanded(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(
-                                                              "Sort",
-                                                              style: TextStyles
-                                                                  .primaryBold
-                                                                  .copyWith(
-                                                                      color: AppColors
-                                                                          .dark50,
-                                                                      fontSize:
-                                                                          (20 / Dimensions.designWidth)
-                                                                              .w),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 20),
-                                                        Text(
-                                                          "Date",
-                                                          style: TextStyles
-                                                              .primaryMedium
-                                                              .copyWith(
-                                                                  color: AppColors
-                                                                      .dark50,
-                                                                  fontSize: (16 /
-                                                                          Dimensions
-                                                                              .designWidth)
-                                                                      .w),
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 15),
-                                                        MultiSelectButton(
-                                                          isSelected:
-                                                              isDateNewest,
-                                                          content: Text(
-                                                            "Newest first",
-                                                            style: TextStyles
-                                                                .primaryMedium
-                                                                .copyWith(
-                                                              color: AppColors
-                                                                  .primaryDark,
-                                                              fontSize: (18 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            final ShowButtonBloc
-                                                                showButtonBloc =
-                                                                context.read<
-                                                                    ShowButtonBloc>();
-                                                            isDateNewest = true;
-                                                            isDateOldest =
-                                                                false;
-                                                            isAmountHighest =
-                                                                false;
-                                                            isAmountLowest =
-                                                                false;
-                                                            sortText = "Latest";
-                                                            sortDisplayStatementList(
-                                                              isDateNewest,
-                                                              isDateOldest,
-                                                              isAmountHighest,
-                                                              isAmountLowest,
-                                                            );
-                                                            isShowSort = false;
-                                                            showButtonBloc.add(
-                                                              ShowButtonEvent(
-                                                                show: isDateNewest &&
-                                                                    isDateOldest &&
-                                                                    isAmountHighest &&
-                                                                    isAmountLowest,
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 10),
-                                                        MultiSelectButton(
-                                                          isSelected:
-                                                              isDateOldest,
-                                                          content: Text(
-                                                            "Oldest first",
-                                                            style: TextStyles
-                                                                .primaryMedium
-                                                                .copyWith(
-                                                              color: AppColors
-                                                                  .primaryDark,
-                                                              fontSize: (18 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            final ShowButtonBloc
-                                                                showButtonBloc =
-                                                                context.read<
-                                                                    ShowButtonBloc>();
-                                                            isDateNewest =
-                                                                false;
-                                                            isDateOldest = true;
-                                                            isAmountHighest =
-                                                                false;
-                                                            isAmountLowest =
-                                                                false;
-                                                            sortText = "Oldest";
-                                                            sortDisplayStatementList(
-                                                              isDateNewest,
-                                                              isDateOldest,
-                                                              isAmountHighest,
-                                                              isAmountLowest,
-                                                            );
-                                                            isShowSort = false;
-                                                            showButtonBloc.add(
-                                                              ShowButtonEvent(
-                                                                show: isDateNewest &&
-                                                                    isDateOldest &&
-                                                                    isAmountHighest &&
-                                                                    isAmountLowest,
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 20),
-                                                        Text(
-                                                          "Amount",
-                                                          style: TextStyles
-                                                              .primaryMedium
-                                                              .copyWith(
-                                                                  color: AppColors
-                                                                      .dark50,
-                                                                  fontSize: (16 /
-                                                                          Dimensions
-                                                                              .designWidth)
-                                                                      .w),
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 15),
-                                                        MultiSelectButton(
-                                                          isSelected:
-                                                              isAmountHighest,
-                                                          content: Text(
-                                                            "Highest amount first",
-                                                            style: TextStyles
-                                                                .primaryMedium
-                                                                .copyWith(
-                                                              color: AppColors
-                                                                  .primaryDark,
-                                                              fontSize: (18 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            final ShowButtonBloc
-                                                                showButtonBloc =
-                                                                context.read<
-                                                                    ShowButtonBloc>();
-                                                            isDateNewest =
-                                                                false;
-                                                            isDateOldest =
-                                                                false;
-                                                            isAmountHighest =
-                                                                true;
-                                                            isAmountLowest =
-                                                                false;
-                                                            sortText =
-                                                                "Highest";
-                                                            sortDisplayStatementList(
-                                                              isDateNewest,
-                                                              isDateOldest,
-                                                              isAmountHighest,
-                                                              isAmountLowest,
-                                                            );
-                                                            isShowSort = false;
-                                                            showButtonBloc.add(
-                                                              ShowButtonEvent(
-                                                                show: isDateNewest &&
-                                                                    isDateOldest &&
-                                                                    isAmountHighest &&
-                                                                    isAmountLowest,
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 10),
-                                                        MultiSelectButton(
-                                                          isSelected:
-                                                              isAmountLowest,
-                                                          content: Text(
-                                                            "Lowest amount first",
-                                                            style: TextStyles
-                                                                .primaryMedium
-                                                                .copyWith(
-                                                              color: AppColors
-                                                                  .primaryDark,
-                                                              fontSize: (18 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            final ShowButtonBloc
-                                                                showButtonBloc =
-                                                                context.read<
-                                                                    ShowButtonBloc>();
-                                                            isDateNewest =
-                                                                false;
-                                                            isDateOldest =
-                                                                false;
-                                                            isAmountHighest =
-                                                                false;
-                                                            isAmountLowest =
-                                                                true;
-                                                            sortText = "Lowest";
-                                                            sortDisplayStatementList(
-                                                              isDateNewest,
-                                                              isDateOldest,
-                                                              isAmountHighest,
-                                                              isAmountLowest,
-                                                            );
-                                                            isShowSort = false;
-                                                            showButtonBloc.add(
-                                                              ShowButtonEvent(
-                                                                show: isDateNewest &&
-                                                                    isDateOldest &&
-                                                                    isAmountHighest &&
-                                                                    isAmountLowest,
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  // GradientButton(
-                                                  //   onTap: () {
-                                                  //     final ShowButtonBloc
-                                                  //         showButtonBloc = context
-                                                  //             .read<ShowButtonBloc>();
-                                                  //     isShowSort = false;
-                                                  //     showButtonBloc.add(
-                                                  //       ShowButtonEvent(
-                                                  //         show: isShowFilter,
-                                                  //       ),
-                                                  //     );
-                                                  //   },
-                                                  //   text:
-                                                  //       "Show ${displayStatementList.length} transactions",
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    // ! Deposit tab related draggable listview UI
-                                    falsy: BlocBuilder<ShowButtonBloc,
-                                        ShowButtonState>(
-                                      builder: (context, state) {
-                                        return Ternary(
-                                          condition: !isShowDepositFilter &&
-                                              !isShowDepositSort,
-                                          truthy: SizedBox(
-                                            height: 85.h,
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    // ! Recent Transactions
-                                                    Text(
-                                                      labels[10]["labelText"],
-                                                      style: TextStyles.primary
-                                                          .copyWith(
-                                                        color: AppColors.dark50,
-                                                        fontSize: (16 /
-                                                                Dimensions
-                                                                    .designWidth)
-                                                            .w,
-                                                      ),
-                                                    ),
-                                                    // ! Download statement
-                                                    InkWell(
-                                                      onTap: () {
-                                                        Navigator.pushNamed(
-                                                          context,
-                                                          Routes
-                                                              .downloadStatement,
-                                                          arguments:
-                                                              DownloadStatementArgumentModel(
-                                                            accountNumber:
-                                                                accountDetails[
-                                                                        0][
-                                                                    "accountNumber"],
-                                                          ).toMap(),
-                                                        );
-                                                      },
-                                                      child: Row(
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
                                                         children: [
-                                                          SvgPicture.asset(
-                                                            ImageConstants
-                                                                .download,
-                                                            width: (15 /
-                                                                    Dimensions
-                                                                        .designWidth)
-                                                                .w,
-                                                            height: (15 /
-                                                                    Dimensions
-                                                                        .designWidth)
-                                                                .w,
-                                                          ),
-                                                          const SizeBox(
-                                                              width: 10),
+                                                          // ! Recent Transactions
                                                           Text(
-                                                            labels[89]
+                                                            labels[10]
                                                                 ["labelText"],
                                                             style: TextStyles
                                                                 .primary
@@ -1863,944 +1971,983 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                   .w,
                                                             ),
                                                           ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizeBox(height: 15),
-                                                // ! Account number, sort and filter bar
-                                                Container(
-                                                  width: 100.w,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular((10 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w),
-                                                    ),
-                                                    color: AppColors.primary10,
-                                                  ),
-                                                  padding: EdgeInsets.all(
-                                                    (10 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      // ! pick subaccount
-                                                      InkWell(
-                                                        onTap: () {
-                                                          showModalBottomSheet(
-                                                            context: context,
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .transparent,
-                                                            builder: (context) {
-                                                              return Container(
-                                                                width: 100.w,
-                                                                height: (10.h) *
-                                                                    depositDetails
-                                                                        .length,
-                                                                padding: EdgeInsets
-                                                                    .symmetric(
-                                                                  vertical: (PaddingConstants
-                                                                              .horizontalPadding /
+                                                          // ! Download statement
+                                                          InkWell(
+                                                            onTap: () {
+                                                              Navigator
+                                                                  .pushNamed(
+                                                                context,
+                                                                Routes
+                                                                    .downloadStatement,
+                                                                arguments:
+                                                                    DownloadStatementArgumentModel(
+                                                                  accountNumber:
+                                                                      accountDetails[
+                                                                              0]
+                                                                          [
+                                                                          "accountNumber"],
+                                                                ).toMap(),
+                                                              );
+                                                            },
+                                                            child: Row(
+                                                              children: [
+                                                                SvgPicture
+                                                                    .asset(
+                                                                  ImageConstants
+                                                                      .download,
+                                                                  width: (15 /
                                                                           Dimensions
-                                                                              .designHeight)
-                                                                      .h,
-                                                                  horizontal:
-                                                                      (PaddingConstants.horizontalPadding /
-                                                                              Dimensions.designWidth)
-                                                                          .w,
+                                                                              .designWidth)
+                                                                      .w,
+                                                                  height: (15 /
+                                                                          Dimensions
+                                                                              .designWidth)
+                                                                      .w,
                                                                 ),
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .only(
-                                                                    topLeft: Radius
-                                                                        .circular((10 /
-                                                                                Dimensions.designWidth)
-                                                                            .w),
-                                                                    topRight: Radius
-                                                                        .circular((10 /
-                                                                                Dimensions.designWidth)
-                                                                            .w),
+                                                                const SizeBox(
+                                                                    width: 10),
+                                                                Text(
+                                                                  labels[89][
+                                                                      "labelText"],
+                                                                  style: TextStyles
+                                                                      .primary
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .dark50,
+                                                                    fontSize:
+                                                                        (16 / Dimensions.designWidth)
+                                                                            .w,
                                                                   ),
                                                                 ),
-                                                                child: BlocBuilder<
-                                                                    ShowButtonBloc,
-                                                                    ShowButtonState>(
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizeBox(height: 15),
+                                                      // ! Account number, sort and filter bar
+                                                      Container(
+                                                        width: 100.w,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular((10 /
+                                                                    Dimensions
+                                                                        .designWidth)
+                                                                .w),
+                                                          ),
+                                                          color: AppColors
+                                                              .primary10,
+                                                        ),
+                                                        padding: EdgeInsets.all(
+                                                          (10 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w,
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            // ! pick subaccount
+                                                            InkWell(
+                                                              onTap: () {
+                                                                showModalBottomSheet(
+                                                                  context:
+                                                                      context,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .transparent,
                                                                   builder:
-                                                                      (context1,
-                                                                          state) {
-                                                                    return Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        Ternary(
-                                                                          condition:
-                                                                              isChangingDepositAccount,
-                                                                          truthy:
-                                                                              Center(
-                                                                            child:
-                                                                                SpinKitFadingCircle(
-                                                                              color: AppColors.primary,
-                                                                              size: (50 / Dimensions.designWidth).w,
-                                                                            ),
-                                                                          ),
-                                                                          falsy:
-                                                                              Expanded(
-                                                                            child:
-                                                                                ListView.builder(
-                                                                              itemCount: depositDetails.length,
-                                                                              itemBuilder: (context, index) {
-                                                                                return ListTile(
-                                                                                  dense: true,
-                                                                                  onTap: () async {
-                                                                                    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-                                                                                    isChangingDepositAccount = true;
-                                                                                    showButtonBloc.add(
-                                                                                      ShowButtonEvent(show: isChangingDepositAccount),
-                                                                                    );
-                                                                                    await storage.write(key: "chosenFdAccount", value: index.toString());
-                                                                                    storageChosenFdAccount = int.parse(await storage.read(key: "chosenFdAccount") ?? "0");
-                                                                                    log("storageChosenFdAccount -> $storageChosenFdAccount");
-
-                                                                                    getCustomerFdAccountStatement();
-
-                                                                                    isChangingDepositAccount = false;
-                                                                                    showButtonBloc.add(
-                                                                                      ShowButtonEvent(show: isChangingDepositAccount),
-                                                                                    );
-                                                                                    if (context1.mounted) {
-                                                                                      Navigator.pop(context1);
-                                                                                    }
-                                                                                  },
-                                                                                  leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.uaeFlag),
-                                                                                  title: Text(
-                                                                                    depositDetails[index]["depositAccountNumber"],
-                                                                                    style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),
-                                                                                  ),
-                                                                                  subtitle: Text(
-                                                                                    // accountDetails[index]["productCode"] == "1001" ? "Current" : "Savings",
-                                                                                    "Fixed Deposit",
-                                                                                    style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
-                                                                                  ),
-                                                                                  trailing: Text(
-                                                                                    depositDetails[index]["depositPrincipalAmount"],
-                                                                                    style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
-                                                                                  ),
-                                                                                );
-                                                                              },
-                                                                            ),
-                                                                          ),
+                                                                      (context) {
+                                                                    return Container(
+                                                                      width:
+                                                                          100.w,
+                                                                      height: (10
+                                                                              .h) *
+                                                                          depositDetails
+                                                                              .length,
+                                                                      padding:
+                                                                          EdgeInsets
+                                                                              .symmetric(
+                                                                        vertical:
+                                                                            (PaddingConstants.horizontalPadding / Dimensions.designHeight).h,
+                                                                        horizontal:
+                                                                            (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+                                                                      ),
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        borderRadius:
+                                                                            BorderRadius.only(
+                                                                          topLeft:
+                                                                              Radius.circular((10 / Dimensions.designWidth).w),
+                                                                          topRight:
+                                                                              Radius.circular((10 / Dimensions.designWidth).w),
                                                                         ),
-                                                                      ],
+                                                                      ),
+                                                                      child: BlocBuilder<
+                                                                          ShowButtonBloc,
+                                                                          ShowButtonState>(
+                                                                        builder:
+                                                                            (context1,
+                                                                                state) {
+                                                                          return Column(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.center,
+                                                                            children: [
+                                                                              Ternary(
+                                                                                condition: isChangingDepositAccount,
+                                                                                truthy: Center(
+                                                                                  child: SpinKitFadingCircle(
+                                                                                    color: AppColors.primary,
+                                                                                    size: (50 / Dimensions.designWidth).w,
+                                                                                  ),
+                                                                                ),
+                                                                                falsy: Expanded(
+                                                                                  child: ListView.builder(
+                                                                                    itemCount: depositDetails.length,
+                                                                                    itemBuilder: (context, index) {
+                                                                                      return ListTile(
+                                                                                        dense: true,
+                                                                                        onTap: () async {
+                                                                                          final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+                                                                                          isChangingDepositAccount = true;
+                                                                                          showButtonBloc.add(
+                                                                                            ShowButtonEvent(show: isChangingDepositAccount),
+                                                                                          );
+                                                                                          await storage.write(key: "chosenFdAccount", value: index.toString());
+                                                                                          storageChosenFdAccount = int.parse(await storage.read(key: "chosenFdAccount") ?? "0");
+                                                                                          log("storageChosenFdAccount -> $storageChosenFdAccount");
+
+                                                                                          getCustomerFdAccountStatement();
+
+                                                                                          isChangingDepositAccount = false;
+                                                                                          showButtonBloc.add(
+                                                                                            ShowButtonEvent(show: isChangingDepositAccount),
+                                                                                          );
+                                                                                          if (context1.mounted) {
+                                                                                            Navigator.pop(context1);
+                                                                                          }
+                                                                                        },
+                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.uaeFlag),
+                                                                                        title: Text(
+                                                                                          depositDetails[index]["depositAccountNumber"],
+                                                                                          style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),
+                                                                                        ),
+                                                                                        subtitle: Text(
+                                                                                          // accountDetails[index]["productCode"] == "1001" ? "Current" : "Savings",
+                                                                                          "Fixed Deposit",
+                                                                                          style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
+                                                                                        ),
+                                                                                        trailing: Text(
+                                                                                          depositDetails[index]["depositPrincipalAmount"],
+                                                                                          style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
+                                                                                        ),
+                                                                                      );
+                                                                                    },
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      ),
                                                                     );
                                                                   },
+                                                                );
+                                                              },
+                                                              child:
+                                                                  const SizeBox(),
+                                                              // const Row(
+                                                              //   children: [
+                                                              //     // Text(
+                                                              //     //   "Account: ",
+                                                              //     //   style: TextStyles
+                                                              //     //       .primaryMedium
+                                                              //     //       .copyWith(
+                                                              //     //     color: AppColors
+                                                              //     //         .dark50,
+                                                              //     //     fontSize: (14 /
+                                                              //     //             Dimensions
+                                                              //     //                 .designWidth)
+                                                              //     //         .w,
+                                                              //     //   ),
+                                                              //     // ),
+                                                              //     // Text(
+                                                              //     //   // "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? "Current" : "Savings"} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
+                                                              //     //   "Fixed ****${depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].substring(depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length - 4, depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length)}",
+                                                              //     //   style: TextStyles
+                                                              //     //       .primaryMedium
+                                                              //     //       .copyWith(
+                                                              //     //     color: AppColors
+                                                              //     //         .primary,
+                                                              //     //     fontSize: (14 /
+                                                              //     //             Dimensions
+                                                              //     //                 .designWidth)
+                                                              //     //         .w,
+                                                              //     //   ),
+                                                              //     // ),
+                                                              //     // Icon(
+                                                              //     //   Icons
+                                                              //     //       .arrow_drop_down_rounded,
+                                                              //     //   color: AppColors
+                                                              //     //       .dark80,
+                                                              //     //   size: (20 /
+                                                              //     //           Dimensions
+                                                              //     //               .designWidth)
+                                                              //     //       .w,
+                                                              //     // ),
+                                                              //   ],
+                                                              // ),
+                                                            ),
+                                                            // const SizeBox(width: 5),
+                                                            // Text(
+                                                            //   "|",
+                                                            //   style: TextStyles
+                                                            //       .primaryMedium
+                                                            //       .copyWith(
+                                                            //     color:
+                                                            //         AppColors.dark50,
+                                                            //     fontSize: (16 /
+                                                            //             Dimensions
+                                                            //                 .designWidth)
+                                                            //         .w,
+                                                            //   ),
+                                                            // ),
+                                                            // const SizeBox(width: 10),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                // final ShowButtonBloc
+                                                                //     showButtonBloc =
+                                                                //     context.read<
+                                                                //         ShowButtonBloc>();
+                                                                // isShowFilter = true;
+                                                                // showButtonBloc.add(
+                                                                //   ShowButtonEvent(
+                                                                //       show:
+                                                                //           isShowFilter),
+                                                                // );
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture
+                                                                      .asset(
+                                                                    ImageConstants
+                                                                        .filter,
+                                                                    width: (12 /
+                                                                            Dimensions.designHeight)
+                                                                        .w,
+                                                                    height: (12 /
+                                                                            Dimensions.designWidth)
+                                                                        .w,
+                                                                  ),
+                                                                  const SizeBox(
+                                                                      width: 5),
+                                                                  Text(
+                                                                    filterTextFD,
+                                                                    style: TextStyles
+                                                                        .primaryMedium
+                                                                        .copyWith(
+                                                                      color: AppColors
+                                                                          .primary,
+                                                                      fontSize:
+                                                                          (14 / Dimensions.designWidth)
+                                                                              .w,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            const SizeBox(
+                                                                width: 10),
+                                                            Text(
+                                                              "|",
+                                                              style: TextStyles
+                                                                  .primaryMedium
+                                                                  .copyWith(
+                                                                color: AppColors
+                                                                    .dark50,
+                                                                fontSize: (16 /
+                                                                        Dimensions
+                                                                            .designWidth)
+                                                                    .w,
+                                                              ),
+                                                            ),
+                                                            const SizeBox(
+                                                                width: 10),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                final ShowButtonBloc
+                                                                    showButtonBloc =
+                                                                    context.read<
+                                                                        ShowButtonBloc>();
+                                                                isShowDepositSort =
+                                                                    true;
+                                                                showButtonBloc
+                                                                    .add(
+                                                                  ShowButtonEvent(
+                                                                      show:
+                                                                          isShowSort),
+                                                                );
+                                                              },
+                                                              child: Row(
+                                                                children: [
+                                                                  SvgPicture
+                                                                      .asset(
+                                                                    ImageConstants
+                                                                        .sort,
+                                                                    width: (10 /
+                                                                            Dimensions.designHeight)
+                                                                        .w,
+                                                                    height: (10 /
+                                                                            Dimensions.designWidth)
+                                                                        .w,
+                                                                  ),
+                                                                  const SizeBox(
+                                                                      width: 5),
+                                                                  Text(
+                                                                    sortTextFD,
+                                                                    style: TextStyles
+                                                                        .primaryMedium
+                                                                        .copyWith(
+                                                                      color: AppColors
+                                                                          .primary,
+                                                                      fontSize:
+                                                                          (14 / Dimensions.designWidth)
+                                                                              .w,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      const SizeBox(height: 15),
+                                                      Ternary(
+                                                        condition:
+                                                            displayFdStatementList
+                                                                .isEmpty,
+                                                        truthy: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            const SizeBox(
+                                                                height: 70),
+                                                            Text(
+                                                              "No FD transactions",
+                                                              style: TextStyles
+                                                                  .primaryBold
+                                                                  .copyWith(
+                                                                color: AppColors
+                                                                    .dark30,
+                                                                fontSize: (24 /
+                                                                        Dimensions
+                                                                            .designWidth)
+                                                                    .w,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        falsy: Expanded(
+                                                          child:
+                                                              ListView.builder(
+                                                            controller:
+                                                                scrollController,
+                                                            itemCount:
+                                                                displayFdStatementList
+                                                                    .length,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return DashboardTransactionListTile(
+                                                                onTap: () {},
+                                                                isCredit: true,
+                                                                title: displayFdStatementList[
+                                                                        index][
+                                                                    "description"],
+                                                                name: displayFdStatementList[
+                                                                        index][
+                                                                    "customerName"],
+                                                                amount: double.parse(
+                                                                    displayFdStatementList[
+                                                                            index]
+                                                                        [
+                                                                        "amount"]),
+                                                                currency: displayFdStatementList[
+                                                                        index][
+                                                                    "amountCurrency"],
+                                                                date: DateFormat(
+                                                                        'EEE, MMM dd yyyy')
+                                                                    .format(
+                                                                  DateTime
+                                                                      .parse(
+                                                                    displayFdStatementList[
+                                                                            index]
+                                                                        [
+                                                                        "bookingDate"],
+                                                                  ),
                                                                 ),
                                                               );
                                                             },
-                                                          );
-                                                        },
-                                                        child: const SizeBox(),
-                                                        // const Row(
-                                                        //   children: [
-                                                        //     // Text(
-                                                        //     //   "Account: ",
-                                                        //     //   style: TextStyles
-                                                        //     //       .primaryMedium
-                                                        //     //       .copyWith(
-                                                        //     //     color: AppColors
-                                                        //     //         .dark50,
-                                                        //     //     fontSize: (14 /
-                                                        //     //             Dimensions
-                                                        //     //                 .designWidth)
-                                                        //     //         .w,
-                                                        //     //   ),
-                                                        //     // ),
-                                                        //     // Text(
-                                                        //     //   // "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? "Current" : "Savings"} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
-                                                        //     //   "Fixed ****${depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].substring(depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length - 4, depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length)}",
-                                                        //     //   style: TextStyles
-                                                        //     //       .primaryMedium
-                                                        //     //       .copyWith(
-                                                        //     //     color: AppColors
-                                                        //     //         .primary,
-                                                        //     //     fontSize: (14 /
-                                                        //     //             Dimensions
-                                                        //     //                 .designWidth)
-                                                        //     //         .w,
-                                                        //     //   ),
-                                                        //     // ),
-                                                        //     // Icon(
-                                                        //     //   Icons
-                                                        //     //       .arrow_drop_down_rounded,
-                                                        //     //   color: AppColors
-                                                        //     //       .dark80,
-                                                        //     //   size: (20 /
-                                                        //     //           Dimensions
-                                                        //     //               .designWidth)
-                                                        //     //       .w,
-                                                        //     // ),
-                                                        //   ],
-                                                        // ),
-                                                      ),
-                                                      // const SizeBox(width: 5),
-                                                      // Text(
-                                                      //   "|",
-                                                      //   style: TextStyles
-                                                      //       .primaryMedium
-                                                      //       .copyWith(
-                                                      //     color:
-                                                      //         AppColors.dark50,
-                                                      //     fontSize: (16 /
-                                                      //             Dimensions
-                                                      //                 .designWidth)
-                                                      //         .w,
-                                                      //   ),
-                                                      // ),
-                                                      // const SizeBox(width: 10),
-                                                      InkWell(
-                                                        onTap: () {
-                                                          // final ShowButtonBloc
-                                                          //     showButtonBloc =
-                                                          //     context.read<
-                                                          //         ShowButtonBloc>();
-                                                          // isShowFilter = true;
-                                                          // showButtonBloc.add(
-                                                          //   ShowButtonEvent(
-                                                          //       show:
-                                                          //           isShowFilter),
-                                                          // );
-                                                        },
-                                                        child: Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              ImageConstants
-                                                                  .filter,
-                                                              width: (12 /
-                                                                      Dimensions
-                                                                          .designHeight)
-                                                                  .w,
-                                                              height: (12 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                            const SizeBox(
-                                                                width: 5),
-                                                            Text(
-                                                              filterTextFD,
-                                                              style: TextStyles
-                                                                  .primaryMedium
-                                                                  .copyWith(
-                                                                color: AppColors
-                                                                    .primary,
-                                                                fontSize: (14 /
-                                                                        Dimensions
-                                                                            .designWidth)
-                                                                    .w,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      const SizeBox(width: 10),
-                                                      Text(
-                                                        "|",
-                                                        style: TextStyles
-                                                            .primaryMedium
-                                                            .copyWith(
-                                                          color:
-                                                              AppColors.dark50,
-                                                          fontSize: (16 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                        ),
-                                                      ),
-                                                      const SizeBox(width: 10),
-                                                      InkWell(
-                                                        onTap: () {
-                                                          final ShowButtonBloc
-                                                              showButtonBloc =
-                                                              context.read<
-                                                                  ShowButtonBloc>();
-                                                          isShowDepositSort =
-                                                              true;
-                                                          showButtonBloc.add(
-                                                            ShowButtonEvent(
-                                                                show:
-                                                                    isShowSort),
-                                                          );
-                                                        },
-                                                        child: Row(
-                                                          children: [
-                                                            SvgPicture.asset(
-                                                              ImageConstants
-                                                                  .sort,
-                                                              width: (10 /
-                                                                      Dimensions
-                                                                          .designHeight)
-                                                                  .w,
-                                                              height: (10 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                            const SizeBox(
-                                                                width: 5),
-                                                            Text(
-                                                              sortTextFD,
-                                                              style: TextStyles
-                                                                  .primaryMedium
-                                                                  .copyWith(
-                                                                color: AppColors
-                                                                    .primary,
-                                                                fontSize: (14 /
-                                                                        Dimensions
-                                                                            .designWidth)
-                                                                    .w,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizeBox(height: 15),
-                                                Ternary(
-                                                  condition:
-                                                      displayFdStatementList
-                                                          .isEmpty,
-                                                  truthy: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      const SizeBox(height: 70),
-                                                      Text(
-                                                        "No FD transactions",
-                                                        style: TextStyles
-                                                            .primaryBold
-                                                            .copyWith(
-                                                          color:
-                                                              AppColors.dark30,
-                                                          fontSize: (24 /
-                                                                  Dimensions
-                                                                      .designWidth)
-                                                              .w,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  falsy: Expanded(
-                                                    child: ListView.builder(
-                                                      controller:
-                                                          scrollController,
-                                                      itemCount:
-                                                          displayFdStatementList
-                                                              .length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return DashboardTransactionListTile(
-                                                          onTap: () {},
-                                                          isCredit: true,
-                                                          title:
-                                                              displayFdStatementList[
-                                                                      index][
-                                                                  "description"],
-                                                          name: displayFdStatementList[
-                                                                  index]
-                                                              ["customerName"],
-                                                          amount: double.parse(
-                                                              displayFdStatementList[
-                                                                      index]
-                                                                  ["amount"]),
-                                                          currency:
-                                                              displayFdStatementList[
-                                                                      index][
-                                                                  "amountCurrency"],
-                                                          date: DateFormat(
-                                                                  'EEE, MMM dd yyyy')
-                                                              .format(
-                                                            DateTime.parse(
-                                                              displayFdStatementList[
-                                                                      index][
-                                                                  "bookingDate"],
-                                                            ),
                                                           ),
-                                                        );
-                                                      },
-                                                    ),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                          falsy: Ternary(
-                                            condition: isShowDepositFilter,
-                                            truthy: const SizedBox(
-                                                // height:
-                                                //     // _dsController.size,
-                                                //     29.h,
-                                                // child: Column(
-                                                //   crossAxisAlignment:
-                                                //       CrossAxisAlignment.start,
-                                                //   children: [
-                                                //     Expanded(
-                                                //       child: Column(
-                                                //         crossAxisAlignment:
-                                                //             CrossAxisAlignment
-                                                //                 .start,
-                                                //         children: [
-                                                //           Row(
-                                                //             mainAxisAlignment:
-                                                //                 MainAxisAlignment
-                                                //                     .spaceBetween,
-                                                //             children: [
-                                                //               Text(
-                                                //                 "Filter",
-                                                //                 style: TextStyles
-                                                //                     .primaryBold
-                                                //                     .copyWith(
-                                                //                         color: AppColors
-                                                //                             .dark50,
-                                                //                         fontSize:
-                                                //                             (20 / Dimensions.designWidth)
-                                                //                                 .w),
-                                                //               ),
-                                                //             ],
-                                                //           ),
-                                                //           const SizeBox(
-                                                //               height: 20),
-                                                //           Text(
-                                                //             "Transaction type",
-                                                //             style: TextStyles
-                                                //                 .primaryMedium
-                                                //                 .copyWith(
-                                                //                     color: AppColors
-                                                //                         .dark50,
-                                                //                     fontSize: (16 /
-                                                //                             Dimensions
-                                                //                                 .designWidth)
-                                                //                         .w),
-                                                //           ),
-                                                //           const SizeBox(
-                                                //               height: 15),
-                                                //           Row(
-                                                //             children: [
-                                                //               SolidButton(
-                                                //                 width: (118 /
-                                                //                         Dimensions
-                                                //                             .designWidth)
-                                                //                     .w,
-                                                //                 color:
-                                                //                     Colors.white,
-                                                //                 fontColor:
-                                                //                     AppColors
-                                                //                         .primary,
-                                                //                 boxShadow: [
-                                                //                   BoxShadows
-                                                //                       .primary
-                                                //                 ],
-                                                //                 borderColor: isAllSelected
-                                                //                     ? const Color
-                                                //                             .fromRGBO(
-                                                //                         0,
-                                                //                         184,
-                                                //                         148,
-                                                //                         0.21)
-                                                //                     : Colors
-                                                //                         .transparent,
-                                                //                 onTap: () {
-                                                //                   final ShowButtonBloc
-                                                //                       showButtonBloc =
-                                                //                       context.read<
-                                                //                           ShowButtonBloc>();
-                                                //                   isAllSelected =
-                                                //                       true;
-                                                //                   isSentSelected =
-                                                //                       false;
-                                                //                   isReceivedSelected =
-                                                //                       false;
-                                                //                   filterText =
-                                                //                       "All";
-                                                //                   populateDisplayStatementList(
-                                                //                     isAllSelected,
-                                                //                     isSentSelected,
-                                                //                     isReceivedSelected,
-                                                //                   );
-                                                //                   sortDisplayStatementList(
-                                                //                     isDateNewest,
-                                                //                     isDateOldest,
-                                                //                     isAmountHighest,
-                                                //                     isAmountLowest,
-                                                //                   );
-                                                //                   showButtonBloc
-                                                //                       .add(
-                                                //                     ShowButtonEvent(
-                                                //                       show: isAllSelected &&
-                                                //                           isSentSelected &&
-                                                //                           isReceivedSelected,
-                                                //                     ),
-                                                //                   );
-                                                //                 },
-                                                //                 text: "All",
-                                                //               ),
-                                                //               const SizeBox(
-                                                //                   width: 15),
-                                                //               SolidButton(
-                                                //                 width: (118 /
-                                                //                         Dimensions
-                                                //                             .designWidth)
-                                                //                     .w,
-                                                //                 color:
-                                                //                     Colors.white,
-                                                //                 fontColor:
-                                                //                     AppColors
-                                                //                         .primary,
-                                                //                 boxShadow: [
-                                                //                   BoxShadows
-                                                //                       .primary
-                                                //                 ],
-                                                //                 borderColor: isSentSelected
-                                                //                     ? const Color
-                                                //                             .fromRGBO(
-                                                //                         0,
-                                                //                         184,
-                                                //                         148,
-                                                //                         0.21)
-                                                //                     : Colors
-                                                //                         .transparent,
-                                                //                 onTap: () {
-                                                //                   final ShowButtonBloc
-                                                //                       showButtonBloc =
-                                                //                       context.read<
-                                                //                           ShowButtonBloc>();
-                                                //                   isAllSelected =
-                                                //                       false;
-                                                //                   isSentSelected =
-                                                //                       true;
-                                                //                   isReceivedSelected =
-                                                //                       false;
-                                                //                   filterText =
-                                                //                       "Sent";
-                                                //                   populateDisplayStatementList(
-                                                //                     isAllSelected,
-                                                //                     isSentSelected,
-                                                //                     isReceivedSelected,
-                                                //                   );
-                                                //                   sortDisplayStatementList(
-                                                //                     isDateNewest,
-                                                //                     isDateOldest,
-                                                //                     isAmountHighest,
-                                                //                     isAmountLowest,
-                                                //                   );
-                                                //                   showButtonBloc
-                                                //                       .add(
-                                                //                     ShowButtonEvent(
-                                                //                       show: isAllSelected &&
-                                                //                           isSentSelected &&
-                                                //                           isReceivedSelected,
-                                                //                     ),
-                                                //                   );
-                                                //                 },
-                                                //                 text: "Sent",
-                                                //               ),
-                                                //               const SizeBox(
-                                                //                   width: 15),
-                                                //               SolidButton(
-                                                //                 width: (118 /
-                                                //                         Dimensions
-                                                //                             .designWidth)
-                                                //                     .w,
-                                                //                 color:
-                                                //                     Colors.white,
-                                                //                 fontColor:
-                                                //                     AppColors
-                                                //                         .primary,
-                                                //                 boxShadow: [
-                                                //                   BoxShadows
-                                                //                       .primary
-                                                //                 ],
-                                                //                 borderColor: isReceivedSelected
-                                                //                     ? const Color
-                                                //                             .fromRGBO(
-                                                //                         0,
-                                                //                         184,
-                                                //                         148,
-                                                //                         0.21)
-                                                //                     : Colors
-                                                //                         .transparent,
-                                                //                 onTap: () {
-                                                //                   final ShowButtonBloc
-                                                //                       showButtonBloc =
-                                                //                       context.read<
-                                                //                           ShowButtonBloc>();
-                                                //                   isAllSelected =
-                                                //                       false;
-                                                //                   isSentSelected =
-                                                //                       false;
-                                                //                   isReceivedSelected =
-                                                //                       true;
-                                                //                   filterText =
-                                                //                       "Received";
-                                                //                   populateDisplayStatementList(
-                                                //                     isAllSelected,
-                                                //                     isSentSelected,
-                                                //                     isReceivedSelected,
-                                                //                   );
-                                                //                   sortDisplayStatementList(
-                                                //                     isDateNewest,
-                                                //                     isDateOldest,
-                                                //                     isAmountHighest,
-                                                //                     isAmountLowest,
-                                                //                   );
-                                                //                   showButtonBloc
-                                                //                       .add(
-                                                //                     ShowButtonEvent(
-                                                //                       show: isAllSelected &&
-                                                //                           isSentSelected &&
-                                                //                           isReceivedSelected,
-                                                //                     ),
-                                                //                   );
-                                                //                 },
-                                                //                 text: "Received",
-                                                //               ),
-                                                //             ],
-                                                //           ),
-                                                //         ],
-                                                //       ),
-                                                //     ),
-                                                //     GradientButton(
-                                                //       onTap: () {
-                                                //         final ShowButtonBloc
-                                                //             showButtonBloc =
-                                                //             context.read<
-                                                //                 ShowButtonBloc>();
-                                                //         isShowFilter = false;
-                                                //         showButtonBloc.add(
-                                                //           ShowButtonEvent(
-                                                //             show: isShowFilter,
-                                                //           ),
-                                                //         );
-                                                //       },
-                                                //       text:
-                                                //           "Show ${displayStatementList.length} transactions",
-                                                //     ),
-                                                //   ],
-                                                // ),
-                                                ),
-                                            falsy: SizedBox(
-                                              height: 85.h,
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Expanded(
+                                                falsy: Ternary(
+                                                  condition:
+                                                      isShowDepositFilter,
+                                                  truthy: const SizedBox(
+                                                      // height:
+                                                      //     // _dsController.size,
+                                                      //     29.h,
+                                                      // child: Column(
+                                                      //   crossAxisAlignment:
+                                                      //       CrossAxisAlignment.start,
+                                                      //   children: [
+                                                      //     Expanded(
+                                                      //       child: Column(
+                                                      //         crossAxisAlignment:
+                                                      //             CrossAxisAlignment
+                                                      //                 .start,
+                                                      //         children: [
+                                                      //           Row(
+                                                      //             mainAxisAlignment:
+                                                      //                 MainAxisAlignment
+                                                      //                     .spaceBetween,
+                                                      //             children: [
+                                                      //               Text(
+                                                      //                 "Filter",
+                                                      //                 style: TextStyles
+                                                      //                     .primaryBold
+                                                      //                     .copyWith(
+                                                      //                         color: AppColors
+                                                      //                             .dark50,
+                                                      //                         fontSize:
+                                                      //                             (20 / Dimensions.designWidth)
+                                                      //                                 .w),
+                                                      //               ),
+                                                      //             ],
+                                                      //           ),
+                                                      //           const SizeBox(
+                                                      //               height: 20),
+                                                      //           Text(
+                                                      //             "Transaction type",
+                                                      //             style: TextStyles
+                                                      //                 .primaryMedium
+                                                      //                 .copyWith(
+                                                      //                     color: AppColors
+                                                      //                         .dark50,
+                                                      //                     fontSize: (16 /
+                                                      //                             Dimensions
+                                                      //                                 .designWidth)
+                                                      //                         .w),
+                                                      //           ),
+                                                      //           const SizeBox(
+                                                      //               height: 15),
+                                                      //           Row(
+                                                      //             children: [
+                                                      //               SolidButton(
+                                                      //                 width: (118 /
+                                                      //                         Dimensions
+                                                      //                             .designWidth)
+                                                      //                     .w,
+                                                      //                 color:
+                                                      //                     Colors.white,
+                                                      //                 fontColor:
+                                                      //                     AppColors
+                                                      //                         .primary,
+                                                      //                 boxShadow: [
+                                                      //                   BoxShadows
+                                                      //                       .primary
+                                                      //                 ],
+                                                      //                 borderColor: isAllSelected
+                                                      //                     ? const Color
+                                                      //                             .fromRGBO(
+                                                      //                         0,
+                                                      //                         184,
+                                                      //                         148,
+                                                      //                         0.21)
+                                                      //                     : Colors
+                                                      //                         .transparent,
+                                                      //                 onTap: () {
+                                                      //                   final ShowButtonBloc
+                                                      //                       showButtonBloc =
+                                                      //                       context.read<
+                                                      //                           ShowButtonBloc>();
+                                                      //                   isAllSelected =
+                                                      //                       true;
+                                                      //                   isSentSelected =
+                                                      //                       false;
+                                                      //                   isReceivedSelected =
+                                                      //                       false;
+                                                      //                   filterText =
+                                                      //                       "All";
+                                                      //                   populateDisplayStatementList(
+                                                      //                     isAllSelected,
+                                                      //                     isSentSelected,
+                                                      //                     isReceivedSelected,
+                                                      //                   );
+                                                      //                   sortDisplayStatementList(
+                                                      //                     isDateNewest,
+                                                      //                     isDateOldest,
+                                                      //                     isAmountHighest,
+                                                      //                     isAmountLowest,
+                                                      //                   );
+                                                      //                   showButtonBloc
+                                                      //                       .add(
+                                                      //                     ShowButtonEvent(
+                                                      //                       show: isAllSelected &&
+                                                      //                           isSentSelected &&
+                                                      //                           isReceivedSelected,
+                                                      //                     ),
+                                                      //                   );
+                                                      //                 },
+                                                      //                 text: "All",
+                                                      //               ),
+                                                      //               const SizeBox(
+                                                      //                   width: 15),
+                                                      //               SolidButton(
+                                                      //                 width: (118 /
+                                                      //                         Dimensions
+                                                      //                             .designWidth)
+                                                      //                     .w,
+                                                      //                 color:
+                                                      //                     Colors.white,
+                                                      //                 fontColor:
+                                                      //                     AppColors
+                                                      //                         .primary,
+                                                      //                 boxShadow: [
+                                                      //                   BoxShadows
+                                                      //                       .primary
+                                                      //                 ],
+                                                      //                 borderColor: isSentSelected
+                                                      //                     ? const Color
+                                                      //                             .fromRGBO(
+                                                      //                         0,
+                                                      //                         184,
+                                                      //                         148,
+                                                      //                         0.21)
+                                                      //                     : Colors
+                                                      //                         .transparent,
+                                                      //                 onTap: () {
+                                                      //                   final ShowButtonBloc
+                                                      //                       showButtonBloc =
+                                                      //                       context.read<
+                                                      //                           ShowButtonBloc>();
+                                                      //                   isAllSelected =
+                                                      //                       false;
+                                                      //                   isSentSelected =
+                                                      //                       true;
+                                                      //                   isReceivedSelected =
+                                                      //                       false;
+                                                      //                   filterText =
+                                                      //                       "Sent";
+                                                      //                   populateDisplayStatementList(
+                                                      //                     isAllSelected,
+                                                      //                     isSentSelected,
+                                                      //                     isReceivedSelected,
+                                                      //                   );
+                                                      //                   sortDisplayStatementList(
+                                                      //                     isDateNewest,
+                                                      //                     isDateOldest,
+                                                      //                     isAmountHighest,
+                                                      //                     isAmountLowest,
+                                                      //                   );
+                                                      //                   showButtonBloc
+                                                      //                       .add(
+                                                      //                     ShowButtonEvent(
+                                                      //                       show: isAllSelected &&
+                                                      //                           isSentSelected &&
+                                                      //                           isReceivedSelected,
+                                                      //                     ),
+                                                      //                   );
+                                                      //                 },
+                                                      //                 text: "Sent",
+                                                      //               ),
+                                                      //               const SizeBox(
+                                                      //                   width: 15),
+                                                      //               SolidButton(
+                                                      //                 width: (118 /
+                                                      //                         Dimensions
+                                                      //                             .designWidth)
+                                                      //                     .w,
+                                                      //                 color:
+                                                      //                     Colors.white,
+                                                      //                 fontColor:
+                                                      //                     AppColors
+                                                      //                         .primary,
+                                                      //                 boxShadow: [
+                                                      //                   BoxShadows
+                                                      //                       .primary
+                                                      //                 ],
+                                                      //                 borderColor: isReceivedSelected
+                                                      //                     ? const Color
+                                                      //                             .fromRGBO(
+                                                      //                         0,
+                                                      //                         184,
+                                                      //                         148,
+                                                      //                         0.21)
+                                                      //                     : Colors
+                                                      //                         .transparent,
+                                                      //                 onTap: () {
+                                                      //                   final ShowButtonBloc
+                                                      //                       showButtonBloc =
+                                                      //                       context.read<
+                                                      //                           ShowButtonBloc>();
+                                                      //                   isAllSelected =
+                                                      //                       false;
+                                                      //                   isSentSelected =
+                                                      //                       false;
+                                                      //                   isReceivedSelected =
+                                                      //                       true;
+                                                      //                   filterText =
+                                                      //                       "Received";
+                                                      //                   populateDisplayStatementList(
+                                                      //                     isAllSelected,
+                                                      //                     isSentSelected,
+                                                      //                     isReceivedSelected,
+                                                      //                   );
+                                                      //                   sortDisplayStatementList(
+                                                      //                     isDateNewest,
+                                                      //                     isDateOldest,
+                                                      //                     isAmountHighest,
+                                                      //                     isAmountLowest,
+                                                      //                   );
+                                                      //                   showButtonBloc
+                                                      //                       .add(
+                                                      //                     ShowButtonEvent(
+                                                      //                       show: isAllSelected &&
+                                                      //                           isSentSelected &&
+                                                      //                           isReceivedSelected,
+                                                      //                     ),
+                                                      //                   );
+                                                      //                 },
+                                                      //                 text: "Received",
+                                                      //               ),
+                                                      //             ],
+                                                      //           ),
+                                                      //         ],
+                                                      //       ),
+                                                      //     ),
+                                                      //     GradientButton(
+                                                      //       onTap: () {
+                                                      //         final ShowButtonBloc
+                                                      //             showButtonBloc =
+                                                      //             context.read<
+                                                      //                 ShowButtonBloc>();
+                                                      //         isShowFilter = false;
+                                                      //         showButtonBloc.add(
+                                                      //           ShowButtonEvent(
+                                                      //             show: isShowFilter,
+                                                      //           ),
+                                                      //         );
+                                                      //       },
+                                                      //       text:
+                                                      //           "Show ${displayStatementList.length} transactions",
+                                                      //     ),
+                                                      //   ],
+                                                      // ),
+                                                      ),
+                                                  falsy: SizedBox(
+                                                    height: 85.h,
                                                     child: Column(
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Text(
-                                                              "Sort",
-                                                              style: TextStyles
-                                                                  .primaryBold
-                                                                  .copyWith(
-                                                                      color: AppColors
-                                                                          .dark50,
-                                                                      fontSize:
-                                                                          (20 / Dimensions.designWidth)
-                                                                              .w),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 20),
-                                                        Text(
-                                                          "Date",
-                                                          style: TextStyles
-                                                              .primaryMedium
-                                                              .copyWith(
-                                                                  color: AppColors
-                                                                      .dark50,
-                                                                  fontSize: (16 /
-                                                                          Dimensions
-                                                                              .designWidth)
-                                                                      .w),
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 15),
-                                                        MultiSelectButton(
-                                                          isSelected:
-                                                              isFdDateNewest,
-                                                          content: Text(
-                                                            "Newest first",
-                                                            style: TextStyles
-                                                                .primaryMedium
-                                                                .copyWith(
-                                                              color: AppColors
-                                                                  .primaryDark,
-                                                              fontSize: (18 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            final ShowButtonBloc
-                                                                showButtonBloc =
-                                                                context.read<
-                                                                    ShowButtonBloc>();
-                                                            isFdDateNewest =
-                                                                true;
-                                                            isFdDateOldest =
-                                                                false;
-                                                            isFdAmountHighest =
-                                                                false;
-                                                            isFdAmountLowest =
-                                                                false;
-                                                            sortTextFD =
-                                                                "Latest";
-                                                            sortDisplayFdStatementList(
-                                                              isFdDateNewest,
-                                                              isFdDateOldest,
-                                                              isFdAmountHighest,
-                                                              isFdAmountLowest,
-                                                            );
-                                                            isShowDepositSort =
-                                                                false;
-                                                            showButtonBloc.add(
-                                                              ShowButtonEvent(
-                                                                show: isFdDateNewest &&
-                                                                    isFdDateOldest &&
-                                                                    isFdAmountHighest &&
-                                                                    isFdAmountLowest,
+                                                        Expanded(
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Text(
+                                                                    "Sort",
+                                                                    style: TextStyles
+                                                                        .primaryBold
+                                                                        .copyWith(
+                                                                            color:
+                                                                                AppColors.dark50,
+                                                                            fontSize: (20 / Dimensions.designWidth).w),
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            );
-                                                          },
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 10),
-                                                        MultiSelectButton(
-                                                          isSelected:
-                                                              isFdDateOldest,
-                                                          content: Text(
-                                                            "Oldest first",
-                                                            style: TextStyles
-                                                                .primaryMedium
-                                                                .copyWith(
-                                                              color: AppColors
-                                                                  .primaryDark,
-                                                              fontSize: (18 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            final ShowButtonBloc
-                                                                showButtonBloc =
-                                                                context.read<
-                                                                    ShowButtonBloc>();
-                                                            isFdDateNewest =
-                                                                false;
-                                                            isFdDateOldest =
-                                                                true;
-                                                            isFdAmountHighest =
-                                                                false;
-                                                            isFdAmountLowest =
-                                                                false;
-                                                            sortTextFD =
-                                                                "Oldest";
-                                                            sortDisplayFdStatementList(
-                                                              isFdDateNewest,
-                                                              isFdDateOldest,
-                                                              isFdAmountHighest,
-                                                              isFdAmountLowest,
-                                                            );
-                                                            isShowDepositSort =
-                                                                false;
-                                                            showButtonBloc.add(
-                                                              ShowButtonEvent(
-                                                                show: isFdDateNewest &&
-                                                                    isFdDateOldest &&
-                                                                    isFdAmountHighest &&
-                                                                    isFdAmountLowest,
+                                                              const SizeBox(
+                                                                  height: 20),
+                                                              Text(
+                                                                "Date",
+                                                                style: TextStyles
+                                                                    .primaryMedium
+                                                                    .copyWith(
+                                                                        color: AppColors
+                                                                            .dark50,
+                                                                        fontSize:
+                                                                            (16 / Dimensions.designWidth).w),
                                                               ),
-                                                            );
-                                                          },
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 20),
-                                                        Text(
-                                                          "Amount",
-                                                          style: TextStyles
-                                                              .primaryMedium
-                                                              .copyWith(
-                                                                  color: AppColors
-                                                                      .dark50,
-                                                                  fontSize: (16 /
-                                                                          Dimensions
-                                                                              .designWidth)
-                                                                      .w),
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 15),
-                                                        MultiSelectButton(
-                                                          isSelected:
-                                                              isFdAmountHighest,
-                                                          content: Text(
-                                                            "Highest amount first",
-                                                            style: TextStyles
-                                                                .primaryMedium
-                                                                .copyWith(
-                                                              color: AppColors
-                                                                  .primaryDark,
-                                                              fontSize: (18 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            final ShowButtonBloc
-                                                                showButtonBloc =
-                                                                context.read<
-                                                                    ShowButtonBloc>();
-                                                            isFdDateNewest =
-                                                                false;
-                                                            isFdDateOldest =
-                                                                false;
-                                                            isFdAmountHighest =
-                                                                true;
-                                                            isFdAmountLowest =
-                                                                false;
-                                                            sortTextFD =
-                                                                "Highest";
-                                                            sortDisplayFdStatementList(
-                                                              isFdDateNewest,
-                                                              isFdDateOldest,
-                                                              isFdAmountHighest,
-                                                              isFdAmountLowest,
-                                                            );
-                                                            isShowDepositSort =
-                                                                false;
-                                                            showButtonBloc.add(
-                                                              ShowButtonEvent(
-                                                                show: isFdDateNewest &&
-                                                                    isFdDateOldest &&
-                                                                    isFdAmountHighest &&
+                                                              const SizeBox(
+                                                                  height: 15),
+                                                              MultiSelectButton(
+                                                                isSelected:
+                                                                    isFdDateNewest,
+                                                                content: Text(
+                                                                  "Newest first",
+                                                                  style: TextStyles
+                                                                      .primaryMedium
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .primaryDark,
+                                                                    fontSize:
+                                                                        (18 / Dimensions.designWidth)
+                                                                            .w,
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  final ShowButtonBloc
+                                                                      showButtonBloc =
+                                                                      context.read<
+                                                                          ShowButtonBloc>();
+                                                                  isFdDateNewest =
+                                                                      true;
+                                                                  isFdDateOldest =
+                                                                      false;
+                                                                  isFdAmountHighest =
+                                                                      false;
+                                                                  isFdAmountLowest =
+                                                                      false;
+                                                                  sortTextFD =
+                                                                      "Latest";
+                                                                  sortDisplayFdStatementList(
+                                                                    isFdDateNewest,
+                                                                    isFdDateOldest,
+                                                                    isFdAmountHighest,
                                                                     isFdAmountLowest,
+                                                                  );
+                                                                  isShowDepositSort =
+                                                                      false;
+                                                                  showButtonBloc
+                                                                      .add(
+                                                                    ShowButtonEvent(
+                                                                      show: isFdDateNewest &&
+                                                                          isFdDateOldest &&
+                                                                          isFdAmountHighest &&
+                                                                          isFdAmountLowest,
+                                                                    ),
+                                                                  );
+                                                                },
                                                               ),
-                                                            );
-                                                          },
-                                                        ),
-                                                        const SizeBox(
-                                                            height: 10),
-                                                        MultiSelectButton(
-                                                          isSelected:
-                                                              isFdAmountLowest,
-                                                          content: Text(
-                                                            "Lowest amount first",
-                                                            style: TextStyles
-                                                                .primaryMedium
-                                                                .copyWith(
-                                                              color: AppColors
-                                                                  .primaryDark,
-                                                              fontSize: (18 /
-                                                                      Dimensions
-                                                                          .designWidth)
-                                                                  .w,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            final ShowButtonBloc
-                                                                showButtonBloc =
-                                                                context.read<
-                                                                    ShowButtonBloc>();
-                                                            isFdDateNewest =
-                                                                false;
-                                                            isFdDateOldest =
-                                                                false;
-                                                            isFdAmountHighest =
-                                                                false;
-                                                            isFdAmountLowest =
-                                                                true;
-                                                            sortTextFD =
-                                                                "Lowest";
-                                                            sortDisplayFdStatementList(
-                                                              isFdDateNewest,
-                                                              isFdDateOldest,
-                                                              isFdAmountHighest,
-                                                              isFdAmountLowest,
-                                                            );
-                                                            isShowDepositSort =
-                                                                false;
-                                                            showButtonBloc.add(
-                                                              ShowButtonEvent(
-                                                                show: isFdDateNewest &&
-                                                                    isFdDateOldest &&
-                                                                    isFdAmountHighest &&
+                                                              const SizeBox(
+                                                                  height: 10),
+                                                              MultiSelectButton(
+                                                                isSelected:
+                                                                    isFdDateOldest,
+                                                                content: Text(
+                                                                  "Oldest first",
+                                                                  style: TextStyles
+                                                                      .primaryMedium
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .primaryDark,
+                                                                    fontSize:
+                                                                        (18 / Dimensions.designWidth)
+                                                                            .w,
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  final ShowButtonBloc
+                                                                      showButtonBloc =
+                                                                      context.read<
+                                                                          ShowButtonBloc>();
+                                                                  isFdDateNewest =
+                                                                      false;
+                                                                  isFdDateOldest =
+                                                                      true;
+                                                                  isFdAmountHighest =
+                                                                      false;
+                                                                  isFdAmountLowest =
+                                                                      false;
+                                                                  sortTextFD =
+                                                                      "Oldest";
+                                                                  sortDisplayFdStatementList(
+                                                                    isFdDateNewest,
+                                                                    isFdDateOldest,
+                                                                    isFdAmountHighest,
                                                                     isFdAmountLowest,
+                                                                  );
+                                                                  isShowDepositSort =
+                                                                      false;
+                                                                  showButtonBloc
+                                                                      .add(
+                                                                    ShowButtonEvent(
+                                                                      show: isFdDateNewest &&
+                                                                          isFdDateOldest &&
+                                                                          isFdAmountHighest &&
+                                                                          isFdAmountLowest,
+                                                                    ),
+                                                                  );
+                                                                },
                                                               ),
-                                                            );
-                                                          },
+                                                              const SizeBox(
+                                                                  height: 20),
+                                                              Text(
+                                                                "Amount",
+                                                                style: TextStyles
+                                                                    .primaryMedium
+                                                                    .copyWith(
+                                                                        color: AppColors
+                                                                            .dark50,
+                                                                        fontSize:
+                                                                            (16 / Dimensions.designWidth).w),
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 15),
+                                                              MultiSelectButton(
+                                                                isSelected:
+                                                                    isFdAmountHighest,
+                                                                content: Text(
+                                                                  "Highest amount first",
+                                                                  style: TextStyles
+                                                                      .primaryMedium
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .primaryDark,
+                                                                    fontSize:
+                                                                        (18 / Dimensions.designWidth)
+                                                                            .w,
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  final ShowButtonBloc
+                                                                      showButtonBloc =
+                                                                      context.read<
+                                                                          ShowButtonBloc>();
+                                                                  isFdDateNewest =
+                                                                      false;
+                                                                  isFdDateOldest =
+                                                                      false;
+                                                                  isFdAmountHighest =
+                                                                      true;
+                                                                  isFdAmountLowest =
+                                                                      false;
+                                                                  sortTextFD =
+                                                                      "Highest";
+                                                                  sortDisplayFdStatementList(
+                                                                    isFdDateNewest,
+                                                                    isFdDateOldest,
+                                                                    isFdAmountHighest,
+                                                                    isFdAmountLowest,
+                                                                  );
+                                                                  isShowDepositSort =
+                                                                      false;
+                                                                  showButtonBloc
+                                                                      .add(
+                                                                    ShowButtonEvent(
+                                                                      show: isFdDateNewest &&
+                                                                          isFdDateOldest &&
+                                                                          isFdAmountHighest &&
+                                                                          isFdAmountLowest,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                              const SizeBox(
+                                                                  height: 10),
+                                                              MultiSelectButton(
+                                                                isSelected:
+                                                                    isFdAmountLowest,
+                                                                content: Text(
+                                                                  "Lowest amount first",
+                                                                  style: TextStyles
+                                                                      .primaryMedium
+                                                                      .copyWith(
+                                                                    color: AppColors
+                                                                        .primaryDark,
+                                                                    fontSize:
+                                                                        (18 / Dimensions.designWidth)
+                                                                            .w,
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  final ShowButtonBloc
+                                                                      showButtonBloc =
+                                                                      context.read<
+                                                                          ShowButtonBloc>();
+                                                                  isFdDateNewest =
+                                                                      false;
+                                                                  isFdDateOldest =
+                                                                      false;
+                                                                  isFdAmountHighest =
+                                                                      false;
+                                                                  isFdAmountLowest =
+                                                                      true;
+                                                                  sortTextFD =
+                                                                      "Lowest";
+                                                                  sortDisplayFdStatementList(
+                                                                    isFdDateNewest,
+                                                                    isFdDateOldest,
+                                                                    isFdAmountHighest,
+                                                                    isFdAmountLowest,
+                                                                  );
+                                                                  isShowDepositSort =
+                                                                      false;
+                                                                  showButtonBloc
+                                                                      .add(
+                                                                    ShowButtonEvent(
+                                                                      show: isFdDateNewest &&
+                                                                          isFdDateOldest &&
+                                                                          isFdAmountHighest &&
+                                                                          isFdAmountLowest,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
+                                                        // GradientButton(
+                                                        //   onTap: () {
+                                                        //     final ShowButtonBloc
+                                                        //         showButtonBloc = context
+                                                        //             .read<ShowButtonBloc>();
+                                                        //     isShowSort = false;
+                                                        //     showButtonBloc.add(
+                                                        //       ShowButtonEvent(
+                                                        //         show: isShowFilter,
+                                                        //       ),
+                                                        //     );
+                                                        //   },
+                                                        //   text:
+                                                        //       "Show ${displayStatementList.length} transactions",
+                                                        // ),
                                                       ],
                                                     ),
                                                   ),
-                                                  // GradientButton(
-                                                  //   onTap: () {
-                                                  //     final ShowButtonBloc
-                                                  //         showButtonBloc = context
-                                                  //             .read<ShowButtonBloc>();
-                                                  //     isShowSort = false;
-                                                  //     showButtonBloc.add(
-                                                  //       ShowButtonEvent(
-                                                  //         show: isShowFilter,
-                                                  //       ),
-                                                  //     );
-                                                  //   },
-                                                  //   text:
-                                                  //       "Show ${displayStatementList.length} transactions",
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
+                                                ),
+                                              );
+                                            },
                                           ),
                                         );
                                       },
                                     ),
-                                  );
-                                },
+                                  ],
+                                ),
                               ),
                             ],
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                          );
+                        },
+                      ),
               ],
             );
           }

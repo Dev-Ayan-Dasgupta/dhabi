@@ -660,6 +660,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                         context.read<ShowButtonBloc>();
                     isUpdating = true;
                     showButtonBloc.add(ShowButtonEvent(show: isUpdating));
+                    log("Change Password Request -> ${{
+                      "cif": storageCif,
+                      "password": _newPasswordController.text,
+                    }}");
                     var changePasswordApiResult =
                         await MapChangePassword.mapChangePassword(
                       {

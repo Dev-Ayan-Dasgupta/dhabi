@@ -216,7 +216,9 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           storagePhoto != null &&
           storageDocPhoto != null) {
         bool result = await MapIfEidExists.mapIfEidExists(
-            {"eidNumber": eiDNumber}, token ?? "");
+          {"eidNumber": eiDNumber},
+          eidReKycArgument.isReKyc ? tokenCP ?? "" : token ?? "",
+        );
 
         log("If EID Exists API response -> $result");
 

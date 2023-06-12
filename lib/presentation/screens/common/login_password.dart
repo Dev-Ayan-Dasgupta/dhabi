@@ -656,6 +656,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
   }
 
   void promptKycExpired() {
+    // TODO: get temporary OTP, discuss with Samit sir on how to get it
     showDialog(
       context: context,
       builder: (context) {

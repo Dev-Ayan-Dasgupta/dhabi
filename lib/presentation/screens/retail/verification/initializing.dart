@@ -102,7 +102,8 @@ class _VerificationInitializingScreenState
     // });
 
     if (context.mounted) {
-      if (storageStepsCompleted == 2) {
+      if (storageStepsCompleted == 2 ||
+          verificationInitializationArgument.isReKyc == true) {
         Navigator.pushReplacementNamed(
           context,
           Routes.eidExplanation,

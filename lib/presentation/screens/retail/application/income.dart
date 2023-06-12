@@ -19,7 +19,7 @@ class ApplicationIncomeScreen extends StatefulWidget {
 class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
   int progress = 2;
 
-  bool isIncomeSourceSelected = false;
+  bool isIncomeSourceSelected = storageIncomeSource == null ? false : true;
   int toggles = 0;
 
   String? selectedValue = storageIncomeSource;

@@ -44,6 +44,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   int time = 0;
 
   bool isLoading = false;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -54,7 +55,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   animateToPage() async {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {});
       time++;
       if (time == 5 || time == 10 || time == 15) {
@@ -571,5 +572,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         }
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }

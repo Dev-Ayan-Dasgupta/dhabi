@@ -138,8 +138,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
     scannedDetailsArgument =
         ScannedDetailsArgumentModel.fromMap(widget.argument as dynamic ?? {});
 
-    image1.bitmap =
-        base64Encode(base64Decode(storagePhoto!.replaceAll("\n", "")));
+    image1.bitmap = base64Encode(base64Decode(
+        storagePhoto != null ? storagePhoto!.replaceAll("\n", "") : ""));
     image1.imageType = regula.ImageType.PRINTED;
 
     fullName = scannedDetailsArgument.fullName;
@@ -354,7 +354,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           storageDocPhoto != null) {
         bool result = await MapIfEidExists.mapIfEidExists(
           {"eidNumber": eiDNumber},
-          token ?? "",
+          scannedDetailsArgument.isReKyc ? tokenCP ?? "" : token ?? "",
         );
 
         log("If EID Exists API response -> $result");
@@ -571,8 +571,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       await storage.write(key: "passportNumber", value: passportNumber);
       storagePassportNumber = await storage.read(key: "passportNumber");
 
-      nationality =
-          await results?.textFieldValueByTypeLcid(EVisualFieldType.FT_NATIONALITY, LCID.LATIN);
+      nationality = await results?.textFieldValueByTypeLcid(
+          EVisualFieldType.FT_NATIONALITY, LCID.LATIN);
       await storage.write(key: "nationality", value: nationality);
       storageNationality = await storage.read(key: "nationality");
 
@@ -672,7 +672,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           storageIssuingStateCode != null) {
         var result = await MapIfPassportExists.mapIfPassportExists(
           {"passportNumber": passportNumber},
-          token ?? "",
+          scannedDetailsArgument.isReKyc ? tokenCP ?? "" : token ?? "",
         );
         log("If Passport Exists API response -> $result");
 

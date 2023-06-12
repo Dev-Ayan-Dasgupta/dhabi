@@ -88,8 +88,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       Text(
-                        DateFormat('dd MMMM yyyy')
-                            .format(DateTime.parse(profileDoB ?? "1900-01-01")),
+                        DateFormat('dd MMMM yyyy').format(
+                            DateTime.parse(profileDoB ?? "01 January 1900")),
                         style: TextStyles.primaryMedium.copyWith(
                           color: AppColors.primary,
                           fontSize: (16 / Dimensions.designWidth).w,
