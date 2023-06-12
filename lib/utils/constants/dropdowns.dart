@@ -73,6 +73,8 @@ List<String> noTinReasonDDs = [
   // {"key": "DD_0007_003", "value": "No TIN is required."}
 ];
 
+List<String> payoutDurationDDs = [];
+
 List statementDurationDDs = [
   // {"key": "DD_0008_001", "value": "1 Month"},
   // {"key": "DD_0008_002", "value": "3 Months"},

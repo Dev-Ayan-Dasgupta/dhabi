@@ -70,5 +70,6 @@ String? storageCustomerName;
 
 int? storageChosenAccount;
 int? storageChosenFdAccount;
+int? storageChosenAccountForCreateFD;
 
 String? storageProfilePhotoBase64;

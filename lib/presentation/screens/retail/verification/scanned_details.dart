@@ -572,7 +572,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       storagePassportNumber = await storage.read(key: "passportNumber");
 
       nationality =
-          await results?.textFieldValueByType(EVisualFieldType.FT_NATIONALITY);
+          await results?.textFieldValueByTypeLcid(EVisualFieldType.FT_NATIONALITY, LCID.LATIN);
       await storage.write(key: "nationality", value: nationality);
       storageNationality = await storage.read(key: "nationality");
 

@@ -280,7 +280,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           "accountNumber": accountDetails[storageChosenAccount ?? 0]
               ["accountNumber"],
           "startDate": DateFormat('yyyy-MM-dd')
-              .format(DateTime.now().subtract(const Duration(days: 30))),
+              .format(DateTime.now().subtract(const Duration(days: 90))),
           "endDate": DateFormat('yyyy-MM-dd').format(DateTime.now()),
         },
         token ?? "",
@@ -1208,7 +1208,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                               displayStatementList[
                                                                           index]
                                                                       [
-                                                                      "creditAmount"] ==
+                                                                      "debitAmount"] ==
                                                                   0,
                                                           title:
                                                               // "Tax non filer debit Tax non filer debit",

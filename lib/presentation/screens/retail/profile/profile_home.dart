@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -183,8 +184,49 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                         const SizeBox(height: 10),
                         TopicTile(
                           color: const Color(0XFFFAFAFA),
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.selectAccount);
+                          onTap: () async {
+                            var getCustomerDetailsResponse =
+                                await MapCustomerDetails.mapCustomerDetails(
+                                    token ?? "");
+                            log("Get Customer Details API response -> $getCustomerDetailsResponse");
+
+                            List cifDetails =
+                                getCustomerDetailsResponse["cifDetails"];
+
+                            if (cifDetails.length > 1) {
+                              if (context.mounted) {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.selectAccount,
+                                  arguments: SelectAccountArgumentModel(
+                                    emailId: storageEmail ?? "",
+                                    cifDetails: cifDetails,
+                                    isPwChange: false,
+                                    isLogin: true,
+                                    isIncompleteOnboarding: false,
+                                  ).toMap(),
+                                );
+                              }
+                            } else {
+                              if (context.mounted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomDialog(
+                                      svgAssetPath: ImageConstants.warning,
+                                      title: "No Other Acount",
+                                      message:
+                                          "You have only one registered account.",
+                                      actionWidget: GradientButton(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          text: labels[347]["labelText"]),
+                                    );
+                                  },
+                                );
+                              }
+                            }
                           },
                           iconPath: ImageConstants.rotate,
                           text: "Switch Entities",

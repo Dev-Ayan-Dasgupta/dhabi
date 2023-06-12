@@ -82,6 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
     populateDD(sourceOfIncomeDDs, 5);
     populateDD(noTinReasonDDs, 6);
     populateDD(statementDurationDDs, 7);
+    populateDD(payoutDurationDDs, 8);
     populateDD(reasonOfSending, 9);
     populateEmirates();
     getPolicies();
@@ -300,8 +301,8 @@ class _SplashScreenState extends State<SplashScreen> {
       persistBiometric = await storage.read(key: "persistBiometric") == "true";
       log("persistBiometric -> $persistBiometric");
 
-      storageStepsCompleted = 0;
-      int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+      storageStepsCompleted =
+          int.parse(await storage.read(key: "stepsCompleted") ?? "0");
       log("storageStepsCompleted -> $storageStepsCompleted");
 
       storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
@@ -388,6 +389,9 @@ class _SplashScreenState extends State<SplashScreen> {
       storageChosenAccount =
           int.parse(await storage.read(key: "chosenAccount") ?? "0");
       log("storageChosenAccount -> $storageChosenAccount");
+      storageChosenAccountForCreateFD = int.parse(
+        await storage.read(key: "chosenAccountForCreateFD") ?? "0",
+      );
 
       storageProfilePhotoBase64 = await storage.read(key: "profilePhotoBase64");
       log("storageProfilePhotoBase64 -> $storageProfilePhotoBase64");

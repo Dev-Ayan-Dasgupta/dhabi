@@ -75,6 +75,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: Stack(
         children: [
           PageView.builder(
+            physics: const NeverScrollableScrollPhysics(),
             controller: pageController,
             itemCount: onboardingSoftList.length,
             itemBuilder: (context, index) {
@@ -383,11 +384,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       condition: onboardingArgumentModel.isInitial,
                       truthy: SolidButton(
                         onTap: () {
-                          // Navigator.pushNamed(
-                          //     context, Routes.exploreDashboard);
+                          Navigator.pushNamed(context, Routes.exploreDashboard);
                           // Navigator.pushNamed(
                           //     context, Routes.verificationInitializing);
-                          Navigator.pushNamed(context, Routes.loginUserId);
+                          // Navigator.pushNamed(context, Routes.loginUserId);
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   Routes.otp,
+                          //   arguments: OTPArgumentModel(
+                          //     emailOrPhone: storageEmail ?? "",
+                          //     isEmail: true,
+                          //     isBusiness: false,
+                          //     isInitial: false,
+                          //     isLogin: false,
+                          //     isEmailIdUpdate: false,
+                          //     isMobileUpdate: false,
+                          //   ).toMap(),
+                          // );
                           // Navigator.pushNamed(
                           //     context, Routes.applicationAddress);
                           // Navigator.pushNamed(

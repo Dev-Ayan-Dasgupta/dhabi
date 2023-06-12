@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
@@ -57,19 +58,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   double interestRate = 0;
 
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8',
-  ];
-
-  String chosenAccountNumber = accountDetails[0]["accountNumber"];
-  int chosenIndex = 0;
+  String chosenAccountNumber =
+      accountDetails[storageChosenAccountForCreateFD ?? 0]["accountNumber"];
+  int chosenIndex = storageChosenAccountForCreateFD ?? 0;
 
   List<DetailsTileModel> rates = [];
 
@@ -177,13 +168,24 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                         isSelected: chosenIndex == index,
                                         accountNumber: accountDetails[index]
                                             ["accountNumber"],
-                                        onTap: () {
+                                        onTap: () async {
                                           final ShowButtonBloc showButtonBloc =
                                               context.read<ShowButtonBloc>();
                                           chosenIndex = index;
                                           chosenAccountNumber =
                                               accountDetails[index]
                                                   ["accountNumber"];
+                                          await storage.write(
+                                            key: "chosenAccountForCreateFD",
+                                            value: index.toString(),
+                                          );
+                                          storageChosenAccountForCreateFD =
+                                              int.parse(
+                                            await storage.read(
+                                                    key:
+                                                        "chosenAccountForCreateFD") ??
+                                                "0",
+                                          );
                                           bal = double.parse(
                                                   accountDetails[index]
                                                           ["currentBalance"]
@@ -825,8 +827,8 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
   Widget buildInterestDropdown(
       BuildContext context, DropdownSelectedState state) {
     return CustomDropDown(
-      title: "Select",
-      items: items,
+      title: "Select from the list",
+      items: payoutDurationDDs,
       value: selectedPayout,
       onChanged: onDropdownChanged,
     );
@@ -1020,7 +1022,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     tenureDays: auxToDate.difference(DateTime.now()).inDays,
                     interestRate: interestRate,
                     interestAmount: double.parse(_depositController.text) *
-                        (1 + interestRate),
+                        (interestRate / 100),
                     interestPayout: selectedPayout ?? "",
                     isAutoRenewal: isAutoRenewal,
                     isAutoTransfer: false,

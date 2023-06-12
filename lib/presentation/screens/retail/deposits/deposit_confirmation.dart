@@ -208,6 +208,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
             "maturityDate": DateFormat('yyyy-MM-dd')
                 .format(depositConfirmationModel.dateOfMaturity),
             "interestRate": depositConfirmationModel.interestRate,
+            "interestPayoutPeriod": depositConfirmationModel.interestPayout,
             "accountNumber": depositConfirmationModel.accountNumber,
             "autoRollover": depositConfirmationModel.isAutoRenewal,
             "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
@@ -234,6 +235,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
               "maturityDate": DateFormat('yyyy-MM-dd')
                   .format(depositConfirmationModel.dateOfMaturity),
               "interestRate": depositConfirmationModel.interestRate,
+              "interestPayoutPeriod": depositConfirmationModel.interestPayout,
               "accountNumber": depositConfirmationModel.accountNumber,
               "autoRollover": depositConfirmationModel.isAutoRenewal,
               "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
