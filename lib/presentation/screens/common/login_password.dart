@@ -451,7 +451,83 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                     token = result["token"];
                     log("token -> $token");
                     if (result["success"]) {
-                      persistOnboardingState(result["onboardingState"]);
+                      await persistOnboardingState(result["onboardingState"]);
+                      if (result["onboardingState"] == 5) {
+                        if (context.mounted) {
+                          if (loginPasswordArgument.userTypeId == 1) {
+                            await storage.write(
+                                key: "retailLoggedIn", value: true.toString());
+                            storageRetailLoggedIn =
+                                await storage.read(key: "retailLoggedIn") ==
+                                    "true";
+
+                            if (context.mounted) {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                Routes.retailDashboard,
+                                (route) => false,
+                                arguments: RetailDashboardArgumentModel(
+                                  imgUrl: "",
+                                  name: result["customerName"],
+                                  isFirst: storageIsFirstLogin == true
+                                      ? false
+                                      : true,
+                                ).toMap(),
+                              );
+                            }
+                          } else {
+                            if (storageCif == null || storageCif == "null") {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomDialog(
+                                    svgAssetPath: ImageConstants.warning,
+                                    title: "Application approval pending",
+                                    message:
+                                        "You already have a registration pending. Please contact Dhabi support.",
+                                    auxWidget: GradientButton(
+                                      onTap: () async {
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            Routes.onboarding,
+                                            arguments: OnboardingArgumentModel(
+                                              isInitial: true,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      },
+                                      text: labels[347]["labelText"],
+                                    ),
+                                    actionWidget: SolidButton(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      text: labels[166]["labelText"],
+                                      color: AppColors.primaryBright17,
+                                      fontColor: AppColors.primary,
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                Routes.businessDashboard,
+                                (route) => false,
+                                arguments: RetailDashboardArgumentModel(
+                                  imgUrl: "",
+                                  name: "",
+                                  isFirst: storageIsFirstLogin == true
+                                      ? false
+                                      : true,
+                                ).toMap(),
+                              );
+                            }
+                          }
+                        }
+                      }
                       await storage.write(
                           key: "password", value: _passwordController.text);
                       storagePassword = await storage.read(key: "password");
