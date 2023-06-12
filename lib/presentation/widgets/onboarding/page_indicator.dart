@@ -48,7 +48,7 @@ class _PageIndicatorState extends State<PageIndicator>
   Widget build(BuildContext context) {
     return SizedBox(
       width: 100.w,
-      height: (6 / Dimensions.designHeight).w,
+      height: (3 / Dimensions.designHeight).h,
       child: Row(
         children: [
           Expanded(
@@ -68,7 +68,7 @@ class _PageIndicatorState extends State<PageIndicator>
                       width:
                           (100.w - (2 * padding.w) - (widget.count * space.w)) /
                               widget.count,
-                      height: (6 / Dimensions.designHeight).w,
+                      height: (6 / Dimensions.designHeight).h,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(
                           Radius.circular(borderRadius),
@@ -82,7 +82,7 @@ class _PageIndicatorState extends State<PageIndicator>
                                     (2 * padding.w) -
                                     (widget.count * space.w)) /
                                 widget.count,
-                            height: (6 / Dimensions.designHeight).w,
+                            height: (6 / Dimensions.designHeight).h,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(borderRadius),
@@ -93,7 +93,7 @@ class _PageIndicatorState extends State<PageIndicator>
                         : index == widget.page
                             ? Container(
                                 width: _progressLengthAnimation.value,
-                                height: (6 / Dimensions.designHeight).w,
+                                height: (6 / Dimensions.designHeight).h,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(borderRadius),

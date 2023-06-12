@@ -55,10 +55,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   animateToPage() async {
     Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {});
       time++;
       if (time == 5 || time == 10 || time == 15) {
         pageController.animateToPage(page + 1,
-            duration: const Duration(milliseconds: 200), curve: Curves.easeIn);
+            duration: const Duration(milliseconds: 1), curve: Curves.easeIn);
         page++;
         if (page == 3) {
           timer.cancel();
@@ -71,367 +72,378 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: PageView.builder(
-        controller: pageController,
-        itemCount: onboardingSoftList.length,
-        itemBuilder: (context, index) {
-          return Stack(
-            children: [
-              Container(
-                width: 100.w,
-                height: 100.h,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image:
-                        AssetImage(onboardingSoftList[index].backgroundImage),
-                    fit: BoxFit.fill,
+      body: Stack(
+        children: [
+          PageView.builder(
+            controller: pageController,
+            itemCount: onboardingSoftList.length,
+            itemBuilder: (context, index) {
+              return Stack(
+                children: [
+                  Container(
+                    width: 100.w,
+                    height: 100.h,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                            onboardingSoftList[index].backgroundImage),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Container(
-                width: 100.w,
-                height: 100.h,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black87,
-                      Colors.transparent,
-                      Colors.black38,
-                    ],
+                  Container(
+                    width: 100.w,
+                    height: 100.h,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.black87,
+                          Colors.transparent,
+                          Colors.black38,
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Positioned(
-                top: MediaQuery.of(context).padding.top +
-                    (10 / Dimensions.designWidth).w,
-                child: SizedBox(
-                  width: 100.w,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: (28 / Dimensions.designWidth).w),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        PageIndicator(
-                          count: onboardingSoftList.length,
-                          page: index,
-                        ),
-                        const SizeBox(height: 24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Ternary(
-                              condition: onboardingArgumentModel.isInitial,
-                              truthy: InkWell(
-                                onTap: loginMethod,
-                                child: Text(
-                                  labels[205]["labelText"],
-                                  style: TextStyles.primaryBold.copyWith(
-                                    fontSize: (20 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                              ),
-                              falsy: InkWell(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.exploreDashboard);
-                                },
-                                child: Text(
-                                  "Explore",
-                                  style: TextStyles.primaryBold.copyWith(
-                                    fontSize: (20 / Dimensions.designWidth).w,
-                                  ),
-                                ),
+                  Positioned(
+                    top: MediaQuery.of(context).padding.top +
+                        (10 / Dimensions.designHeight).h,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: (28 / Dimensions.designWidth).w,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          PageIndicator(
+                            count: onboardingSoftList.length,
+                            page: index,
+                          ),
+                          const SizeBox(height: 24),
+                          const SizeBox(height: 28),
+                          Text(
+                            "DHABI",
+                            style: TextStyle(
+                              color: const Color.fromRGBO(255, 255, 255, 0.5),
+                              fontFamily: "Montserrat",
+                              fontWeight: FontWeight.w700,
+                              fontSize: (16 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          const SizeBox(height: 10),
+                          SizedBox(
+                            width: 67.w,
+                            child: Text(
+                              onboardingSoftList[index].caption,
+                              style: TextStyles.primaryMedium.copyWith(
+                                fontSize: (35 / Dimensions.designWidth).w,
                               ),
                             ),
-                            const SizeBox(width: 10),
-                          ],
-                        ),
-                        const SizeBox(height: 28),
-                        Text(
-                          "DHABI",
-                          style: TextStyle(
-                            color: const Color.fromRGBO(255, 255, 255, 0.5),
-                            fontFamily: "Montserrat",
-                            fontWeight: FontWeight.w700,
-                            fontSize: (16 / Dimensions.designWidth).w,
                           ),
-                        ),
-                        const SizeBox(height: 10),
-                        SizedBox(
-                          width: 67.w,
-                          child: Text(
-                            onboardingSoftList[index].caption,
-                            style: TextStyles.primaryMedium.copyWith(
-                                fontSize: (35 / Dimensions.designWidth).w),
-                          ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                child: SizedBox(
-                  width: 100.w,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: (28 / Dimensions.designWidth).w),
-                    child: Column(
+                ],
+              );
+            },
+          ),
+          Positioned(
+            top: MediaQuery.of(context).padding.top +
+                (10 / Dimensions.designHeight).h,
+            child: SizedBox(
+              width: 100.w,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: (28 / Dimensions.designWidth).w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizeBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Ternary(
                           condition: onboardingArgumentModel.isInitial,
-                          truthy: BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: (context, state) {
-                              return GradientButton(
-                                onTap: () async {
-                                  log("storageStepsCompleted -> $storageStepsCompleted");
-                                  switch (storageStepsCompleted) {
-                                    case 0:
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.registration,
-                                        arguments: RegistrationArgumentModel(
-                                          isInitial: true,
-                                        ).toMap(),
-                                      );
-                                      break;
-                                    case 1:
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.createPassword,
-                                        arguments: CreateAccountArgumentModel(
-                                          email: storageEmail ?? "",
-                                          isRetail: storageUserTypeId == 1
-                                              ? true
-                                              : false,
-                                          userTypeId: storageUserTypeId ?? 1,
-                                          companyId: storageCompanyId ?? 0,
-                                        ).toMap(),
-                                      );
-                                      break;
-                                    case 2:
-                                      callLoginApi();
-                                      if (storageUserTypeId == 1) {
-                                        Navigator.pushNamed(
-                                          context,
-                                          Routes.retailOnboardingStatus,
-                                          arguments:
-                                              OnboardingStatusArgumentModel(
-                                            stepsCompleted: 1,
-                                            isFatca: false,
-                                            isPassport: false,
-                                            isRetail: true,
-                                          ).toMap(),
-                                        );
-                                      } else {
-                                        Navigator.pushNamed(
-                                          context,
-                                          Routes.businessOnboardingStatus,
-                                          arguments:
-                                              OnboardingStatusArgumentModel(
-                                            stepsCompleted: 1,
-                                            isFatca: false,
-                                            isPassport: false,
-                                            isRetail: false,
-                                          ).toMap(),
-                                        );
-                                      }
-                                      break;
-                                    case 3:
-                                      callLoginApi();
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.verificationInitializing,
-                                        arguments:
-                                            VerificationInitializationArgumentModel(
-                                          isReKyc: false,
-                                        ).toMap(),
-                                      );
-                                      break;
-                                    case 4:
-                                      callLoginApi();
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.retailOnboardingStatus,
-                                        arguments:
-                                            OnboardingStatusArgumentModel(
-                                          stepsCompleted: 2,
-                                          isFatca: false,
-                                          isPassport: false,
-                                          isRetail: true,
-                                        ).toMap(),
-                                      );
-                                      break;
-                                    case 5:
-                                      callLoginApi();
-                                      Navigator.pushNamed(
-                                          context, Routes.applicationIncome);
-                                      break;
-                                    case 6:
-                                      callLoginApi();
-                                      Navigator.pushNamed(
-                                          context, Routes.applicationTaxFATCA);
-                                      break;
-                                    case 7:
-                                      callLoginApi();
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.applicationTaxCRS,
-                                        arguments: TaxCrsArgumentModel(
-                                          isUSFATCA: storageIsUSFATCA ?? true,
-                                          ustin: storageUsTin ?? "",
-                                        ).toMap(),
-                                      );
-                                      break;
-                                    case 8:
-                                      callLoginApi();
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.applicationAccount,
-                                        arguments:
-                                            ApplicationAccountArgumentModel(
-                                          isInitial: true,
-                                          savingsAccountsCreated: 0,
-                                          currentAccountsCreated: 0,
-                                        ).toMap(),
-                                      );
-                                      break;
-                                    case 9:
-                                      callLoginApi();
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.retailOnboardingStatus,
-                                        arguments:
-                                            OnboardingStatusArgumentModel(
-                                          stepsCompleted: 3,
-                                          isFatca: false,
-                                          isPassport: false,
-                                          isRetail: true,
-                                        ).toMap(),
-                                      );
-                                      break;
-                                    case 10:
-                                      callLoginApi();
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.retailOnboardingStatus,
-                                        arguments:
-                                            OnboardingStatusArgumentModel(
-                                          stepsCompleted: 4,
-                                          isFatca: false,
-                                          isPassport: false,
-                                          isRetail: true,
-                                        ).toMap(),
-                                      );
-                                      break;
-                                    case 11:
-                                      callLoginApi();
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.businessOnboardingStatus,
-                                        arguments:
-                                            OnboardingStatusArgumentModel(
-                                          stepsCompleted: 2,
-                                          isFatca: false,
-                                          isPassport: false,
-                                          isRetail: false,
-                                        ).toMap(),
-                                      );
-                                      break;
-                                    default:
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.registration,
-                                        arguments: RegistrationArgumentModel(
-                                          isInitial: true,
-                                        ).toMap(),
-                                      );
-                                  }
-                                },
-                                text: labels[207]["labelText"],
-                                auxWidget: isLoading
-                                    ? const LoaderRow()
-                                    : const SizeBox(),
-                              );
-                            },
-                          ),
-                          falsy: GradientButton(
+                          truthy: InkWell(
                             onTap: loginMethod,
-                            text: labels[205]["labelText"],
+                            child: Text(
+                              labels[205]["labelText"],
+                              style: TextStyles.primaryBold.copyWith(
+                                fontSize: (20 / Dimensions.designWidth).w,
+                              ),
+                            ),
                           ),
-                        ),
-                        const SizeBox(height: 15),
-                        Ternary(
-                          condition: onboardingArgumentModel.isInitial,
-                          truthy: SolidButton(
-                            onTap: () {
-                              // Navigator.pushNamed(
-                              //     context, Routes.exploreDashboard);
-                              // Navigator.pushNamed(
-                              //     context, Routes.verificationInitializing);
-                              Navigator.pushNamed(context, Routes.loginUserId);
-                              // Navigator.pushNamed(
-                              //     context, Routes.applicationAddress);
-                              // Navigator.pushNamed(
-                              //   context,
-                              //   Routes.verifyMobile,
-                              //   arguments: VerifyMobileArgumentModel(
-                              //     isBusiness: false,
-                              //   ).toMap(),
-                              // );
-                              // Navigator.pushNamed(
-                              //   context,
-                              //   Routes.applicationAccount,
-                              //   arguments: ApplicationAccountArgumentModel(
-                              //           isInitial: true)
-                              //       .toMap(),
-                              // );
-                              // Navigator.pushNamed(
-                              //     context, Routes.applicationAddress);
-                              // Navigator.pushNamed(
-                              //   context,
-                              //   Routes.applicationTaxCRS,
-                              //   arguments: TaxCrsArgumentModel(
-                              //     isUSFATCA: storageIsUSFATCA ?? true,
-                              //     ustin: storageUsTin ?? "",
-                              //   ).toMap(),
-                              // );
-                            },
-                            text: labels[208]["labelText"],
-                            color: const Color.fromRGBO(85, 85, 85, 0.2),
-                            fontColor: Colors.white,
-                          ),
-                          falsy: SolidButton(
+                          falsy: InkWell(
                             onTap: () {
                               Navigator.pushNamed(
-                                context,
-                                Routes.registration,
-                                arguments: RegistrationArgumentModel(
-                                  isInitial: true,
-                                ).toMap(),
-                              );
+                                  context, Routes.exploreDashboard);
                             },
-                            text: "Register",
-                            color: const Color.fromRGBO(85, 85, 85, 0.2),
-                            fontColor: Colors.white,
+                            child: Text(
+                              "Explore",
+                              style: TextStyles.primaryBold.copyWith(
+                                fontSize: (20 / Dimensions.designWidth).w,
+                              ),
+                            ),
                           ),
                         ),
-                        SizeBox(
-                          height: PaddingConstants.bottomPadding +
-                              MediaQuery.of(context).padding.bottom,
-                        ),
+                        const SizeBox(width: 10),
                       ],
                     ),
-                  ),
+                  ],
                 ),
               ),
-            ],
-          );
-        },
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: SizedBox(
+              width: 100.w,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: (28 / Dimensions.designWidth).w),
+                child: Column(
+                  children: [
+                    Ternary(
+                      condition: onboardingArgumentModel.isInitial,
+                      truthy: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                        builder: (context, state) {
+                          return GradientButton(
+                            onTap: () async {
+                              log("storageStepsCompleted -> $storageStepsCompleted");
+                              switch (storageStepsCompleted) {
+                                case 0:
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.registration,
+                                    arguments: RegistrationArgumentModel(
+                                      isInitial: true,
+                                    ).toMap(),
+                                  );
+                                  break;
+                                case 1:
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.createPassword,
+                                    arguments: CreateAccountArgumentModel(
+                                      email: storageEmail ?? "",
+                                      isRetail:
+                                          storageUserTypeId == 1 ? true : false,
+                                      userTypeId: storageUserTypeId ?? 1,
+                                      companyId: storageCompanyId ?? 0,
+                                    ).toMap(),
+                                  );
+                                  break;
+                                case 2:
+                                  callLoginApi();
+                                  if (storageUserTypeId == 1) {
+                                    Navigator.pushNamed(
+                                      context,
+                                      Routes.retailOnboardingStatus,
+                                      arguments: OnboardingStatusArgumentModel(
+                                        stepsCompleted: 1,
+                                        isFatca: false,
+                                        isPassport: false,
+                                        isRetail: true,
+                                      ).toMap(),
+                                    );
+                                  } else {
+                                    Navigator.pushNamed(
+                                      context,
+                                      Routes.businessOnboardingStatus,
+                                      arguments: OnboardingStatusArgumentModel(
+                                        stepsCompleted: 1,
+                                        isFatca: false,
+                                        isPassport: false,
+                                        isRetail: false,
+                                      ).toMap(),
+                                    );
+                                  }
+                                  break;
+                                case 3:
+                                  callLoginApi();
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.verificationInitializing,
+                                    arguments:
+                                        VerificationInitializationArgumentModel(
+                                      isReKyc: false,
+                                    ).toMap(),
+                                  );
+                                  break;
+                                case 4:
+                                  callLoginApi();
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.retailOnboardingStatus,
+                                    arguments: OnboardingStatusArgumentModel(
+                                      stepsCompleted: 2,
+                                      isFatca: false,
+                                      isPassport: false,
+                                      isRetail: true,
+                                    ).toMap(),
+                                  );
+                                  break;
+                                case 5:
+                                  callLoginApi();
+                                  Navigator.pushNamed(
+                                      context, Routes.applicationIncome);
+                                  break;
+                                case 6:
+                                  callLoginApi();
+                                  Navigator.pushNamed(
+                                      context, Routes.applicationTaxFATCA);
+                                  break;
+                                case 7:
+                                  callLoginApi();
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.applicationTaxCRS,
+                                    arguments: TaxCrsArgumentModel(
+                                      isUSFATCA: storageIsUSFATCA ?? true,
+                                      ustin: storageUsTin ?? "",
+                                    ).toMap(),
+                                  );
+                                  break;
+                                case 8:
+                                  callLoginApi();
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.applicationAccount,
+                                    arguments: ApplicationAccountArgumentModel(
+                                      isInitial: true,
+                                      savingsAccountsCreated: 0,
+                                      currentAccountsCreated: 0,
+                                    ).toMap(),
+                                  );
+                                  break;
+                                case 9:
+                                  callLoginApi();
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.retailOnboardingStatus,
+                                    arguments: OnboardingStatusArgumentModel(
+                                      stepsCompleted: 3,
+                                      isFatca: false,
+                                      isPassport: false,
+                                      isRetail: true,
+                                    ).toMap(),
+                                  );
+                                  break;
+                                case 10:
+                                  callLoginApi();
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.retailOnboardingStatus,
+                                    arguments: OnboardingStatusArgumentModel(
+                                      stepsCompleted: 4,
+                                      isFatca: false,
+                                      isPassport: false,
+                                      isRetail: true,
+                                    ).toMap(),
+                                  );
+                                  break;
+                                case 11:
+                                  callLoginApi();
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.businessOnboardingStatus,
+                                    arguments: OnboardingStatusArgumentModel(
+                                      stepsCompleted: 2,
+                                      isFatca: false,
+                                      isPassport: false,
+                                      isRetail: false,
+                                    ).toMap(),
+                                  );
+                                  break;
+                                default:
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.registration,
+                                    arguments: RegistrationArgumentModel(
+                                      isInitial: true,
+                                    ).toMap(),
+                                  );
+                              }
+                            },
+                            text: labels[207]["labelText"],
+                            auxWidget:
+                                isLoading ? const LoaderRow() : const SizeBox(),
+                          );
+                        },
+                      ),
+                      falsy: GradientButton(
+                        onTap: loginMethod,
+                        text: labels[205]["labelText"],
+                      ),
+                    ),
+                    const SizeBox(height: 15),
+                    Ternary(
+                      condition: onboardingArgumentModel.isInitial,
+                      truthy: SolidButton(
+                        onTap: () {
+                          // Navigator.pushNamed(
+                          //     context, Routes.exploreDashboard);
+                          // Navigator.pushNamed(
+                          //     context, Routes.verificationInitializing);
+                          Navigator.pushNamed(context, Routes.loginUserId);
+                          // Navigator.pushNamed(
+                          //     context, Routes.applicationAddress);
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   Routes.verifyMobile,
+                          //   arguments: VerifyMobileArgumentModel(
+                          //     isBusiness: false,
+                          //   ).toMap(),
+                          // );
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   Routes.applicationAccount,
+                          //   arguments: ApplicationAccountArgumentModel(
+                          //           isInitial: true)
+                          //       .toMap(),
+                          // );
+                          // Navigator.pushNamed(
+                          //     context, Routes.applicationAddress);
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   Routes.applicationTaxCRS,
+                          //   arguments: TaxCrsArgumentModel(
+                          //     isUSFATCA: storageIsUSFATCA ?? true,
+                          //     ustin: storageUsTin ?? "",
+                          //   ).toMap(),
+                          // );
+                        },
+                        text: labels[208]["labelText"],
+                        color: const Color.fromRGBO(85, 85, 85, 0.2),
+                        fontColor: Colors.white,
+                      ),
+                      falsy: SolidButton(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.registration,
+                            arguments: RegistrationArgumentModel(
+                              isInitial: true,
+                            ).toMap(),
+                          );
+                        },
+                        text: "Register",
+                        color: const Color.fromRGBO(85, 85, 85, 0.2),
+                        fontColor: Colors.white,
+                      ),
+                    ),
+                    SizeBox(
+                      height: PaddingConstants.bottomPadding +
+                          MediaQuery.of(context).padding.bottom,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

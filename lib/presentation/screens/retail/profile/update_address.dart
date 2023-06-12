@@ -6,6 +6,7 @@ import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
@@ -294,70 +295,75 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
           GradientButton(
             onTap: () async {
               if (!isUploading) {
-                final ShowButtonBloc showButtonBloc =
-                    context.read<ShowButtonBloc>();
-                isUploading = true;
-                showButtonBloc.add(ShowButtonEvent(show: isUploading));
-
-                log("Update Address Request -> ${{
-                  "addressLine_1": _address1Controller.text,
-                  "addressLine_2": _address2Controller.text,
-                  "city": _cityController.text,
-                  "state": _stateProvinceController.text,
-                  "countryCode": selectedCountryCode,
-                  "pinCode": _poBoxController.text,
-                }}");
-
-                var updateAddressResult =
-                    await MapUpdateRetailAddress.mapUpdateRetailAddress(
-                  {
-                    "addressLine_1": _address1Controller.text,
-                    "addressLine_2": _address2Controller.text,
-                    "city": _cityController.text,
-                    "state": _stateProvinceController.text,
-                    "countryCode": selectedCountryCode,
-                    "pinCode": _poBoxController.text,
-                  },
-                  token ?? "",
-                );
-                log("Update Retail Address API response -> $updateAddressResult");
-
-                isUploading = true;
-                showButtonBloc.add(ShowButtonEvent(show: isUploading));
-
-                if (updateAddressResult["success"]) {
-                  await storage.write(
-                      key: "addressCountry", value: selectedCountryName);
-                  storageAddressCountry =
-                      await storage.read(key: "addressCountry");
-                  await storage.write(
-                      key: "addressLine1", value: _address1Controller.text);
-                  storageAddressLine1 = await storage.read(key: "addressLine1");
-                  await storage.write(
-                      key: "addressLine2", value: _address2Controller.text);
-                  storageAddressLine2 = await storage.read(key: "addressLine2");
-
-                  await storage.write(
-                      key: "addressCity", value: _cityController.text);
-                  storageAddressCity = await storage.read(key: "addressCity");
-                  await storage.write(
-                      key: "addressState",
-                      value: _stateProvinceController.text);
-                  storageAddressState = await storage.read(key: "addressState");
-
-                  await storage.write(
-                      key: "addressEmirate", value: selectedValue);
-                  storageAddressEmirate =
-                      await storage.read(key: "addressEmirate");
-                  await storage.write(
-                      key: "poBox", value: _poBoxController.text);
-                  storageAddressPoBox = await storage.read(key: "poBox");
-
-                  profileAddress =
-                      "${storageAddressLine1 ?? ""}, ${storageAddressLine2 ?? ""}, ${storageAddressCity ?? ""}, ${storageAddressState ?? ""}, ${storageAddressPoBox ?? ""}";
-                  promptSuccessfulAddressUpdate();
+                if (dhabiCountryIndex != 0) {
+                  log("country -> ${dhabiCountries[dhabiCountryIndex]["countryName"]}");
+                  Navigator.pushNamed(
+                    context,
+                    Routes.notAvailable,
+                    arguments: NotAvailableArgumentModel(
+                      country: dhabiCountries[dhabiCountryIndex]["countryName"],
+                    ).toMap(),
+                  );
                 } else {
-                  promptUnsuccessfulAddressUpdate();
+                  final ShowButtonBloc showButtonBloc =
+                      context.read<ShowButtonBloc>();
+                  isUploading = true;
+                  showButtonBloc.add(ShowButtonEvent(show: isUploading));
+
+                  var updateAddressResult =
+                      await MapUpdateRetailAddress.mapUpdateRetailAddress(
+                    {
+                      "addressLine_1": _address1Controller.text,
+                      "addressLine_2": _address2Controller.text,
+                      "city": _cityController.text,
+                      "state": _stateProvinceController.text,
+                      "countryCode": selectedCountryCode,
+                      "pinCode": _poBoxController.text,
+                    },
+                    token ?? "",
+                  );
+                  log("Update Retail Address API response -> $updateAddressResult");
+
+                  isUploading = true;
+                  showButtonBloc.add(ShowButtonEvent(show: isUploading));
+
+                  if (updateAddressResult["success"]) {
+                    await storage.write(
+                        key: "addressCountry", value: selectedCountryName);
+                    storageAddressCountry =
+                        await storage.read(key: "addressCountry");
+                    await storage.write(
+                        key: "addressLine1", value: _address1Controller.text);
+                    storageAddressLine1 =
+                        await storage.read(key: "addressLine1");
+                    await storage.write(
+                        key: "addressLine2", value: _address2Controller.text);
+                    storageAddressLine2 =
+                        await storage.read(key: "addressLine2");
+
+                    await storage.write(
+                        key: "addressCity", value: _cityController.text);
+                    storageAddressCity = await storage.read(key: "addressCity");
+                    await storage.write(
+                        key: "addressState",
+                        value: _stateProvinceController.text);
+                    storageAddressState =
+                        await storage.read(key: "addressState");
+
+                    await storage.write(
+                        key: "addressEmirate", value: selectedValue);
+                    storageAddressEmirate =
+                        await storage.read(key: "addressEmirate");
+                    await storage.write(
+                        key: "poBox", value: _poBoxController.text);
+                    storageAddressPoBox = await storage.read(key: "poBox");
+
+                    profileAddress =
+                        "${storageAddressLine1 ?? ""}, ${storageAddressLine2 ?? ""}, ${storageAddressCity ?? ""}, ${storageAddressState ?? ""}, ${storageAddressPoBox ?? ""}";
+                    promptSuccessfulAddressUpdate();
+                  } else {
+                    promptUnsuccessfulAddressUpdate();
+                  }
                 }
               }
             },

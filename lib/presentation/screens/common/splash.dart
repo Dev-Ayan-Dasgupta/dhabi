@@ -218,7 +218,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     await storage.write(key: "deviceId", value: deviceId);
-    // storageDeviceId = await storage.read(key: "deviceId");
+    storageDeviceId = await storage.read(key: "deviceId");
 
     log("deviceId -> $deviceId");
     log("deviceName -> $deviceName");
