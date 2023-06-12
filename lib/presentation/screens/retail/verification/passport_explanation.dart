@@ -88,6 +88,7 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
   void argumentInitialization() {
     passportReKycArgument = VerificationInitializationArgumentModel.fromMap(
         widget.argument as dynamic ?? {});
+    log("passportReKycArgument -> ${passportReKycArgument.toMap()}");
   }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
@@ -126,9 +127,9 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
 
       log("storagePassportNumber -> $storagePassportNumber");
 
-      nationality =
-          await results?.textFieldValueByTypeLcid(EVisualFieldType.FT_NATIONALITY, LCID.LATIN);
-          
+      nationality = await results?.textFieldValueByTypeLcid(
+          EVisualFieldType.FT_NATIONALITY, LCID.LATIN);
+
       await storage.write(key: "nationality", value: nationality);
       storageNationality = await storage.read(key: "nationality");
       log("storageNationality -> $storageNationality");

@@ -86,6 +86,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
   void argumentInitialization() {
     eidReKycArgument = VerificationInitializationArgumentModel.fromMap(
         widget.argument as dynamic ?? {});
+    log("eidReKycArgument -> ${eidReKycArgument.toMap()}");
   }
 
   void handleCompletion(DocumentReaderCompletion completion) async {
@@ -496,6 +497,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
                 const SizeBox(height: 15),
                 SolidButton(
                   onTap: () {
+                    log("eidReKycArgument.isReKyc -> ${eidReKycArgument.isReKyc}");
                     Navigator.pushNamed(
                       context,
                       Routes.passportExplanation,

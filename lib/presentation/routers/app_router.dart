@@ -108,7 +108,9 @@ class AppRouter {
         );
       case Routes.passportExplanation:
         return MaterialPageRoute(
-          builder: (_) => const PassportExplanationScreen(),
+          builder: (_) => PassportExplanationScreen(
+            argument: args,
+          ),
         );
       case Routes.scannedDetails:
         return MaterialPageRoute(

@@ -2013,47 +2013,48 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                             },
                                                           );
                                                         },
-                                                        child: const Row(
-                                                          children: [
-                                                            // Text(
-                                                            //   "Account: ",
-                                                            //   style: TextStyles
-                                                            //       .primaryMedium
-                                                            //       .copyWith(
-                                                            //     color: AppColors
-                                                            //         .dark50,
-                                                            //     fontSize: (14 /
-                                                            //             Dimensions
-                                                            //                 .designWidth)
-                                                            //         .w,
-                                                            //   ),
-                                                            // ),
-                                                            // Text(
-                                                            //   // "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? "Current" : "Savings"} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
-                                                            //   "Fixed ****${depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].substring(depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length - 4, depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length)}",
-                                                            //   style: TextStyles
-                                                            //       .primaryMedium
-                                                            //       .copyWith(
-                                                            //     color: AppColors
-                                                            //         .primary,
-                                                            //     fontSize: (14 /
-                                                            //             Dimensions
-                                                            //                 .designWidth)
-                                                            //         .w,
-                                                            //   ),
-                                                            // ),
-                                                            // Icon(
-                                                            //   Icons
-                                                            //       .arrow_drop_down_rounded,
-                                                            //   color: AppColors
-                                                            //       .dark80,
-                                                            //   size: (20 /
-                                                            //           Dimensions
-                                                            //               .designWidth)
-                                                            //       .w,
-                                                            // ),
-                                                          ],
-                                                        ),
+                                                        child: const SizeBox(),
+                                                        // const Row(
+                                                        //   children: [
+                                                        //     // Text(
+                                                        //     //   "Account: ",
+                                                        //     //   style: TextStyles
+                                                        //     //       .primaryMedium
+                                                        //     //       .copyWith(
+                                                        //     //     color: AppColors
+                                                        //     //         .dark50,
+                                                        //     //     fontSize: (14 /
+                                                        //     //             Dimensions
+                                                        //     //                 .designWidth)
+                                                        //     //         .w,
+                                                        //     //   ),
+                                                        //     // ),
+                                                        //     // Text(
+                                                        //     //   // "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? "Current" : "Savings"} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
+                                                        //     //   "Fixed ****${depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].substring(depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length - 4, depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length)}",
+                                                        //     //   style: TextStyles
+                                                        //     //       .primaryMedium
+                                                        //     //       .copyWith(
+                                                        //     //     color: AppColors
+                                                        //     //         .primary,
+                                                        //     //     fontSize: (14 /
+                                                        //     //             Dimensions
+                                                        //     //                 .designWidth)
+                                                        //     //         .w,
+                                                        //     //   ),
+                                                        //     // ),
+                                                        //     // Icon(
+                                                        //     //   Icons
+                                                        //     //       .arrow_drop_down_rounded,
+                                                        //     //   color: AppColors
+                                                        //     //       .dark80,
+                                                        //     //   size: (20 /
+                                                        //     //           Dimensions
+                                                        //     //               .designWidth)
+                                                        //     //       .w,
+                                                        //     // ),
+                                                        //   ],
+                                                        // ),
                                                       ),
                                                       // const SizeBox(width: 5),
                                                       // Text(

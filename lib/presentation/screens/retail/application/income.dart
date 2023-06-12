@@ -22,7 +22,7 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
   bool isIncomeSourceSelected = false;
   int toggles = 0;
 
-  String? selectedValue;
+  String? selectedValue = storageIncomeSource;
 
   bool isUploading = false;
 

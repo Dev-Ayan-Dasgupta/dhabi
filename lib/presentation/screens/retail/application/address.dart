@@ -24,11 +24,16 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
 
   final TextEditingController _countryController =
       TextEditingController(text: "United Arab Emirates");
-  final TextEditingController _address1Controller = TextEditingController();
-  final TextEditingController _address2Controller = TextEditingController();
-  final TextEditingController _cityController = TextEditingController();
-  final TextEditingController _stateController = TextEditingController();
-  final TextEditingController _zipController = TextEditingController();
+  final TextEditingController _address1Controller =
+      TextEditingController(text: storageAddressLine1 ?? "");
+  final TextEditingController _address2Controller =
+      TextEditingController(text: storageAddressLine2 ?? "");
+  final TextEditingController _cityController =
+      TextEditingController(text: storageAddressCity ?? "");
+  final TextEditingController _stateController =
+      TextEditingController(text: storageAddressState ?? "");
+  final TextEditingController _zipController =
+      TextEditingController(text: storageAddressPoBox ?? "");
 
   bool isAddress1Entered = false;
   // bool isEmirateSelected = false;
