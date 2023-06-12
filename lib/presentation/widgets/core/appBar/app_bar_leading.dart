@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dialup_mobile_app/presentation/widgets/core/dialog.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,12 +31,36 @@ class AppBarLeading extends StatelessWidget {
               if (canPop) {
                 Navigator.pop(context);
               } else {
-                if (Platform.isAndroid) {
-                  SystemNavigator.pop();
-                }
-                if (Platform.isIOS) {
-                  exit(0);
-                }
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialog(
+                      svgAssetPath: ImageConstants.warning,
+                      title: "Exit App?",
+                      message: "Do you really want to close the app?",
+                      auxWidget: SolidButton(
+                        color: AppColors.primaryBright17,
+                        fontColor: AppColors.primary,
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        text: "No",
+                      ),
+                      actionWidget: GradientButton(
+                        onTap: () {
+                          if (Platform.isAndroid) {
+                            Navigator.pop(context);
+                            SystemNavigator.pop();
+                          } else {
+                            Navigator.pop(context);
+                            exit(0);
+                          }
+                        },
+                        text: "Yes",
+                      ),
+                    );
+                  },
+                );
               }
             },
         child: SvgPicture.asset(

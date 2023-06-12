@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (34)
+## Release notes - 1.0.0 (33)
 
 - Fixed Regula passport scanning and EID scanning
 - added await for persistent onboarding when logging in from a new device with incomplete onboarding
