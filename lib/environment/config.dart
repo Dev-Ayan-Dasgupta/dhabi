@@ -283,4 +283,11 @@ class EnvConfig implements BaseConfig {
   String get register {
     return dotenv.env['REGISTER'] ?? "";
   }
+
+  // ? Services APIs
+
+  @override
+  String get createServiceRequest {
+    return dotenv.env['CREATE_SERVICE_REQUEST'] ?? "";
+  }
 }

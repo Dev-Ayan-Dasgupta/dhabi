@@ -66,4 +66,8 @@ abstract class BaseConfig {
 
   String get checkIfTradeLicenseExists;
   String get register;
+
+  // ? Services APIs
+
+  String get createServiceRequest;
 }

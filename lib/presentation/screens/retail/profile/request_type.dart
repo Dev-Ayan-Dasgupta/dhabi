@@ -36,6 +36,7 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
   int toggles = 0;
   bool isRequestTypeSelected = false;
   bool isRemarkValid = false;
+  bool isNumberSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,31 +58,58 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Request Type",
+                    labels[56]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
                   const SizeBox(height: 20),
-                  Text(
-                    "Request Type",
-                    style: TextStyles.primary.copyWith(
-                      color: AppColors.black63,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        labels[56]["labelText"],
+                        style: TextStyles.primary.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 10),
                   BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                    builder: buildDropdown,
+                    builder: buildDropdownRequestType,
                   ),
                   const SizeBox(height: 20),
-                  Text(
-                    "Remarks",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.black63,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        "Loan Number",
+                        style: TextStyles.primary.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
+                  ),
+                  const SizeBox(height: 10),
+                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                    builder: buildDropdownNumber,
+                  ),
+                  const SizeBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        labels[58]["labelText"],
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 10),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -99,7 +127,8 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
     );
   }
 
-  Widget buildDropdown(BuildContext context, DropdownSelectedState state) {
+  Widget buildDropdownRequestType(
+      BuildContext context, DropdownSelectedState state) {
     final DropdownSelectedBloc dropdownSelectedBloc =
         context.read<DropdownSelectedBloc>();
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
@@ -124,6 +153,33 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
     );
   }
 
+  Widget buildDropdownNumber(
+      BuildContext context, DropdownSelectedState state) {
+    final DropdownSelectedBloc dropdownSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return CustomDropDown(
+      title: "Select from the list",
+      items: items,
+      value: selectedValue,
+      onChanged: (value) {
+        toggles++;
+        isNumberSelected = true;
+        selectedValue = value as String;
+        dropdownSelectedBloc.add(
+          DropdownSelectedEvent(
+            isDropdownSelected: isNumberSelected,
+            toggles: toggles,
+          ),
+        );
+        showButtonBloc.add(
+          ShowButtonEvent(
+              show: isRequestTypeSelected && isRemarkValid && isNumberSelected),
+        );
+      },
+    );
+  }
+
   Widget buildRemarks(BuildContext context, ShowButtonState state) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return CustomTextField(
@@ -140,25 +196,40 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
           isRemarkValid = false;
         }
         showButtonBloc.add(
-          ShowButtonEvent(show: isRequestTypeSelected && isRemarkValid),
+          ShowButtonEvent(
+              show: isRequestTypeSelected && isRemarkValid && isNumberSelected),
         );
       },
     );
   }
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
-    if (isRequestTypeSelected && isRemarkValid) {
+    if (isRequestTypeSelected && isRemarkValid && isNumberSelected) {
       return Column(
         children: [
           GradientButton(
             onTap: () {},
             text: labels[127]["labelText"],
           ),
-          const SizeBox(height: 20),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.of(context).padding.bottom,
+          ),
         ],
       );
     } else {
-      return const SizeBox();
+      return Column(
+        children: [
+          SolidButton(
+            onTap: () {},
+            text: labels[127]["labelText"],
+          ),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.of(context).padding.bottom,
+          ),
+        ],
+      );
     }
   }
 
