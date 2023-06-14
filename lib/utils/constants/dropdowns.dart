@@ -1,6 +1,6 @@
 List allDDs = [];
 
-List serviceRequestDDs = [
+List<String> serviceRequestDDs = [
   // {"key": "DD_0001_001", "value": "Request to Update KYC"},
   // {"key": "DD_0001_002", "value": "Request for certificate or Statement"},
   // {"key": "DD_0001_003", "value": "Request to update Settlement instructions"},
@@ -88,3 +88,7 @@ List<String> dhabiCountryNames = [];
 List<String> countryLongCodes = [];
 
 List<String> bankNames = [];
+
+List<String> accountNumbers = [];
+List<String> depositAccountNumbers = [];
+List<String> loanAccountNumbers = [];

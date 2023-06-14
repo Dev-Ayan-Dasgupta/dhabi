@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/services/index.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -20,23 +25,22 @@ class RequestTypeScreen extends StatefulWidget {
 class _RequestTypeScreenState extends State<RequestTypeScreen> {
   final TextEditingController _remarkController = TextEditingController();
 
-  final List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-    'Item7',
-    'Item8'
-  ];
+  String? selectedRequest;
+  int selectedRequestIndex = -1;
 
-  String? selectedValue;
+  String? selectedLoanNumber;
+  String? selectedAccountNumber;
+  String? selectedDepositNumber;
 
   int toggles = 0;
   bool isRequestTypeSelected = false;
   bool isRemarkValid = false;
   bool isNumberSelected = false;
+  bool isLoanNumberSelected = false;
+  bool isAccountNumberSelected = false;
+  bool isDepositNumberSelected = false;
+
+  bool isRequesting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -81,22 +85,47 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
                   BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
                     builder: buildDropdownRequestType,
                   ),
-                  const SizeBox(height: 20),
-                  Row(
-                    children: [
-                      Text(
-                        "Loan Number",
-                        style: TextStyles.primary.copyWith(
-                          color: AppColors.dark80,
-                          fontSize: (14 / Dimensions.designWidth).w,
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      return Ternary(
+                        condition: selectedRequestIndex >= 1 &&
+                            selectedRequestIndex <= 4,
+                        truthy: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizeBox(height: 20),
+                            Row(
+                              children: [
+                                Text(
+                                  selectedRequestIndex == 1 ||
+                                          selectedRequestIndex == 2
+                                      ? "Loan Number"
+                                      : selectedRequestIndex == 3
+                                          ? "Fixed Deposit Number"
+                                          : "Account Number",
+                                  style: TextStyles.primary.copyWith(
+                                    color: AppColors.dark80,
+                                    fontSize: (14 / Dimensions.designWidth).w,
+                                  ),
+                                ),
+                                const Asterisk(),
+                              ],
+                            ),
+                            const SizeBox(height: 10),
+                            BlocBuilder<DropdownSelectedBloc,
+                                DropdownSelectedState>(
+                              builder: selectedRequestIndex == 1 ||
+                                      selectedRequestIndex == 2
+                                  ? buildDropdownLoanNumber
+                                  : selectedRequestIndex == 3
+                                      ? buildDropdownDepositsNumber
+                                      : buildDropdownAccountNumber,
+                            ),
+                          ],
                         ),
-                      ),
-                      const Asterisk(),
-                    ],
-                  ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-                    builder: buildDropdownNumber,
+                        falsy: const SizeBox(),
+                      );
+                    },
                   ),
                   const SizeBox(height: 20),
                   Row(
@@ -134,12 +163,24 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return CustomDropDown(
       title: "Select from the list",
-      items: items,
-      value: selectedValue,
+      items: serviceRequestDDs,
+      value: selectedRequest,
       onChanged: (value) {
         toggles++;
         isRequestTypeSelected = true;
-        selectedValue = value as String;
+        selectedRequest = value as String;
+        for (int i = 0; i < serviceRequestDDs.length; i++) {
+          if (allDDs[0]["items"][i]["value"] == selectedRequest) {
+            selectedRequestIndex = i;
+            log("selectedRequestIndex -> $selectedRequestIndex");
+            break;
+          }
+        }
+        // if (!(selectedRequestIndex >= 1 && selectedRequestIndex <= 4)) {
+        //   isNumberSelected = true;
+        // } else {
+        //   isNumberSelected = false;
+        // }
         dropdownSelectedBloc.add(
           DropdownSelectedEvent(
             isDropdownSelected: isRequestTypeSelected,
@@ -153,28 +194,89 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
     );
   }
 
-  Widget buildDropdownNumber(
+  Widget buildDropdownLoanNumber(
       BuildContext context, DropdownSelectedState state) {
     final DropdownSelectedBloc dropdownSelectedBloc =
         context.read<DropdownSelectedBloc>();
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     return CustomDropDown(
       title: "Select from the list",
-      items: items,
-      value: selectedValue,
+      items: loanAccountNumbers,
+      value: selectedLoanNumber,
       onChanged: (value) {
         toggles++;
-        isNumberSelected = true;
-        selectedValue = value as String;
+        isLoanNumberSelected = true;
+        selectedLoanNumber = value as String;
         dropdownSelectedBloc.add(
           DropdownSelectedEvent(
-            isDropdownSelected: isNumberSelected,
+            isDropdownSelected: isLoanNumberSelected,
             toggles: toggles,
           ),
         );
         showButtonBloc.add(
           ShowButtonEvent(
-              show: isRequestTypeSelected && isRemarkValid && isNumberSelected),
+              show: isRequestTypeSelected &&
+                  isRemarkValid &&
+                  isLoanNumberSelected),
+        );
+      },
+    );
+  }
+
+  Widget buildDropdownDepositsNumber(
+      BuildContext context, DropdownSelectedState state) {
+    final DropdownSelectedBloc dropdownSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return CustomDropDown(
+      title: "Select from the list",
+      items: depositAccountNumbers,
+      value: selectedDepositNumber,
+      onChanged: (value) {
+        toggles++;
+        isDepositNumberSelected = true;
+        selectedDepositNumber = value as String;
+        dropdownSelectedBloc.add(
+          DropdownSelectedEvent(
+            isDropdownSelected: isDepositNumberSelected,
+            toggles: toggles,
+          ),
+        );
+        showButtonBloc.add(
+          ShowButtonEvent(
+              show: isRequestTypeSelected &&
+                  isRemarkValid &&
+                  isDepositNumberSelected),
+        );
+      },
+    );
+  }
+
+  Widget buildDropdownAccountNumber(
+      BuildContext context, DropdownSelectedState state) {
+    final DropdownSelectedBloc dropdownSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    return CustomDropDown(
+      title: "Select from the list",
+      items: accountNumbers,
+      value: selectedAccountNumber,
+      onChanged: (value) {
+        toggles++;
+        isAccountNumberSelected = true;
+        selectedAccountNumber = value as String;
+        log("isAccountNumberSelected -> $isAccountNumberSelected");
+        dropdownSelectedBloc.add(
+          DropdownSelectedEvent(
+            isDropdownSelected: isAccountNumberSelected,
+            toggles: toggles,
+          ),
+        );
+        showButtonBloc.add(
+          ShowButtonEvent(
+              show: isRequestTypeSelected &&
+                  isRemarkValid &&
+                  isAccountNumberSelected),
         );
       },
     );
@@ -190,26 +292,121 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
       maxLines: 5,
       maxLength: 200,
       onChanged: (p0) {
-        if (p0.length >= 20) {
+        if (p0.length >= 5) {
           isRemarkValid = true;
         } else {
           isRemarkValid = false;
         }
         showButtonBloc.add(
           ShowButtonEvent(
-              show: isRequestTypeSelected && isRemarkValid && isNumberSelected),
+              show: isRequestTypeSelected &&
+                  isRemarkValid &&
+                  isLoanNumberSelected),
         );
       },
     );
   }
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
-    if (isRequestTypeSelected && isRemarkValid && isNumberSelected) {
+    if (isRequestTypeSelected &&
+        isRemarkValid &&
+        (selectedRequestIndex == 1 || selectedRequestIndex == 2
+            ? isLoanNumberSelected
+            : selectedRequestIndex == 3
+                ? isDepositNumberSelected
+                : selectedRequestIndex == 4
+                    ? isAccountNumberSelected
+                    : true)) {
       return Column(
         children: [
           GradientButton(
-            onTap: () {},
+            onTap: () async {
+              if (!isRequesting) {
+                final ShowButtonBloc showButtonBloc =
+                    context.read<ShowButtonBloc>();
+                isRequesting = true;
+                showButtonBloc.add(ShowButtonEvent(show: isRequesting));
+
+                log("Create SR API Request -> ${{
+                  "requestType": selectedRequest,
+                  "additionalInformation":
+                      selectedRequestIndex == 1 || selectedRequestIndex == 2
+                          ? selectedLoanNumber
+                          : selectedRequestIndex == 3
+                              ? selectedDepositNumber
+                              : selectedRequestIndex == 4
+                                  ? selectedAccountNumber
+                                  : "",
+                  "remark": _remarkController.text,
+                }}");
+
+                var sRApiResult =
+                    await MapCreateServiceRequest.mapCreateServiceRequest(
+                  {
+                    "requestType": selectedRequest,
+                    "additionalInformation":
+                        selectedRequestIndex == 1 || selectedRequestIndex == 2
+                            ? selectedLoanNumber
+                            : selectedRequestIndex == 3
+                                ? selectedDepositNumber
+                                : selectedRequestIndex == 4
+                                    ? selectedAccountNumber
+                                    : "",
+                    "remark": _remarkController.text,
+                  },
+                  token ?? "",
+                );
+                log("Select Request API response -> $sRApiResult");
+
+                if (sRApiResult["success"]) {
+                  if (context.mounted) {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.errorSuccessScreen,
+                      arguments: ErrorArgumentModel(
+                        hasSecondaryButton: false,
+                        iconPath: ImageConstants.checkCircleOutlined,
+                        title: messages[91]["messageText"],
+                        message:
+                            "${messages[48]["messageText"]} ${sRApiResult["serviceId"]}",
+                        buttonText: labels[347]["labelText"],
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        buttonTextSecondary: "",
+                        onTapSecondary: () {},
+                      ).toMap(),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CustomDialog(
+                          svgAssetPath: ImageConstants.warning,
+                          title: "Unable to Create Request",
+                          message:
+                              "Due to a technical problem, we are unable to create your service request. Please try again later",
+                          actionWidget: GradientButton(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            text: labels[347]["labelText"],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }
+
+                isRequesting = false;
+                showButtonBloc.add(ShowButtonEvent(show: isRequesting));
+              }
+            },
             text: labels[127]["labelText"],
+            auxWidget: isRequesting ? const LoaderRow() : const SizeBox(),
           ),
           SizeBox(
             height: PaddingConstants.bottomPadding +

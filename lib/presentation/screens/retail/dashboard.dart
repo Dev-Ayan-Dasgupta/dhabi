@@ -256,7 +256,9 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       log("Customer Account Details API response -> $customerDetails");
       accountDetails =
           customerDetails["crCustomerProfileRes"]["body"]["accountDetails"];
+      accountNumbers.clear();
       for (var account in accountDetails) {
+        accountNumbers.add(account["accountNumber"]);
         if (account["productCode"] == "1001") {
           currentAccountCount++;
         } else {
@@ -267,6 +269,11 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       log("Savings Accounts -> $savingsAccountCount");
       depositDetails =
           customerDetails["crCustomerProfileRes"]["body"]["depositDetails"];
+      depositAccountNumbers.clear();
+      for (var deposit in depositDetails) {
+        depositAccountNumbers.add(deposit["depositAccountNumber"]);
+      }
+      log("depositAccountNumbers -> $depositAccountNumbers");
     } catch (_) {
       rethrow;
     }
