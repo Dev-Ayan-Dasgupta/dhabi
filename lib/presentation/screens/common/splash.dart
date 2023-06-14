@@ -5,6 +5,9 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dialup_mobile_app/data/models/widgets/dropdown_countries.dart';
+import 'package:dialup_mobile_app/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +24,18 @@ import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/index.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // await setupFlutterNotifications();
+  // showFlutterNotification(message);
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  log('Handling a background message ${message.messageId}');
+  log("FCM Message BGHandler -> ${message.data}");
+}
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({
@@ -59,6 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await initConfigurations();
       await initLocalStorageData();
       addNewDevice();
+      await initFirebaseNotifications();
       if (context.mounted) {
         navigate(context);
       }
@@ -414,6 +430,49 @@ class _SplashScreenState extends State<SplashScreen> {
         "deviceType": deviceType,
         "appVersion": appVersion,
       });
+    }
+  }
+
+  Future<void> initFirebaseNotifications() async {
+    try {
+      // initialize local notification service
+      LocalNotificationService.initialize(context);
+
+      // initialize firebase
+      await Firebase.initializeApp();
+
+      // request firebase permission
+      await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        provisional: false,
+        sound: true,
+      );
+
+      // GET FCM TOKEN
+      FirebaseMessaging.instance.getToken().then((String? token) {
+        log("FCM Token -> $token");
+      });
+
+      // THIS WILL HELP US IN NAVIGATING TO A SCREEN WHEN APP IS TERMINATED
+      FirebaseMessaging.instance
+          .getInitialMessage()
+          .then((RemoteMessage? message) async {
+        if (message != null) {
+          log("FCM Message getInitialMessage -> ${message.data}");
+        }
+      });
+
+      // THIS WILL HANDLE NOTIFICATION WHEN THE APP IS IN THE BACKGROUND - either minimized or terminated
+      FirebaseMessaging.onBackgroundMessage(
+          _firebaseMessagingBackgroundHandler);
+
+      // GET NOTIFICATION ONTO THE APP WHEN THE APP IS RUNNING IN FOREGROUND
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+        log("FCM Message onMessageListen -> ${message.data}");
+      });
+    } catch (_) {
+      rethrow;
     }
   }
 

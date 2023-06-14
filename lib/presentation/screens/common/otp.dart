@@ -336,6 +336,23 @@ class _OTPScreenState extends State<OTPScreen> {
                       errorCount: pinputErrorCount,
                     ),
                   );
+
+                  var result = await MapLogin.mapLogin({
+                    "emailId": updatedEmail,
+                    "userTypeId": storageUserTypeId,
+                    "userId": 1,
+                    "companyId": storageCompanyId,
+                    "password": storagePassword,
+                    "deviceId": storageDeviceId,
+                    "registerDevice": false,
+                    "deviceName": deviceName,
+                    "deviceType": deviceType,
+                    "appVersion": appVersion
+                  });
+                  log("Login API Response -> $result");
+                  token = result["token"];
+                  log("token -> $token");
+
                   await storage.write(key: "emailAddress", value: updatedEmail);
                   storageEmail = await storage.read(key: "emailAddress");
                   log("storageEmail -> $storageEmail");

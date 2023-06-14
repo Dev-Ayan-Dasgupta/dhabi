@@ -7,3 +7,4 @@ Digital Banking Application for Dhabi
 - Implemented Re-KYC
 - Implemented Logout
 - Implemented getFDDetails
+- Made fix for change password after change email

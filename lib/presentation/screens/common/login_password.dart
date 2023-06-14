@@ -460,6 +460,10 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                           if (loginPasswordArgument.userTypeId == 1) {
                             await getProfileData();
                             await storage.write(
+                                key: "cif", value: result["cif"]);
+                            storageCif = await storage.read(key: "cif");
+                            log("storageCif -> $storageCif");
+                            await storage.write(
                                 key: "loggedOut", value: false.toString());
                             storageLoggedOut =
                                 await storage.read(key: "loggedOut") == "true";

@@ -544,20 +544,10 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             title: messages[73]["messageText"],
             message: "Your time has run out. Please try again.",
             // messages[35]["messageText"],
-            buttonText: "Go Home",
+            buttonText: labels[88]["labelText"],
             // labels[1]["labelText"],
             onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.retailOnboardingStatus,
-                (route) => false,
-                arguments: OnboardingStatusArgumentModel(
-                  stepsCompleted: 1,
-                  isFatca: false,
-                  isPassport: false,
-                  isRetail: true,
-                ).toMap(),
-              );
+              Navigator.pop(context);
             },
             buttonTextSecondary: "",
             onTapSecondary: () {},
@@ -888,20 +878,10 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
             title: messages[73]["messageText"],
             message: "Your time has run out. Please try again.",
             // messages[35]["messageText"],
-            buttonText: "Go Home",
+            buttonText: messages[88]["messageText"],
             // labels[1]["labelText"],
             onTap: () {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.retailOnboardingStatus,
-                (route) => false,
-                arguments: OnboardingStatusArgumentModel(
-                  stepsCompleted: 1,
-                  isFatca: false,
-                  isPassport: false,
-                  isRetail: true,
-                ).toMap(),
-              );
+              Navigator.pop(context);
             },
             buttonTextSecondary: "",
             onTapSecondary: () {},
