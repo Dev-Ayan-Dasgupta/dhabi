@@ -4,15 +4,18 @@ import 'dart:convert';
 class VerifyMobileArgumentModel {
   final bool isBusiness;
   final bool isUpdate;
+  final bool isReKyc;
   VerifyMobileArgumentModel({
     required this.isBusiness,
     required this.isUpdate,
+    required this.isReKyc,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'isBusiness': isBusiness,
       'isUpdate': isUpdate,
+      'isReKyc': isReKyc,
     };
   }
 
@@ -20,6 +23,7 @@ class VerifyMobileArgumentModel {
     return VerifyMobileArgumentModel(
       isBusiness: map['isBusiness'] as bool,
       isUpdate: map['isUpdate'] as bool,
+      isReKyc: map['isReKyc'] as bool,
     );
   }
 
@@ -32,24 +36,29 @@ class VerifyMobileArgumentModel {
   VerifyMobileArgumentModel copyWith({
     bool? isBusiness,
     bool? isUpdate,
+    bool? isReKyc,
   }) {
     return VerifyMobileArgumentModel(
       isBusiness: isBusiness ?? this.isBusiness,
       isUpdate: isUpdate ?? this.isUpdate,
+      isReKyc: isReKyc ?? this.isReKyc,
     );
   }
 
   @override
   String toString() =>
-      'VerifyMobileArgumentModel(isBusiness: $isBusiness, isUpdate: $isUpdate)';
+      'VerifyMobileArgumentModel(isBusiness: $isBusiness, isUpdate: $isUpdate, isReKyc: $isReKyc)';
 
   @override
   bool operator ==(covariant VerifyMobileArgumentModel other) {
     if (identical(this, other)) return true;
 
-    return other.isBusiness == isBusiness && other.isUpdate == isUpdate;
+    return other.isBusiness == isBusiness &&
+        other.isUpdate == isUpdate &&
+        other.isReKyc == isReKyc;
   }
 
   @override
-  int get hashCode => isBusiness.hashCode ^ isUpdate.hashCode;
+  int get hashCode =>
+      isBusiness.hashCode ^ isUpdate.hashCode ^ isReKyc.hashCode;
 }

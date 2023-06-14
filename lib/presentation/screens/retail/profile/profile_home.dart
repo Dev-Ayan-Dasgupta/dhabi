@@ -309,6 +309,9 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           message: "If you log out you would need to re-login again",
           auxWidget: GradientButton(
             onTap: () async {
+              await storage.write(key: "loggedOut", value: true.toString());
+              storageLoggedOut = await storage.read(key: "loggedOut") == "true";
+
               await storage.delete(key: "hasFirstLoggedIn");
               await storage.delete(key: "isFirstLogin");
               await storage.delete(key: "userId");

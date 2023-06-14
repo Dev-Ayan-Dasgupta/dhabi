@@ -6,7 +6,7 @@ class InputValidator {
   }
 
   static bool isPhoneValid(String phone) {
-    return RegExp(r"^(?:[+0]9)?[0-9]{10}$").hasMatch(phone) ||
-        RegExp(r"^(?:[+0]9)?[0-9]{11}$").hasMatch(phone);
+    return RegExp(r"^(?:[+0]9)?[0-9]{11}$").hasMatch(phone) ||
+        RegExp(r"^(?:[+0]9)?[0-9]{12}$").hasMatch(phone);
   }
 }

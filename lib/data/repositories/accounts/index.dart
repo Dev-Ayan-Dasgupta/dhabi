@@ -10,3 +10,4 @@ export './map_get_fds.dart';
 export './map_create_beneficiaries.dart';
 export './map_get_beneficiaries.dart';
 export './map_customer_fd_account_statement.dart';
+export './map_customer_fd_details.dart';

@@ -239,6 +239,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
             await storage.write(
                 key: "emailAddress", value: _emailController.text);
             storageEmail = await storage.read(key: "emailAddress");
+            log("storageEmail -> $storageEmail");
 
             // check if single cif exists
             var singleCifResult =
@@ -376,20 +377,42 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                 var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
                     {"emailID": _emailController.text});
                 log("sendEmailOtpResult -> $sendEmailOtpResult");
-                if (context.mounted) {
-                  Navigator.pushNamed(
-                    context,
-                    Routes.otp,
-                    arguments: OTPArgumentModel(
-                      emailOrPhone: _emailController.text,
-                      isEmail: true,
-                      isBusiness: false,
-                      isInitial: false,
-                      isLogin: true,
-                      isEmailIdUpdate: false,
-                      isMobileUpdate: false,
-                    ).toMap(),
-                  );
+                if (sendEmailOtpResult["success"]) {
+                  if (context.mounted) {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.otp,
+                      arguments: OTPArgumentModel(
+                        emailOrPhone: _emailController.text,
+                        isEmail: true,
+                        isBusiness: false,
+                        isInitial: false,
+                        isLogin: true,
+                        isEmailIdUpdate: false,
+                        isMobileUpdate: false,
+                        isReKyc: false,
+                      ).toMap(),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CustomDialog(
+                          svgAssetPath: ImageConstants.warning,
+                          title: "Max Retries Reached",
+                          message: sendEmailOtpResult["message"],
+                          actionWidget: GradientButton(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            text: labels[346]["labelText"],
+                          ),
+                        );
+                      },
+                    );
+                  }
                 }
               } else {
                 // promptWrongCredentials();
@@ -434,20 +457,42 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                       await MapSendEmailOtp.mapSendEmailOtp(
                           {"emailID": _emailController.text});
                   log("sendEmailOtpResult -> $sendEmailOtpResult");
-                  if (context.mounted) {
-                    Navigator.pushNamed(
-                      context,
-                      Routes.otp,
-                      arguments: OTPArgumentModel(
-                        emailOrPhone: _emailController.text,
-                        isEmail: true,
-                        isBusiness: false,
-                        isInitial: false,
-                        isLogin: true,
-                        isEmailIdUpdate: false,
-                        isMobileUpdate: false,
-                      ).toMap(),
-                    );
+                  if (sendEmailOtpResult["success"]) {
+                    if (context.mounted) {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.otp,
+                        arguments: OTPArgumentModel(
+                          emailOrPhone: _emailController.text,
+                          isEmail: true,
+                          isBusiness: false,
+                          isInitial: false,
+                          isLogin: true,
+                          isEmailIdUpdate: false,
+                          isMobileUpdate: false,
+                          isReKyc: false,
+                        ).toMap(),
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.warning,
+                            title: "Max Retries Reached",
+                            message: sendEmailOtpResult["message"],
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
                   }
                 }
               }

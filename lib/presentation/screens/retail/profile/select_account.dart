@@ -7,7 +7,6 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/arguments/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -146,7 +145,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                       await MapIsDeviceValid.mapIsDeviceValid({
                                     "userId": selectAccountArgument
                                         .cifDetails[index]["userID"],
-                                    "deviceId": deviceId,
+                                    "deviceId": storageDeviceId,
                                   }, tokenCP ?? "");
                                   log("isDeviceValidApiResult -> $isDeviceValidApiResult");
                                   if (isDeviceValidApiResult["success"]) {
@@ -204,6 +203,7 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                             isLogin: false,
                                             isEmailIdUpdate: false,
                                             isMobileUpdate: false,
+                                            isReKyc: false,
                                           ).toMap(),
                                         );
                                       }

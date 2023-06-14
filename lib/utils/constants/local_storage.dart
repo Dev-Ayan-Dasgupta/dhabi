@@ -73,3 +73,5 @@ int? storageChosenFdAccount;
 int? storageChosenAccountForCreateFD;
 
 String? storageProfilePhotoBase64;
+
+bool? storageLoggedOut;

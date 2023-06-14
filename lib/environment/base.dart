@@ -13,6 +13,7 @@ abstract class BaseConfig {
   String get getBeneficiaries;
   String get createFd;
   String get getCustomerFdAccountStatement;
+  String get getCustomerFdDetails;
 
   // ? Authentication APIs
 

@@ -10,3 +10,4 @@ export './create_beneficiary.dart';
 export './get_beneficiaries.dart';
 export './create_fd.dart';
 export './get_customer_fd_account_statement.dart';
+export './get_customer_fd_details.dart';

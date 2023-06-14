@@ -10,6 +10,7 @@ class OTPArgumentModel {
   final bool isLogin;
   final bool isEmailIdUpdate;
   final bool isMobileUpdate;
+  final bool isReKyc;
   OTPArgumentModel({
     required this.emailOrPhone,
     required this.isEmail,
@@ -18,6 +19,7 @@ class OTPArgumentModel {
     required this.isLogin,
     required this.isEmailIdUpdate,
     required this.isMobileUpdate,
+    required this.isReKyc,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +31,7 @@ class OTPArgumentModel {
       'isLogin': isLogin,
       'isEmailIdUpdate': isEmailIdUpdate,
       'isMobileUpdate': isMobileUpdate,
+      'isReKyc': isReKyc,
     };
   }
 
@@ -41,6 +44,7 @@ class OTPArgumentModel {
       isLogin: map['isLogin'] as bool,
       isEmailIdUpdate: map['isEmailIdUpdate'] as bool,
       isMobileUpdate: map['isMobileUpdate'] as bool,
+      isReKyc: map['isReKyc'] as bool,
     );
   }
 
@@ -57,6 +61,7 @@ class OTPArgumentModel {
     bool? isLogin,
     bool? isEmailIdUpdate,
     bool? isMobileUpdate,
+    bool? isReKyc,
   }) {
     return OTPArgumentModel(
       emailOrPhone: emailOrPhone ?? this.emailOrPhone,
@@ -66,12 +71,13 @@ class OTPArgumentModel {
       isLogin: isLogin ?? this.isLogin,
       isEmailIdUpdate: isEmailIdUpdate ?? this.isEmailIdUpdate,
       isMobileUpdate: isMobileUpdate ?? this.isMobileUpdate,
+      isReKyc: isReKyc ?? this.isReKyc,
     );
   }
 
   @override
   String toString() {
-    return 'OTPArgumentModel(emailOrPhone: $emailOrPhone, isEmail: $isEmail, isBusiness: $isBusiness, isInitial: $isInitial, isLogin: $isLogin, isEmailIdUpdate: $isEmailIdUpdate, isMobileUpdate: $isMobileUpdate)';
+    return 'OTPArgumentModel(emailOrPhone: $emailOrPhone, isEmail: $isEmail, isBusiness: $isBusiness, isInitial: $isInitial, isLogin: $isLogin, isEmailIdUpdate: $isEmailIdUpdate, isMobileUpdate: $isMobileUpdate, isReKyc: $isReKyc)';
   }
 
   @override
@@ -84,7 +90,8 @@ class OTPArgumentModel {
         other.isInitial == isInitial &&
         other.isLogin == isLogin &&
         other.isEmailIdUpdate == isEmailIdUpdate &&
-        other.isMobileUpdate == isMobileUpdate;
+        other.isMobileUpdate == isMobileUpdate &&
+        other.isReKyc == isReKyc;
   }
 
   @override
@@ -95,6 +102,7 @@ class OTPArgumentModel {
         isInitial.hashCode ^
         isLogin.hashCode ^
         isEmailIdUpdate.hashCode ^
-        isMobileUpdate.hashCode;
+        isMobileUpdate.hashCode ^
+        isReKyc.hashCode;
   }
 }

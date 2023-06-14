@@ -284,6 +284,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                       isLogin: false,
                       isEmailIdUpdate: false,
                       isMobileUpdate: verifyMobileArgumentModel.isUpdate,
+                      isReKyc: verifyMobileArgumentModel.isReKyc,
                     ).toMap(),
                   );
                 }

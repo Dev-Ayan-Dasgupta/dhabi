@@ -207,6 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 arguments: VerifyMobileArgumentModel(
                                   isBusiness: false,
                                   isUpdate: true,
+                                  isReKyc: false,
                                 ).toMap(),
                               );
                             },

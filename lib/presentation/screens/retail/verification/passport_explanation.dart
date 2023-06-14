@@ -253,8 +253,10 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
           storageDocPhoto != null &&
           storageIssuingStateCode != null) {
         var result = await MapIfPassportExists.mapIfPassportExists(
-          {"passportNumber": passportNumber},
-          passportReKycArgument.isReKyc ? tokenCP ?? "" : token ?? "",
+          {
+            "passportNumber": passportNumber,
+          },
+          token ?? "",
         );
         log("If Passport Exists API response -> $result");
 
@@ -333,39 +335,43 @@ class _PassportExplanationScreenState extends State<PassportExplanationScreen> {
         }
 
         // ? Check for previous existence
-        else if (result["exists"]) {
-          if (context.mounted) {
-            Navigator.pushNamed(context, Routes.errorSuccessScreen,
-                arguments: ErrorArgumentModel(
-                  hasSecondaryButton: false,
-                  iconPath: ImageConstants.warningRed,
-                  title: messages[76]["messageText"],
-                  message: messages[21]["messageText"],
-                  buttonText: labels[205]["labelText"],
-                  onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      Routes.loginUserId,
-                      (route) => false,
-                      arguments: OnboardingStatusArgumentModel(
-                        stepsCompleted: 1,
-                        isFatca: false,
-                        isPassport: false,
-                        isRetail: true,
-                      ).toMap(),
-                    );
-                  },
-                  buttonTextSecondary: "",
-                  onTapSecondary: () {},
-                ).toMap());
+        else if (!(passportReKycArgument.isReKyc)) {
+          if (result["exists"]) {
+            if (context.mounted) {
+              Navigator.pushNamed(context, Routes.errorSuccessScreen,
+                  arguments: ErrorArgumentModel(
+                    hasSecondaryButton: false,
+                    iconPath: ImageConstants.warningRed,
+                    title: messages[76]["messageText"],
+                    message: messages[21]["messageText"],
+                    buttonText: labels[205]["labelText"],
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.loginUserId,
+                        (route) => false,
+                        arguments: OnboardingStatusArgumentModel(
+                          stepsCompleted: 1,
+                          isFatca: false,
+                          isPassport: false,
+                          isRetail: true,
+                        ).toMap(),
+                      );
+                    },
+                    buttonTextSecondary: "",
+                    onTapSecondary: () {},
+                  ).toMap());
+            }
           }
         } else {
           await storage.write(key: "isEid", value: false.toString());
           // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
           storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
-          await storage.write(key: "stepsCompleted", value: 3.toString());
-          storageStepsCompleted =
-              int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+          if (!(passportReKycArgument.isReKyc)) {
+            await storage.write(key: "stepsCompleted", value: 3.toString());
+            storageStepsCompleted =
+                int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+          }
 
           if (context.mounted) {
             Navigator.pushNamed(

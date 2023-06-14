@@ -244,6 +244,7 @@ class _BusinessOnboardingStatusScreenState
                                 arguments: VerifyMobileArgumentModel(
                                   isBusiness: true,
                                   isUpdate: false,
+                                  isReKyc: false,
                                 ).toMap(),
                               );
                               break;
@@ -338,7 +339,7 @@ class _BusinessOnboardingStatusScreenState
       "userId": storageUserId,
       "companyId": storageCompanyId,
       "password": storagePassword,
-      "deviceId": deviceId,
+      "deviceId": storageDeviceId,
       "registerDevice": false,
       "deviceName": deviceName,
       "deviceType": deviceType,
@@ -350,6 +351,8 @@ class _BusinessOnboardingStatusScreenState
     customerName = result["customerName"];
     await storage.write(key: "customerName", value: customerName);
     storageCustomerName = await storage.read(key: "customerName");
+    await storage.write(key: "loggedOut", value: false.toString());
+    storageLoggedOut = await storage.read(key: "loggedOut") == "true";
 
     isLoading = false;
     showButtonBloc.add(ShowButtonEvent(show: isLoading));

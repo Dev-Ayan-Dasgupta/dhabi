@@ -461,7 +461,7 @@ class _DepositBeneficiaryScreenState extends State<DepositBeneficiaryScreen> {
               interestPayout: depositConfirmation.interestPayout,
               isAutoRenewal: depositConfirmation.isAutoRenewal,
               isAutoTransfer: true,
-              creditAccountNumber: depositConfirmation.creditAccountNumber,
+              creditAccountNumber: _ibanController.text,
               dateOfMaturity: depositConfirmation.dateOfMaturity,
               depositBeneficiary: DepositBeneficiaryModel(
                 accountNumber: _ibanController.text,

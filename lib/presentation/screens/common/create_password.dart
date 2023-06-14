@@ -618,7 +618,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     "userType": 1,
                     "emailId": createAccountArgumentModel.email,
                     "password": _confirmPasswordController.text,
-                    "deviceId": deviceId,
+                    "deviceId": storageDeviceId,
                     "deviceName": deviceName,
                     "deviceType": deviceType,
                     "appVersion": appVersion
@@ -643,7 +643,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     "userId": storageUserId,
                     "companyId": storageCompanyId,
                     "password": _confirmPasswordController.text,
-                    "deviceId": deviceId,
+                    "deviceId": storageDeviceId,
                     "registerDevice": false,
                     "deviceName": deviceName,
                     "deviceType": deviceType,
@@ -655,7 +655,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
                   if (result["success"]) {
                     // customerName = result["customerName"];
-
+                    await storage.write(
+                        key: "loggedOut", value: false.toString());
+                    storageLoggedOut =
+                        await storage.read(key: "loggedOut") == "true";
                     await storage.write(
                         key: "stepsCompleted", value: 2.toString());
                     storageStepsCompleted = int.parse(
@@ -712,7 +715,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     "userType": 2,
                     "emailId": createAccountArgumentModel.email,
                     "password": _confirmPasswordController.text,
-                    "deviceId": deviceId,
+                    "deviceId": storageDeviceId,
                     "deviceName": deviceName,
                     "deviceType": deviceType,
                     "appVersion": appVersion
@@ -740,7 +743,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     "userId": storageUserId,
                     "companyId": storageCompanyId,
                     "password": _confirmPasswordController.text,
-                    "deviceId": deviceId,
+                    "deviceId": storageDeviceId,
                     "registerDevice": false,
                     "deviceName": deviceName,
                     "deviceType": deviceType,
@@ -752,6 +755,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
                   if (result["success"]) {
                     // customerName = result["customerName"];
+                    await storage.write(
+                        key: "loggedOut", value: false.toString());
+                    storageLoggedOut =
+                        await storage.read(key: "loggedOut") == "true";
                     await storage.write(
                         key: "stepsCompleted", value: 2.toString());
                     storageStepsCompleted = int.parse(
@@ -869,7 +876,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                             "userId": storageUserId,
                             "companyId": storageCompanyId,
                             "password": _confirmPasswordController.text,
-                            "deviceId": deviceId,
+                            "deviceId": storageDeviceId,
                             "registerDevice": true,
                             "deviceName": deviceName,
                             "deviceType": deviceType,
@@ -880,6 +887,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                           log("token -> $token");
                           if (result["success"]) {
                             // customerName = result["customerName"];
+                            await storage.write(
+                                key: "loggedOut", value: false.toString());
+                            storageLoggedOut =
+                                await storage.read(key: "loggedOut") == "true";
                             await storage.write(
                                 key: "stepsCompleted", value: 2.toString());
                             storageStepsCompleted = int.parse(

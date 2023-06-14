@@ -4,7 +4,6 @@ import 'dart:developer';
 // import 'dart:math' as math;
 
 import 'package:dialup_mobile_app/bloc/index.dart';
-import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -354,7 +353,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           storageDocPhoto != null) {
         bool result = await MapIfEidExists.mapIfEidExists(
           {"eidNumber": eiDNumber},
-          scannedDetailsArgument.isReKyc ? tokenCP ?? "" : token ?? "",
+          token ?? "",
         );
 
         log("If EID Exists API response -> $result");
@@ -442,39 +441,44 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         }
 
         // ? Check for previous existence
-        else if (result) {
-          if (context.mounted) {
-            Navigator.pushNamed(context, Routes.errorSuccessScreen,
-                arguments: ErrorArgumentModel(
-                  hasSecondaryButton: false,
-                  iconPath: ImageConstants.warningRed,
-                  title: messages[76]["messageText"],
-                  message: messages[23]["messageText"],
-                  buttonText: labels[205]["labelText"],
-                  onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      Routes.loginUserId,
-                      (route) => false,
-                      arguments: OnboardingStatusArgumentModel(
-                        stepsCompleted: 1,
-                        isFatca: false,
-                        isPassport: false,
-                        isRetail: true,
-                      ).toMap(),
-                    );
-                  },
-                  buttonTextSecondary: "",
-                  onTapSecondary: () {},
-                ).toMap());
+        else if (!(scannedDetailsArgument.isReKyc)) {
+          if (result) {
+            if (context.mounted) {
+              Navigator.pushNamed(context, Routes.errorSuccessScreen,
+                  arguments: ErrorArgumentModel(
+                    hasSecondaryButton: false,
+                    iconPath: ImageConstants.warningRed,
+                    title: messages[76]["messageText"],
+                    message: messages[23]["messageText"],
+                    buttonText: labels[205]["labelText"],
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.loginUserId,
+                        (route) => false,
+                        arguments: OnboardingStatusArgumentModel(
+                          stepsCompleted: 1,
+                          isFatca: false,
+                          isPassport: false,
+                          isRetail: true,
+                        ).toMap(),
+                      );
+                    },
+                    buttonTextSecondary: "",
+                    onTapSecondary: () {},
+                  ).toMap());
+            }
           }
         } else {
           await storage.write(key: "isEid", value: true.toString());
           // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
           storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
-          await storage.write(key: "stepsCompleted", value: 3.toString());
-          storageStepsCompleted =
-              int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+          if (!(scannedDetailsArgument.isReKyc)) {
+            await storage.write(key: "stepsCompleted", value: 3.toString());
+            storageStepsCompleted =
+                int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+          }
+
           if (context.mounted) {
             Navigator.pushNamed(
               context,
@@ -672,7 +676,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           storageIssuingStateCode != null) {
         var result = await MapIfPassportExists.mapIfPassportExists(
           {"passportNumber": passportNumber},
-          scannedDetailsArgument.isReKyc ? tokenCP ?? "" : token ?? "",
+          token ?? "",
         );
         log("If Passport Exists API response -> $result");
 
@@ -754,39 +758,43 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         }
 
         // ? Check for previous existence
-        else if (result["exists"]) {
-          if (context.mounted) {
-            Navigator.pushNamed(context, Routes.errorSuccessScreen,
-                arguments: ErrorArgumentModel(
-                  hasSecondaryButton: false,
-                  iconPath: ImageConstants.warningRed,
-                  title: messages[76]["messageText"],
-                  message: messages[21]["messageText"],
-                  buttonText: labels[205]["labelText"],
-                  onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      Routes.loginUserId,
-                      (route) => false,
-                      arguments: OnboardingStatusArgumentModel(
-                        stepsCompleted: 1,
-                        isFatca: false,
-                        isPassport: false,
-                        isRetail: true,
-                      ).toMap(),
-                    );
-                  },
-                  buttonTextSecondary: "",
-                  onTapSecondary: () {},
-                ).toMap());
+        else if (!(scannedDetailsArgument.isReKyc)) {
+          if (result["exists"]) {
+            if (context.mounted) {
+              Navigator.pushNamed(context, Routes.errorSuccessScreen,
+                  arguments: ErrorArgumentModel(
+                    hasSecondaryButton: false,
+                    iconPath: ImageConstants.warningRed,
+                    title: messages[76]["messageText"],
+                    message: messages[21]["messageText"],
+                    buttonText: labels[205]["labelText"],
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.loginUserId,
+                        (route) => false,
+                        arguments: OnboardingStatusArgumentModel(
+                          stepsCompleted: 1,
+                          isFatca: false,
+                          isPassport: false,
+                          isRetail: true,
+                        ).toMap(),
+                      );
+                    },
+                    buttonTextSecondary: "",
+                    onTapSecondary: () {},
+                  ).toMap());
+            }
           }
         } else {
           await storage.write(key: "isEid", value: false.toString());
           // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
           storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
-          await storage.write(key: "stepsCompleted", value: 3.toString());
-          storageStepsCompleted =
-              int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+          if (!(scannedDetailsArgument.isReKyc)) {
+            await storage.write(key: "stepsCompleted", value: 3.toString());
+            storageStepsCompleted =
+                int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+          }
           if (context.mounted) {
             Navigator.pushNamed(
               context,
@@ -958,36 +966,20 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
       if (response["success"]) {
         if (context.mounted) {
           if (scannedDetailsArgument.isReKyc) {
-            var loginApiResult = await MapLogin.mapLogin({
-              "emailId": storageEmail,
-              "userTypeId": storageUserTypeId,
-              "userId": storageUserId,
-              "companyId": storageCompanyId,
-              "password": storagePassword,
-              "deviceId": deviceId,
-              "registerDevice": false,
-              "deviceName": deviceName,
-              "deviceType": deviceType,
-              "appVersion": appVersion
-            });
-            if (loginApiResult["success"]) {
-              if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  Routes.retailDashboard,
-                  (route) => false,
-                  arguments: RetailDashboardArgumentModel(
-                    imgUrl: "",
-                    name: loginApiResult["customerName"],
-                    isFirst: true,
-                  ).toMap(),
-                );
-              }
-            }
+            Navigator.pushReplacementNamed(
+              context,
+              Routes.verifyMobile,
+              arguments: VerifyMobileArgumentModel(
+                isBusiness: false,
+                isUpdate: false,
+                isReKyc: true,
+              ).toMap(),
+            );
           } else {
             await storage.write(key: "stepsCompleted", value: 4.toString());
             storageStepsCompleted =
-                int.parse(await storage.read(key: "stepsCompleted") ?? "4");
+                int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+
             if (context.mounted) {
               Navigator.pushReplacementNamed(
                 context,
@@ -1066,6 +1058,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
   }
 
   matchfaces() async {
+    // log("matchfaces executing");
     regula.MatchFacesRequest request = regula.MatchFacesRequest();
     request.images = [image1, image2];
     var value = await regula.FaceSDK.matchFaces(jsonEncode(request));
@@ -1074,7 +1067,7 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
         jsonEncode(response!.results), 0.8);
     regula.MatchFacesSimilarityThresholdSplit? split =
         regula.MatchFacesSimilarityThresholdSplit.fromJson(json.decode(str));
-
+    // log("matched faces -> ${split!.matchedFaces}");
     photoMatchScore = split!.matchedFaces.isNotEmpty
         ? (split.matchedFaces[0]!.similarity! * 100)
         : 0;

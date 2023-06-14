@@ -613,7 +613,19 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     fontSize: 14,
                                                   )
                                                 : AccountSummaryTile(
-                                                    onTap: () {},
+                                                    onTap: () {
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        Routes.depositDetails,
+                                                        arguments:
+                                                            DepositDetailsArgumentModel(
+                                                          accountNumber:
+                                                              depositDetails[
+                                                                      index][
+                                                                  "depositAccountNumber"],
+                                                        ).toMap(),
+                                                      );
+                                                    },
                                                     imgUrl: depositDetails[
                                                                     index][
                                                                 "depositAccountCurrency"] ==
@@ -703,134 +715,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                 // ! Explore Tab View
                                 Column(
                                   children: [
-                                    // Expanded(
-                                    //   child: ListView.builder(
-                                    //     padding: EdgeInsets.only(
-                                    //         top:
-                                    //             (5 / Dimensions.designHeight).h,
-                                    //         bottom:
-                                    //             (13 / Dimensions.designHeight)
-                                    //                 .h),
-                                    //     controller: _scrollController,
-                                    //     scrollDirection: Axis.horizontal,
-                                    //     itemCount: (accountDetails.length) + 1,
-                                    //     itemBuilder: (context, index) {
-                                    //       return Padding(
-                                    //         padding: EdgeInsets.only(
-                                    //           left: (index == 0)
-                                    //               ? (PaddingConstants
-                                    //                           .horizontalPadding /
-                                    //                       Dimensions
-                                    //                           .designWidth)
-                                    //                   .w
-                                    //               : 0,
-                                    //         ),
-                                    //         child: index ==
-                                    //                 accountDetails.length
-                                    //             ? AccountSummaryTile(
-                                    //                 onTap: () {
-                                    //                   Navigator.pushNamed(
-                                    //                     context,
-                                    //                     Routes
-                                    //                         .applicationAccount,
-                                    //                     arguments:
-                                    //                         ApplicationAccountArgumentModel(
-                                    //                       isInitial: false,
-                                    //                       savingsAccountsCreated:
-                                    //                           savingsAccountCount,
-                                    //                       currentAccountsCreated:
-                                    //                           currentAccountCount,
-                                    //                     ).toMap(),
-                                    //                   );
-                                    //                 },
-                                    //                 imgUrl: ImageConstants
-                                    //                     .addAccount,
-                                    //                 accountType: "",
-                                    //                 currency: "Open Account",
-                                    //                 amount: "",
-                                    //                 subText: "",
-                                    //                 subImgUrl: "",
-                                    //                 fontSize: 14,
-                                    //               )
-                                    //             : AccountSummaryTile(
-                                    //                 onTap: () {},
-                                    //                 imgUrl: accountDetails[
-                                    //                                 index][
-                                    //                             "accountCurrency"] ==
-                                    //                         "AED"
-                                    //                     ? ImageConstants.uaeFlag
-                                    //                     : ImageConstants
-                                    //                         .usaFlag,
-                                    //                 accountType: accountDetails[
-                                    //                                 index][
-                                    //                             "productCode"] ==
-                                    //                         "1001"
-                                    //                     ? "Current"
-                                    //                     : "Savings",
-                                    //                 currency: accountDetails[
-                                    //                             index]
-                                    //                         ["currentBalance"]
-                                    //                     .split(" ")
-                                    //                     .first,
-                                    //                 amount: accountDetails[
-                                    //                             index]
-                                    //                         ["currentBalance"]
-                                    //                     .split(" ")
-                                    //                     .last,
-                                    //                 subText: "",
-                                    //                 subImgUrl: "",
-                                    //               ),
-                                    //       );
-                                    //     },
-                                    //   ),
-                                    // ),
-                                    // const SizeBox(height: 10),
-                                    // BlocBuilder<SummaryTileBloc,
-                                    //     SummaryTileState>(
-                                    //   builder: (context, state) {
-                                    //     return Padding(
-                                    //       padding: EdgeInsets.symmetric(
-                                    //           horizontal: 47.w -
-                                    //               ((accountDetails.length - 1) *
-                                    //                   (6.5 /
-                                    //                           Dimensions
-                                    //                               .designWidth)
-                                    //                       .w)),
-                                    //       child: SizedBox(
-                                    //         width: 90.w,
-                                    //         height:
-                                    //             (9 / Dimensions.designWidth).w,
-                                    //         child: ListView.builder(
-                                    //           scrollDirection: Axis.horizontal,
-                                    //           physics:
-                                    //               const NeverScrollableScrollPhysics(),
-                                    //           itemCount: accountDetails.length,
-                                    //           itemBuilder: (context, index) {
-                                    //             return ScrollIndicator(
-                                    //               isCurrent:
-                                    //                   (index == _scrollIndex),
-                                    //             );
-                                    //           },
-                                    //         ),
-                                    //       ),
-                                    //     );
-                                    //   },
-                                    // ),
-                                    // const SizeBox(height: 10),
-                                    // Row(
-                                    //   mainAxisAlignment:
-                                    //       MainAxisAlignment.center,
-                                    //   children: [
-                                    //     DashboardActivityTile(
-                                    //       iconPath: ImageConstants.arrowOutward,
-                                    //       activityText: "Send Money",
-                                    //       onTap: () {
-                                    //         Navigator.pushNamed(
-                                    //             context, Routes.sendMoney);
-                                    //       },
-                                    //     ),
-                                    //   ],
-                                    // ),
                                     const SizeBox(height: 15),
                                     InkWell(
                                       onTap: () {

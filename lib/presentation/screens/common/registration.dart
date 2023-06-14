@@ -362,6 +362,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       isLogin: false,
                       isEmailIdUpdate: !(registrationArgument.isInitial),
                       isMobileUpdate: false,
+                      isReKyc: false,
                     ).toMap(),
                   );
                 }

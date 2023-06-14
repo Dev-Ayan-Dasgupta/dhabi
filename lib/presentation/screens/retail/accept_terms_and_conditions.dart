@@ -259,7 +259,7 @@ class _AcceptTermsAndConditionsScreenState
                                       "userId": storageUserId,
                                       "companyId": storageCompanyId,
                                       "password": storagePassword,
-                                      "deviceId": deviceId,
+                                      "deviceId": storageDeviceId,
                                       "registerDevice": false,
                                       "deviceName": deviceName,
                                       "deviceType": deviceType,
@@ -270,6 +270,12 @@ class _AcceptTermsAndConditionsScreenState
                                     log("token -> $token");
 
                                     if (result["success"]) {
+                                      await storage.write(
+                                          key: "loggedOut",
+                                          value: false.toString());
+                                      storageLoggedOut = await storage.read(
+                                              key: "loggedOut") ==
+                                          "true";
                                       customerName = result["customerName"];
                                       await storage.write(
                                           key: "customerName",
@@ -447,6 +453,9 @@ class _AcceptTermsAndConditionsScreenState
       log("getProfileDataResult -> $getProfileDataResult");
       if (getProfileDataResult["success"]) {
         profileName = getProfileDataResult["name"];
+        await storage.write(key: "customerName", value: profileName);
+        storageCustomerName = await storage.read(key: "customerName");
+
         profilePhotoBase64 = getProfileDataResult["profileImageBase64"];
         await storage.write(
             key: "profilePhotoBase64", value: profilePhotoBase64);

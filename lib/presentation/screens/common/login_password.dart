@@ -50,6 +50,8 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
 
   bool isPwdBlank = false;
 
+  bool isSendingOtp = false;
+
   late LoginPasswordArgumentModel loginPasswordArgument;
 
   @override
@@ -245,7 +247,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       "userId": loginPasswordArgument.userId,
       "companyId": loginPasswordArgument.companyId,
       "password": password,
-      "deviceId": deviceId,
+      "deviceId": storageDeviceId,
       "registerDevice": false,
       "deviceName": deviceName,
       "deviceType": deviceType,
@@ -275,9 +277,10 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
             await storage.write(key: "retailLoggedIn", value: true.toString());
             storageRetailLoggedIn =
                 await storage.read(key: "retailLoggedIn") == "true";
-
             if (context.mounted) {
               await getProfileData();
+              await storage.write(key: "loggedOut", value: false.toString());
+              storageLoggedOut = await storage.read(key: "loggedOut") == "true";
               if (context.mounted) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
@@ -441,7 +444,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                       "userId": loginPasswordArgument.userId,
                       "companyId": loginPasswordArgument.companyId,
                       "password": _passwordController.text,
-                      "deviceId": deviceId,
+                      "deviceId": storageDeviceId,
                       "registerDevice": true,
                       "deviceName": deviceName,
                       "deviceType": deviceType,
@@ -455,12 +458,16 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                       if (result["onboardingState"] == 5) {
                         if (context.mounted) {
                           if (loginPasswordArgument.userTypeId == 1) {
+                            await getProfileData();
+                            await storage.write(
+                                key: "loggedOut", value: false.toString());
+                            storageLoggedOut =
+                                await storage.read(key: "loggedOut") == "true";
                             await storage.write(
                                 key: "retailLoggedIn", value: true.toString());
                             storageRetailLoggedIn =
                                 await storage.read(key: "retailLoggedIn") ==
                                     "true";
-
                             if (context.mounted) {
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
@@ -655,31 +662,39 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     );
   }
 
-  void promptKycExpired() {
-    // TODO: get temporary OTP, discuss with Samit sir on how to get it
-    showDialog(
-      context: context,
-      builder: (context) {
-        return CustomDialog(
-          svgAssetPath: ImageConstants.warning,
-          title: "Identification Document Expired",
-          message:
-              "${messages[9]["messageText"]} ${messages[10]["messageText"]}",
-          actionWidget: GradientButton(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                Routes.verificationInitializing,
-                arguments: VerificationInitializationArgumentModel(
-                  isReKyc: true,
-                ).toMap(),
-              );
-            },
-            text: "Verify",
-          ),
-        );
-      },
-    );
+  void promptKycExpired() async {
+    await storage.write(key: "password", value: _passwordController.text);
+    storagePassword = await storage.read(key: "password");
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return CustomDialog(
+            svgAssetPath: ImageConstants.warning,
+            title: "Identification Document Expired",
+            message:
+                "${messages[9]["messageText"]} ${messages[10]["messageText"]}",
+            actionWidget: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+              builder: (context, state) {
+                return GradientButton(
+                  onTap: () async {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.verificationInitializing,
+                      arguments: VerificationInitializationArgumentModel(
+                        isReKyc: true,
+                      ).toMap(),
+                    );
+                  },
+                  text: "Verify",
+                  auxWidget: isSendingOtp ? const LoaderRow() : const SizeBox(),
+                );
+              },
+            ),
+          );
+        },
+      );
+    }
   }
 
   Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
@@ -743,6 +758,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               isLogin: false,
               isEmailIdUpdate: false,
               isMobileUpdate: false,
+              isReKyc: false,
             ).toMap(),
           );
         }
@@ -905,6 +921,9 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       log("getProfileDataResult -> $getProfileDataResult");
       if (getProfileDataResult["success"]) {
         profileName = getProfileDataResult["name"];
+        await storage.write(key: "customerName", value: profileName);
+        storageCustomerName = await storage.read(key: "customerName");
+
         profilePhotoBase64 = getProfileDataResult["profileImageBase64"];
         await storage.write(
             key: "profilePhotoBase64", value: profilePhotoBase64);

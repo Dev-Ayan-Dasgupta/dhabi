@@ -269,6 +269,9 @@ class _SplashScreenState extends State<SplashScreen> {
       await storage.delete(key: "retailLoggedIn");
       await storage.delete(key: "customerName");
       await storage.delete(key: "chosenAccount");
+      await storage.delete(key: "loggedOut");
+      await storage.delete(key: "chosenAccountForCreateFD");
+      await storage.delete(key: "chosenprofilePhotoBase64Account");
       prefs.setBool('first_run', false);
     }
 
@@ -395,6 +398,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
       storageProfilePhotoBase64 = await storage.read(key: "profilePhotoBase64");
       log("storageProfilePhotoBase64 -> $storageProfilePhotoBase64");
+
+      storageLoggedOut = await storage.read(key: "loggedOut") == "true";
+      log("storageLoggedOut -> $storageLoggedOut");
     } catch (_) {
       rethrow;
     }
@@ -416,11 +422,43 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacementNamed(context, Routes.onboarding,
           arguments: OnboardingArgumentModel(isInitial: true).toMap());
     } else {
-      if (storageStepsCompleted == 0) {
-        if (storageUserTypeId == 2) {
-          if (storageIsFirstLogin == false) {
-            Navigator.pushReplacementNamed(context, Routes.onboarding,
-                arguments: OnboardingArgumentModel(isInitial: true).toMap());
+      if (storageLoggedOut == true) {
+        Navigator.pushReplacementNamed(
+          context,
+          Routes.onboarding,
+          arguments: OnboardingArgumentModel(isInitial: true).toMap(),
+        );
+      } else {
+        if (storageStepsCompleted == 0) {
+          if (storageUserTypeId == 2) {
+            if (storageIsFirstLogin == false) {
+              Navigator.pushReplacementNamed(context, Routes.onboarding,
+                  arguments: OnboardingArgumentModel(isInitial: true).toMap());
+            } else {
+              if (persistBiometric == true) {
+                Navigator.pushReplacementNamed(
+                  context,
+                  Routes.loginBiometric,
+                  arguments: LoginPasswordArgumentModel(
+                    emailId: storageEmail ?? "",
+                    userId: storageUserId ?? 0,
+                    userTypeId: storageUserTypeId ?? 1,
+                    companyId: storageCompanyId ?? 0,
+                  ).toMap(),
+                );
+              } else {
+                Navigator.pushReplacementNamed(
+                  context,
+                  Routes.loginPassword,
+                  arguments: LoginPasswordArgumentModel(
+                    emailId: storageEmail ?? "",
+                    userId: storageUserId ?? 0,
+                    userTypeId: storageUserTypeId ?? 1,
+                    companyId: storageCompanyId ?? 0,
+                  ).toMap(),
+                );
+              }
+            }
           } else {
             if (persistBiometric == true) {
               Navigator.pushReplacementNamed(
@@ -447,127 +485,104 @@ class _SplashScreenState extends State<SplashScreen> {
             }
           }
         } else {
-          if (persistBiometric == true) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.loginBiometric,
-              arguments: LoginPasswordArgumentModel(
-                emailId: storageEmail ?? "",
-                userId: storageUserId ?? 0,
-                userTypeId: storageUserTypeId ?? 1,
-                companyId: storageCompanyId ?? 0,
-              ).toMap(),
-            );
-          } else {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.loginPassword,
-              arguments: LoginPasswordArgumentModel(
-                emailId: storageEmail ?? "",
-                userId: storageUserId ?? 0,
-                userTypeId: storageUserTypeId ?? 1,
-                companyId: storageCompanyId ?? 0,
-              ).toMap(),
-            );
+          if (storageUserTypeId == 1) {
+            if (storageStepsCompleted == 1) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.retailOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 0,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
+              );
+            } else if (storageStepsCompleted == 2 ||
+                storageStepsCompleted == 3) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.retailOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 1,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
+              );
+            } else if (storageStepsCompleted == 4 ||
+                storageStepsCompleted == 5 ||
+                storageStepsCompleted == 6 ||
+                storageStepsCompleted == 7 ||
+                storageStepsCompleted == 8) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.retailOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 2,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
+              );
+            } else if (storageStepsCompleted == 9) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.retailOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 3,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
+              );
+            } else if (storageStepsCompleted == 10) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.retailOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 4,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: true,
+                ).toMap(),
+              );
+            }
           }
-        }
-      } else {
-        if (storageUserTypeId == 1) {
-          if (storageStepsCompleted == 1) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.retailOnboardingStatus,
-              arguments: OnboardingStatusArgumentModel(
-                stepsCompleted: 0,
-                isFatca: false,
-                isPassport: false,
-                isRetail: true,
-              ).toMap(),
-            );
-          } else if (storageStepsCompleted == 2 || storageStepsCompleted == 3) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.retailOnboardingStatus,
-              arguments: OnboardingStatusArgumentModel(
-                stepsCompleted: 1,
-                isFatca: false,
-                isPassport: false,
-                isRetail: true,
-              ).toMap(),
-            );
-          } else if (storageStepsCompleted == 4 ||
-              storageStepsCompleted == 5 ||
-              storageStepsCompleted == 6 ||
-              storageStepsCompleted == 7 ||
-              storageStepsCompleted == 8) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.retailOnboardingStatus,
-              arguments: OnboardingStatusArgumentModel(
-                stepsCompleted: 2,
-                isFatca: false,
-                isPassport: false,
-                isRetail: true,
-              ).toMap(),
-            );
-          } else if (storageStepsCompleted == 9) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.retailOnboardingStatus,
-              arguments: OnboardingStatusArgumentModel(
-                stepsCompleted: 3,
-                isFatca: false,
-                isPassport: false,
-                isRetail: true,
-              ).toMap(),
-            );
-          } else if (storageStepsCompleted == 10) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.retailOnboardingStatus,
-              arguments: OnboardingStatusArgumentModel(
-                stepsCompleted: 4,
-                isFatca: false,
-                isPassport: false,
-                isRetail: true,
-              ).toMap(),
-            );
-          }
-        }
-        if (storageUserTypeId == 2) {
-          if (storageStepsCompleted == 1) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.createPassword,
-              arguments: CreateAccountArgumentModel(
-                email: storageEmail ?? "",
-                isRetail: storageUserTypeId == 1 ? true : false,
-                userTypeId: storageUserTypeId ?? 1,
-                companyId: storageCompanyId ?? 0,
-              ).toMap(),
-            );
-          } else if (storageStepsCompleted == 2) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.businessOnboardingStatus,
-              arguments: OnboardingStatusArgumentModel(
-                stepsCompleted: 1,
-                isFatca: false,
-                isPassport: false,
-                isRetail: false,
-              ).toMap(),
-            );
-          } else if (storageStepsCompleted == 11) {
-            Navigator.pushReplacementNamed(
-              context,
-              Routes.businessOnboardingStatus,
-              arguments: OnboardingStatusArgumentModel(
-                stepsCompleted: 2,
-                isFatca: false,
-                isPassport: false,
-                isRetail: false,
-              ).toMap(),
-            );
+          if (storageUserTypeId == 2) {
+            if (storageStepsCompleted == 1) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.createPassword,
+                arguments: CreateAccountArgumentModel(
+                  email: storageEmail ?? "",
+                  isRetail: storageUserTypeId == 1 ? true : false,
+                  userTypeId: storageUserTypeId ?? 1,
+                  companyId: storageCompanyId ?? 0,
+                ).toMap(),
+              );
+            } else if (storageStepsCompleted == 2) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.businessOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 1,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: false,
+                ).toMap(),
+              );
+            } else if (storageStepsCompleted == 11) {
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.businessOnboardingStatus,
+                arguments: OnboardingStatusArgumentModel(
+                  stepsCompleted: 2,
+                  isFatca: false,
+                  isPassport: false,
+                  isRetail: false,
+                ).toMap(),
+              );
+            }
           }
         }
       }

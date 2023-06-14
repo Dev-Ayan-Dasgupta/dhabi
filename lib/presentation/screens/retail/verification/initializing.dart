@@ -127,8 +127,6 @@ class _VerificationInitializingScreenState
             photo: storagePhoto,
             docPhoto: storageDocPhoto,
             isReKyc: verificationInitializationArgument.isReKyc,
-            // img1: img1,
-            // image1: image1,
           ).toMap(),
         );
       }

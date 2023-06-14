@@ -217,7 +217,7 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
           storageDocPhoto != null) {
         bool result = await MapIfEidExists.mapIfEidExists(
           {"eidNumber": eiDNumber},
-          eidReKycArgument.isReKyc ? tokenCP ?? "" : token ?? "",
+          token ?? "",
         );
 
         log("If EID Exists API response -> $result");
@@ -300,39 +300,43 @@ class _EIDExplanationScreenState extends State<EIDExplanationScreen> {
         }
 
         // ? Check for previous existence
-        else if (result) {
-          if (context.mounted) {
-            Navigator.pushNamed(context, Routes.errorSuccessScreen,
-                arguments: ErrorArgumentModel(
-                  hasSecondaryButton: false,
-                  iconPath: ImageConstants.warningRed,
-                  title: messages[76]["messageText"],
-                  message: messages[23]["messageText"],
-                  buttonText: labels[205]["labelText"],
-                  onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      Routes.retailOnboardingStatus,
-                      (route) => false,
-                      arguments: OnboardingStatusArgumentModel(
-                        stepsCompleted: 1,
-                        isFatca: false,
-                        isPassport: false,
-                        isRetail: true,
-                      ).toMap(),
-                    );
-                  },
-                  buttonTextSecondary: "",
-                  onTapSecondary: () {},
-                ).toMap());
+        else if (!(eidReKycArgument.isReKyc)) {
+          if (result) {
+            if (context.mounted) {
+              Navigator.pushNamed(context, Routes.errorSuccessScreen,
+                  arguments: ErrorArgumentModel(
+                    hasSecondaryButton: false,
+                    iconPath: ImageConstants.warningRed,
+                    title: messages[76]["messageText"],
+                    message: messages[23]["messageText"],
+                    buttonText: labels[205]["labelText"],
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.retailOnboardingStatus,
+                        (route) => false,
+                        arguments: OnboardingStatusArgumentModel(
+                          stepsCompleted: 1,
+                          isFatca: false,
+                          isPassport: false,
+                          isRetail: true,
+                        ).toMap(),
+                      );
+                    },
+                    buttonTextSecondary: "",
+                    onTapSecondary: () {},
+                  ).toMap());
+            }
           }
         } else {
           await storage.write(key: "isEid", value: true.toString());
           // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
           storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
-          await storage.write(key: "stepsCompleted", value: 3.toString());
-          storageStepsCompleted =
-              int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+          if (!(eidReKycArgument.isReKyc)) {
+            await storage.write(key: "stepsCompleted", value: 3.toString());
+            storageStepsCompleted =
+                int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+          }
 
           if (context.mounted) {
             Navigator.pushNamed(

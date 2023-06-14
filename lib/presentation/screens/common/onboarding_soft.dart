@@ -384,11 +384,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Ternary(
                       condition: onboardingArgumentModel.isInitial,
                       truthy: SolidButton(
-                        onTap: () {
+                        onTap: () async {
                           Navigator.pushNamed(context, Routes.exploreDashboard);
                           // Navigator.pushNamed(
                           //     context, Routes.verificationInitializing);
                           // Navigator.pushNamed(context, Routes.loginUserId);
+                          // await storage.write(
+                          //     key: "stepsCompleted", value: 0.toString());
+                          // storageStepsCompleted = int.parse(
+                          //     await storage.read(key: "stepsCompleted") ?? "0");
                           // Navigator.pushNamed(
                           //   context,
                           //   Routes.otp,
@@ -409,6 +413,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           //   Routes.verifyMobile,
                           //   arguments: VerifyMobileArgumentModel(
                           //     isBusiness: false,
+                          //     isUpdate: false,
+                          //     isReKyc: false,
                           //   ).toMap(),
                           // );
                           // Navigator.pushNamed(
@@ -472,7 +478,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       "userId": storageUserId,
       "companyId": storageCompanyId,
       "password": storagePassword,
-      "deviceId": deviceId,
+      "deviceId": storageDeviceId,
       "registerDevice": false,
       "deviceName": deviceName,
       "deviceType": deviceType,
@@ -484,43 +490,73 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     customerName = result["customerName"];
     await storage.write(key: "customerName", value: customerName);
     storageCustomerName = await storage.read(key: "customerName");
+    await storage.write(key: "loggedOut", value: false.toString());
+    storageLoggedOut = await storage.read(key: "loggedOut") == "true";
     isLoading = false;
     showButtonBloc.add(ShowButtonEvent(show: isLoading));
   }
 
   void loginMethod() {
-    if (storageCif == "null" || storageCif == null) {
-      if (storageRetailLoggedIn == true) {
-        if (persistBiometric == true) {
-          Navigator.pushNamed(
-            context,
-            Routes.loginBiometric,
-            arguments: LoginPasswordArgumentModel(
-              emailId: storageEmail ?? "",
-              userId: storageUserId ?? 0,
-              userTypeId: storageUserTypeId ?? 1,
-              companyId: storageCompanyId ?? 0,
-            ).toMap(),
-          );
+    if (storageLoggedOut == true) {
+      Navigator.pushNamed(context, Routes.loginUserId);
+    } else {
+      if (storageCif == "null" || storageCif == null) {
+        if (storageRetailLoggedIn == true) {
+          if (persistBiometric == true) {
+            Navigator.pushNamed(
+              context,
+              Routes.loginBiometric,
+              arguments: LoginPasswordArgumentModel(
+                emailId: storageEmail ?? "",
+                userId: storageUserId ?? 0,
+                userTypeId: storageUserTypeId ?? 1,
+                companyId: storageCompanyId ?? 0,
+              ).toMap(),
+            );
+          } else {
+            Navigator.pushNamed(
+              context,
+              Routes.loginPassword,
+              arguments: LoginPasswordArgumentModel(
+                emailId: storageEmail ?? "",
+                userId: storageUserId ?? 0,
+                userTypeId: storageUserTypeId ?? 1,
+                companyId: storageCompanyId ?? 0,
+              ).toMap(),
+            );
+          }
         } else {
-          Navigator.pushNamed(
-            context,
-            Routes.loginPassword,
-            arguments: LoginPasswordArgumentModel(
-              emailId: storageEmail ?? "",
-              userId: storageUserId ?? 0,
-              userTypeId: storageUserTypeId ?? 1,
-              companyId: storageCompanyId ?? 0,
-            ).toMap(),
-          );
+          Navigator.pushNamed(context, Routes.loginUserId);
         }
       } else {
-        Navigator.pushNamed(context, Routes.loginUserId);
-      }
-    } else {
-      if (storageIsCompany == true) {
-        if (storageisCompanyRegistered == false) {
-          Navigator.pushNamed(context, Routes.loginUserId);
+        if (storageIsCompany == true) {
+          if (storageisCompanyRegistered == false) {
+            Navigator.pushNamed(context, Routes.loginUserId);
+          } else {
+            if (persistBiometric == true) {
+              Navigator.pushNamed(
+                context,
+                Routes.loginBiometric,
+                arguments: LoginPasswordArgumentModel(
+                  emailId: storageEmail ?? "",
+                  userId: storageUserId ?? 0,
+                  userTypeId: storageUserTypeId ?? 1,
+                  companyId: storageCompanyId ?? 0,
+                ).toMap(),
+              );
+            } else {
+              Navigator.pushNamed(
+                context,
+                Routes.loginPassword,
+                arguments: LoginPasswordArgumentModel(
+                  emailId: storageEmail ?? "",
+                  userId: storageUserId ?? 0,
+                  userTypeId: storageUserTypeId ?? 1,
+                  companyId: storageCompanyId ?? 0,
+                ).toMap(),
+              );
+            }
+          }
         } else {
           if (persistBiometric == true) {
             Navigator.pushNamed(
@@ -545,30 +581,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ).toMap(),
             );
           }
-        }
-      } else {
-        if (persistBiometric == true) {
-          Navigator.pushNamed(
-            context,
-            Routes.loginBiometric,
-            arguments: LoginPasswordArgumentModel(
-              emailId: storageEmail ?? "",
-              userId: storageUserId ?? 0,
-              userTypeId: storageUserTypeId ?? 1,
-              companyId: storageCompanyId ?? 0,
-            ).toMap(),
-          );
-        } else {
-          Navigator.pushNamed(
-            context,
-            Routes.loginPassword,
-            arguments: LoginPasswordArgumentModel(
-              emailId: storageEmail ?? "",
-              userId: storageUserId ?? 0,
-              userTypeId: storageUserTypeId ?? 1,
-              companyId: storageCompanyId ?? 0,
-            ).toMap(),
-          );
         }
       }
     }

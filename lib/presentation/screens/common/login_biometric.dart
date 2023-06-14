@@ -37,6 +37,8 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
   bool isShowBiometric = true;
   int biometricFailedCount = 0;
 
+  bool isSendingOtp = false;
+
   @override
   void initState() {
     super.initState();
@@ -185,7 +187,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
       "userId": storageUserId,
       "companyId": storageCompanyId,
       "password": password,
-      "deviceId": deviceId,
+      "deviceId": storageDeviceId,
       "registerDevice": false,
       "deviceName": deviceName,
       "deviceType": deviceType,
@@ -208,6 +210,8 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
       if (context.mounted) {
         if (loginPasswordArgument.userTypeId == 1) {
           await getProfileData();
+          await storage.write(key: "loggedOut", value: false.toString());
+          storageLoggedOut = await storage.read(key: "loggedOut") == "true";
           if (context.mounted) {
             Navigator.pushNamedAndRemoveUntil(
               context,
@@ -364,7 +368,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                     "userId": loginPasswordArgument.userId,
                     "companyId": loginPasswordArgument.companyId,
                     "password": storagePassword,
-                    "deviceId": deviceId,
+                    "deviceId": storageDeviceId,
                     "registerDevice": true,
                     "deviceName": deviceName,
                     "deviceType": deviceType,
@@ -391,6 +395,10 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                             await storage.read(key: "retailLoggedIn") == "true";
                         if (context.mounted) {
                           await getProfileData();
+                          await storage.write(
+                              key: "loggedOut", value: false.toString());
+                          storageLoggedOut =
+                              await storage.read(key: "loggedOut") == "true";
                           if (context.mounted) {
                             Navigator.pushNamedAndRemoveUntil(
                               context,
@@ -501,7 +509,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
     );
   }
 
-  void promptKycExpired() {
+  void promptKycExpired() async {
     showDialog(
       context: context,
       builder: (context) {
@@ -510,17 +518,22 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
           title: "Identification Document Expired",
           message:
               "${messages[9]["messageText"]} ${messages[10]["messageText"]}",
-          actionWidget: GradientButton(
-            onTap: () {
-              Navigator.pushReplacementNamed(
-                context,
-                Routes.verificationInitializing,
-                arguments: VerificationInitializationArgumentModel(
-                  isReKyc: true,
-                ).toMap(),
+          actionWidget: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+            builder: (context, state) {
+              return GradientButton(
+                onTap: () async {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    Routes.verificationInitializing,
+                    arguments: VerificationInitializationArgumentModel(
+                      isReKyc: true,
+                    ).toMap(),
+                  );
+                },
+                text: "Verify",
+                auxWidget: isSendingOtp ? const LoaderRow() : const SizeBox(),
               );
             },
-            text: "Verify",
           ),
         );
       },
@@ -534,6 +547,9 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
       log("getProfileDataResult -> $getProfileDataResult");
       if (getProfileDataResult["success"]) {
         profileName = getProfileDataResult["name"];
+        await storage.write(key: "customerName", value: profileName);
+        storageCustomerName = await storage.read(key: "customerName");
+
         profilePhotoBase64 = getProfileDataResult["profileImageBase64"];
         await storage.write(
             key: "profilePhotoBase64", value: profilePhotoBase64);

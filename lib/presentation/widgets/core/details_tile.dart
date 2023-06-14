@@ -31,7 +31,7 @@ class DetailsTile extends StatelessWidget {
             itemBuilder: (context, index) {
               return Container(
                 width: 100.w,
-                height: (40 / Dimensions.designWidth).w,
+                height: (40 / Dimensions.designHeight).h,
                 padding: EdgeInsets.symmetric(
                   horizontal: (15 / Dimensions.designWidth).w,
                 ),

@@ -225,7 +225,9 @@ class AppRouter {
         );
       case Routes.depositDetails:
         return MaterialPageRoute(
-          builder: (_) => const DepositDetailsScreen(),
+          builder: (_) => DepositDetailsScreen(
+            argument: args,
+          ),
         );
       case Routes.prematureWithdrawal:
         return MaterialPageRoute(
