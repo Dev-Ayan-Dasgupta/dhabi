@@ -468,6 +468,35 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                     onTapSecondary: () {},
                   ).toMap());
             }
+          } else {
+            await storage.write(key: "isEid", value: true.toString());
+            // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
+            storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
+            if (!(scannedDetailsArgument.isReKyc)) {
+              await storage.write(key: "stepsCompleted", value: 3.toString());
+              storageStepsCompleted =
+                  int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+            }
+
+            if (context.mounted) {
+              Navigator.pushNamed(
+                context,
+                Routes.scannedDetails,
+                arguments: ScannedDetailsArgumentModel(
+                  isEID: true,
+                  fullName: fullName,
+                  idNumber: eiDNumber,
+                  nationality: nationality,
+                  nationalityCode: nationalityCode,
+                  expiryDate: expiryDate,
+                  dob: dob,
+                  gender: gender,
+                  photo: photo,
+                  docPhoto: docPhoto,
+                  isReKyc: scannedDetailsArgument.isReKyc,
+                ).toMap(),
+              );
+            }
           }
         } else {
           await storage.write(key: "isEid", value: true.toString());
@@ -784,6 +813,34 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
                     buttonTextSecondary: "",
                     onTapSecondary: () {},
                   ).toMap());
+            }
+          } else {
+            await storage.write(key: "isEid", value: false.toString());
+            // storageIsEid = bool.parse(await storage.read(key: "isEid") ?? "");
+            storageIsEid = (await storage.read(key: "isEid") ?? "") == "true";
+            if (!(scannedDetailsArgument.isReKyc)) {
+              await storage.write(key: "stepsCompleted", value: 3.toString());
+              storageStepsCompleted =
+                  int.parse(await storage.read(key: "stepsCompleted") ?? "0");
+            }
+            if (context.mounted) {
+              Navigator.pushNamed(
+                context,
+                Routes.scannedDetails,
+                arguments: ScannedDetailsArgumentModel(
+                  isEID: false,
+                  fullName: fullName,
+                  idNumber: passportNumber,
+                  nationality: nationality,
+                  nationalityCode: nationalityCode,
+                  expiryDate: expiryDate,
+                  dob: dob,
+                  gender: gender,
+                  photo: photo,
+                  docPhoto: docPhoto,
+                  isReKyc: scannedDetailsArgument.isReKyc,
+                ).toMap(),
+              );
             }
           }
         } else {
