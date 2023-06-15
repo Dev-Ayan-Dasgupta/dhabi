@@ -7,9 +7,25 @@ class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  static void requestIOSPermissions(
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) {
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+  }
+
   static void initialize(BuildContext context) {
     const settings = InitializationSettings(
-      iOS: IOSInitializationSettings(),
+      iOS: IOSInitializationSettings(
+        requestSoundPermission: false,
+        requestBadgePermission: false,
+        requestAlertPermission: false,
+      ),
       android: AndroidInitializationSettings("@mipmap/ic_launcher"),
     );
 
@@ -25,11 +41,12 @@ class LocalNotificationService {
   static void display(RemoteMessage message) async {
     try {
       final id = int.parse(const Uuid().v4());
-      // DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
       const NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
           "Dhabi", // this has to be the same as the string passed in the meta-data in AndroidManifest.xml
           "Dhabi Channel",
+          playSound: true,
           importance: Importance.max,
           priority: Priority.high,
         ),
@@ -43,7 +60,6 @@ class LocalNotificationService {
         payload: message.data["routeFor"],
       );
     } catch (_) {
-      // print(e.toString());
       rethrow;
     }
   }

@@ -14,6 +14,8 @@ abstract class BaseConfig {
   String get createFd;
   String get getCustomerFdAccountStatement;
   String get getCustomerFdDetails;
+  String get getFdPrematureWithdrawalDetails;
+  String get fdPrematureWithdraw;
 
   // ? Authentication APIs
 
@@ -70,4 +72,9 @@ abstract class BaseConfig {
   // ? Services APIs
 
   String get createServiceRequest;
+
+  // ? Notification APIs
+
+  String get getNotifications;
+  String get removeNotification;
 }

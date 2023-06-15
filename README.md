@@ -2,9 +2,6 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (34)
+## Release notes - 1.0.0 (35)
 
-- Implemented Re-KYC
-- Implemented Logout
-- Implemented getFDDetails
-- Made fix for change password after change email
+- Created API integration for premature withdrawal

@@ -11,3 +11,5 @@ export './map_create_beneficiaries.dart';
 export './map_get_beneficiaries.dart';
 export './map_customer_fd_account_statement.dart';
 export './map_customer_fd_details.dart';
+export './map_premature_withdrawal_details.dart';
+export './map_fd_premature_withdraw.dart';

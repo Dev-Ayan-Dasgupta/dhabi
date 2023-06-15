@@ -263,7 +263,8 @@ class _AcceptTermsAndConditionsScreenState
                                       "registerDevice": false,
                                       "deviceName": deviceName,
                                       "deviceType": deviceType,
-                                      "appVersion": appVersion
+                                      "appVersion": appVersion,
+                                      "fcmToken": fcmToken,
                                     });
                                     log("Login API Response -> $result");
                                     token = result["token"];

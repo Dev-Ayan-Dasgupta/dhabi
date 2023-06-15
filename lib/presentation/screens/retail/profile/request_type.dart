@@ -34,7 +34,7 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
 
   int toggles = 0;
   bool isRequestTypeSelected = false;
-  bool isRemarkValid = false;
+  bool isRemarkValid = true;
   bool isNumberSelected = false;
   bool isLoanNumberSelected = false;
   bool isAccountNumberSelected = false;
@@ -292,11 +292,11 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
       maxLines: 5,
       maxLength: 200,
       onChanged: (p0) {
-        if (p0.length >= 5) {
-          isRemarkValid = true;
-        } else {
-          isRemarkValid = false;
-        }
+        // if (p0.length >= 0) {
+        //   isRemarkValid = true;
+        // } else {
+        //   isRemarkValid = false;
+        // }
         showButtonBloc.add(
           ShowButtonEvent(
               show: isRequestTypeSelected &&

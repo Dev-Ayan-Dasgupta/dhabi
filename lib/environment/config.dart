@@ -76,6 +76,16 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['GET_CUSTOMER_FD_DETAILS'] ?? "";
   }
 
+  @override
+  String get getFdPrematureWithdrawalDetails {
+    return dotenv.env['GET_FD_PREMATURE_WITHDRAWAL_DETAILS'] ?? "";
+  }
+
+  @override
+  String get fdPrematureWithdraw {
+    return dotenv.env['FD_PREMATURE_WITHDRAW'] ?? "";
+  }
+
   // ? Authentication APIs
 
   @override
@@ -289,5 +299,17 @@ class EnvConfig implements BaseConfig {
   @override
   String get createServiceRequest {
     return dotenv.env['CREATE_SERVICE_REQUEST'] ?? "";
+  }
+
+  // ? Notifications APIs
+
+  @override
+  String get getNotifications {
+    return dotenv.env['GET_NOTIFICATIONS'] ?? "";
+  }
+
+  @override
+  String get removeNotification {
+    return dotenv.env['REMOVE_NOTIFICATION'] ?? "";
   }
 }

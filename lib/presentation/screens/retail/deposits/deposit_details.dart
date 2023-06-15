@@ -28,16 +28,7 @@ class DepositDetailsScreen extends StatefulWidget {
 }
 
 class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
-  List<DetailsTileModel> depositDetails = [
-    // DetailsTileModel(key: "Deposit Account No.", value: "235437484001"),
-    // DetailsTileModel(key: "Deposit Amount", value: "USD 10,000.00"),
-    // DetailsTileModel(key: "Tenure", value: "13 months and 3 days"),
-    // DetailsTileModel(key: "Interest Rate", value: "6.10%"),
-    // DetailsTileModel(key: "Interest Amount", value: "USD 300"),
-    // DetailsTileModel(key: "Interest Payout", value: "On maturity"),
-    // DetailsTileModel(key: "Maturity Date", value: "9 November, 2023"),
-    // DetailsTileModel(key: "Maturity Amount", value: "USD 10,300.00"),
-  ];
+  List<DetailsTileModel> depositDetails = [];
 
   bool isFetchingData = true;
 
@@ -58,6 +49,9 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
   Future<void> getDepositDetails() async {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     try {
+      log("Get Fd Details Request -> ${{
+        "accountNumber": depositDetailsArgumentModel.accountNumber,
+      }}");
       var getFDDetailsResult = await MapCustomerFdDetails.mapCustomerFdDetails(
         {
           "accountNumber": depositDetailsArgumentModel.accountNumber,
@@ -65,7 +59,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
         token ?? "",
       );
       log("Get Fd Details Response -> $getFDDetailsResult");
-      if (!(getFDDetailsResult["success"])) {
+      if (getFDDetailsResult["success"]) {
         depositDetails.clear();
         depositDetails.add(DetailsTileModel(
             key: "Deposit Account No.",
@@ -74,7 +68,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
             key: "Deposit Amount",
             value: "USD ${getFDDetailsResult["depositAmount"]}"));
         depositDetails.add(DetailsTileModel(
-            key: "Tenure", value: "${getFDDetailsResult["tenure"] ?? "null"}"));
+            key: "Tenure", value: "${getFDDetailsResult["tenure"] ?? ""}"));
         depositDetails.add(DetailsTileModel(
             key: "Total Interest Earned",
             value: "USD ${getFDDetailsResult["interestAmount"]}"));
@@ -99,6 +93,26 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
         depositDetails.add(DetailsTileModel(
             key: "Standing Instruction",
             value: getFDDetailsResult["standingInstruction"]));
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error",
+                message:
+                    "There was an error in fetching your deposit details, please try again later",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: labels[346]["labelText"],
+                ),
+              );
+            },
+          );
+        }
       }
 
       isFetchingData = false;
@@ -150,7 +164,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
                   ),
                   const SizeBox(height: 20),
                   Text(
-                    "Below are the details of your exisitng term deposit",
+                    labels[136]["labelText"],
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.grey40,
                       fontSize: (16 / Dimensions.designWidth).w,
@@ -204,7 +218,13 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
           auxWidget: GradientButton(
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, Routes.prematureWithdrawal);
+              Navigator.pushNamed(
+                context,
+                Routes.prematureWithdrawal,
+                arguments: DepositDetailsArgumentModel(
+                  accountNumber: depositDetailsArgumentModel.accountNumber,
+                ).toMap(),
+              );
             },
             text: "Yes, I am sure",
           ),

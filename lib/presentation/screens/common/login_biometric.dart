@@ -191,7 +191,8 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
       "registerDevice": false,
       "deviceName": deviceName,
       "deviceType": deviceType,
-      "appVersion": appVersion
+      "appVersion": appVersion,
+      "fcmToken": fcmToken,
     });
     log("Login API Response -> $result");
     token = result["token"];
@@ -372,7 +373,8 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                     "registerDevice": true,
                     "deviceName": deviceName,
                     "deviceType": deviceType,
-                    "appVersion": appVersion
+                    "appVersion": appVersion,
+                    "fcmToken": fcmToken,
                   });
                   log("Login API Response -> $result");
                   token = result["token"];

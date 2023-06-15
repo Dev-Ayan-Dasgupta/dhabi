@@ -46,6 +46,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+String fcmToken = "";
+
 String? deviceId;
 String deviceName = "";
 String deviceType = "";
@@ -439,7 +441,8 @@ class _SplashScreenState extends State<SplashScreen> {
       LocalNotificationService.initialize(context);
 
       // initialize firebase
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform);
 
       // request firebase permission
       await FirebaseMessaging.instance.requestPermission(
@@ -451,8 +454,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
       // GET FCM TOKEN
       FirebaseMessaging.instance.getToken().then((String? token) {
+        if (token != null) {
+          fcmToken = token;
+        }
         log("FCM Token -> $token");
       });
+
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true, // Required to display a heads up notification
+        badge: true,
+        sound: true,
+      );
 
       // THIS WILL HELP US IN NAVIGATING TO A SCREEN WHEN APP IS TERMINATED
       FirebaseMessaging.instance
@@ -460,6 +473,7 @@ class _SplashScreenState extends State<SplashScreen> {
           .then((RemoteMessage? message) async {
         if (message != null) {
           log("FCM Message getInitialMessage -> ${message.data}");
+          LocalNotificationService.display(message);
         }
       });
 
@@ -470,6 +484,8 @@ class _SplashScreenState extends State<SplashScreen> {
       // GET NOTIFICATION ONTO THE APP WHEN THE APP IS RUNNING IN FOREGROUND
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         log("FCM Message onMessageListen -> ${message.data}");
+        LocalNotificationService.display(message);
+        // LocalNotificationService.initialize(context);
       });
     } catch (_) {
       rethrow;

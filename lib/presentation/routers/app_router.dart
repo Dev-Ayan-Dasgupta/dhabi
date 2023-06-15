@@ -231,7 +231,9 @@ class AppRouter {
         );
       case Routes.prematureWithdrawal:
         return MaterialPageRoute(
-          builder: (_) => const PrematureWithdrawalScreen(),
+          builder: (_) => PrematureWithdrawalScreen(
+            argument: args,
+          ),
         );
       case Routes.depositStatement:
         return MaterialPageRoute(

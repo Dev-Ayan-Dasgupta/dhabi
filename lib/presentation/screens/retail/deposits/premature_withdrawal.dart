@@ -1,3 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/shimmers/index.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
@@ -8,13 +18,15 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class PrematureWithdrawalScreen extends StatefulWidget {
-  const PrematureWithdrawalScreen({Key? key}) : super(key: key);
+  const PrematureWithdrawalScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<PrematureWithdrawalScreen> createState() =>
@@ -34,6 +46,71 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
   ];
 
   bool isChecked = false;
+  bool isFetchingData = true;
+
+  bool isWithdrawing = false;
+
+  late DepositDetailsArgumentModel prematureWithdrawalArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+    getFdPrematureWithdrawalDetails();
+  }
+
+  void argumentInitialization() {
+    prematureWithdrawalArgument =
+        DepositDetailsArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
+  Future<void> getFdPrematureWithdrawalDetails() async {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    try {
+      log("Api Request -> ${{
+        "accountNo": prematureWithdrawalArgument.accountNumber,
+        "maturityDate": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      }}");
+      var apiResult =
+          await MapFDPrematureWithdrawalDetails.mapFDPrematureWithdrawalDetails(
+        {
+          "accountNo": prematureWithdrawalArgument.accountNumber,
+          "maturityDate": DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        },
+        token ?? "",
+      );
+      log("Get PremWdrwl API response -> $apiResult");
+
+      if (apiResult["success"]) {
+        prematureDetails.clear();
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error",
+                message:
+                    "There was an error in fetching your premature withdraw deposit details, please try again later",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: labels[346]["labelText"],
+                ),
+              );
+            },
+          );
+        }
+      }
+
+      isFetchingData = false;
+      showButtonBloc.add(ShowButtonEvent(show: isFetchingData));
+    } catch (_) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +132,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Premature Withdrawal",
+                    labels[138]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
@@ -70,11 +147,19 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                     ),
                   ),
                   const SizeBox(height: 20),
-                  Expanded(
-                    child: DetailsTile(
-                      length: prematureDetails.length,
-                      details: prematureDetails,
-                    ),
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      return Ternary(
+                        condition: isFetchingData,
+                        truthy: const ShimmerDepositDetails(),
+                        falsy: Expanded(
+                          child: DetailsTile(
+                            length: prematureDetails.length,
+                            details: prematureDetails,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -82,60 +167,6 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                      builder: buildTC,
-                    ),
-                    const SizeBox(width: 5),
-                    Row(
-                      children: [
-                        Text(
-                          'I agree to the ',
-                          style: TextStyles.primary.copyWith(
-                            color: const Color.fromRGBO(0, 0, 0, 0.5),
-                            fontSize: (16 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.termsAndConditions);
-                          },
-                          child: Text(
-                            'Terms & Conditions',
-                            style: TextStyles.primary.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          ' and ',
-                          style: TextStyles.primary.copyWith(
-                            color: const Color.fromRGBO(0, 0, 0, 0.5),
-                            fontSize: (16 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.privacyStatement);
-                          },
-                          child: Text(
-                            'Privacy Policy',
-                            style: TextStyles.primary.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
                 const SizeBox(height: 10),
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: buildSubmitButton,
@@ -194,20 +225,77 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
       return Column(
         children: [
           GradientButton(
-            onTap: () {
-              if (isChecked) {
-                Navigator.pop(context);
-                Navigator.pop(context);
+            onTap: () async {
+              if (!isWithdrawing) {
+                final ShowButtonBloc showButtonBloc =
+                    context.read<ShowButtonBloc>();
+                isWithdrawing = true;
+                showButtonBloc.add(ShowButtonEvent(show: isWithdrawing));
+
+                var premWdrwApiResult =
+                    await MapFDPrematureWithdraw.mapFDPrematureWithdraw(
+                  {
+                    "accountNo": prematureWithdrawalArgument.accountNumber,
+                    "maturityDate":
+                        DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                  },
+                  token ?? "",
+                );
+                log("PremWithdraw API response -> $premWdrwApiResult");
+
+                if (premWdrwApiResult["success"]) {
+                  if (context.mounted) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.retailDashboard,
+                      (route) => false,
+                      arguments: RetailDashboardArgumentModel(
+                        imgUrl: "",
+                        name: storageFullName ?? "",
+                        isFirst: false,
+                      ).toMap(),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CustomDialog(
+                          svgAssetPath: ImageConstants.warning,
+                          title: "Error",
+                          message:
+                              "There was an error in premature withdrawal of your FD, please try again later",
+                          actionWidget: GradientButton(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            text: labels[346]["labelText"],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }
+
+                isWithdrawing = true;
+                showButtonBloc.add(ShowButtonEvent(show: isWithdrawing));
               }
             },
-            text: "Withdraw and close deposit",
-            fontColor: Colors.white,
+            text: labels[148]["labelText"],
+            auxWidget: isWithdrawing ? const LoaderRow() : const SizeBox(),
           ),
-          const SizeBox(height: 20),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.of(context).padding.bottom,
+          ),
         ],
       );
     } else {
-      return const SizeBox();
+      return SolidButton(
+        onTap: () {},
+        text: labels[148]["labelText"],
+      );
     }
   }
 }
