@@ -1,7 +1,8 @@
+import 'package:dialup_mobile_app/main.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:uuid/uuid.dart';
 
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -32,15 +33,16 @@ class LocalNotificationService {
     // initialize notifications plugin
     notificationsPlugin.initialize(
       settings,
-      onSelectNotification: (String? route) async {
-        Navigator.pushNamed(context, route!);
+      onSelectNotification: (_) async {
+        // Navigator.pushNamed(context, Routes.depositStatement);
+        navigatorKey.currentState!.pushNamed(Routes.depositStatement);
       },
     );
   }
 
   static void display(RemoteMessage message) async {
     try {
-      final id = int.parse(const Uuid().v4());
+      // final id = int.parse(const Uuid().v4());
 
       const NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
@@ -53,11 +55,12 @@ class LocalNotificationService {
         iOS: IOSNotificationDetails(),
       );
       await notificationsPlugin.show(
-        id,
+        0,
+        // id,
         message.notification!.title,
         message.notification!.body,
         notificationDetails,
-        payload: message.data["routeFor"],
+        payload: Routes.depositStatement,
       );
     } catch (_) {
       rethrow;

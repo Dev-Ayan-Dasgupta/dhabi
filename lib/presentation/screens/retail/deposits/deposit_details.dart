@@ -106,6 +106,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
                 actionWidget: GradientButton(
                   onTap: () {
                     Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                   text: labels[346]["labelText"],
                 ),

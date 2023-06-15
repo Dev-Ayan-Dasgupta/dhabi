@@ -96,6 +96,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                 actionWidget: GradientButton(
                   onTap: () {
                     Navigator.pop(context);
+                    Navigator.pop(context);
                   },
                   text: labels[346]["labelText"],
                 ),

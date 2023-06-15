@@ -29,8 +29,6 @@ import 'package:dialup_mobile_app/utils/helpers/index.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // await setupFlutterNotifications();
-  // showFlutterNotification(message);
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   log('Handling a background message ${message.messageId}');
@@ -296,8 +294,8 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       storageDeviceId = await storage.read(key: "deviceId");
       log("storageDeviceId -> $storageDeviceId");
-      storageIsNotNewInstall =
-          (await storage.read(key: "newInstall")) == "true";
+      storageIsNotNewInstall = false;
+      (await storage.read(key: "newInstall")) == "true";
       log("storageIsNotNewInstall -> $storageIsNotNewInstall");
       storageHasFirstLoggedIn =
           (await storage.read(key: "hasFirstLoggedIn")) == "true";
