@@ -138,7 +138,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
               onTap: () {
                 Navigator.pushNamed(context, Routes.downloadStatement);
               },
-              child: SvgPicture.asset(ImageConstants.statement),
+              child: SvgPicture.asset(ImageConstants.certificate),
             ),
           )
         ],

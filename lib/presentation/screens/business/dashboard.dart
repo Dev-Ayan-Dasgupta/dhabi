@@ -324,11 +324,10 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
                 title: "Error {200}",
-                message:
+                message: corpCustPermApiResult["message"] ??
                     "Error fetching account details, please try again later",
                 actionWidget: GradientButton(
                   onTap: () {
-                    Navigator.pop(context);
                     Navigator.pop(context);
                   },
                   text: labels[293]["labelText"],
@@ -405,7 +404,27 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
 
       if (getLoansApiResult["success"]) {
         loans.clear();
-      } else {}
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error {200}",
+                message: getLoansApiResult["message"] ??
+                    "Error fetching loan details, please try again later",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: labels[293]["labelText"],
+                ),
+              );
+            },
+          );
+        }
+      }
     } catch (_) {
       rethrow;
     }

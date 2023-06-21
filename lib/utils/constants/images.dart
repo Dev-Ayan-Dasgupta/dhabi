@@ -46,6 +46,7 @@ class ImageConstants {
   static const String transaction = "${iconsRoot}transaction.svg";
   static const String menu = "${iconsRoot}menu.svg";
   static const String statement = "${iconsRoot}statement.svg";
+  static const String certificate = "${iconsRoot}certificate.svg";
   static const String document = "${iconsRoot}document.svg";
   static const String help = "${iconsRoot}help.svg";
   static const String percent = "${iconsRoot}percent.svg";

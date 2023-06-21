@@ -34,18 +34,9 @@ class PrematureWithdrawalScreen extends StatefulWidget {
 }
 
 class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
-  List<DetailsTileModel> prematureDetails = [
-    // DetailsTileModel(key: "Deposit Account No.", value: "235437484001"),
-    // DetailsTileModel(key: "Deposit Amount", value: "USD 10,000.00"),
-    // DetailsTileModel(key: "Maturity Date", value: "9 November, 2023"),
-    // DetailsTileModel(key: "Interest Rate", value: "6.10%"),
-    // DetailsTileModel(key: "Credit Account", value: "110156884301"),
-    // DetailsTileModel(key: "Closure Date", value: "17 November 2023"),
-    // DetailsTileModel(key: "Credit Amount", value: "USD 300"),
-    // DetailsTileModel(key: "Penal Rate", value: "1%"),
-  ];
+  List<DetailsTileModel> prematureDetails = [];
 
-  bool isChecked = false;
+  bool isChecked = true;
   bool isFetchingData = true;
 
   bool isWithdrawing = false;
@@ -86,28 +77,30 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
 
         prematureDetails.add(DetailsTileModel(
             key: "Deposit Account No.",
-            value: apiResult["depositAccountNumber"]));
+            value: apiResult["depositAccountNumber"] ?? ""));
         prematureDetails.add(DetailsTileModel(
-            key: "Deposit Amount", value: apiResult["fDAmount"]));
+            key: "Deposit Amount",
+            value: "USD ${apiResult["fdAmount"].toString()}"));
         prematureDetails.add(DetailsTileModel(
             key: "Open Date",
             value: DateFormat('dd MMMM yyyy')
-                .format(DateTime.parse(apiResult["fDOpenDate"]))));
+                .format(DateTime.parse(apiResult["fdOpenDate"]))));
         prematureDetails.add(DetailsTileModel(
             key: "Closure Date",
             value: DateFormat('dd MMMM yyyy')
                 .format(DateTime.parse(apiResult["closureDate"]))));
         prematureDetails.add(DetailsTileModel(
-            key: "Deposit Amount",
-            value: "USD ${apiResult["fDIntAmount"].toString()}"));
+            key: "Interest Amount",
+            value: "USD ${apiResult["fdIntAmount"].toString()}"));
         prematureDetails.add(DetailsTileModel(
             key: "Interest Rate", value: "${apiResult["interestRate"]} %"));
         prematureDetails.add(DetailsTileModel(
-            key: "Credit Account No.", value: apiResult["creditAccount"]));
+            key: "Credit Account No.",
+            value: apiResult["creditAccount"] ?? ""));
         prematureDetails.add(DetailsTileModel(
             key: "Maturity Date",
             value: DateFormat('dd MMMM yyyy')
-                .format(DateTime.parse(apiResult["fDMaturityDate"]))));
+                .format(DateTime.parse(apiResult["fdMaturityDate"]))));
         prematureDetails.add(DetailsTileModel(
             key: "Credit Amount",
             value: "USD ${apiResult["creditAmount"].toString()}"));
@@ -115,7 +108,8 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
             key: "Penalty Rate",
             value: "${apiResult["penaltyRate"].toString()} %"));
         prematureDetails.add(DetailsTileModel(
-            key: "Penalty Amount", value: "USD ${apiResult["penaltyAmount"]}"));
+            key: "Penalty Amount",
+            value: "USD ${apiResult["penaltyAmount"] ?? ""}"));
       } else {
         if (context.mounted) {
           showDialog(
@@ -151,6 +145,20 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
+        actions: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: (15 / Dimensions.designWidth).w,
+              vertical: (15 / Dimensions.designWidth).w,
+            ),
+            child: InkWell(
+              onTap: () {
+                // Navigator.pushNamed(context, Routes.downloadStatement);
+              },
+              child: SvgPicture.asset(ImageConstants.certificate),
+            ),
+          )
+        ],
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -298,7 +306,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.warning,
                           title: "Error",
-                          message:
+                          message: premWdrwApiResult["message"] ??
                               "There was an error in premature withdrawal of your FD, please try again later",
                           actionWidget: GradientButton(
                             onTap: () {
