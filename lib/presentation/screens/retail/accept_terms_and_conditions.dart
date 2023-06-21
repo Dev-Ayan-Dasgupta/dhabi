@@ -330,6 +330,26 @@ class _AcceptTermsAndConditionsScreenState
                                     }
                                   }
                                 } else {
+                                  if (context.mounted) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CustomDialog(
+                                          svgAssetPath: ImageConstants.warning,
+                                          title: "Error {200}",
+                                          message: createCustomerResult[
+                                                  "message"] ??
+                                              "There was an error, please try again later.",
+                                          actionWidget: GradientButton(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            text: labels[346]["labelText"],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
                                   log("Create Customer API failed -> ${createCustomerResult["message"]}");
                                 }
 
