@@ -35,14 +35,14 @@ class PrematureWithdrawalScreen extends StatefulWidget {
 
 class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
   List<DetailsTileModel> prematureDetails = [
-    DetailsTileModel(key: "Deposit Account No.", value: "235437484001"),
-    DetailsTileModel(key: "Deposit Amount", value: "USD 10,000.00"),
-    DetailsTileModel(key: "Maturity Date", value: "9 November, 2023"),
-    DetailsTileModel(key: "Interest Rate", value: "6.10%"),
-    DetailsTileModel(key: "Credit Account", value: "110156884301"),
-    DetailsTileModel(key: "Closure Date", value: "17 November 2023"),
-    DetailsTileModel(key: "Credit Amount", value: "USD 300"),
-    DetailsTileModel(key: "Penal Rate", value: "1%"),
+    // DetailsTileModel(key: "Deposit Account No.", value: "235437484001"),
+    // DetailsTileModel(key: "Deposit Amount", value: "USD 10,000.00"),
+    // DetailsTileModel(key: "Maturity Date", value: "9 November, 2023"),
+    // DetailsTileModel(key: "Interest Rate", value: "6.10%"),
+    // DetailsTileModel(key: "Credit Account", value: "110156884301"),
+    // DetailsTileModel(key: "Closure Date", value: "17 November 2023"),
+    // DetailsTileModel(key: "Credit Amount", value: "USD 300"),
+    // DetailsTileModel(key: "Penal Rate", value: "1%"),
   ];
 
   bool isChecked = false;
@@ -83,6 +83,39 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
 
       if (apiResult["success"]) {
         prematureDetails.clear();
+
+        prematureDetails.add(DetailsTileModel(
+            key: "Deposit Account No.",
+            value: apiResult["depositAccountNumber"]));
+        prematureDetails.add(DetailsTileModel(
+            key: "Deposit Amount", value: apiResult["fDAmount"]));
+        prematureDetails.add(DetailsTileModel(
+            key: "Open Date",
+            value: DateFormat('dd MMMM yyyy')
+                .format(DateTime.parse(apiResult["fDOpenDate"]))));
+        prematureDetails.add(DetailsTileModel(
+            key: "Closure Date",
+            value: DateFormat('dd MMMM yyyy')
+                .format(DateTime.parse(apiResult["closureDate"]))));
+        prematureDetails.add(DetailsTileModel(
+            key: "Deposit Amount",
+            value: "USD ${apiResult["fDIntAmount"].toString()}"));
+        prematureDetails.add(DetailsTileModel(
+            key: "Interest Rate", value: "${apiResult["interestRate"]} %"));
+        prematureDetails.add(DetailsTileModel(
+            key: "Credit Account No.", value: apiResult["creditAccount"]));
+        prematureDetails.add(DetailsTileModel(
+            key: "Maturity Date",
+            value: DateFormat('dd MMMM yyyy')
+                .format(DateTime.parse(apiResult["fDMaturityDate"]))));
+        prematureDetails.add(DetailsTileModel(
+            key: "Credit Amount",
+            value: "USD ${apiResult["creditAmount"].toString()}"));
+        prematureDetails.add(DetailsTileModel(
+            key: "Penalty Rate",
+            value: "${apiResult["penaltyRate"].toString()} %"));
+        prematureDetails.add(DetailsTileModel(
+            key: "Penalty Amount", value: "USD ${apiResult["penaltyAmount"]}"));
       } else {
         if (context.mounted) {
           showDialog(
@@ -91,7 +124,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
                 title: "Error",
-                message:
+                message: apiResult["message"] ??
                     "There was an error in fetching your premature withdraw deposit details, please try again later",
                 actionWidget: GradientButton(
                   onTap: () {
@@ -293,9 +326,17 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
         ],
       );
     } else {
-      return SolidButton(
-        onTap: () {},
-        text: labels[148]["labelText"],
+      return Column(
+        children: [
+          SolidButton(
+            onTap: () {},
+            text: labels[148]["labelText"],
+          ),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.paddingOf(context).bottom,
+          ),
+        ],
       );
     }
   }

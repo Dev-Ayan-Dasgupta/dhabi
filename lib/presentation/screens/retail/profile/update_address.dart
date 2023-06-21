@@ -45,6 +45,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
   );
   String? selectedCountryName = dhabiCountriesWithFlags[0].countrynameOrCode;
   String selectedCountryCode = "AE";
+  String selectedCountryCodeInitial = "AE";
 
   String? selectedValue;
 
@@ -57,6 +58,8 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
   int toggles = 0;
 
   bool isUploading = false;
+
+  bool hasEdited = false;
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +149,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                                       toggles: toggles,
                                     ),
                                   );
+                                  checkHasEdited();
                                 },
                               );
                             },
@@ -172,6 +176,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           ),
                           const SizeBox(height: 10),
                           CustomTextField(
+                            // maxLines: 1,
                             hintText: "Address",
                             controller: _address1Controller,
                             onChanged: (p0) {
@@ -186,6 +191,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                                   ShowButtonEvent(show: isShowButton),
                                 );
                               }
+                              checkHasEdited();
                             },
                           ),
                           const SizeBox(height: 20),
@@ -199,8 +205,11 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           const SizeBox(height: 10),
                           CustomTextField(
                             hintText: "Address",
+                            // maxLines: 1,
                             controller: _address2Controller,
-                            onChanged: (p0) {},
+                            onChanged: (p0) {
+                              checkHasEdited();
+                            },
                           ),
                           const SizeBox(height: 20),
                           Text(
@@ -214,7 +223,9 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           CustomTextField(
                             hintText: "City",
                             controller: _cityController,
-                            onChanged: (p0) {},
+                            onChanged: (p0) {
+                              checkHasEdited();
+                            },
                           ),
                           const SizeBox(height: 20),
                           Text(
@@ -228,7 +239,9 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           CustomTextField(
                             hintText: "State/Province",
                             controller: _stateProvinceController,
-                            onChanged: (p0) {},
+                            onChanged: (p0) {
+                              checkHasEdited();
+                            },
                           ),
                           // BlocBuilder<DropdownSelectedBloc,
                           //     DropdownSelectedState>(
@@ -246,7 +259,9 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           CustomTextField(
                             hintText: "",
                             controller: _poBoxController,
-                            onChanged: (p0) {},
+                            onChanged: (p0) {
+                              checkHasEdited();
+                            },
                           ),
                           const SizeBox(height: 20),
                         ],
@@ -289,7 +304,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
   }
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
-    if (isShowButton) {
+    if (isShowButton && hasEdited) {
       return Column(
         children: [
           GradientButton(
@@ -377,7 +392,15 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
         ],
       );
     } else {
-      return const SizeBox();
+      return Column(
+        children: [
+          SolidButton(onTap: () {}, text: labels[127]["labelText"]),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.of(context).padding.bottom,
+          ),
+        ],
+      );
     }
   }
 
@@ -421,6 +444,21 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
         );
       },
     );
+  }
+
+  void checkHasEdited() {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    if (selectedCountryCode == selectedCountryCodeInitial &&
+        _address1Controller.text == storageAddressLine1 &&
+        _address2Controller.text == storageAddressLine2 &&
+        _cityController.text == storageAddressCity &&
+        _stateProvinceController.text == storageAddressState &&
+        _poBoxController.text == storageAddressPoBox) {
+      hasEdited = false;
+    } else {
+      hasEdited = true;
+    }
+    showButtonBloc.add(ShowButtonEvent(show: hasEdited));
   }
 
   @override

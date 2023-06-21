@@ -16,6 +16,8 @@ abstract class BaseConfig {
   String get getCustomerFdDetails;
   String get getFdPrematureWithdrawalDetails;
   String get fdPrematureWithdraw;
+  String get getLoans;
+  String get getLoanDetails;
 
   // ? Authentication APIs
 
@@ -77,4 +79,12 @@ abstract class BaseConfig {
 
   String get getNotifications;
   String get removeNotification;
+
+  // ? Corporate Accounts APIs
+
+  String get getCorporateCustomerAccountDetails;
+  String get getCorporateCustomerPermissions;
+  String get createCorporateFd;
+  String get getCorporateFdApprovalList;
+  String get approveOrDisapproveCorporateFd;
 }

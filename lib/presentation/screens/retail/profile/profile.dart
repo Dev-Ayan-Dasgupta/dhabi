@@ -171,6 +171,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ImageConstants.edit,
                               width: (18 / Dimensions.designWidth).w,
                               height: (18 / Dimensions.designWidth).w,
+                              colorFilter: const ColorFilter.mode(
+                                AppColors.primary,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                         ],
@@ -215,6 +219,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ImageConstants.edit,
                               width: (18 / Dimensions.designWidth).w,
                               height: (18 / Dimensions.designWidth).w,
+                              colorFilter: const ColorFilter.mode(
+                                AppColors.primary,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                         ],
@@ -226,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizeBox(height: 20),
             Text(
-              "Contact Details",
+              "Address Details",
               style: TextStyles.primaryMedium.copyWith(
                 color: const Color.fromRGBO(9, 9, 9, 0.7),
                 fontSize: (16 / Dimensions.designWidth).w,
@@ -279,6 +287,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ImageConstants.edit,
                               width: (18 / Dimensions.designWidth).w,
                               height: (18 / Dimensions.designWidth).w,
+                              colorFilter: const ColorFilter.mode(
+                                AppColors.primary,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                         ],

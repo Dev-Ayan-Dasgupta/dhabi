@@ -217,7 +217,9 @@ class AppRouter {
         );
       case Routes.createDeposits:
         return MaterialPageRoute(
-          builder: (_) => const CreateDepositsScreen(),
+          builder: (_) => CreateDepositsScreen(
+            argument: args,
+          ),
         );
       case Routes.depositConfirmation:
         return MaterialPageRoute(
@@ -375,7 +377,9 @@ class AppRouter {
         );
       case Routes.setPassword:
         return MaterialPageRoute(
-          builder: (_) => const SetPasswordScreen(),
+          builder: (_) => SetPasswordScreen(
+            argument: args,
+          ),
         );
       case Routes.dormant:
         return MaterialPageRoute(

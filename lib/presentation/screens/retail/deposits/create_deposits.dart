@@ -1,13 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:dialup_mobile_app/bloc/index.dart';
-import 'package:dialup_mobile_app/data/models/index.dart';
-import 'package:dialup_mobile_app/main.dart';
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,8 +11,21 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
+import 'package:dialup_mobile_app/bloc/index.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/main.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+
 class CreateDepositsScreen extends StatefulWidget {
-  const CreateDepositsScreen({Key? key}) : super(key: key);
+  const CreateDepositsScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<CreateDepositsScreen> createState() => _CreateDepositsScreenState();
@@ -32,13 +40,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   final double minAmtReq = 10000;
   final double maxAmtReq = 100000;
-  double bal = double.parse(accountDetails[0]["currentBalance"]
-          .split(' ')
-          .last
-          .replaceAll(',', ''))
-      .abs();
+  double bal = 0;
 
-  String currency = accountDetails[0]["accountCurrency"];
+  String currency = "";
 
   String errorMsg = "";
 
@@ -58,24 +62,44 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   double interestRate = 0;
 
-  String chosenAccountNumber =
-      accountDetails[storageChosenAccountForCreateFD ?? 0]["accountNumber"];
+  String chosenAccountNumber = "";
+
   int chosenIndex = storageChosenAccountForCreateFD ?? 0;
 
   List<DetailsTileModel> rates = [];
 
   bool _keyboardVisible = false;
 
+  late CreateDepositArgumentModel createDepositArgument;
+
   @override
   void initState() {
     super.initState();
+    argumentInitialization();
     _scrollController.addListener(() {
       _scrollOffset = _scrollController.offset + 120;
       _scrollIndex = _scrollOffset ~/ 188;
-
       final SummaryTileBloc summaryTileBloc = context.read<SummaryTileBloc>();
       summaryTileBloc.add(SummaryTileEvent(scrollIndex: _scrollIndex));
     });
+  }
+
+  void argumentInitialization() {
+    createDepositArgument =
+        CreateDepositArgumentModel.fromMap(widget.argument as dynamic ?? {});
+    currency = createDepositArgument.isRetail
+        ? accountDetails[0]["accountCurrency"]
+        : fdSeedAccounts[0].currency;
+    bal = createDepositArgument.isRetail
+        ? double.parse(accountDetails[0]["currentBalance"]
+                .split(' ')
+                .last
+                .replaceAll(',', ''))
+            .abs()
+        : fdSeedAccounts[0].bal;
+    chosenAccountNumber = createDepositArgument.isRetail
+        ? accountDetails[storageChosenAccountForCreateFD ?? 0]["accountNumber"]
+        : fdSeedAccounts[0].accountNumber;
   }
 
   @override
@@ -161,20 +185,29 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                             (12 / Dimensions.designHeight).h),
                                     controller: _scrollController,
                                     scrollDirection: Axis.horizontal,
-                                    itemCount: (accountDetails.length),
+                                    itemCount: createDepositArgument.isRetail
+                                        ? accountDetails.length
+                                        : fdSeedAccounts.length,
                                     itemBuilder: (context, index) {
                                       return AccountSummaryTile(
                                         isShowCheckMark: true,
                                         isSelected: chosenIndex == index,
-                                        accountNumber: accountDetails[index]
-                                            ["accountNumber"],
+                                        accountNumber:
+                                            createDepositArgument.isRetail
+                                                ? accountDetails[index]
+                                                    ["accountNumber"]
+                                                : fdSeedAccounts[index]
+                                                    .accountNumber,
                                         onTap: () async {
                                           final ShowButtonBloc showButtonBloc =
                                               context.read<ShowButtonBloc>();
                                           chosenIndex = index;
                                           chosenAccountNumber =
-                                              accountDetails[index]
-                                                  ["accountNumber"];
+                                              createDepositArgument.isRetail
+                                                  ? accountDetails[index]
+                                                      ["accountNumber"]
+                                                  : fdSeedAccounts[index]
+                                                      .acountNumber;
                                           await storage.write(
                                             key: "chosenAccountForCreateFD",
                                             value: index.toString(),
@@ -186,36 +219,59 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                                         "chosenAccountForCreateFD") ??
                                                 "0",
                                           );
-                                          bal = double.parse(
-                                                  accountDetails[index]
-                                                          ["currentBalance"]
-                                                      .split(' ')
-                                                      .last
-                                                      .replaceAll(',', ''))
-                                              .abs();
-                                          currency = accountDetails[index]
-                                              ["accountCurrency"];
+                                          bal = createDepositArgument.isRetail
+                                              ? double.parse(
+                                                      accountDetails[index]
+                                                              ["currentBalance"]
+                                                          .split(' ')
+                                                          .last
+                                                          .replaceAll(',', ''))
+                                                  .abs()
+                                              : fdSeedAccounts[index].bal;
+                                          currency = createDepositArgument
+                                                  .isRetail
+                                              ? accountDetails[index]
+                                                  ["accountCurrency"]
+                                              : fdSeedAccounts[index].currency;
                                           showButtonBloc.add(ShowButtonEvent(
                                               show: chosenIndex == index));
                                         },
-                                        imgUrl: accountDetails[index]
-                                                    ["accountCurrency"] ==
-                                                "AED"
-                                            ? ImageConstants.uaeFlag
-                                            : ImageConstants.usaFlag,
-                                        accountType: accountDetails[index]
-                                                    ["productCode"] ==
-                                                "1001"
-                                            ? "Current"
-                                            : "Savings",
-                                        currency: accountDetails[index]
-                                                ["currentBalance"]
-                                            .split(" ")
-                                            .first,
-                                        amount: accountDetails[index]
-                                                ["currentBalance"]
-                                            .split(" ")
-                                            .last,
+                                        imgUrl: createDepositArgument.isRetail
+                                            ? accountDetails[index]
+                                                        ["accountCurrency"] ==
+                                                    "AED"
+                                                ? ImageConstants.uaeFlag
+                                                : ImageConstants.usaFlag
+                                            : fdSeedAccounts[index].currency ==
+                                                    "AED"
+                                                ? ImageConstants.uaeFlag
+                                                : ImageConstants.usaFlag,
+                                        accountType:
+                                            createDepositArgument.isRetail
+                                                ? accountDetails[index]
+                                                            ["productCode"] ==
+                                                        "1001"
+                                                    ? "Current"
+                                                    : "Savings"
+                                                : fdSeedAccounts[index]
+                                                            .accountType ==
+                                                        2
+                                                    ? "Current"
+                                                    : "Savings",
+                                        currency: createDepositArgument.isRetail
+                                            ? accountDetails[index]
+                                                    ["currentBalance"]
+                                                .split(" ")
+                                                .first
+                                            : fdSeedAccounts[index].currency,
+                                        amount: createDepositArgument.isRetail
+                                            ? accountDetails[index]
+                                                    ["currentBalance"]
+                                                .split(" ")
+                                                .last
+                                            : fdSeedAccounts[index]
+                                                .bal
+                                                .toString(),
                                         subText: "",
                                         subImgUrl: "",
                                         space: _keyboardVisible ? 17 : 21,
@@ -1016,6 +1072,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                   context,
                   Routes.depositConfirmation,
                   arguments: DepositConfirmationArgumentModel(
+                    isRetail: createDepositArgument.isRetail,
                     currency: currency,
                     accountNumber: chosenAccountNumber,
                     depositAmount: double.parse(_depositController.text),
@@ -1045,6 +1102,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     context,
                     Routes.depositConfirmation,
                     arguments: DepositConfirmationArgumentModel(
+                      isRetail: createDepositArgument.isRetail,
                       currency: currency,
                       accountNumber: chosenAccountNumber,
                       depositAmount: double.parse(_depositController.text),
@@ -1073,6 +1131,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     context,
                     Routes.depositBeneficiary,
                     arguments: DepositConfirmationArgumentModel(
+                      isRetail: createDepositArgument.isRetail,
                       currency: currency,
                       accountNumber: chosenAccountNumber,
                       depositAmount: double.parse(_depositController.text),
@@ -1138,6 +1197,13 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
       errorMessageBloc.add(
         ErrorMessageEvent(hasError: errorMsg.isEmpty),
       );
+    } else if (fdSeedAccounts.isNotEmpty) {
+      if (double.parse(p0) > fdSeedAccounts[chosenIndex].fdCreationThreshold) {
+        errorMsg = "FD Creation Threshold Exceeded";
+        errorMessageBloc.add(
+          ErrorMessageEvent(hasError: errorMsg.isEmpty),
+        );
+      }
     } else {
       errorMsg = "";
       errorMessageBloc.add(

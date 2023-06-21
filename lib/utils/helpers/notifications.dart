@@ -44,6 +44,19 @@ class LocalNotificationService {
     try {
       // final id = int.parse(const Uuid().v4());
 
+      notificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(
+            const AndroidNotificationChannel(
+              "Dhabi",
+              "Dhabi name",
+              importance: Importance.high,
+              enableVibration: true,
+              playSound: true,
+            ),
+          );
+
       const NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
           "Dhabi", // this has to be the same as the string passed in the meta-data in AndroidManifest.xml

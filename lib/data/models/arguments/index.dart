@@ -18,3 +18,6 @@ export './aaplication_account.dart';
 export './deposit_confirmation.dart';
 export './deposit_beneficiary.dart';
 export './deposit_details.dart';
+export './set_password.dart';
+export './fd_seed_account.dart';
+export './create_deposit.dart';

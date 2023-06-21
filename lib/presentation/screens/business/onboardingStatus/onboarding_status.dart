@@ -253,8 +253,8 @@ class _BusinessOnboardingStatusScreenState
                                 context,
                                 Routes.businessDashboard,
                                 arguments: RetailDashboardArgumentModel(
-                                  imgUrl: "",
-                                  name: "",
+                                  imgUrl: storageProfilePhotoBase64 ?? "",
+                                  name: profileName ?? "",
                                   isFirst: storageIsFirstLogin == true
                                       ? false
                                       : true,

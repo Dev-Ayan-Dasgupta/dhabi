@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
@@ -23,7 +24,7 @@ class _PageIndicatorState extends State<PageIndicator>
   late final AnimationController _progressAnimationController;
   late final Animation _progressLengthAnimation;
 
-  final padding = (28 / Dimensions.designWidth);
+  final padding = (PaddingConstants.horizontalPadding / Dimensions.designWidth);
   final borderRadius = (8 / Dimensions.designWidth);
   final space = (10 / Dimensions.designWidth);
 

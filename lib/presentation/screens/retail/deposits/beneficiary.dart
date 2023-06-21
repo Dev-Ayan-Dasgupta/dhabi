@@ -452,6 +452,7 @@ class _DepositBeneficiaryScreenState extends State<DepositBeneficiaryScreen> {
             context,
             Routes.depositConfirmation,
             arguments: DepositConfirmationArgumentModel(
+              isRetail: depositConfirmation.isRetail,
               currency: depositConfirmation.currency,
               accountNumber: depositConfirmation.accountNumber,
               depositAmount: depositConfirmation.depositAmount,

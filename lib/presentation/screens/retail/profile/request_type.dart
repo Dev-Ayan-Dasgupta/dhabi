@@ -34,7 +34,7 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
 
   int toggles = 0;
   bool isRequestTypeSelected = false;
-  bool isRemarkValid = true;
+  bool isRemarkValid = false;
   bool isNumberSelected = false;
   bool isLoanNumberSelected = false;
   bool isAccountNumberSelected = false;
@@ -85,48 +85,48 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
                   BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
                     builder: buildDropdownRequestType,
                   ),
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      return Ternary(
-                        condition: selectedRequestIndex >= 1 &&
-                            selectedRequestIndex <= 4,
-                        truthy: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizeBox(height: 20),
-                            Row(
-                              children: [
-                                Text(
-                                  selectedRequestIndex == 1 ||
-                                          selectedRequestIndex == 2
-                                      ? "Loan Number"
-                                      : selectedRequestIndex == 3
-                                          ? "Fixed Deposit Number"
-                                          : "Account Number",
-                                  style: TextStyles.primary.copyWith(
-                                    color: AppColors.dark80,
-                                    fontSize: (14 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                                const Asterisk(),
-                              ],
-                            ),
-                            const SizeBox(height: 10),
-                            BlocBuilder<DropdownSelectedBloc,
-                                DropdownSelectedState>(
-                              builder: selectedRequestIndex == 1 ||
-                                      selectedRequestIndex == 2
-                                  ? buildDropdownLoanNumber
-                                  : selectedRequestIndex == 3
-                                      ? buildDropdownDepositsNumber
-                                      : buildDropdownAccountNumber,
-                            ),
-                          ],
-                        ),
-                        falsy: const SizeBox(),
-                      );
-                    },
-                  ),
+                  // BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  //   builder: (context, state) {
+                  //     return Ternary(
+                  //       condition: selectedRequestIndex >= 1 &&
+                  //           selectedRequestIndex <= 4,
+                  //       truthy: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           const SizeBox(height: 20),
+                  //           Row(
+                  //             children: [
+                  //               Text(
+                  //                 selectedRequestIndex == 1 ||
+                  //                         selectedRequestIndex == 2
+                  //                     ? "Loan Number"
+                  //                     : selectedRequestIndex == 3
+                  //                         ? "Fixed Deposit Number"
+                  //                         : "Account Number",
+                  //                 style: TextStyles.primary.copyWith(
+                  //                   color: AppColors.dark80,
+                  //                   fontSize: (14 / Dimensions.designWidth).w,
+                  //                 ),
+                  //               ),
+                  //               const Asterisk(),
+                  //             ],
+                  //           ),
+                  //           const SizeBox(height: 10),
+                  //           BlocBuilder<DropdownSelectedBloc,
+                  //               DropdownSelectedState>(
+                  //             builder: selectedRequestIndex == 1 ||
+                  //                     selectedRequestIndex == 2
+                  //                 ? buildDropdownLoanNumber
+                  //                 : selectedRequestIndex == 3
+                  //                     ? buildDropdownDepositsNumber
+                  //                     : buildDropdownAccountNumber,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //       falsy: const SizeBox(),
+                  //     );
+                  //   },
+                  // ),
                   const SizeBox(height: 20),
                   Row(
                     children: [
@@ -292,11 +292,11 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
       maxLines: 5,
       maxLength: 200,
       onChanged: (p0) {
-        // if (p0.length >= 0) {
-        //   isRemarkValid = true;
-        // } else {
-        //   isRemarkValid = false;
-        // }
+        if (p0.isNotEmpty) {
+          isRemarkValid = true;
+        } else {
+          isRemarkValid = false;
+        }
         showButtonBloc.add(
           ShowButtonEvent(
               show: isRequestTypeSelected &&
@@ -308,15 +308,16 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
   }
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
-    if (isRequestTypeSelected &&
-        isRemarkValid &&
-        (selectedRequestIndex == 1 || selectedRequestIndex == 2
-            ? isLoanNumberSelected
-            : selectedRequestIndex == 3
-                ? isDepositNumberSelected
-                : selectedRequestIndex == 4
-                    ? isAccountNumberSelected
-                    : true)) {
+    if (isRequestTypeSelected && isRemarkValid
+        // &&
+        // (selectedRequestIndex == 1 || selectedRequestIndex == 2
+        //     ? isLoanNumberSelected
+        //     : selectedRequestIndex == 3
+        //         ? isDepositNumberSelected
+        //         : selectedRequestIndex == 4
+        //             ? isAccountNumberSelected
+        //             : true)
+        ) {
       return Column(
         children: [
           GradientButton(

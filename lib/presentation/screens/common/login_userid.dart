@@ -82,21 +82,24 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                     builder: (context, state) {
                       return CustomTextField(
                         controller: _emailController,
-                        borderColor: isEmailValid ||
-                                _emailController.text.isEmpty ||
-                                !_emailController.text.contains('@') ||
-                                (_emailController.text.contains('@') &&
-                                    (RegExp("[A-Za-z0-9.-]").hasMatch(
-                                        _emailController.text
+                        borderColor: (_emailController.text.contains('@') &&
+                                _emailController.text.contains('.'))
+                            ? isEmailValid ||
+                                    _emailController.text.isEmpty ||
+                                    !_emailController.text.contains('@') ||
+                                    (_emailController.text.contains('@') &&
+                                        (RegExp("[A-Za-z0-9.-]").hasMatch(
+                                            _emailController.text
+                                                .split('@')
+                                                .last)) &&
+                                        !(_emailController.text
                                             .split('@')
-                                            .last)) &&
-                                    !(_emailController.text
-                                        .split('@')
-                                        .last
-                                        .contains(RegExp(
-                                            r'[!@#$%^&*(),_?":{}|<>\/\\]'))))
-                            ? const Color(0xFFEEEEEE)
-                            : AppColors.red100,
+                                            .last
+                                            .contains(RegExp(
+                                                r'[!@#$%^&*(),_?":{}|<>\/\\]'))))
+                                ? const Color(0xFFEEEEEE)
+                                : AppColors.red100
+                            : const Color(0xFFEEEEEE),
                         suffixIcon: Ternary(
                           condition: !isEmailValid,
                           truthy: Padding(
@@ -194,35 +197,40 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
   }
 
   Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
-    if (isEmailValid ||
-        _emailController.text.isEmpty ||
-        !_emailController.text.contains('@') ||
-        (_emailController.text.contains('@') &&
-            (RegExp("[A-Za-z0-9.-]")
-                .hasMatch(_emailController.text.split('@').last)) &&
-            !(_emailController.text
-                .split('@')
-                .last
-                .contains(RegExp(r'[!@#$%^&*(),_?":{}|<>\/\\]'))))) {
-      return const SizeBox();
-    } else {
-      return Row(
-        children: [
-          SvgPicture.asset(
-            ImageConstants.errorSolid,
-            width: (10 / Dimensions.designWidth).w,
-            height: (10 / Dimensions.designWidth).w,
-          ),
-          const SizeBox(width: 5),
-          Text(
-            "Invalid email address",
-            style: TextStyles.primaryMedium.copyWith(
-              color: const Color(0xFFC94540),
-              fontSize: (12 / Dimensions.designWidth).w,
+    if ((_emailController.text.contains('@') &&
+        _emailController.text.contains('.'))) {
+      if (isEmailValid ||
+          _emailController.text.isEmpty ||
+          !_emailController.text.contains('@') ||
+          (_emailController.text.contains('@') &&
+              (RegExp("[A-Za-z0-9.-]")
+                  .hasMatch(_emailController.text.split('@').last)) &&
+              !(_emailController.text
+                  .split('@')
+                  .last
+                  .contains(RegExp(r'[!@#$%^&*(),_?":{}|<>\/\\]'))))) {
+        return const SizeBox();
+      } else {
+        return Row(
+          children: [
+            SvgPicture.asset(
+              ImageConstants.errorSolid,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
             ),
-          ),
-        ],
-      );
+            const SizeBox(width: 5),
+            Text(
+              "Invalid email address",
+              style: TextStyles.primaryMedium.copyWith(
+                color: const Color(0xFFC94540),
+                fontSize: (12 / Dimensions.designWidth).w,
+              ),
+            ),
+          ],
+        );
+      }
+    } else {
+      return const SizeBox();
     }
   }
 
@@ -247,150 +255,102 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                     {"emailId": _emailController.text});
             log("singleCifResult -> $singleCifResult");
 
-            // if only one cif
-            if (singleCifResult["hasSingleCIF"]) {
-              if (singleCifResult["hasValidCIF"]) {
-                // if (singleCifResult["userType"] == 2) {
-                //   var getCustomerDetailsResponse =
-                //       await MapCustomerDetails.mapCustomerDetails(tokenCP ?? "");
-                //   log("Get Customer Details API response -> $getCustomerDetailsResponse");
-                //   List cifDetails = getCustomerDetailsResponse["cifDetails"];
-                //   if (cifDetails[0]["isCompanyRegistered"]) {
-                //     if (context.mounted) {
-                //       Navigator.pushNamed(
-                //         context,
-                //         Routes.loginPassword,
-                //         arguments: LoginPasswordArgumentModel(
-                //           emailId: _emailController.text,
-                //           userId: 0,
-                //           userTypeId: singleCifResult["userType"],
-                //           companyId: singleCifResult["cid"],
-                //         ).toMap(),
-                //       );
-                //     }
-                //   } else {
-                //     if (context.mounted) {
-                //       showDialog(
-                //         context: context,
-                //         barrierDismissible: false,
-                //         builder: (context) {
-                //           return CustomDialog(
-                //             svgAssetPath: ImageConstants.warning,
-                //             title: "Application approval pending",
-                //             message:
-                //                 "You already have a registration pending. Please contact Dhabi support.",
-                //             auxWidget: GradientButton(
-                //               onTap: () async {
-                //                 if (context.mounted) {
-                //                   Navigator.pop(context);
-                //                   Navigator.pushReplacementNamed(
-                //                     context,
-                //                     Routes.onboarding,
-                //                     arguments: OnboardingArgumentModel(
-                //                       isInitial: true,
-                //                     ).toMap(),
-                //                   );
-                //                 }
-                //               },
-                //               text: labels[347]["labelText"],
-                //             ),
-                //             actionWidget: SolidButton(
-                //               onTap: () {
-                //                 Navigator.pop(context);
-                //               },
-                //               text: labels[166]["labelText"],
-                //               color: AppColors.primaryBright17,
-                //               fontColor: AppColors.primary,
-                //             ),
-                //           );
-                //         },
-                //       );
-                //     }
-                //   }
-                // } else {
-                //   if (context.mounted) {
-                //     Navigator.pushNamed(
-                //       context,
-                //       Routes.loginPassword,
-                //       arguments: LoginPasswordArgumentModel(
-                //         emailId: _emailController.text,
-                //         userId: 0,
-                //         userTypeId: singleCifResult["userType"],
-                //         companyId: singleCifResult["cid"],
-                //       ).toMap(),
-                //     );
-                //   }
-                // }
-                if (context.mounted) {
-                  Navigator.pushNamed(
-                    context,
-                    Routes.loginPassword,
-                    arguments: LoginPasswordArgumentModel(
-                      emailId: _emailController.text,
-                      userId: 0,
-                      userTypeId: singleCifResult["userType"],
-                      companyId: singleCifResult["cid"],
-                    ).toMap(),
-                  );
-                }
-              } else {
-                if (context.mounted) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) {
-                      return CustomDialog(
-                        svgAssetPath: ImageConstants.warning,
-                        title: "Application approval pending",
-                        message:
-                            "You already have a registration pending. Please contact Dhabi support.",
-                        auxWidget: GradientButton(
-                          onTap: () async {
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                              Navigator.pushReplacementNamed(
-                                context,
-                                Routes.onboarding,
-                                arguments: OnboardingArgumentModel(
-                                  isInitial: true,
-                                ).toMap(),
-                              );
-                            }
-                          },
-                          text: labels[347]["labelText"],
-                        ),
-                        actionWidget: SolidButton(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          text: labels[166]["labelText"],
-                          color: AppColors.primaryBright17,
-                          fontColor: AppColors.primary,
-                        ),
-                      );
-                    },
-                  );
-                }
-              }
-            } else {
-              if (singleCifResult["hasValidCIF"]) {
-                var sendEmailOtpResult = await MapSendEmailOtp.mapSendEmailOtp(
-                    {"emailID": _emailController.text});
-                log("sendEmailOtpResult -> $sendEmailOtpResult");
-                if (sendEmailOtpResult["success"]) {
+            if (singleCifResult["success"]) {
+              await storage.write(
+                  key: "userTypeId",
+                  value: singleCifResult["userType"].toString());
+              storageUserTypeId =
+                  int.parse(await storage.read(key: "userTypeId") ?? "0");
+              log("storageUserTypeId -> $storageUserTypeId");
+
+              await storage.write(
+                  key: "companyId", value: singleCifResult["cid"].toString());
+              storageCompanyId =
+                  int.parse(await storage.read(key: "companyId") ?? "0");
+              log("storageCompanyId -> $storageCompanyId");
+              // if only one cif
+              if (singleCifResult["hasSingleCIF"]) {
+                if (singleCifResult["hasValidCIF"]) {
+                  // if (singleCifResult["userType"] == 2) {
+                  //   var getCustomerDetailsResponse =
+                  //       await MapCustomerDetails.mapCustomerDetails(tokenCP ?? "");
+                  //   log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                  //   List cifDetails = getCustomerDetailsResponse["cifDetails"];
+                  //   if (cifDetails[0]["isCompanyRegistered"]) {
+                  //     if (context.mounted) {
+                  //       Navigator.pushNamed(
+                  //         context,
+                  //         Routes.loginPassword,
+                  //         arguments: LoginPasswordArgumentModel(
+                  //           emailId: _emailController.text,
+                  //           userId: 0,
+                  //           userTypeId: singleCifResult["userType"],
+                  //           companyId: singleCifResult["cid"],
+                  //         ).toMap(),
+                  //       );
+                  //     }
+                  //   } else {
+                  //     if (context.mounted) {
+                  //       showDialog(
+                  //         context: context,
+                  //         barrierDismissible: false,
+                  //         builder: (context) {
+                  //           return CustomDialog(
+                  //             svgAssetPath: ImageConstants.warning,
+                  //             title: "Application approval pending",
+                  //             message:
+                  //                 "You already have a registration pending. Please contact Dhabi support.",
+                  //             auxWidget: GradientButton(
+                  //               onTap: () async {
+                  //                 if (context.mounted) {
+                  //                   Navigator.pop(context);
+                  //                   Navigator.pushReplacementNamed(
+                  //                     context,
+                  //                     Routes.onboarding,
+                  //                     arguments: OnboardingArgumentModel(
+                  //                       isInitial: true,
+                  //                     ).toMap(),
+                  //                   );
+                  //                 }
+                  //               },
+                  //               text: labels[347]["labelText"],
+                  //             ),
+                  //             actionWidget: SolidButton(
+                  //               onTap: () {
+                  //                 Navigator.pop(context);
+                  //               },
+                  //               text: labels[166]["labelText"],
+                  //               color: AppColors.primaryBright17,
+                  //               fontColor: AppColors.primary,
+                  //             ),
+                  //           );
+                  //         },
+                  //       );
+                  //     }
+                  //   }
+                  // } else {
+                  //   if (context.mounted) {
+                  //     Navigator.pushNamed(
+                  //       context,
+                  //       Routes.loginPassword,
+                  //       arguments: LoginPasswordArgumentModel(
+                  //         emailId: _emailController.text,
+                  //         userId: 0,
+                  //         userTypeId: singleCifResult["userType"],
+                  //         companyId: singleCifResult["cid"],
+                  //       ).toMap(),
+                  //     );
+                  //   }
+                  // }
                   if (context.mounted) {
                     Navigator.pushNamed(
                       context,
-                      Routes.otp,
-                      arguments: OTPArgumentModel(
-                        emailOrPhone: _emailController.text,
-                        isEmail: true,
-                        isBusiness: false,
-                        isInitial: false,
-                        isLogin: true,
-                        isEmailIdUpdate: false,
-                        isMobileUpdate: false,
-                        isReKyc: false,
+                      Routes.loginPassword,
+                      arguments: LoginPasswordArgumentModel(
+                        emailId: _emailController.text,
+                        userId: 0,
+                        userTypeId: singleCifResult["userType"],
+                        companyId: singleCifResult["cid"],
                       ).toMap(),
                     );
                   }
@@ -398,16 +358,35 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                   if (context.mounted) {
                     showDialog(
                       context: context,
+                      barrierDismissible: false,
                       builder: (context) {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.warning,
-                          title: "Max Retries Reached",
-                          message: sendEmailOtpResult["message"],
-                          actionWidget: GradientButton(
+                          title: "Application approval pending",
+                          message:
+                              "You already have a registration pending. Please contact Dhabi support.",
+                          auxWidget: GradientButton(
+                            onTap: () async {
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  Routes.onboarding,
+                                  arguments: OnboardingArgumentModel(
+                                    isInitial: true,
+                                  ).toMap(),
+                                );
+                              }
+                            },
+                            text: labels[347]["labelText"],
+                          ),
+                          actionWidget: SolidButton(
                             onTap: () {
                               Navigator.pop(context);
                             },
-                            text: labels[346]["labelText"],
+                            text: labels[166]["labelText"],
+                            color: AppColors.primaryBright17,
+                            fontColor: AppColors.primary,
                           ),
                         );
                       },
@@ -415,44 +394,7 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                   }
                 }
               } else {
-                // promptWrongCredentials();
-                if ((singleCifResult["retailOnboardingState"] != 0 &&
-                        singleCifResult["corporateOnboardingState"] == 0) ||
-                    (singleCifResult["retailOnboardingState"] == 0 &&
-                        singleCifResult["corporateOnboardingState"] != 0) ||
-                    (singleCifResult["retailOnboardingState"] != 0 &&
-                        singleCifResult["corporateOnboardingState"] == 4) ||
-                    (singleCifResult["retailOnboardingState"] == 5 &&
-                        singleCifResult["corporateOnboardingState"] != 0)) {
-                  if (context.mounted) {
-                    Navigator.pushNamed(
-                      context,
-                      Routes.loginPassword,
-                      arguments: LoginPasswordArgumentModel(
-                        emailId: storageEmail ?? "",
-                        userId: storageUserId ?? 0,
-                        userTypeId:
-                            ((singleCifResult["retailOnboardingState"] != 0 &&
-                                        singleCifResult[
-                                                "corporateOnboardingState"] ==
-                                            0) ||
-                                    (singleCifResult["retailOnboardingState"] !=
-                                            0 &&
-                                        singleCifResult[
-                                                "corporateOnboardingState"] ==
-                                            4))
-                                ? 1
-                                : 2,
-                        companyId: storageCompanyId ?? 0,
-                      ).toMap(),
-                    );
-                  }
-                } else if (singleCifResult["retailOnboardingState"] != 5 &&
-                    singleCifResult["corporateOnboardingState"] != 4) {
-                  if (context.mounted) {
-                    Navigator.pushNamed(context, Routes.entityForOnboarding);
-                  }
-                } else {
+                if (singleCifResult["hasValidCIF"]) {
                   var sendEmailOtpResult =
                       await MapSendEmailOtp.mapSendEmailOtp(
                           {"emailID": _emailController.text});
@@ -494,9 +436,111 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
                       );
                     }
                   }
+                } else {
+                  // promptWrongCredentials();
+                  if ((singleCifResult["retailOnboardingState"] != 0 &&
+                          singleCifResult["corporateOnboardingState"] == 0) ||
+                      (singleCifResult["retailOnboardingState"] == 0 &&
+                          singleCifResult["corporateOnboardingState"] != 0) ||
+                      (singleCifResult["retailOnboardingState"] != 0 &&
+                          singleCifResult["corporateOnboardingState"] == 4) ||
+                      (singleCifResult["retailOnboardingState"] == 5 &&
+                          singleCifResult["corporateOnboardingState"] != 0)) {
+                    if (context.mounted) {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.loginPassword,
+                        arguments: LoginPasswordArgumentModel(
+                          emailId: storageEmail ?? "",
+                          userId: storageUserId ?? 0,
+                          userTypeId:
+                              ((singleCifResult["retailOnboardingState"] != 0 &&
+                                          singleCifResult[
+                                                  "corporateOnboardingState"] ==
+                                              0) ||
+                                      (singleCifResult[
+                                                  "retailOnboardingState"] !=
+                                              0 &&
+                                          singleCifResult[
+                                                  "corporateOnboardingState"] ==
+                                              4))
+                                  ? 1
+                                  : 2,
+                          companyId: storageCompanyId ?? 0,
+                        ).toMap(),
+                      );
+                    }
+                  } else if (singleCifResult["retailOnboardingState"] != 5 &&
+                      singleCifResult["corporateOnboardingState"] != 4) {
+                    if (context.mounted) {
+                      Navigator.pushNamed(context, Routes.entityForOnboarding);
+                    }
+                  } else {
+                    var sendEmailOtpResult =
+                        await MapSendEmailOtp.mapSendEmailOtp(
+                            {"emailID": _emailController.text});
+                    log("sendEmailOtpResult -> $sendEmailOtpResult");
+                    if (sendEmailOtpResult["success"]) {
+                      if (context.mounted) {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.otp,
+                          arguments: OTPArgumentModel(
+                            emailOrPhone: _emailController.text,
+                            isEmail: true,
+                            isBusiness: false,
+                            isInitial: false,
+                            isLogin: true,
+                            isEmailIdUpdate: false,
+                            isMobileUpdate: false,
+                            isReKyc: false,
+                          ).toMap(),
+                        );
+                      }
+                    } else {
+                      if (context.mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return CustomDialog(
+                              svgAssetPath: ImageConstants.warning,
+                              title: "Max Retries Reached",
+                              message: sendEmailOtpResult["message"],
+                              actionWidget: GradientButton(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                text: labels[346]["labelText"],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    }
+                  }
                 }
               }
+            } else {
+              if (context.mounted) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialog(
+                      svgAssetPath: ImageConstants.warning,
+                      title: "Error",
+                      message: "API Error",
+                      actionWidget: GradientButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        text: labels[293]["labelText"],
+                      ),
+                    );
+                  },
+                );
+              }
             }
+
             isLoading = false;
             showButtonBloc.add(ShowButtonEvent(show: isLoading));
           }

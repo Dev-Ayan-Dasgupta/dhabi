@@ -751,12 +751,18 @@ class _OTPScreenState extends State<OTPScreen> {
                                         Navigator.pushReplacementNamed(
                                           context,
                                           Routes.setPassword,
+                                          arguments: SetPasswordArgumentModel(
+                                            fromTempPassword: false,
+                                          ).toMap(),
                                         );
                                       }
                                     } else {
                                       Navigator.pushReplacementNamed(
                                         context,
                                         Routes.setPassword,
+                                        arguments: SetPasswordArgumentModel(
+                                          fromTempPassword: false,
+                                        ).toMap(),
                                       );
                                     }
                                   }
@@ -1455,7 +1461,12 @@ class _OTPScreenState extends State<OTPScreen> {
                   } else {
                     if (context.mounted) {
                       Navigator.pushReplacementNamed(
-                          context, Routes.setPassword);
+                        context,
+                        Routes.setPassword,
+                        arguments: SetPasswordArgumentModel(
+                          fromTempPassword: false,
+                        ).toMap(),
+                      );
                     }
                   }
                 } else {

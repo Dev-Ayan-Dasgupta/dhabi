@@ -371,7 +371,9 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(
-                              horizontal: (15 / Dimensions.designWidth).w,
+                              horizontal: (PaddingConstants.horizontalPadding /
+                                      Dimensions.designWidth)
+                                  .w,
                             ),
                             // ! Upper tabs
                             child: Row(
@@ -420,15 +422,19 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                       labelStyle:
                                           TextStyles.primaryMedium.copyWith(
                                         color: const Color(0xFF000000),
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
+                                        fontSize: (PaddingConstants
+                                                    .horizontalPadding /
+                                                Dimensions.designWidth)
+                                            .w,
                                       ),
                                       unselectedLabelColor: Colors.black,
                                       unselectedLabelStyle:
                                           TextStyles.primaryMedium.copyWith(
                                         color: const Color(0xFF000000),
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
+                                        fontSize: (PaddingConstants
+                                                    .horizontalPadding /
+                                                Dimensions.designWidth)
+                                            .w,
                                       ),
                                     );
                                   },
@@ -564,7 +570,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                       children: [
                                         DashboardActivityTile(
                                           iconPath: ImageConstants.arrowOutward,
-                                          activityText: "Send Money",
+                                          activityText: labels[9]["labelText"],
                                           onTap: () {
                                             Navigator.pushNamed(
                                                 context, Routes.sendMoney);
@@ -607,13 +613,17 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                       Navigator.pushNamed(
                                                         context,
                                                         Routes.createDeposits,
+                                                        arguments:
+                                                            CreateDepositArgumentModel(
+                                                          isRetail: true,
+                                                        ).toMap(),
                                                       );
                                                     },
                                                     imgUrl: ImageConstants
                                                         .addAccount,
                                                     accountType: "",
-                                                    currency:
-                                                        "Create New Deposit",
+                                                    currency: labels[103]
+                                                        ["labelText"],
                                                     amount: "",
                                                     subText: "",
                                                     subImgUrl: "",
@@ -706,15 +716,6 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                             //     context, Routes.interestRates);
                                           },
                                         ),
-                                        // const SizeBox(width: 40),
-                                        // DashboardActivityTile(
-                                        //   iconPath: ImageConstants.barChart,
-                                        //   activityText: "Insights",
-                                        //   onTap: () {
-                                        //     Navigator.pushNamed(
-                                        //         context, Routes.insights);
-                                        //   },
-                                        // ),
                                       ],
                                     ),
                                   ],

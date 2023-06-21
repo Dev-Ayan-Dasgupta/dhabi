@@ -13,3 +13,5 @@ export './map_customer_fd_account_statement.dart';
 export './map_customer_fd_details.dart';
 export './map_premature_withdrawal_details.dart';
 export './map_fd_premature_withdraw.dart';
+export './map_get_loans.dart';
+export './map_loan_details.dart';

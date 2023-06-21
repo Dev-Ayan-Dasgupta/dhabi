@@ -16,6 +16,7 @@ class DepositConfirmationArgumentModel {
   String creditAccountNumber;
   DateTime dateOfMaturity;
   DepositBeneficiaryModel depositBeneficiary;
+  bool isRetail;
 
   DepositConfirmationArgumentModel({
     required this.currency,
@@ -30,6 +31,7 @@ class DepositConfirmationArgumentModel {
     required this.creditAccountNumber,
     required this.dateOfMaturity,
     required this.depositBeneficiary,
+    required this.isRetail,
   });
 
   DepositConfirmationArgumentModel copyWith({
@@ -45,6 +47,7 @@ class DepositConfirmationArgumentModel {
     String? creditAccountNumber,
     DateTime? dateOfMaturity,
     DepositBeneficiaryModel? depositBeneficiary,
+    bool? isRetail,
   }) {
     return DepositConfirmationArgumentModel(
       currency: currency ?? this.currency,
@@ -59,6 +62,7 @@ class DepositConfirmationArgumentModel {
       creditAccountNumber: creditAccountNumber ?? this.creditAccountNumber,
       dateOfMaturity: dateOfMaturity ?? this.dateOfMaturity,
       depositBeneficiary: depositBeneficiary ?? this.depositBeneficiary,
+      isRetail: isRetail ?? this.isRetail,
     );
   }
 
@@ -75,7 +79,8 @@ class DepositConfirmationArgumentModel {
       'isAutoTransfer': isAutoTransfer,
       'creditAccountNumber': creditAccountNumber,
       'dateOfMaturity': dateOfMaturity,
-      'depositBeneficiary': depositBeneficiary.toMap(),
+      'depositBeneficiary': depositBeneficiary,
+      'isRetail': isRetail,
     };
   }
 
@@ -92,8 +97,9 @@ class DepositConfirmationArgumentModel {
       isAutoTransfer: map['isAutoTransfer'] as bool,
       creditAccountNumber: map['creditAccountNumber'] as String,
       dateOfMaturity: (map['dateOfMaturity'] as DateTime),
-      depositBeneficiary: DepositBeneficiaryModel.fromMap(
-          map['depositBeneficiary'] as Map<String, dynamic>),
+      depositBeneficiary:
+          (map['depositBeneficiary'] as DepositBeneficiaryModel),
+      isRetail: map['isRetail'] as bool,
     );
   }
 
@@ -105,7 +111,7 @@ class DepositConfirmationArgumentModel {
 
   @override
   String toString() {
-    return 'DepositConfirmationArgumentModel(currency: $currency, accountNumber: $accountNumber, depositAmount: $depositAmount, tenureDays: $tenureDays, interestRate: $interestRate, interestAmount: $interestAmount, interestPayout: $interestPayout, isAutoRenewal: $isAutoRenewal, isAutoTransfer: $isAutoTransfer, creditAccountNumber: $creditAccountNumber, dateOfMaturity: $dateOfMaturity, depositBeneficiary: $depositBeneficiary)';
+    return 'DepositConfirmationArgumentModel(currency: $currency, accountNumber: $accountNumber, depositAmount: $depositAmount, tenureDays: $tenureDays, interestRate: $interestRate, interestAmount: $interestAmount, interestPayout: $interestPayout, isAutoRenewal: $isAutoRenewal, isAutoTransfer: $isAutoTransfer, creditAccountNumber: $creditAccountNumber, dateOfMaturity: $dateOfMaturity, depositBeneficiary: $depositBeneficiary, isRetail: $isRetail)';
   }
 
   @override
@@ -123,7 +129,8 @@ class DepositConfirmationArgumentModel {
         other.isAutoTransfer == isAutoTransfer &&
         other.creditAccountNumber == creditAccountNumber &&
         other.dateOfMaturity == dateOfMaturity &&
-        other.depositBeneficiary == depositBeneficiary;
+        other.depositBeneficiary == depositBeneficiary &&
+        other.isRetail == isRetail;
   }
 
   @override
@@ -139,6 +146,7 @@ class DepositConfirmationArgumentModel {
         isAutoTransfer.hashCode ^
         creditAccountNumber.hashCode ^
         dateOfMaturity.hashCode ^
-        depositBeneficiary.hashCode;
+        depositBeneficiary.hashCode ^
+        isRetail.hashCode;
   }
 }

@@ -32,40 +32,86 @@ class OnboardingScreen extends StatefulWidget {
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends State<OnboardingScreen>
+    with SingleTickerProviderStateMixin {
   late OnboardingArgumentModel onboardingArgumentModel;
 
-  final padding = (28 / Dimensions.designWidth);
+  final padding = (PaddingConstants.horizontalPadding / Dimensions.designWidth);
   final space = (10 / Dimensions.designWidth);
 
   PageController pageController = PageController(initialPage: 0);
 
   int page = 0;
   int time = 0;
+  int time2 = 0;
 
   bool isLoading = false;
   Timer? _timer;
+  Timer? _timer2;
+
+  late final AnimationController _progressAnimationController;
+  late final Animation _progressLengthAnimation;
 
   @override
   void initState() {
     super.initState();
     onboardingArgumentModel =
         OnboardingArgumentModel.fromMap(widget.argument as dynamic ?? {});
+    // moveCaption();
+    animateCaption();
     animateToPage();
   }
 
-  animateToPage() async {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  void animateToPage() {
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        setState(() {});
+        time++;
+        if (time % 5 == 0 || time == 19) {
+          pageController.animateToPage(page + 1,
+              duration: const Duration(milliseconds: 1), curve: Curves.easeIn);
+          page++;
+          if (time >= 19) {
+            _timer?.cancel();
+          }
+        }
+        log("time -> $time");
+        log("right -> ${(time % 5) * (25 / Dimensions.designWidth).w}");
+      },
+    );
+  }
+
+  animateCaption() {
+    _progressAnimationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    _progressLengthAnimation = Tween<double>(
+      begin: (400 / Dimensions.designHeight).h,
+      end: 0,
+    ).animate(CurvedAnimation(
+        parent: _progressAnimationController, curve: Curves.linear));
+    _progressAnimationController.addListener(() {
       setState(() {});
-      time++;
-      if (time == 5 || time == 10 || time == 15) {
-        pageController.animateToPage(page + 1,
-            duration: const Duration(milliseconds: 1), curve: Curves.easeIn);
-        page++;
-        if (page == 3) {
+    });
+    _progressAnimationController.forward();
+    // _progressAnimationController.repeat();
+
+    log("_progressLengthAnimation -> ${_progressLengthAnimation.value}");
+  }
+
+  void moveCaption() {
+    _timer2 = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        time2++;
+        if (time2 % 5 == 0) {
+          animateCaption();
+        }
+
+        if (time2 >= 15) {
           timer.cancel();
         }
-      }
+      });
+      log("time2 -> $time2");
     });
   }
 
@@ -80,85 +126,128 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             controller: pageController,
             itemCount: onboardingSoftList.length,
             itemBuilder: (context, index) {
-              return Stack(
-                children: [
-                  Container(
-                    width: 100.w,
-                    height: 100.h,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                            onboardingSoftList[index].backgroundImage),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 100.w,
-                    height: 100.h,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black87,
-                          Colors.transparent,
-                          Colors.black38,
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: MediaQuery.of(context).padding.top +
-                        (10 / Dimensions.designHeight).h,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: (28 / Dimensions.designWidth).w,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          PageIndicator(
-                            count: onboardingSoftList.length,
-                            page: index,
-                          ),
-                          const SizeBox(height: 24),
-                          const SizeBox(height: 28),
-                          Text(
-                            "DHABI",
-                            style: TextStyle(
-                              color: const Color.fromRGBO(255, 255, 255, 0.5),
-                              fontFamily: "Montserrat",
-                              fontWeight: FontWeight.w700,
-                              fontSize: (16 / Dimensions.designWidth).w,
+              if (pageController.position.haveDimensions) {
+                return Stack(
+                  children: [
+                    AnimatedPositioned(
+                      duration: const Duration(seconds: 5),
+                      curve: Curves.linear,
+                      right: (time % 5) * (25 / Dimensions.designWidth).w,
+                      child: Transform.scale(
+                        scaleX: pageController.page == 0
+                            ? 2
+                            : pageController.page == 2
+                                ? 3.5
+                                : pageController.page == 3
+                                    ? 2.2
+                                    : 1,
+                        child: Container(
+                          width: 100.w,
+                          height: 100.h,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(
+                                  onboardingSoftList[index].backgroundImage),
+                              fit: BoxFit.fill,
                             ),
                           ),
-                          const SizeBox(height: 10),
-                          SizedBox(
-                            width: 67.w,
-                            child: Text(
-                              onboardingSoftList[index].caption,
-                              style: TextStyles.primaryMedium.copyWith(
-                                fontSize: (35 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              );
+                    Container(
+                      width: 100.w,
+                      height: 100.h,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black87,
+                            Colors.transparent,
+                            Colors.black38,
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: MediaQuery.of(context).padding.top +
+                          (20 / Dimensions.designHeight).h,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: (PaddingConstants.horizontalPadding /
+                                  Dimensions.designWidth)
+                              .w,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            PageIndicator(
+                              count: onboardingSoftList.length,
+                              page: index,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                        top: MediaQuery.of(context).padding.top +
+                            (72 / Dimensions.designHeight).h +
+                            _progressLengthAnimation.value,
+                        child: Opacity(
+                          opacity: 1,
+                          // ((400 / Dimensions.designHeight).h -
+                          //         _progressLengthAnimation.value) /
+                          //     (400 / Dimensions.designHeight).h,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    (PaddingConstants.horizontalPadding /
+                                            Dimensions.designWidth)
+                                        .w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "DHABI",
+                                  style: TextStyle(
+                                    color: const Color.fromRGBO(
+                                        255, 255, 255, 0.5),
+                                    fontFamily: "Montserrat",
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: (16 / Dimensions.designWidth).w,
+                                  ),
+                                ),
+                                const SizeBox(height: 10),
+                                SizedBox(
+                                  width: 67.w,
+                                  child: Text(
+                                    onboardingSoftList[index].caption,
+                                    style: TextStyles.primaryMedium.copyWith(
+                                      fontSize: (35 / Dimensions.designWidth).w,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ))
+                  ],
+                );
+              } else {
+                return null;
+              }
             },
           ),
           Positioned(
             top: MediaQuery.of(context).padding.top +
-                (10 / Dimensions.designHeight).h,
+                (20 / Dimensions.designHeight).h,
             child: SizedBox(
               width: 100.w,
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: (28 / Dimensions.designWidth).w),
+                    horizontal: (PaddingConstants.horizontalPadding /
+                            Dimensions.designWidth)
+                        .w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -204,7 +293,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               width: 100.w,
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: (28 / Dimensions.designWidth).w),
+                    horizontal: (PaddingConstants.horizontalPadding /
+                            Dimensions.designWidth)
+                        .w),
                 child: Column(
                   children: [
                     Ternary(
@@ -590,6 +681,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   void dispose() {
     _timer?.cancel();
+    _timer2?.cancel();
     super.dispose();
   }
 }

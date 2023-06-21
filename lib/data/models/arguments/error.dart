@@ -12,6 +12,7 @@ class ErrorArgumentModel {
   final VoidCallback onTap;
   final String buttonTextSecondary;
   final VoidCallback onTapSecondary;
+  final Widget? auxWidget;
   ErrorArgumentModel({
     required this.hasSecondaryButton,
     required this.iconPath,
@@ -21,6 +22,7 @@ class ErrorArgumentModel {
     required this.onTap,
     required this.buttonTextSecondary,
     required this.onTapSecondary,
+    this.auxWidget,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,6 +35,7 @@ class ErrorArgumentModel {
       'onTap': onTap,
       'buttonTextSecondary': buttonTextSecondary,
       'onTapSecondary': onTapSecondary,
+      'auxWidget': auxWidget,
     };
   }
 
@@ -45,13 +48,8 @@ class ErrorArgumentModel {
       buttonText: map['buttonText'] as String,
       onTap: (map['onTap'] as VoidCallback),
       buttonTextSecondary: map['buttonTextSecondary'] as String,
-      // map['buttonTextSecondary'] != null
-      //     ? map['buttonTextSecondary'] as String
-      //     : null,
       onTapSecondary: (map['onTapSecondary'] as VoidCallback),
-      // map['onTapSecondary'] != null
-      //     ? (map['onTapSecondary'] as VoidCallback)
-      //     : null,
+      auxWidget: (map['auxWidget'] as Widget?),
     );
   }
 
@@ -59,4 +57,61 @@ class ErrorArgumentModel {
 
   factory ErrorArgumentModel.fromJson(String source) =>
       ErrorArgumentModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  ErrorArgumentModel copyWith({
+    bool? hasSecondaryButton,
+    String? iconPath,
+    String? title,
+    String? message,
+    String? buttonText,
+    VoidCallback? onTap,
+    String? buttonTextSecondary,
+    VoidCallback? onTapSecondary,
+    Widget? auxWidget,
+  }) {
+    return ErrorArgumentModel(
+      hasSecondaryButton: hasSecondaryButton ?? this.hasSecondaryButton,
+      iconPath: iconPath ?? this.iconPath,
+      title: title ?? this.title,
+      message: message ?? this.message,
+      buttonText: buttonText ?? this.buttonText,
+      onTap: onTap ?? this.onTap,
+      buttonTextSecondary: buttonTextSecondary ?? this.buttonTextSecondary,
+      onTapSecondary: onTapSecondary ?? this.onTapSecondary,
+      auxWidget: auxWidget ?? this.auxWidget,
+    );
+  }
+
+  @override
+  String toString() {
+    return 'ErrorArgumentModel(hasSecondaryButton: $hasSecondaryButton, iconPath: $iconPath, title: $title, message: $message, buttonText: $buttonText, onTap: $onTap, buttonTextSecondary: $buttonTextSecondary, onTapSecondary: $onTapSecondary, auxWidget: $auxWidget)';
+  }
+
+  @override
+  bool operator ==(covariant ErrorArgumentModel other) {
+    if (identical(this, other)) return true;
+
+    return other.hasSecondaryButton == hasSecondaryButton &&
+        other.iconPath == iconPath &&
+        other.title == title &&
+        other.message == message &&
+        other.buttonText == buttonText &&
+        other.onTap == onTap &&
+        other.buttonTextSecondary == buttonTextSecondary &&
+        other.onTapSecondary == onTapSecondary &&
+        other.auxWidget == auxWidget;
+  }
+
+  @override
+  int get hashCode {
+    return hasSecondaryButton.hashCode ^
+        iconPath.hashCode ^
+        title.hashCode ^
+        message.hashCode ^
+        buttonText.hashCode ^
+        onTap.hashCode ^
+        buttonTextSecondary.hashCode ^
+        onTapSecondary.hashCode ^
+        auxWidget.hashCode;
+  }
 }

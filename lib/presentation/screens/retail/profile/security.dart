@@ -121,6 +121,24 @@ class _SecurityScreenState extends State<SecurityScreen> {
       value: isEnabled,
       onToggle: (val) async {
         isEnabled = val;
+        showDialog(
+          context: context,
+          builder: (context) {
+            return CustomDialog(
+              svgAssetPath: ImageConstants.checkCircleOutlined,
+              title: isEnabled ? "Biometric enabled" : "Biometric Disabled",
+              message: isEnabled
+                  ? "Enjoy the added convenience and security in using the app with biometric authentication."
+                  : "You can turn on biometric authentication anytime from the profile menu.",
+              actionWidget: GradientButton(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                text: labels[293]["labelText"],
+              ),
+            );
+          },
+        );
         await storage.write(
             key: "persistBiometric", value: isEnabled.toString());
         persistBiometric =

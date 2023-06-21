@@ -128,21 +128,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     BlocBuilder<ShowButtonBloc, ShowButtonState>(
                       builder: (context, state) {
                         return CustomTextField(
-                          borderColor: _isEmailValid ||
-                                  _emailController.text.isEmpty ||
-                                  !_emailController.text.contains('@') ||
-                                  (_emailController.text.contains('@') &&
-                                      (RegExp("[A-Za-z0-9.-]").hasMatch(
-                                          _emailController.text
+                          borderColor: (_emailController.text.contains('@') &&
+                                  _emailController.text.contains('.'))
+                              ? _isEmailValid ||
+                                      _emailController.text.isEmpty ||
+                                      !_emailController.text.contains('@') ||
+                                      (_emailController.text.contains('@') &&
+                                          (RegExp("[A-Za-z0-9.-]").hasMatch(
+                                              _emailController.text
+                                                  .split('@')
+                                                  .last)) &&
+                                          !(_emailController.text
                                               .split('@')
-                                              .last)) &&
-                                      !(_emailController.text
-                                          .split('@')
-                                          .last
-                                          .contains(RegExp(
-                                              r'[!@#$%^&*(),_?":{}|<>\/\\]'))))
-                              ? const Color(0xFFEEEEEE)
-                              : AppColors.red100,
+                                              .last
+                                              .contains(RegExp(
+                                                  r'[!@#$%^&*(),_?":{}|<>\/\\]'))))
+                                  ? const Color(0xFFEEEEEE)
+                                  : AppColors.red100
+                              : const Color(0xFFEEEEEE),
                           controller: _emailController,
                           suffixIcon:
                               BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -281,35 +284,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
-    if (_isEmailValid ||
-        _emailController.text.isEmpty ||
-        !_emailController.text.contains('@') ||
-        (_emailController.text.contains('@') &&
-            (RegExp("[A-Za-z0-9.-]")
-                .hasMatch(_emailController.text.split('@').last)) &&
-            !(_emailController.text
-                .split('@')
-                .last
-                .contains(RegExp(r'[!@#$%^&*(),_?":{}|<>\/\\]'))))) {
-      return const SizeBox();
-    } else {
-      return Row(
-        children: [
-          SvgPicture.asset(
-            ImageConstants.errorSolid,
-            width: (10 / Dimensions.designWidth).w,
-            height: (10 / Dimensions.designWidth).w,
-          ),
-          const SizeBox(width: 5),
-          Text(
-            "Invalid email address",
-            style: TextStyles.primaryMedium.copyWith(
-              color: const Color(0xFFC94540),
-              fontSize: (12 / Dimensions.designWidth).w,
+    if ((_emailController.text.contains('@') &&
+        _emailController.text.contains('.'))) {
+      if ((_isEmailValid ||
+          _emailController.text.isEmpty ||
+          !_emailController.text.contains('@') ||
+          (_emailController.text.contains('@') &&
+              (RegExp("[A-Za-z0-9.-]")
+                  .hasMatch(_emailController.text.split('@').last)) &&
+              !(_emailController.text
+                  .split('@')
+                  .last
+                  .contains(RegExp(r'[!@#$%^&*(),_?":{}|<>\/\\]')))))) {
+        return const SizeBox();
+      } else {
+        return Row(
+          children: [
+            SvgPicture.asset(
+              ImageConstants.errorSolid,
+              width: (10 / Dimensions.designWidth).w,
+              height: (10 / Dimensions.designWidth).w,
             ),
-          ),
-        ],
-      );
+            const SizeBox(width: 5),
+            Text(
+              "Invalid email address",
+              style: TextStyles.primaryMedium.copyWith(
+                color: const Color(0xFFC94540),
+                fontSize: (12 / Dimensions.designWidth).w,
+              ),
+            ),
+          ],
+        );
+      }
+    } else {
+      return const SizeBox();
     }
   }
 

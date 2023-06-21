@@ -9,8 +9,8 @@ class MapChangePassword {
       Map<String, dynamic> body, String token) async {
     try {
       http.Response response = await ChangePassword.changePassword(body, token);
-      if (response.statusCode == 401) {
-        log("Auth error 401");
+      if (response.statusCode != 200) {
+        log("Status code -> ${response.statusCode}");
       }
       return jsonDecode(response.body);
     } catch (_) {

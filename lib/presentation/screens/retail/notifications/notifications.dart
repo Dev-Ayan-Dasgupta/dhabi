@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class NotificatonsScreen extends StatefulWidget {
   const NotificatonsScreen({Key? key}) : super(key: key);
@@ -20,36 +21,11 @@ class NotificatonsScreen extends StatefulWidget {
 }
 
 class _NotificatonsScreenState extends State<NotificatonsScreen> {
-  List<NotificationsTileModel> notifications = [
-    // NotificationsTileModel(
-    //   title: "Your passport details are expired. Please update it.",
-    //   message: "",
-    //   dateTime: "Today at 9:42 AM",
-    //   widget: GradientButton(
-    //     height: (28 / Dimensions.designWidth).w,
-    //     width: (66 / Dimensions.designWidth).w,
-    //     borderRadius: (4 / Dimensions.designWidth).w,
-    //     fontSize: (14 / Dimensions.designWidth).w,
-    //     fontWeight: FontWeight.w400,
-    //     onTap: () {},
-    //     text: "Update",
-    //   ),
-    // ),
-    // NotificationsTileModel(
-    //   title: "Black Friday's here to stay",
-    //   message: "Our offers and cashback will last longer",
-    //   dateTime: "Yesterday at 11:42 PM",
-    //   widget: const SizeBox(),
-    // ),
-    // NotificationsTileModel(
-    //   title: "Invite friends, get paid",
-    //   message: "You can earn upto \$200 for each friend you refer",
-    //   dateTime: "Last Wednesday at 11:15 AM",
-    //   widget: const SizeBox(),
-    // ),
-  ];
+  List<NotificationsTileModel> notifications = [];
 
   bool isFetchingData = true;
+
+  Map<String, dynamic> getNotificationsApiResult = {};
 
   @override
   void initState() {
@@ -61,8 +37,7 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
     try {
       final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
 
-      var getNotificationsApiResult =
-          await MapGetNotifications.mapGetNotifications(
+      getNotificationsApiResult = await MapGetNotifications.mapGetNotifications(
         token ?? "",
       );
       log("Get notificatons api response -> $getNotificationsApiResult");
@@ -75,7 +50,9 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
           notifications.add(NotificationsTileModel(
               title: getNotificationsApiResult["notifications"][i]["subject"],
               message: getNotificationsApiResult["notifications"][i]["content"],
-              dateTime: "Yesterday at 11:42 PM",
+              dateTime: DateFormat('EEEE, MMM dd, yyyy, hh:mm').format(
+                  DateTime.parse(getNotificationsApiResult["notifications"][i]
+                      ["createdOn"])),
               widget: const SizeBox()));
         }
       } else {
@@ -90,6 +67,7 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
                     "There was an error in fetching your notifications, please try again later",
                 actionWidget: GradientButton(
                   onTap: () {
+                    Navigator.pop(context);
                     Navigator.pop(context);
                   },
                   text: labels[346]["labelText"],
@@ -133,14 +111,24 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
             ),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
               builder: (context, state) {
-                return SizeBox(height: notifications.isEmpty ? 0 : 15);
+                return SizeBox(height: notifications.isEmpty ? 15 : 15);
               },
             ),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
               builder: (context, state) {
                 return Ternary(
                   condition: isFetchingData,
-                  truthy: const ShimmerDepositDetails(),
+                  truthy: Expanded(
+                    child: ListView.separated(
+                      separatorBuilder: (context, index) {
+                        return const SizeBox(height: 10);
+                      },
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return const ShimmerNotificationTile();
+                      },
+                    ),
+                  ),
                   falsy: Ternary(
                     condition: notifications.isEmpty,
                     truthy: Column(
@@ -188,6 +176,84 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
                               message: item.message,
                               dateTime: item.dateTime,
                               widget: item.widget,
+                              onPressed: (context) async {
+                                if (!isFetchingData) {
+                                  final ShowButtonBloc showButtonBloc =
+                                      context.read<ShowButtonBloc>();
+                                  isFetchingData = true;
+                                  showButtonBloc.add(
+                                      ShowButtonEvent(show: isFetchingData));
+                                  try {
+                                    log("Remove Notification request -> ${{
+                                      "notificationId":
+                                          getNotificationsApiResult[
+                                                  "notifications"][index]
+                                              ["notificationId"],
+                                    }}");
+                                    var remNotiApiResult =
+                                        await MapRemoveNotifications
+                                            .mapRemoveNotifications(
+                                      {
+                                        "notificationId":
+                                            getNotificationsApiResult[
+                                                    "notifications"][index]
+                                                ["notificationId"],
+                                      },
+                                      token ?? "",
+                                    );
+                                    log("Remove Notification API response -> $remNotiApiResult");
+
+                                    if (remNotiApiResult["success"]) {
+                                      await getNotifications();
+                                    } else {
+                                      if (context.mounted) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return CustomDialog(
+                                              svgAssetPath:
+                                                  ImageConstants.warning,
+                                              title: "Error",
+                                              message:
+                                                  "There was an error in removing this notification, please try again later.",
+                                              actionWidget: GradientButton(
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                },
+                                                text: labels[347]["labelText"],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    }
+                                  } catch (_) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CustomDialog(
+                                          svgAssetPath: ImageConstants.warning,
+                                          title: "Oops",
+                                          message:
+                                              "Something went wrong, please try again later.",
+                                          actionWidget: GradientButton(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            text: labels[347]["labelText"],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+
+                                  isFetchingData = false;
+                                  showButtonBloc.add(
+                                      ShowButtonEvent(show: isFetchingData));
+                                }
+                              },
                             ),
                           );
                         },

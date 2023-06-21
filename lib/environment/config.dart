@@ -86,6 +86,16 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['FD_PREMATURE_WITHDRAW'] ?? "";
   }
 
+  @override
+  String get getLoans {
+    return dotenv.env['GET_LOANS'] ?? "";
+  }
+
+  @override
+  String get getLoanDetails {
+    return dotenv.env['GET_LOAN_DETAILS'] ?? "";
+  }
+
   // ? Authentication APIs
 
   @override
@@ -311,5 +321,32 @@ class EnvConfig implements BaseConfig {
   @override
   String get removeNotification {
     return dotenv.env['REMOVE_NOTIFICATION'] ?? "";
+  }
+
+  // ? Corporate Accounts APIs
+
+  @override
+  String get getCorporateCustomerAccountDetails {
+    return dotenv.env['GET_CORPORATE_CUSTOMER_ACCOUNT_DETAILS'] ?? "";
+  }
+
+  @override
+  String get getCorporateCustomerPermissions {
+    return dotenv.env['GET_CORPORATE_CUSTOMER_PERMISSIONS'] ?? "";
+  }
+
+  @override
+  String get createCorporateFd {
+    return dotenv.env['CREATE_CORPORATE_FD'] ?? "";
+  }
+
+  @override
+  String get getCorporateFdApprovalList {
+    return dotenv.env['GET_CORPORATE_FD_APPROVAL_LIST'] ?? "";
+  }
+
+  @override
+  String get approveOrDisapproveCorporateFd {
+    return dotenv.env['APPROVE_OR_DISAPROVE_CORPORATE_FD'] ?? "";
   }
 }

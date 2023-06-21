@@ -262,16 +262,21 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
               },
             );
           } else {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.businessDashboard,
-              (route) => false,
-              arguments: RetailDashboardArgumentModel(
-                imgUrl: "",
-                name: "",
-                isFirst: storageIsFirstLogin == true ? false : true,
-              ).toMap(),
-            );
+            await getProfileData();
+            await storage.write(key: "loggedOut", value: false.toString());
+            storageLoggedOut = await storage.read(key: "loggedOut") == "true";
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.businessDashboard,
+                (route) => false,
+                arguments: RetailDashboardArgumentModel(
+                  imgUrl: storageProfilePhotoBase64 ?? "",
+                  name: profileName ?? "",
+                  isFirst: storageIsFirstLogin == true ? false : true,
+                ).toMap(),
+              );
+            }
           }
         }
       }
@@ -416,16 +421,24 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                           }
                         }
                       } else {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          Routes.businessDashboard,
-                          (route) => false,
-                          arguments: RetailDashboardArgumentModel(
-                            imgUrl: "",
-                            name: "",
-                            isFirst: storageIsFirstLogin == true ? false : true,
-                          ).toMap(),
-                        );
+                        await getProfileData();
+                        await storage.write(
+                            key: "loggedOut", value: false.toString());
+                        storageLoggedOut =
+                            await storage.read(key: "loggedOut") == "true";
+                        if (context.mounted) {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.businessDashboard,
+                            (route) => false,
+                            arguments: RetailDashboardArgumentModel(
+                              imgUrl: storageProfilePhotoBase64 ?? "",
+                              name: profileName ?? "",
+                              isFirst:
+                                  storageIsFirstLogin == true ? false : true,
+                            ).toMap(),
+                          );
+                        }
                       }
                     }
 

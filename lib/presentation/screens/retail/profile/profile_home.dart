@@ -51,16 +51,31 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
     return WillPopScope(
       onWillPop: () async {
         if (hasProfilePicUpdated) {
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            Routes.retailDashboard,
-            (route) => false,
-            arguments: RetailDashboardArgumentModel(
-              imgUrl: "",
-              name: profileName ?? "",
-              isFirst: storageIsFirstLogin == true ? false : true,
-            ).toMap(),
-          );
+          if (storageUserTypeId == 1) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.retailDashboard,
+              (route) => false,
+              arguments: RetailDashboardArgumentModel(
+                imgUrl: "",
+                name: profileName ?? "",
+                isFirst: storageIsFirstLogin == true ? false : true,
+              ).toMap(),
+            );
+          } else {
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.businessDashboard,
+                (route) => false,
+                arguments: RetailDashboardArgumentModel(
+                  imgUrl: storageProfilePhotoBase64 ?? "",
+                  name: profileName ?? "",
+                  isFirst: storageIsFirstLogin == true ? false : true,
+                ).toMap(),
+              );
+            }
+          }
         } else {
           Navigator.pop(context);
         }
@@ -72,16 +87,31 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           leading: AppBarLeading(
             onTap: () {
               if (hasProfilePicUpdated) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  Routes.retailDashboard,
-                  (route) => false,
-                  arguments: RetailDashboardArgumentModel(
-                    imgUrl: "",
-                    name: profileName ?? "",
-                    isFirst: storageIsFirstLogin == true ? false : true,
-                  ).toMap(),
-                );
+                if (storageUserTypeId == 1) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    Routes.retailDashboard,
+                    (route) => false,
+                    arguments: RetailDashboardArgumentModel(
+                      imgUrl: "",
+                      name: profileName ?? "",
+                      isFirst: storageIsFirstLogin == true ? false : true,
+                    ).toMap(),
+                  );
+                } else {
+                  if (context.mounted) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.businessDashboard,
+                      (route) => false,
+                      arguments: RetailDashboardArgumentModel(
+                        imgUrl: storageProfilePhotoBase64 ?? "",
+                        name: profileName ?? "",
+                        isFirst: storageIsFirstLogin == true ? false : true,
+                      ).toMap(),
+                    );
+                  }
+                }
               } else {
                 Navigator.pop(context);
               }
@@ -104,142 +134,156 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                   Expanded(
                     child: Column(
                       children: [
-                        const SizeBox(height: 10),
+                        // const SizeBox(height: 10),
                         EditProfilePhoto(
                           isMemoryImage: profilePhotoBase64 != null,
                           bytes: base64Decode(profilePhotoBase64 ?? ""),
                           onTap: showImageUploadOptions,
                         ),
                         const SizeBox(height: 10),
-                        Text(
-                          profileName ?? "",
-                          style: TextStyles.primaryMedium.copyWith(
-                            color: AppColors.primary,
-                            fontSize: (20 / Dimensions.designWidth).w,
-                          ),
-                        ),
-                        const SizeBox(height: 30),
-                        TopicTile(
-                          color: const Color(0XFFFAFAFA),
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.profile);
-                          },
-                          iconPath: ImageConstants.settingsAccountBox,
-                          text: "Profile",
-                        ),
-                        const SizeBox(height: 10),
-                        TopicTile(
-                          color: const Color(0XFFFAFAFA),
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.security);
-                          },
-                          iconPath: ImageConstants.security,
-                          text: "Security",
-                        ),
-                        const SizeBox(height: 10),
-                        TopicTile(
-                          color: const Color(0XFFFAFAFA),
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.requestType);
-                          },
-                          iconPath: ImageConstants.handshake,
-                          text: "Service Request",
-                        ),
-                        const SizeBox(height: 10),
-                        TopicTile(
-                          color: const Color(0XFFFAFAFA),
-                          onTap: promptUserContactUs,
-                          iconPath: ImageConstants.atTheRate,
-                          text: "Contact Us",
-                        ),
-                        const SizeBox(height: 10),
-                        TopicTile(
-                          color: const Color(0XFFFAFAFA),
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.termsAndConditions);
-                          },
-                          iconPath: ImageConstants.termsAndConditions,
-                          text: "Terms & Conditions",
-                        ),
-                        const SizeBox(height: 10),
-                        TopicTile(
-                          color: const Color(0XFFFAFAFA),
-                          onTap: () {
-                            Navigator.pushNamed(
-                                context, Routes.privacyStatement);
-                          },
-                          iconPath: ImageConstants.privacyPolicy,
-                          text: "Privacy Policy",
-                        ),
-                        const SizeBox(height: 10),
-                        TopicTile(
-                          color: const Color(0XFFFAFAFA),
-                          onTap: () {
-                            Navigator.pushNamed(context, Routes.faq);
-                          },
-                          iconPath: ImageConstants.faq,
-                          text: "FAQs",
-                        ),
-                        const SizeBox(height: 10),
-                        TopicTile(
-                          color: const Color(0XFFFAFAFA),
-                          onTap: () async {
-                            var getCustomerDetailsResponse =
-                                await MapCustomerDetails.mapCustomerDetails(
-                                    token ?? "");
-                            log("Get Customer Details API response -> $getCustomerDetailsResponse");
-
-                            List cifDetails =
-                                getCustomerDetailsResponse["cifDetails"];
-
-                            if (cifDetails.length > 1) {
-                              if (context.mounted) {
-                                Navigator.pushNamed(
-                                  context,
-                                  Routes.selectAccount,
-                                  arguments: SelectAccountArgumentModel(
-                                    emailId: storageEmail ?? "",
-                                    cifDetails: cifDetails,
-                                    isPwChange: false,
-                                    isLogin: true,
-                                    isIncompleteOnboarding: false,
-                                  ).toMap(),
-                                );
-                              }
-                            } else {
-                              if (context.mounted) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return CustomDialog(
-                                      svgAssetPath: ImageConstants.warning,
-                                      title: "No Other Acount",
-                                      message:
-                                          "You have only one registered account.",
-                                      actionWidget: GradientButton(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          text: labels[347]["labelText"]),
-                                    );
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Text(
+                                  profileName ?? "",
+                                  style: TextStyles.primaryMedium.copyWith(
+                                    color: AppColors.primary,
+                                    fontSize: (20 / Dimensions.designWidth).w,
+                                  ),
+                                ),
+                                const SizeBox(height: 30),
+                                TopicTile(
+                                  color: const Color(0XFFFAFAFA),
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.profile);
                                   },
-                                );
-                              }
-                            }
-                          },
-                          iconPath: ImageConstants.rotate,
-                          text: "Switch Entities",
-                        ),
-                        const SizeBox(height: 10),
-                        TopicTile(
-                          color: const Color(0XFFFAFAFA),
-                          onTap: promptUserLogout,
-                          iconPath: ImageConstants.logout,
-                          text: "Logout",
-                          fontColor: AppColors.red100,
-                          highlightColor:
-                              const Color.fromRGBO(201, 69, 64, 0.1),
+                                  iconPath: ImageConstants.settingsAccountBox,
+                                  text: "Profile",
+                                ),
+                                const SizeBox(height: 10),
+                                TopicTile(
+                                  color: const Color(0XFFFAFAFA),
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.security);
+                                  },
+                                  iconPath: ImageConstants.security,
+                                  text: "Security",
+                                ),
+                                const SizeBox(height: 10),
+                                TopicTile(
+                                  color: const Color(0XFFFAFAFA),
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.requestType);
+                                  },
+                                  iconPath: ImageConstants.handshake,
+                                  text: "Service Request",
+                                ),
+                                const SizeBox(height: 10),
+                                TopicTile(
+                                  color: const Color(0XFFFAFAFA),
+                                  onTap: promptUserContactUs,
+                                  iconPath: ImageConstants.atTheRate,
+                                  text: "Contact Us",
+                                ),
+                                const SizeBox(height: 10),
+                                TopicTile(
+                                  color: const Color(0XFFFAFAFA),
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.termsAndConditions);
+                                  },
+                                  iconPath: ImageConstants.termsAndConditions,
+                                  text: "Terms & Conditions",
+                                ),
+                                const SizeBox(height: 10),
+                                TopicTile(
+                                  color: const Color(0XFFFAFAFA),
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, Routes.privacyStatement);
+                                  },
+                                  iconPath: ImageConstants.privacyPolicy,
+                                  text: "Privacy Policy",
+                                ),
+                                const SizeBox(height: 10),
+                                TopicTile(
+                                  color: const Color(0XFFFAFAFA),
+                                  onTap: () {
+                                    Navigator.pushNamed(context, Routes.faq);
+                                  },
+                                  iconPath: ImageConstants.faq,
+                                  text: "FAQs",
+                                ),
+                                const SizeBox(height: 10),
+                                TopicTile(
+                                  color: const Color(0XFFFAFAFA),
+                                  onTap: () async {
+                                    var getCustomerDetailsResponse =
+                                        await MapCustomerDetails
+                                            .mapCustomerDetails(token ?? "");
+                                    log("Get Customer Details API response -> $getCustomerDetailsResponse");
+
+                                    List cifDetails =
+                                        getCustomerDetailsResponse[
+                                            "cifDetails"];
+
+                                    if (cifDetails.length > 1) {
+                                      if (context.mounted) {
+                                        Navigator.pushNamed(
+                                          context,
+                                          Routes.selectAccount,
+                                          arguments: SelectAccountArgumentModel(
+                                            emailId: storageEmail ?? "",
+                                            cifDetails: cifDetails,
+                                            isPwChange: false,
+                                            isLogin: true,
+                                            isIncompleteOnboarding: false,
+                                          ).toMap(),
+                                        );
+                                      }
+                                    } else {
+                                      if (context.mounted) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return CustomDialog(
+                                              svgAssetPath:
+                                                  ImageConstants.warning,
+                                              title: "No Other Acount",
+                                              message:
+                                                  "You have only one registered account.",
+                                              actionWidget: GradientButton(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  text: labels[347]
+                                                      ["labelText"]),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    }
+                                  },
+                                  iconPath: ImageConstants.rotate,
+                                  text: "Switch Entities",
+                                ),
+                                const SizeBox(height: 10),
+                                TopicTile(
+                                  color: const Color(0XFFFAFAFA),
+                                  onTap: promptUserLogout,
+                                  iconPath: ImageConstants.logout,
+                                  text: "Logout",
+                                  fontColor: AppColors.red100,
+                                  highlightColor:
+                                      const Color.fromRGBO(201, 69, 64, 0.1),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),

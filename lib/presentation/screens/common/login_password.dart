@@ -237,10 +237,24 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     log("userTypeId -> ${loginPasswordArgument.userTypeId}");
     final MatchPasswordBloc matchPasswordBloc =
         context.read<MatchPasswordBloc>();
-
     isLoading = true;
     matchPasswordBloc
         .add(MatchPasswordEvent(isMatch: isMatch, count: ++toggle));
+
+    log("Login API Request -> ${{
+      "emailId": loginPasswordArgument.emailId,
+      "userTypeId": loginPasswordArgument.userTypeId,
+      "userId": loginPasswordArgument.userId,
+      "companyId": loginPasswordArgument.companyId,
+      "password": password,
+      "deviceId": storageDeviceId,
+      "registerDevice": false,
+      "deviceName": deviceName,
+      "deviceType": deviceType,
+      "appVersion": appVersion,
+      "fcmToken": fcmToken,
+    }}");
+
     var result = await MapLogin.mapLogin({
       "emailId": loginPasswordArgument.emailId,
       "userTypeId": loginPasswordArgument.userTypeId,
@@ -265,6 +279,7 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       await storage.write(key: "newInstall", value: true.toString());
       storageIsNotNewInstall =
           (await storage.read(key: "newInstall")) == "true";
+
       customerName = result["customerName"];
       await storage.write(key: "customerName", value: customerName);
       storageCustomerName = await storage.read(key: "customerName");
@@ -272,76 +287,94 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
       storagePassword = await storage.read(key: "password");
       log("storagePassword -> $storagePassword");
       await persistOnboardingState(result["onboardingState"]);
-      if (result["onboardingState"] == 5) {
+      if (result["isTemporaryPassword"]) {
         if (context.mounted) {
-          if (loginPasswordArgument.userTypeId == 1) {
-            await storage.write(key: "retailLoggedIn", value: true.toString());
-            storageRetailLoggedIn =
-                await storage.read(key: "retailLoggedIn") == "true";
-            if (context.mounted) {
-              await getProfileData();
-              await storage.write(key: "loggedOut", value: false.toString());
-              storageLoggedOut = await storage.read(key: "loggedOut") == "true";
+          Navigator.pushNamed(
+            context,
+            Routes.setPassword,
+            arguments: SetPasswordArgumentModel(fromTempPassword: true).toMap(),
+          );
+        }
+      } else {
+        if (result["onboardingState"] == 5 || result["onboardingState"] == 10) {
+          if (context.mounted) {
+            if (loginPasswordArgument.userTypeId == 1) {
+              await storage.write(
+                  key: "retailLoggedIn", value: true.toString());
+              storageRetailLoggedIn =
+                  await storage.read(key: "retailLoggedIn") == "true";
               if (context.mounted) {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  Routes.retailDashboard,
-                  (route) => false,
-                  arguments: RetailDashboardArgumentModel(
-                    imgUrl: "",
-                    name: result["customerName"],
-                    isFirst: storageIsFirstLogin == true ? false : true,
-                  ).toMap(),
-                );
-              }
-            }
-          } else {
-            if (storageCif == null || storageCif == "null") {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return CustomDialog(
-                    svgAssetPath: ImageConstants.warning,
-                    title: "Application approval pending",
-                    message:
-                        "You already have a registration pending. Please contact Dhabi support.",
-                    auxWidget: GradientButton(
-                      onTap: () async {
-                        if (context.mounted) {
-                          Navigator.pop(context);
-                          Navigator.pushReplacementNamed(
-                            context,
-                            Routes.onboarding,
-                            arguments: OnboardingArgumentModel(
-                              isInitial: true,
-                            ).toMap(),
-                          );
-                        }
-                      },
-                      text: labels[347]["labelText"],
-                    ),
-                    actionWidget: SolidButton(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      text: labels[166]["labelText"],
-                      color: AppColors.primaryBright17,
-                      fontColor: AppColors.primary,
-                    ),
+                await getProfileData();
+                await storage.write(key: "loggedOut", value: false.toString());
+                storageLoggedOut =
+                    await storage.read(key: "loggedOut") == "true";
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    Routes.retailDashboard,
+                    (route) => false,
+                    arguments: RetailDashboardArgumentModel(
+                      imgUrl: "",
+                      name: result["customerName"],
+                      isFirst: storageIsFirstLogin == true ? false : true,
+                    ).toMap(),
                   );
-                },
-              );
+                }
+              }
             } else {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.businessDashboard,
-                (route) => false,
-                arguments: RetailDashboardArgumentModel(
-                  imgUrl: "",
-                  name: "",
-                  isFirst: storageIsFirstLogin == true ? false : true,
-                ).toMap(),
-              );
+              if (storageCif == null || storageCif == "null") {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialog(
+                      svgAssetPath: ImageConstants.warning,
+                      title: "Application approval pending",
+                      message:
+                          "You already have a registration pending. Please contact Dhabi support.",
+                      auxWidget: GradientButton(
+                        onTap: () async {
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            Navigator.pushReplacementNamed(
+                              context,
+                              Routes.onboarding,
+                              arguments: OnboardingArgumentModel(
+                                isInitial: true,
+                              ).toMap(),
+                            );
+                          }
+                        },
+                        text: labels[347]["labelText"],
+                      ),
+                      actionWidget: SolidButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        text: labels[166]["labelText"],
+                        color: AppColors.primaryBright17,
+                        fontColor: AppColors.primary,
+                      ),
+                    );
+                  },
+                );
+              } else {
+                await getProfileData();
+                await storage.write(key: "loggedOut", value: false.toString());
+                storageLoggedOut =
+                    await storage.read(key: "loggedOut") == "true";
+                if (context.mounted) {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    Routes.businessDashboard,
+                    (route) => false,
+                    arguments: RetailDashboardArgumentModel(
+                      imgUrl: storageProfilePhotoBase64 ?? "",
+                      name: profileName ?? "",
+                      isFirst: storageIsFirstLogin == true ? false : true,
+                    ).toMap(),
+                  );
+                }
+              }
             }
           }
         }
@@ -457,90 +490,113 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                     log("token -> $token");
                     if (result["success"]) {
                       await persistOnboardingState(result["onboardingState"]);
-                      if (result["onboardingState"] == 5) {
+                      if (result["isTemporaryPassword"]) {
                         if (context.mounted) {
-                          if (loginPasswordArgument.userTypeId == 1) {
-                            await getProfileData();
-                            await storage.write(
-                                key: "cif", value: result["cif"]);
-                            storageCif = await storage.read(key: "cif");
-                            log("storageCif -> $storageCif");
-                            await storage.write(
-                                key: "loggedOut", value: false.toString());
-                            storageLoggedOut =
-                                await storage.read(key: "loggedOut") == "true";
-                            await storage.write(
-                                key: "retailLoggedIn", value: true.toString());
-                            storageRetailLoggedIn =
-                                await storage.read(key: "retailLoggedIn") ==
-                                    "true";
-                            if (context.mounted) {
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                Routes.retailDashboard,
-                                (route) => false,
-                                arguments: RetailDashboardArgumentModel(
-                                  imgUrl: "",
-                                  name: result["customerName"],
-                                  isFirst: storageIsFirstLogin == true
-                                      ? false
-                                      : true,
-                                ).toMap(),
-                              );
-                            }
-                          } else {
-                            if (storageCif == null || storageCif == "null") {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return CustomDialog(
-                                    svgAssetPath: ImageConstants.warning,
-                                    title: "Application approval pending",
-                                    message:
-                                        "You already have a registration pending. Please contact Dhabi support.",
-                                    auxWidget: GradientButton(
-                                      onTap: () async {
-                                        if (context.mounted) {
-                                          Navigator.pop(context);
-                                          Navigator.pushReplacementNamed(
-                                            context,
-                                            Routes.onboarding,
-                                            arguments: OnboardingArgumentModel(
-                                              isInitial: true,
-                                            ).toMap(),
-                                          );
-                                        }
-                                      },
-                                      text: labels[347]["labelText"],
-                                    ),
-                                    actionWidget: SolidButton(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      text: labels[166]["labelText"],
-                                      color: AppColors.primaryBright17,
-                                      fontColor: AppColors.primary,
-                                    ),
+                          Navigator.pushNamed(
+                            context,
+                            Routes.setPassword,
+                            arguments: SetPasswordArgumentModel(
+                              fromTempPassword: true,
+                            ).toMap(),
+                          );
+                        }
+                      } else {
+                        if (result["onboardingState"] == 5 ||
+                            result["onboardingState"] == 10) {
+                          if (context.mounted) {
+                            if (loginPasswordArgument.userTypeId == 1) {
+                              await storage.write(
+                                  key: "retailLoggedIn",
+                                  value: true.toString());
+                              storageRetailLoggedIn =
+                                  await storage.read(key: "retailLoggedIn") ==
+                                      "true";
+                              if (context.mounted) {
+                                await getProfileData();
+                                await storage.write(
+                                    key: "loggedOut", value: false.toString());
+                                storageLoggedOut =
+                                    await storage.read(key: "loggedOut") ==
+                                        "true";
+                                if (context.mounted) {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    Routes.retailDashboard,
+                                    (route) => false,
+                                    arguments: RetailDashboardArgumentModel(
+                                      imgUrl: "",
+                                      name: result["customerName"],
+                                      isFirst: storageIsFirstLogin == true
+                                          ? false
+                                          : true,
+                                    ).toMap(),
                                   );
-                                },
-                              );
+                                }
+                              }
                             } else {
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                Routes.businessDashboard,
-                                (route) => false,
-                                arguments: RetailDashboardArgumentModel(
-                                  imgUrl: "",
-                                  name: "",
-                                  isFirst: storageIsFirstLogin == true
-                                      ? false
-                                      : true,
-                                ).toMap(),
-                              );
+                              if (storageCif == null || storageCif == "null") {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomDialog(
+                                      svgAssetPath: ImageConstants.warning,
+                                      title: "Application approval pending",
+                                      message:
+                                          "You already have a registration pending. Please contact Dhabi support.",
+                                      auxWidget: GradientButton(
+                                        onTap: () async {
+                                          if (context.mounted) {
+                                            Navigator.pop(context);
+                                            Navigator.pushReplacementNamed(
+                                              context,
+                                              Routes.onboarding,
+                                              arguments:
+                                                  OnboardingArgumentModel(
+                                                isInitial: true,
+                                              ).toMap(),
+                                            );
+                                          }
+                                        },
+                                        text: labels[347]["labelText"],
+                                      ),
+                                      actionWidget: SolidButton(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        text: labels[166]["labelText"],
+                                        color: AppColors.primaryBright17,
+                                        fontColor: AppColors.primary,
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                await getProfileData();
+                                await storage.write(
+                                    key: "loggedOut", value: false.toString());
+                                storageLoggedOut =
+                                    await storage.read(key: "loggedOut") ==
+                                        "true";
+                                if (context.mounted) {
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    Routes.businessDashboard,
+                                    (route) => false,
+                                    arguments: RetailDashboardArgumentModel(
+                                      imgUrl: storageProfilePhotoBase64 ?? "",
+                                      name: profileName ?? "",
+                                      isFirst: storageIsFirstLogin == true
+                                          ? false
+                                          : true,
+                                    ).toMap(),
+                                  );
+                                }
+                              }
                             }
                           }
                         }
                       }
+
                       await storage.write(
                           key: "password", value: _passwordController.text);
                       storagePassword = await storage.read(key: "password");
@@ -571,17 +627,24 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                             );
                           }
                         } else {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            Routes.businessDashboard,
-                            (route) => false,
-                            arguments: RetailDashboardArgumentModel(
-                              imgUrl: "",
-                              name: "",
-                              isFirst:
-                                  storageIsFirstLogin == true ? false : true,
-                            ).toMap(),
-                          );
+                          await getProfileData();
+                          await storage.write(
+                              key: "loggedOut", value: false.toString());
+                          storageLoggedOut =
+                              await storage.read(key: "loggedOut") == "true";
+                          if (context.mounted) {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              Routes.businessDashboard,
+                              (route) => false,
+                              arguments: RetailDashboardArgumentModel(
+                                imgUrl: storageProfilePhotoBase64 ?? "",
+                                name: profileName ?? "",
+                                isFirst:
+                                    storageIsFirstLogin == true ? false : true,
+                              ).toMap(),
+                            );
+                          }
                         }
                       }
 
@@ -904,16 +967,21 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
               },
             );
           } else {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.businessDashboard,
-              (route) => false,
-              arguments: RetailDashboardArgumentModel(
-                imgUrl: "",
-                name: "",
-                isFirst: storageIsFirstLogin == true ? false : true,
-              ).toMap(),
-            );
+            await getProfileData();
+            await storage.write(key: "loggedOut", value: false.toString());
+            storageLoggedOut = await storage.read(key: "loggedOut") == "true";
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.businessDashboard,
+                (route) => false,
+                arguments: RetailDashboardArgumentModel(
+                  imgUrl: storageProfilePhotoBase64 ?? "",
+                  name: profileName ?? "",
+                  isFirst: storageIsFirstLogin == true ? false : true,
+                ).toMap(),
+              );
+            }
           }
         }
       }

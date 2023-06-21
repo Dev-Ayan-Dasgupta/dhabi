@@ -152,7 +152,12 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                     if (!isCompany || isCompanyRegistered) {
                                       if (context.mounted) {
                                         Navigator.pushNamed(
-                                            context, Routes.setPassword);
+                                          context,
+                                          Routes.setPassword,
+                                          arguments: SetPasswordArgumentModel(
+                                            fromTempPassword: false,
+                                          ).toMap(),
+                                        );
                                       }
                                     } else {
                                       // TODO: show dialog box which Samit sir will share

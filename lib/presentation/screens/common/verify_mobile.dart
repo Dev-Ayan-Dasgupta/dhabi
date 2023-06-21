@@ -129,7 +129,7 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                   const SizeBox(height: 9),
                   CustomTextField(
                     controller: _phoneController,
-                    keyboardType: TextInputType.phone,
+                    keyboardType: TextInputType.number,
                     // isDense: true,
                     prefixIcon: BlocBuilder<DropdownSelectedBloc,
                         DropdownSelectedState>(

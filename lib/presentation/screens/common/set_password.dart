@@ -1,4 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
+
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_event.dart';
@@ -22,13 +29,14 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/createPassword/criteria.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SetPasswordScreen extends StatefulWidget {
-  const SetPasswordScreen({super.key});
+  const SetPasswordScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<SetPasswordScreen> createState() => _SetPasswordScreenState();
@@ -55,6 +63,21 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
   bool allTrue = false;
 
   bool isLoading = false;
+
+  bool isLoggingIn = false;
+
+  late SetPasswordArgumentModel setPasswordArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+  }
+
+  void argumentInitialization() async {
+    setPasswordArgument =
+        SetPasswordArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -418,16 +441,18 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
               createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
 
               log("Request -> ${{
-                "cif": cif,
+                "cif": storageCif,
                 "password": _newPasswordController.text,
               }}");
 
               var result = await MapChangePassword.mapChangePassword(
                 {
-                  "cif": cif,
+                  "cif": storageCif,
                   "password": _newPasswordController.text,
                 },
-                tokenCP ?? "",
+                setPasswordArgument.fromTempPassword
+                    ? token ?? ""
+                    : tokenCP ?? "",
               );
               log("Change Password API response -> $result");
               if (result["success"]) {
@@ -443,20 +468,104 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                       message:
                           "Your password updated successfully.\nPlease log in again with your new password.",
                       buttonText: labels[205]["labelText"],
-                      onTap: () {
-                        // TODO: change this to loginUserId after testing
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          Routes.loginPassword,
-                          (route) => false,
-                          arguments: LoginPasswordArgumentModel(
-                            emailId: storageEmail ?? "",
-                            userId: storageUserId ?? 0,
-                            userTypeId: storageUserTypeId ?? 1,
-                            companyId: storageCompanyId ?? 0,
-                          ).toMap(),
-                        );
+                      onTap: () async {
+                        if (setPasswordArgument.fromTempPassword) {
+                          final ShowButtonBloc showButtonBloc =
+                              context.read<ShowButtonBloc>();
+                          isLoggingIn = true;
+                          showButtonBloc
+                              .add(ShowButtonEvent(show: isLoggingIn));
+                          log("BG Login Request -> ${{
+                            "emailId": storageEmail,
+                            "userTypeId": storageUserTypeId,
+                            "userId": 0,
+                            "companyId": storageCompanyId,
+                            "password": _confirmNewPasswordController.text,
+                            "deviceId": storageDeviceId,
+                            "registerDevice": true,
+                            "deviceName": deviceName,
+                            "deviceType": deviceType,
+                            "appVersion": appVersion,
+                            "fcmToken": fcmToken,
+                          }}");
+                          var loginApiResult = await MapLogin.mapLogin(
+                            {
+                              "emailId": storageEmail,
+                              "userTypeId": storageUserTypeId,
+                              "userId": 0,
+                              "companyId": storageCompanyId,
+                              "password": _confirmNewPasswordController.text,
+                              "deviceId": storageDeviceId,
+                              "registerDevice": true,
+                              "deviceName": deviceName,
+                              "deviceType": deviceType,
+                              "appVersion": appVersion,
+                              "fcmToken": fcmToken,
+                            },
+                          );
+                          log("BG login API result -> $loginApiResult");
+                          if (loginApiResult["success"]) {
+                            token = loginApiResult["token"];
+                            log("token -> $token");
+                            await getProfileData();
+                            await storage.write(
+                                key: "loggedOut", value: false.toString());
+                            storageLoggedOut =
+                                await storage.read(key: "loggedOut") == "true";
+                            if (context.mounted) {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                Routes.businessDashboard,
+                                (route) => false,
+                                arguments: RetailDashboardArgumentModel(
+                                  imgUrl: storageProfilePhotoBase64 ?? "",
+                                  name: profileName ?? "",
+                                  isFirst: storageIsFirstLogin == true
+                                      ? false
+                                      : true,
+                                ).toMap(),
+                              );
+                            }
+                          } else {
+                            if (context.mounted) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomDialog(
+                                    svgAssetPath: ImageConstants.warning,
+                                    title: "Error",
+                                    message: "API Error",
+                                    actionWidget: GradientButton(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      text: labels[293]["labelText"],
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          }
+                          isLoggingIn = false;
+                          showButtonBloc
+                              .add(ShowButtonEvent(show: isLoggingIn));
+                        } else {
+                          // TODO: change this to loginUserId after testing
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.loginPassword,
+                            (route) => false,
+                            arguments: LoginPasswordArgumentModel(
+                              emailId: storageEmail ?? "",
+                              userId: storageUserId ?? 0,
+                              userTypeId: storageUserTypeId ?? 1,
+                              companyId: storageCompanyId ?? 0,
+                            ).toMap(),
+                          );
+                        }
                       },
+                      auxWidget:
+                          isLoggingIn ? const LoaderRow() : const SizeBox(),
                       buttonTextSecondary: "",
                       onTapSecondary: () {},
                     ).toMap(),
@@ -577,5 +686,63 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
     final CreatePasswordBloc createPasswordBloc =
         context.read<CreatePasswordBloc>();
     createPasswordBloc.add(CreatePasswordEvent(allTrue: allTrue));
+  }
+
+  Future<void> getProfileData() async {
+    try {
+      var getProfileDataResult =
+          await MapProfileData.mapProfileData(token ?? "");
+      log("getProfileDataResult -> $getProfileDataResult");
+      if (getProfileDataResult["success"]) {
+        profileName = getProfileDataResult["name"];
+        await storage.write(key: "customerName", value: profileName);
+        storageCustomerName = await storage.read(key: "customerName");
+
+        profilePhotoBase64 = getProfileDataResult["profileImageBase64"];
+        await storage.write(
+            key: "profilePhotoBase64", value: profilePhotoBase64);
+        storageProfilePhotoBase64 =
+            await storage.read(key: "profilePhotoBase64");
+        profileDoB = getProfileDataResult["dateOfBirth"];
+        profileEmailId = getProfileDataResult["emailID"];
+        profileMobileNumber = getProfileDataResult["mobileNumber"];
+        profileAddressLine1 = getProfileDataResult["addressLine_1"];
+        profileAddressLine2 = getProfileDataResult["addressLine_2"];
+        profileCity = getProfileDataResult["city"] ?? "";
+        profileState = getProfileDataResult["state"] ?? "";
+        profilePinCode = getProfileDataResult["pinCode"];
+
+        await storage.write(key: "emailAddress", value: profileEmailId);
+        storageEmail = await storage.read(key: "emailAddress");
+        await storage.write(key: "mobileNumber", value: profileMobileNumber);
+        storageMobileNumber = await storage.read(key: "mobileNumber");
+
+        await storage.write(key: "addressLine1", value: profileAddressLine1);
+        storageAddressLine1 = await storage.read(key: "addressLine1");
+        await storage.write(key: "addressLine2", value: profileAddressLine2);
+        storageAddressLine2 = await storage.read(key: "addressLine2");
+
+        await storage.write(key: "addressCity", value: profileCity);
+        storageAddressCity = await storage.read(key: "addressCity");
+        await storage.write(key: "addressState", value: profileState);
+        storageAddressState = await storage.read(key: "addressState");
+
+        await storage.write(key: "poBox", value: profilePinCode);
+        storageAddressPoBox = await storage.read(key: "poBox");
+
+        profileAddress =
+            "$profileAddressLine1, $profileAddressLine2, $profileCity, $profileState, $profilePinCode";
+        // "${getProfileDataResult["addressLine_1"]} ${getProfileDataResult["addressLine_2"]} ${getProfileDataResult["city"] ?? ""} ${getProfileDataResult["state"] ?? ""} ${getProfileDataResult["pinCode"]}";
+
+        log("profileName -> $profileName");
+        log("profilePhotoBase64 -> $profilePhotoBase64");
+        log("profileDoB -> $profileDoB");
+        log("profileEmailId -> $profileEmailId");
+        log("profileMobileNumber -> $profileMobileNumber");
+        log("profileAddress -> $profileAddress");
+      }
+    } catch (_) {
+      rethrow;
+    }
   }
 }

@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,6 +61,8 @@ List<String> emirates = [];
 
 List banks = [];
 
+List availableBiometrics = [];
+
 class _SplashScreenState extends State<SplashScreen> {
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
@@ -73,6 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await initPlatformState();
       await initConfigurations();
       await initLocalStorageData();
+      await getAvailableBiometrics();
       addNewDevice();
       await initFirebaseNotifications();
       if (context.mounted) {
@@ -422,6 +426,10 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  Future<void> getAvailableBiometrics() async {
+    availableBiometrics = await LocalAuthentication().getAvailableBiometrics();
+  }
+
   void addNewDevice() {
     if (storageIsNotNewInstall == false) {
       MapAddNewDevice.mapAddNewDevice({
@@ -508,7 +516,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Navigator.pushReplacementNamed(context, Routes.onboarding,
                   arguments: OnboardingArgumentModel(isInitial: true).toMap());
             } else {
-              if (persistBiometric == true) {
+              if (persistBiometric == true && availableBiometrics.isNotEmpty) {
                 Navigator.pushReplacementNamed(
                   context,
                   Routes.loginBiometric,
@@ -533,7 +541,7 @@ class _SplashScreenState extends State<SplashScreen> {
               }
             }
           } else {
-            if (persistBiometric == true) {
+            if (persistBiometric == true && availableBiometrics.isNotEmpty) {
               Navigator.pushReplacementNamed(
                 context,
                 Routes.loginBiometric,

@@ -917,8 +917,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                                   Routes.businessDashboard,
                                   (route) => false,
                                   arguments: RetailDashboardArgumentModel(
-                                    imgUrl: "",
-                                    name: "",
+                                    imgUrl: storageProfilePhotoBase64 ?? "",
+                                    name: profileName ?? "",
                                     isFirst: storageIsFirstLogin == true
                                         ? false
                                         : true,

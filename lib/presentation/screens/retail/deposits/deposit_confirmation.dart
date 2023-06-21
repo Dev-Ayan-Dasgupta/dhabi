@@ -3,6 +3,7 @@
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:dialup_mobile_app/data/repositories/corporateAccounts/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -202,34 +203,8 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
           isLoading = true;
           showButtonBloc.add(ShowButtonEvent(show: isLoading));
 
-          log("Request -> ${{
-            "currency": depositConfirmationModel.currency,
-            "amount": depositConfirmationModel.depositAmount,
-            "maturityDate": DateFormat('yyyy-MM-dd')
-                .format(depositConfirmationModel.dateOfMaturity),
-            "interestRate": depositConfirmationModel.interestRate,
-            "interestPayout": depositConfirmationModel.interestPayout,
-            "accountNumber": depositConfirmationModel.accountNumber,
-            "autoRollover": depositConfirmationModel.isAutoRenewal,
-            "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
-            "beneficiary": {
-              "accountNumber":
-                  depositConfirmationModel.depositBeneficiary.accountNumber,
-              "name": depositConfirmationModel.depositBeneficiary.name,
-              "address": depositConfirmationModel.depositBeneficiary.address,
-              "accountType":
-                  depositConfirmationModel.depositBeneficiary.accountType,
-              "swiftReference":
-                  depositConfirmationModel.depositBeneficiary.swiftReference,
-            },
-            "saveBeneficiary":
-                depositConfirmationModel.depositBeneficiary.saveBeneficiary,
-            "reasonForSending":
-                depositConfirmationModel.depositBeneficiary.reasonForSending,
-          }}");
-
-          var createFDResult = await MapCreateFd.mapCreateFd(
-            {
+          if (depositConfirmationModel.isRetail) {
+            log("Request -> ${{
               "currency": depositConfirmationModel.currency,
               "amount": depositConfirmationModel.depositAmount,
               "maturityDate": DateFormat('yyyy-MM-dd')
@@ -253,60 +228,199 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                   depositConfirmationModel.depositBeneficiary.saveBeneficiary,
               "reasonForSending":
                   depositConfirmationModel.depositBeneficiary.reasonForSending,
-            },
-            token ?? "",
-          );
+            }}");
 
-          log("Create FD API response -> $createFDResult");
+            var createFDResult = await MapCreateFd.mapCreateFd(
+              {
+                "currency": depositConfirmationModel.currency,
+                "amount": depositConfirmationModel.depositAmount,
+                "maturityDate": DateFormat('yyyy-MM-dd')
+                    .format(depositConfirmationModel.dateOfMaturity),
+                "interestRate": depositConfirmationModel.interestRate,
+                "interestPayout": depositConfirmationModel.interestPayout,
+                "accountNumber": depositConfirmationModel.accountNumber,
+                "autoRollover": depositConfirmationModel.isAutoRenewal,
+                "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
+                "beneficiary": {
+                  "accountNumber":
+                      depositConfirmationModel.depositBeneficiary.accountNumber,
+                  "name": depositConfirmationModel.depositBeneficiary.name,
+                  "address":
+                      depositConfirmationModel.depositBeneficiary.address,
+                  "accountType":
+                      depositConfirmationModel.depositBeneficiary.accountType,
+                  "swiftReference": depositConfirmationModel
+                      .depositBeneficiary.swiftReference,
+                },
+                "saveBeneficiary":
+                    depositConfirmationModel.depositBeneficiary.saveBeneficiary,
+                "reasonForSending": depositConfirmationModel
+                    .depositBeneficiary.reasonForSending,
+              },
+              token ?? "",
+            );
 
-          if (createFDResult["success"]) {
-            if (context.mounted) {
-              Navigator.pushNamed(
-                context,
-                Routes.errorSuccessScreen,
-                arguments: ErrorArgumentModel(
-                  hasSecondaryButton: false,
-                  iconPath: ImageConstants.checkCircleOutlined,
-                  title: "Congratulations!",
-                  message:
-                      "Your deposit account has been created.\nAcc. ${createFDResult["accountNumber"]}",
-                  buttonText: labels[1]["labelText"],
-                  onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      Routes.retailDashboard,
-                      (route) => false,
-                      arguments: RetailDashboardArgumentModel(
-                        imgUrl: "",
-                        name: customerName ?? "",
-                        isFirst: storageIsFirstLogin == true ? false : true,
-                      ).toMap(),
+            log("Create FD API response -> $createFDResult");
+
+            if (createFDResult["success"]) {
+              if (context.mounted) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.errorSuccessScreen,
+                  arguments: ErrorArgumentModel(
+                    hasSecondaryButton: false,
+                    iconPath: ImageConstants.checkCircleOutlined,
+                    title: "Congratulations!",
+                    message:
+                        "Your deposit account has been created.\nAcc. ${createFDResult["accountNumber"]}",
+                    buttonText: labels[1]["labelText"],
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.retailDashboard,
+                        (route) => false,
+                        arguments: RetailDashboardArgumentModel(
+                          imgUrl: "",
+                          name: customerName ?? "",
+                          isFirst: storageIsFirstLogin == true ? false : true,
+                        ).toMap(),
+                      );
+                    },
+                    buttonTextSecondary: "",
+                    onTapSecondary: () {},
+                  ).toMap(),
+                );
+              }
+            } else {
+              if (context.mounted) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialog(
+                      svgAssetPath: ImageConstants.warning,
+                      title: "Error",
+                      message:
+                          "There was an error in creating a fixed deposit, please try again after some time.",
+                      actionWidget: GradientButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        text: labels[346]["labelText"],
+                      ),
                     );
                   },
-                  buttonTextSecondary: "",
-                  onTapSecondary: () {},
-                ).toMap(),
-              );
+                );
+              }
             }
           } else {
-            if (context.mounted) {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return CustomDialog(
-                    svgAssetPath: ImageConstants.warning,
-                    title: "Error",
-                    message:
-                        "There was an error in creating a fixed deposit, please try again after some time.",
-                    actionWidget: GradientButton(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      text: labels[346]["labelText"],
-                    ),
-                  );
+            log("Corporate FD API Request -> ${{
+              "currency": depositConfirmationModel.currency,
+              "amount": depositConfirmationModel.depositAmount,
+              "maturityDate": DateFormat('yyyy-MM-dd')
+                  .format(depositConfirmationModel.dateOfMaturity),
+              "interestRate": depositConfirmationModel.interestRate,
+              "interestPayout": depositConfirmationModel.interestPayout,
+              "accountNumber": depositConfirmationModel.accountNumber,
+              "autoRollover": depositConfirmationModel.isAutoRenewal,
+              "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
+              "beneficiary": {
+                "accountNumber":
+                    depositConfirmationModel.depositBeneficiary.accountNumber,
+                "name": depositConfirmationModel.depositBeneficiary.name,
+                "address": depositConfirmationModel.depositBeneficiary.address,
+                "accountType":
+                    depositConfirmationModel.depositBeneficiary.accountType,
+                "swiftReference":
+                    depositConfirmationModel.depositBeneficiary.swiftReference,
+              },
+              "saveBeneficiary":
+                  depositConfirmationModel.depositBeneficiary.saveBeneficiary,
+              "reasonForSending":
+                  depositConfirmationModel.depositBeneficiary.reasonForSending,
+            }}");
+
+            var createCorporateFDResult =
+                await MapCreateCorporateFd.mapCreateCorporateFd(
+              {
+                "currency": depositConfirmationModel.currency,
+                "amount": depositConfirmationModel.depositAmount,
+                "maturityDate": DateFormat('yyyy-MM-dd')
+                    .format(depositConfirmationModel.dateOfMaturity),
+                "interestRate": depositConfirmationModel.interestRate,
+                "interestPayout": depositConfirmationModel.interestPayout,
+                "accountNumber": depositConfirmationModel.accountNumber,
+                "autoRollover": depositConfirmationModel.isAutoRenewal,
+                "autoFundTransfer": depositConfirmationModel.isAutoTransfer,
+                "beneficiary": {
+                  "accountNumber":
+                      depositConfirmationModel.depositBeneficiary.accountNumber,
+                  "name": depositConfirmationModel.depositBeneficiary.name,
+                  "address":
+                      depositConfirmationModel.depositBeneficiary.address,
+                  "accountType":
+                      depositConfirmationModel.depositBeneficiary.accountType,
+                  "swiftReference": depositConfirmationModel
+                      .depositBeneficiary.swiftReference,
                 },
-              );
+                "saveBeneficiary":
+                    depositConfirmationModel.depositBeneficiary.saveBeneficiary,
+                "reasonForSending": depositConfirmationModel
+                    .depositBeneficiary.reasonForSending,
+              },
+              token ?? "",
+            );
+
+            log("Create Corporate FD API response -> $createCorporateFDResult");
+
+            if (createCorporateFDResult["success"]) {
+              if (context.mounted) {
+                Navigator.pushNamed(
+                  context,
+                  Routes.errorSuccessScreen,
+                  arguments: ErrorArgumentModel(
+                    hasSecondaryButton: false,
+                    iconPath: ImageConstants.checkCircleOutlined,
+                    title: "Congratulations!",
+                    message:
+                        "Your deposit account has been created.\nAcc. ${createCorporateFDResult["accountNumber"]}",
+                    buttonText: labels[1]["labelText"],
+                    onTap: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.businessDashboard,
+                        (route) => false,
+                        arguments: RetailDashboardArgumentModel(
+                          imgUrl: storageProfilePhotoBase64 ?? "",
+                          name: profileName ?? "",
+                          isFirst: storageIsFirstLogin == true ? false : true,
+                        ).toMap(),
+                      );
+                    },
+                    buttonTextSecondary: "",
+                    onTapSecondary: () {},
+                  ).toMap(),
+                );
+              }
+            } else {
+              if (context.mounted) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialog(
+                      svgAssetPath: ImageConstants.warning,
+                      title: "Error",
+                      message:
+                          "There was an error in creating a fixed deposit, please try again after some time.",
+                      actionWidget: GradientButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        text: labels[346]["labelText"],
+                      ),
+                    );
+                  },
+                );
+              }
             }
           }
 
