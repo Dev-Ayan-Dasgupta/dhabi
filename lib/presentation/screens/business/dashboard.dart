@@ -61,6 +61,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
   int currentAccountCount = 0;
   List depositDetails = [];
 
+  List loans = [];
+
   List<DetailsTileModel> rates = [];
 
   bool isShowFilter = false;
@@ -235,6 +237,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
     showButtonBloc.add(ShowButtonEvent(show: isFetchingAccountDetails));
     await getCorporateCustomerPermissions();
     // await getCorporateCustomerAcountDetails();
+    await getCustomerAcountDetails();
+    await getLoans();
     isFetchingAccountDetails = false;
     showButtonBloc.add(ShowButtonEvent(show: isFetchingAccountDetails));
     await getFdRates();
@@ -336,6 +340,73 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
       }
     } catch (e) {
       log("API error -> $e");
+      rethrow;
+    }
+  }
+
+  Future<void> getCustomerAcountDetails() async {
+    try {
+      log("token -> $token");
+      customerDetails =
+          await MapCustomerAccountDetails.mapCustomerAccountDetails(
+              token ?? "");
+      log("Customer Account Details API response -> $customerDetails");
+      if (customerDetails["success"]) {
+        // accountDetails =
+        //     customerDetails["crCustomerProfileRes"]["body"]["accountDetails"];
+        // accountNumbers.clear();
+        // for (var account in accountDetails) {
+        //   accountNumbers.add(account["accountNumber"]);
+        //   if (account["productCode"] == "1001") {
+        //     currentAccountCount++;
+        //   } else {
+        //     savingsAccountCount++;
+        //   }
+        // }
+        // log("Current Accounts -> $currentAccountCount");
+        // log("Savings Accounts -> $savingsAccountCount");
+        depositDetails =
+            customerDetails["crCustomerProfileRes"]["body"]["depositDetails"];
+        depositAccountNumbers.clear();
+        for (var deposit in depositDetails) {
+          depositAccountNumbers.add(deposit["depositAccountNumber"]);
+        }
+        log("depositAccountNumbers -> $depositAccountNumbers");
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error {200}",
+                message: customerDetails["message"] ??
+                    "Error while getting customer details, please try again later",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: labels[346]["labelText"],
+                ),
+              );
+            },
+          );
+        }
+      }
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<void> getLoans() async {
+    try {
+      var getLoansApiResult = await MapGetLoans.mapGetLoans(token ?? "");
+      log("Get Loans response -> $getLoansApiResult");
+
+      if (getLoansApiResult["success"]) {
+        loans.clear();
+      } else {}
+    } catch (_) {
       rethrow;
     }
   }
