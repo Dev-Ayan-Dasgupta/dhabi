@@ -25,18 +25,18 @@ class AppColors {
   static const primaryBright50 = Color.fromRGBO(34, 97, 105, 0.5);
 
   static const primarySwatch = MaterialColor(
-    0XFF226169,
+    0xFF115E67,
     <int, Color>{
-      50: Color(0xFF226169),
-      100: Color(0xFF226169),
-      200: Color(0xFF226169),
-      300: Color(0xFF226169),
-      400: Color(0xFF226169),
-      500: Color(0xFF226169),
-      600: Color(0xFF226169),
-      700: Color(0xFF226169),
-      800: Color(0xFF226169),
-      900: Color(0xFF226169),
+      50: Color(0xFF115E67),
+      100: Color(0xFF115E67),
+      200: Color(0xFF115E67),
+      300: Color(0xFF115E67),
+      400: Color(0xFF115E67),
+      500: Color(0xFF115E67),
+      600: Color(0xFF115E67),
+      700: Color(0xFF115E67),
+      800: Color(0xFF115E67),
+      900: Color(0xFF115E67),
     },
   );
 }
