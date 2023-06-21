@@ -254,26 +254,48 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           await MapCustomerAccountDetails.mapCustomerAccountDetails(
               token ?? "");
       log("Customer Account Details API response -> $customerDetails");
-      accountDetails =
-          customerDetails["crCustomerProfileRes"]["body"]["accountDetails"];
-      accountNumbers.clear();
-      for (var account in accountDetails) {
-        accountNumbers.add(account["accountNumber"]);
-        if (account["productCode"] == "1001") {
-          currentAccountCount++;
-        } else {
-          savingsAccountCount++;
+      if (customerDetails["success"]) {
+        accountDetails =
+            customerDetails["crCustomerProfileRes"]["body"]["accountDetails"];
+        accountNumbers.clear();
+        for (var account in accountDetails) {
+          accountNumbers.add(account["accountNumber"]);
+          if (account["productCode"] == "1001") {
+            currentAccountCount++;
+          } else {
+            savingsAccountCount++;
+          }
+        }
+        log("Current Accounts -> $currentAccountCount");
+        log("Savings Accounts -> $savingsAccountCount");
+        depositDetails =
+            customerDetails["crCustomerProfileRes"]["body"]["depositDetails"];
+        depositAccountNumbers.clear();
+        for (var deposit in depositDetails) {
+          depositAccountNumbers.add(deposit["depositAccountNumber"]);
+        }
+        log("depositAccountNumbers -> $depositAccountNumbers");
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error {200}",
+                message: customerDetails["message"] ??
+                    "Error while getting customer details, please try again later",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: labels[346]["labelText"],
+                ),
+              );
+            },
+          );
         }
       }
-      log("Current Accounts -> $currentAccountCount");
-      log("Savings Accounts -> $savingsAccountCount");
-      depositDetails =
-          customerDetails["crCustomerProfileRes"]["body"]["depositDetails"];
-      depositAccountNumbers.clear();
-      for (var deposit in depositDetails) {
-        depositAccountNumbers.add(deposit["depositAccountNumber"]);
-      }
-      log("depositAccountNumbers -> $depositAccountNumbers");
     } catch (_) {
       rethrow;
     }
