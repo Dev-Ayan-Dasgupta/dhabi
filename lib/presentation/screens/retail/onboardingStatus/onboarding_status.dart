@@ -47,7 +47,7 @@ class _RetailOnboardingStatusScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: SvgPicture.asset(ImageConstants.dhabiText),
+        title: SvgPicture.asset(ImageConstants.appBarLogo),
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,

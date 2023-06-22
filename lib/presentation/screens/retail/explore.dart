@@ -22,7 +22,7 @@ class _RetailExploreScreenState extends State<RetailExploreScreen> {
           imgUrl: "",
           name: customerName ?? "",
         ),
-        title: SvgPicture.asset(ImageConstants.dhabiText),
+        title: SvgPicture.asset(ImageConstants.appBarLogo),
         actions: const [AppBarAction()],
         backgroundColor: Colors.transparent,
         centerTitle: true,

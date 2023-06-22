@@ -495,7 +495,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
           imgUrl: retailDashboardArgumentModel.imgUrl,
           name: retailDashboardArgumentModel.name,
         ),
-        title: SvgPicture.asset(ImageConstants.dhabiBusinessText),
+        title: SvgPicture.asset(ImageConstants.appBarLogo),
         actions: const [AppBarAction()],
         backgroundColor: Colors.transparent,
         centerTitle: true,

@@ -19,7 +19,7 @@ class _BusinessExploreScreenState extends State<BusinessExploreScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarMenu(),
-        title: SvgPicture.asset(ImageConstants.dhabiBusinessText),
+        title: SvgPicture.asset(ImageConstants.appBarLogo),
         actions: const [AppBarAction()],
         backgroundColor: Colors.transparent,
         centerTitle: true,

@@ -1005,11 +1005,17 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
           if (scannedDetailsArgument.isReKyc) {
             Navigator.pushReplacementNamed(
               context,
-              Routes.verifyMobile,
-              arguments: VerifyMobileArgumentModel(
-                isBusiness: false,
-                isUpdate: false,
-                isReKyc: true,
+              // Routes.verifyMobile,
+              // arguments: VerifyMobileArgumentModel(
+              //   isBusiness: false,
+              //   isUpdate: false,
+              //   isReKyc: true,
+              // ).toMap(),
+              Routes.retailDashboard,
+              arguments: RetailDashboardArgumentModel(
+                imgUrl: "",
+                name: profileName ?? "",
+                isFirst: storageIsFirstLogin == true ? false : false,
               ).toMap(),
             );
           } else {

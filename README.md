@@ -2,8 +2,9 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (39)
+## Release notes - 1.0.0 (41)
 
-- Worked on UAT issues: 13, dev issues: 248
-- set up premature withdrawal ui fields based on api response
-- changed logo and color codes
+- Worked on dev issues 223, 251
+- Updated logo in appbar of dashboardsRe-Kyc to exclude mobile verification
+- Changed flow of Re-Kyc to exclude mobile verification
+- Reducing profile picture quality to 5%

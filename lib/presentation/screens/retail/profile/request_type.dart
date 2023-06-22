@@ -194,93 +194,93 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
     );
   }
 
-  Widget buildDropdownLoanNumber(
-      BuildContext context, DropdownSelectedState state) {
-    final DropdownSelectedBloc dropdownSelectedBloc =
-        context.read<DropdownSelectedBloc>();
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    return CustomDropDown(
-      title: "Select from the list",
-      items: loanAccountNumbers,
-      value: selectedLoanNumber,
-      onChanged: (value) {
-        toggles++;
-        isLoanNumberSelected = true;
-        selectedLoanNumber = value as String;
-        dropdownSelectedBloc.add(
-          DropdownSelectedEvent(
-            isDropdownSelected: isLoanNumberSelected,
-            toggles: toggles,
-          ),
-        );
-        showButtonBloc.add(
-          ShowButtonEvent(
-              show: isRequestTypeSelected &&
-                  isRemarkValid &&
-                  isLoanNumberSelected),
-        );
-      },
-    );
-  }
+  // Widget buildDropdownLoanNumber(
+  //     BuildContext context, DropdownSelectedState state) {
+  //   final DropdownSelectedBloc dropdownSelectedBloc =
+  //       context.read<DropdownSelectedBloc>();
+  //   final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+  //   return CustomDropDown(
+  //     title: "Select from the list",
+  //     items: loanAccountNumbers,
+  //     value: selectedLoanNumber,
+  //     onChanged: (value) {
+  //       toggles++;
+  //       isLoanNumberSelected = true;
+  //       selectedLoanNumber = value as String;
+  //       dropdownSelectedBloc.add(
+  //         DropdownSelectedEvent(
+  //           isDropdownSelected: isLoanNumberSelected,
+  //           toggles: toggles,
+  //         ),
+  //       );
+  //       showButtonBloc.add(
+  //         ShowButtonEvent(
+  //             show: isRequestTypeSelected &&
+  //                 isRemarkValid &&
+  //                 isLoanNumberSelected),
+  //       );
+  //     },
+  //   );
+  // }
 
-  Widget buildDropdownDepositsNumber(
-      BuildContext context, DropdownSelectedState state) {
-    final DropdownSelectedBloc dropdownSelectedBloc =
-        context.read<DropdownSelectedBloc>();
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    return CustomDropDown(
-      title: "Select from the list",
-      items: depositAccountNumbers,
-      value: selectedDepositNumber,
-      onChanged: (value) {
-        toggles++;
-        isDepositNumberSelected = true;
-        selectedDepositNumber = value as String;
-        dropdownSelectedBloc.add(
-          DropdownSelectedEvent(
-            isDropdownSelected: isDepositNumberSelected,
-            toggles: toggles,
-          ),
-        );
-        showButtonBloc.add(
-          ShowButtonEvent(
-              show: isRequestTypeSelected &&
-                  isRemarkValid &&
-                  isDepositNumberSelected),
-        );
-      },
-    );
-  }
+  // Widget buildDropdownDepositsNumber(
+  //     BuildContext context, DropdownSelectedState state) {
+  //   final DropdownSelectedBloc dropdownSelectedBloc =
+  //       context.read<DropdownSelectedBloc>();
+  //   final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+  //   return CustomDropDown(
+  //     title: "Select from the list",
+  //     items: depositAccountNumbers,
+  //     value: selectedDepositNumber,
+  //     onChanged: (value) {
+  //       toggles++;
+  //       isDepositNumberSelected = true;
+  //       selectedDepositNumber = value as String;
+  //       dropdownSelectedBloc.add(
+  //         DropdownSelectedEvent(
+  //           isDropdownSelected: isDepositNumberSelected,
+  //           toggles: toggles,
+  //         ),
+  //       );
+  //       showButtonBloc.add(
+  //         ShowButtonEvent(
+  //             show: isRequestTypeSelected &&
+  //                 isRemarkValid &&
+  //                 isDepositNumberSelected),
+  //       );
+  //     },
+  //   );
+  // }
 
-  Widget buildDropdownAccountNumber(
-      BuildContext context, DropdownSelectedState state) {
-    final DropdownSelectedBloc dropdownSelectedBloc =
-        context.read<DropdownSelectedBloc>();
-    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    return CustomDropDown(
-      title: "Select from the list",
-      items: accountNumbers,
-      value: selectedAccountNumber,
-      onChanged: (value) {
-        toggles++;
-        isAccountNumberSelected = true;
-        selectedAccountNumber = value as String;
-        log("isAccountNumberSelected -> $isAccountNumberSelected");
-        dropdownSelectedBloc.add(
-          DropdownSelectedEvent(
-            isDropdownSelected: isAccountNumberSelected,
-            toggles: toggles,
-          ),
-        );
-        showButtonBloc.add(
-          ShowButtonEvent(
-              show: isRequestTypeSelected &&
-                  isRemarkValid &&
-                  isAccountNumberSelected),
-        );
-      },
-    );
-  }
+  // Widget buildDropdownAccountNumber(
+  //     BuildContext context, DropdownSelectedState state) {
+  //   final DropdownSelectedBloc dropdownSelectedBloc =
+  //       context.read<DropdownSelectedBloc>();
+  //   final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+  //   return CustomDropDown(
+  //     title: "Select from the list",
+  //     items: accountNumbers,
+  //     value: selectedAccountNumber,
+  //     onChanged: (value) {
+  //       toggles++;
+  //       isAccountNumberSelected = true;
+  //       selectedAccountNumber = value as String;
+  //       log("isAccountNumberSelected -> $isAccountNumberSelected");
+  //       dropdownSelectedBloc.add(
+  //         DropdownSelectedEvent(
+  //           isDropdownSelected: isAccountNumberSelected,
+  //           toggles: toggles,
+  //         ),
+  //       );
+  //       showButtonBloc.add(
+  //         ShowButtonEvent(
+  //             show: isRequestTypeSelected &&
+  //                 isRemarkValid &&
+  //                 isAccountNumberSelected),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget buildRemarks(BuildContext context, ShowButtonState state) {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
@@ -370,10 +370,22 @@ class _RequestTypeScreenState extends State<RequestTypeScreen> {
                         title: messages[91]["messageText"],
                         message:
                             "${messages[48]["messageText"]} ${sRApiResult["serviceId"]}",
-                        buttonText: labels[347]["labelText"],
+                        buttonText: "Go Home",
+                        // labels[347]["labelText"],
                         onTap: () {
-                          Navigator.pop(context);
-                          Navigator.pop(context);
+                          // Navigator.pop(context);
+                          // Navigator.pop(context);
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            Routes.retailDashboard,
+                            (route) => false,
+                            arguments: RetailDashboardArgumentModel(
+                              imgUrl: "",
+                              name: profileName ?? "",
+                              isFirst:
+                                  storageIsFirstLogin == true ? false : false,
+                            ).toMap(),
+                          );
                         },
                         buttonTextSecondary: "",
                         onTapSecondary: () {},

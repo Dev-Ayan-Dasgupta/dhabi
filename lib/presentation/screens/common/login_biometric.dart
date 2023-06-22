@@ -55,7 +55,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: SvgPicture.asset(ImageConstants.dhabiText),
+        title: SvgPicture.asset(ImageConstants.appBarLogo),
         backgroundColor: Colors.transparent,
         centerTitle: true,
         elevation: 0,

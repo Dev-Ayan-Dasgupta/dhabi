@@ -38,7 +38,7 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
         ),
         title: InkWell(
           onTap: promptUser,
-          child: SvgPicture.asset(ImageConstants.dhabiText),
+          child: SvgPicture.asset(ImageConstants.appBarLogo),
         ),
         actions: [
           Padding(

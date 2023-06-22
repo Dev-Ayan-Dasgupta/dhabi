@@ -211,9 +211,8 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
   }
 
   Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
-    if (_isPhoneValid || _phoneController.text.length <= 9) {
-      return const SizeBox();
-    } else {
+    final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)([0-9]*)))$');
+    if (!(numericRegex.hasMatch(_phoneController.text))) {
       return Row(
         children: [
           SvgPicture.asset(ImageConstants.errorSolid),
@@ -227,6 +226,24 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
           ),
         ],
       );
+    } else {
+      if (_isPhoneValid || _phoneController.text.length <= 9) {
+        return const SizeBox();
+      } else {
+        return Row(
+          children: [
+            SvgPicture.asset(ImageConstants.errorSolid),
+            const SizeBox(width: 5),
+            Text(
+              "Invalid mobile number",
+              style: TextStyles.primaryMedium.copyWith(
+                color: AppColors.red100,
+                fontSize: (16 / Dimensions.designWidth).w,
+              ),
+            ),
+          ],
+        );
+      }
     }
   }
 

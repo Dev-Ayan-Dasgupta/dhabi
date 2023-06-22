@@ -371,7 +371,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           imgUrl: retailDashboardArgumentModel.imgUrl,
           name: retailDashboardArgumentModel.name,
         ),
-        title: SvgPicture.asset(ImageConstants.dhabiText),
+        title: SvgPicture.asset(
+          ImageConstants.appBarLogo,
+          // height: (40 / Dimensions.designHeight).h,
+        ),
         actions: const [AppBarAction()],
         backgroundColor: Colors.transparent,
         centerTitle: true,

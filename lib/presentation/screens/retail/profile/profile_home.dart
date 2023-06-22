@@ -14,6 +14,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -529,16 +530,27 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
     XFile? pickedImageFile = await ImagePicker().pickImage(
       source: source,
       preferredCameraDevice: CameraDevice.front,
+      imageQuality: 40,
     );
 
     if (pickedImageFile != null) {
+      log("Picked photo size -> ${((await pickedImageFile.readAsBytes()).lengthInBytes) / 1024} KB");
       CroppedFile? croppedImageFile = await ImageCropper().cropImage(
-        sourcePath: pickedImageFile.path,
-        aspectRatioPresets: [CropAspectRatioPreset.square],
-      );
+          sourcePath: pickedImageFile.path,
+          aspectRatioPresets: [CropAspectRatioPreset.square],
+          compressQuality: 40);
 
       if (croppedImageFile != null) {
+        log("Cropped photo size -> ${((await croppedImageFile.readAsBytes()).lengthInBytes) / 1024} KB");
         String photoBase64 = base64Encode(await croppedImageFile.readAsBytes());
+
+        var compressedphotoBase64 = await FlutterImageCompress.compressWithList(
+          base64Decode(photoBase64),
+          quality: 25,
+        );
+        photoBase64 = base64Encode(compressedphotoBase64);
+
+        log("Compressed Cropped photo size -> ${((base64Decode(photoBase64).lengthInBytes) / 1024)} KB");
 
         var uploadPPResult = await MapUploadProfilePhoto.mapUploadProfilePhoto(
           {

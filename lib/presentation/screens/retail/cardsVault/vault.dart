@@ -225,7 +225,7 @@ class _VaultScreenState extends State<VaultScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SvgPicture.asset(
-                              ImageConstants.dhabiText,
+                              ImageConstants.appBarLogo,
                               width: (68 / Dimensions.designWidth).w,
                               height: (17 / Dimensions.designWidth).w,
                             ),

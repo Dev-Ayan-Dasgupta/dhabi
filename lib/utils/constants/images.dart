@@ -34,6 +34,7 @@ class ImageConstants {
   static const String warningGreen = "${iconsRoot}warning_green.svg";
   static const String dhabiText = "${iconsRoot}dhabi_text.svg";
   static const String dhabiBusinessText = "${iconsRoot}dhabi_business_text.svg";
+  static const String appBarLogo = "${iconsRoot}appbar_logo.svg";
   static const String notifications = "${iconsRoot}notifications.svg";
   static const String add = "${iconsRoot}add.svg";
   static const String addCircle = "${iconsRoot}add_circle.svg";

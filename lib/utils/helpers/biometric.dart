@@ -22,8 +22,7 @@ class BiometricHelper {
     if (isBiometricSupported && canCheckBiometrics) {
       try {
         isAuthenticated = await localAuthentication.authenticate(
-          localizedReason:
-              "Authenticate yourself to use Dhabi",
+          localizedReason: "Authenticate yourself to use Dhabi",
           authMessages: <AuthMessages>[
             const AndroidAuthMessages(
               signInTitle: 'Authenticate yourself to use Dhabi',
