@@ -30,15 +30,14 @@ class TransferAmountScreen extends StatefulWidget {
 }
 
 class _TransferAmountScreenState extends State<TransferAmountScreen> {
-  final TextEditingController _sendController =
-      TextEditingController(text: "0");
-  final TextEditingController _receiveController =
-      TextEditingController(text: "0");
+  final TextEditingController _sendController = TextEditingController();
+  final TextEditingController _receiveController = TextEditingController();
 
   bool isShowButton = true;
   bool isNotZero = false;
 
-  // double exchangeRate = 0.34304;
+  String? selectedBearerReason;
+  bool isBearerTypeSelected = false;
 
   Color borderColor = const Color(0XFFEEEEEE);
 
@@ -53,8 +52,8 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
   void argumentInitialization() async {
     sendMoneyArgument =
         SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
-    exchangeRate = sendMoneyArgument.isBetweenAccounts ? 1 : 0.5;
-    fees = sendMoneyArgument.isBetweenAccounts ? 0 : 5;
+    // exchangeRate = sendMoneyArgument.isBetweenAccounts ? 1 : 0.5;
+    // fees = sendMoneyArgument.isBetweenAccounts ? 0 : 5;
   }
 
   @override
@@ -122,6 +121,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                             builder: (context, state) {
                               return CustomTextField(
                                 borderColor: borderColor,
+                                hintText: "0",
                                 controller: _sendController,
                                 onChanged: onSendChanged,
                                 keyboardType: TextInputType.number,
@@ -136,11 +136,6 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                             (16 / Dimensions.designWidth).w,
                                       ),
                                     ),
-                                    // CustomCircleAvatarMemory(
-                                    //   bytes: ,
-                                    //   width: (23 / Dimensions.designWidth).w,
-                                    //   height: (23 / Dimensions.designWidth).w,
-                                    // ),
                                     CircleAvatar(
                                       radius:
                                           ((23 / 2) / Dimensions.designWidth).w,
@@ -170,6 +165,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                           const SizeBox(height: 10),
                           CustomTextField(
                             controller: _receiveController,
+                            hintText: "0",
                             onChanged: (p0) {},
                             enabled: false,
                             suffixIcon: Row(
@@ -182,12 +178,6 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                     fontSize: (16 / Dimensions.designWidth).w,
                                   ),
                                 ),
-                                // CustomCircleAvatarAsset(
-                                //   imgUrl:
-                                //       "https://t4.ftcdn.net/jpg/05/22/35/01/240_F_522350125_mPLuK4cNT6RNN6bvpuKZpLGjqbJr5EiL.jpg",
-                                //   width: (23 / Dimensions.designWidth).w,
-                                //   height: (23 / Dimensions.designWidth).w,
-                                // ),
                                 CircleAvatar(
                                   radius: ((23 / 2) / Dimensions.designWidth).w,
                                   backgroundImage: CachedMemoryImageProvider(
@@ -202,13 +192,67 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                           Text(
                             sendMoneyArgument.isBetweenAccounts
                                 ? "Expected arrival today"
-                                : "some text",
+                                : expectedTime,
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.dark50,
                               fontSize: (12 / Dimensions.designWidth).w,
                             ),
                           ),
                           const SizeBox(height: 10),
+                          Ternary(
+                            condition: sendMoneyArgument.isRemittance,
+                            truthy: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      labels[199]["labelText"],
+                                      style: TextStyles.primaryMedium.copyWith(
+                                        color: AppColors.dark80,
+                                        fontSize:
+                                            (14 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                    const Asterisk(),
+                                  ],
+                                ),
+                                const SizeBox(height: 10),
+                                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                  builder: (context, state) {
+                                    return CustomDropDown(
+                                      title: "Select who bears charges",
+                                      items: bearerDetailDDs,
+                                      value: selectedBearerReason,
+                                      onChanged: (value) {
+                                        final ShowButtonBloc showButtonBloc =
+                                            context.read<ShowButtonBloc>();
+                                        isBearerTypeSelected = true;
+                                        selectedBearerReason = value as String;
+                                        if (selectedBearerReason ==
+                                            "I bear the charges (OUR)") {
+                                          isSenderBearCharges = true;
+                                        } else {
+                                          isSenderBearCharges = false;
+                                        }
+                                        showButtonBloc.add(ShowButtonEvent(
+                                            show: isBearerTypeSelected));
+                                      },
+                                    );
+                                  },
+                                ),
+                                const SizeBox(height: 7),
+                                Text(
+                                  "Receiver bearing or sharing charges will be applied only in case of feasibility.",
+                                  style: TextStyles.primaryMedium.copyWith(
+                                    color: AppColors.dark50,
+                                    fontSize: (12 / Dimensions.designWidth).w,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            falsy: const SizeBox(),
+                          ),
                         ],
                       ),
                     ),
@@ -253,6 +297,9 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
     final ShowButtonBloc toggleCaptionsBloc = context.read<ShowButtonBloc>();
     if (_sendController.text.isEmpty ||
         double.parse(_sendController.text) == 0) {
+      if (_sendController.text.isEmpty) {
+        _receiveController.clear();
+      }
       isNotZero = false;
       toggleCaptionsBloc.add(ShowButtonEvent(show: isNotZero));
     } else {
@@ -302,7 +349,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
   Widget buildExchangeRate(BuildContext context, ShowButtonState state) {
     return FeeExchangeRate(
       transferFeeCurrency: senderCurrency,
-      transferFee: fees,
+      transferFee: sendMoneyArgument.isBetweenAccounts ? 0 : fees,
       exchangeRateSenderCurrency: senderCurrency,
       exchangeRate: exchangeRate,
       exchangeRateReceiverCurrency: receiverCurrency,
@@ -332,20 +379,44 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
     if (isShowButton && isNotZero) {
-      return GradientButton(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            Routes.transferConfirmation,
-            arguments: SendMoneyArgumentModel(
-              isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
-              isWithinDhabi: sendMoneyArgument.isWithinDhabi,
-              isRemittance: sendMoneyArgument.isRemittance,
-            ).toMap(),
+      if (sendMoneyArgument.isRemittance) {
+        if (isBearerTypeSelected) {
+          return GradientButton(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                Routes.transferConfirmation,
+                arguments: SendMoneyArgumentModel(
+                  isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
+                  isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                  isRemittance: sendMoneyArgument.isRemittance,
+                ).toMap(),
+              );
+            },
+            text: labels[127]["labelText"],
           );
-        },
-        text: labels[127]["labelText"],
-      );
+        } else {
+          return SolidButton(
+            onTap: () {},
+            text: labels[127]["labelText"],
+          );
+        }
+      } else {
+        return GradientButton(
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              Routes.transferConfirmation,
+              arguments: SendMoneyArgumentModel(
+                isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
+                isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                isRemittance: sendMoneyArgument.isRemittance,
+              ).toMap(),
+            );
+          },
+          text: labels[127]["labelText"],
+        );
+      }
     } else {
       return SolidButton(
         onTap: () {},

@@ -20,6 +20,8 @@ String beneficiaryCountryCode = "";
 
 // ------ REMITTANCE ------ //
 
+bool isNewBeneficiary = false;
+
 String benBankCode = "";
 String benMobileNo = "";
 String benSubBankCode = "";
@@ -38,3 +40,7 @@ String? relation;
 
 bool isBank = false;
 bool isWallet = false;
+
+bool isSenderBearCharges = false;
+
+String expectedTime = "";

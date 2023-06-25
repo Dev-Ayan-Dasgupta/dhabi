@@ -6,5 +6,5 @@ Digital Banking Application for Dhabi
 
 - Changed onFocussed behaviour of Gradient button
 - Implemented biometric capability and availability checks
-- Send money Internal and Remittance developed
-- Forgot password issue fixed by stoing cif details at the time of OTP
+- Send money Internal and Remittance (without biometric and bearer charges) developed
+- Forgot password issue fixed by storing cif details at the time of OTP

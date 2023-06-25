@@ -118,6 +118,8 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                 final ShowButtonBloc showButtonBloc =
                                     context.read<ShowButtonBloc>();
                                 selectedAccountIndex = index;
+                                senderCurrencyFlag =
+                                    accountDetails[index]["currencyFlagBase64"];
                                 senderAccountNumber =
                                     accountDetails[index]["accountNumber"];
                                 senderCurrency =

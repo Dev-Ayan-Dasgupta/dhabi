@@ -97,9 +97,11 @@ class _RecipientReceiveModeScreenState
                     title: "To Bank",
                     limitAmount: 10000,
                     limitCurrency: "EUR",
-                    feeAmount: 10,
+                    feeAmount: sendMoneyArgument.isBetweenAccounts ? 0 : fees,
                     feeCurrency: "USD",
-                    eta: 2,
+                    eta: sendMoneyArgument.isBetweenAccounts
+                        ? "Immediate arrival"
+                        : "Will arrive in $expectedTime",
                   ),
                   const SizeBox(height: 20),
                 ],
@@ -115,9 +117,11 @@ class _RecipientReceiveModeScreenState
                     title: "To Digital Wallet",
                     limitAmount: 20000,
                     limitCurrency: "EUR",
-                    feeAmount: 20,
+                    feeAmount: sendMoneyArgument.isBetweenAccounts ? 0 : fees,
                     feeCurrency: "USD",
-                    eta: 0,
+                    eta: sendMoneyArgument.isBetweenAccounts
+                        ? "Immediate arrival"
+                        : "Will arrive in $expectedTime",
                   ),
                   const SizeBox(height: 20),
                 ],

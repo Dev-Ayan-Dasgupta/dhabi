@@ -170,7 +170,7 @@ class FeeExchangeRate extends StatelessWidget {
         ),
         Positioned(
           bottom: -(10 / Dimensions.designHeight).h,
-          left: (171.5 / Dimensions.designWidth).w,
+          left: (177.5 / Dimensions.designWidth).w,
           child: Icon(
             Icons.arrow_drop_down_rounded,
             color: AppColors.primary,

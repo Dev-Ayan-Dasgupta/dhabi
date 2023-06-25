@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/shimmers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/search_box.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SelectRecipientScreen extends StatefulWidget {
   const SelectRecipientScreen({
@@ -36,6 +38,10 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
   bool isShowAll = true;
 
   bool isFetchingBeneficiaries = false;
+
+  Map<String, dynamic> getBeneficiariesApiResult = {};
+
+  bool isFetchingExchangeRate = false;
 
   late SendMoneyArgumentModel sendMoneyArgument;
 
@@ -57,26 +63,40 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
     try {
       isFetchingBeneficiaries = true;
       showButtonBloc.add(ShowButtonEvent(show: isFetchingBeneficiaries));
-      var getBeneficiariesApiResult =
+      getBeneficiariesApiResult =
           await MapGetBeneficiaries.mapGetBeneficiaries(token ?? "");
       log("getBeneficiariesApiResult -> $getBeneficiariesApiResult");
 
       if (getBeneficiariesApiResult["success"]) {
         recipients.clear();
         for (var beneficiary in getBeneficiariesApiResult["beneficiaries"]) {
-          recipients.add(
-            RecipientModel(
-              beneficiaryId: beneficiary["beneficiaryId"],
-              swiftReference: beneficiary["swiftReference"],
-              flagImgUrl: "",
-              name: beneficiary["name"],
-              accountNumber: beneficiary["accountNumber"],
-              currency: "USD",
-              address: beneficiary["address"],
-              accountType: beneficiary["accountType"],
-              countryShortCode: beneficiary["countryShortCode"],
-            ),
-          );
+          if (beneficiary["beneficiaryType"] == 2) {
+            recipients.add(
+              RecipientModel(
+                beneficiaryId: beneficiary["beneficiaryId"],
+                swiftReference: beneficiary["swiftReference"],
+                flagImgUrl: beneficiary["countryCodeFlagBase64"],
+                name: beneficiary["name"],
+                accountNumber: beneficiary["accountNumber"],
+                currency: beneficiary["targetCurrency"],
+                address: beneficiary["address"],
+                accountType: beneficiary["accountType"],
+                countryShortCode: beneficiary["countryShortCode"],
+                benBankCode: beneficiary["benBankCode"] ?? "",
+                benMobileNo: beneficiary["benMobileNo"] ?? "",
+                benSubBankCode: beneficiary["benSubBankCode"] ?? "",
+                benIdType: beneficiary["benIdType"] ?? "",
+                benIdNo: beneficiary["benIdNo"] ?? "",
+                benIdExpiryDate: beneficiary["benIdExpiryDate"] ?? "",
+                benBankName: beneficiary["benBankName"] ?? "",
+                benSwiftCode: beneficiary["benSwiftCodeText"] ?? "",
+                benCity: beneficiary["city"] ?? "",
+                remittancePurpose: beneficiary["remittancePurpose"] ?? "",
+                sourceOfFunds: beneficiary["sourceOfFunds"] ?? "",
+                relation: beneficiary["relation"] ?? "",
+              ),
+            );
+          }
         }
       } else {
         if (context.mounted) {
@@ -115,131 +135,142 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal:
-              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //  const SizeBox(height: 10),
-            Text(
-              labels[172]["labelText"],
-              style: TextStyles.primaryBold.copyWith(
-                color: AppColors.primary,
-                fontSize: (28 / Dimensions.designWidth).w,
-              ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  (PaddingConstants.horizontalPadding / Dimensions.designWidth)
+                      .w,
             ),
-            const SizeBox(height: 10),
-            Text(
-              labels[173]["labelText"],
-              style: TextStyles.primaryMedium.copyWith(
-                color: AppColors.dark50,
-                fontSize: (14 / Dimensions.designWidth).w,
-              ),
-            ),
-            const SizeBox(height: 30),
-            InkWell(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  Routes.selectCountry,
-                  arguments: SendMoneyArgumentModel(
-                    isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
-                    isWithinDhabi: sendMoneyArgument.isWithinDhabi,
-                    isRemittance: sendMoneyArgument.isRemittance,
-                  ).toMap(),
-                );
-              },
-              child: Container(
-                width: 100.w,
-                height: (50 / Dimensions.designHeight).h,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular((10 / Dimensions.designWidth).w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //  const SizeBox(height: 10),
+                Text(
+                  labels[172]["labelText"],
+                  style: TextStyles.primaryBold.copyWith(
+                    color: AppColors.primary,
+                    fontSize: (28 / Dimensions.designWidth).w,
                   ),
-                  color: Colors.white,
-                  boxShadow: [BoxShadows.primary],
                 ),
-                padding: EdgeInsets.symmetric(
-                    vertical: (16 / Dimensions.designHeight).h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add_circle_outline_outlined,
-                      color: AppColors.primary,
-                      size: (20 / Dimensions.designWidth).w,
-                    ),
-                    const SizeBox(width: 10),
-                    Text(
-                      "Add New Recipient",
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (16 / Dimensions.designWidth).w,
+                const SizeBox(height: 10),
+                Text(
+                  labels[173]["labelText"],
+                  style: TextStyles.primaryMedium.copyWith(
+                    color: AppColors.dark50,
+                    fontSize: (14 / Dimensions.designWidth).w,
+                  ),
+                ),
+                const SizeBox(height: 30),
+                InkWell(
+                  onTap: () {
+                    isNewBeneficiary = true;
+                    Navigator.pushNamed(
+                      context,
+                      Routes.selectCountry,
+                      arguments: SendMoneyArgumentModel(
+                        isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
+                        isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                        isRemittance: sendMoneyArgument.isRemittance,
+                      ).toMap(),
+                    );
+                  },
+                  child: Container(
+                    width: 100.w,
+                    height: (50 / Dimensions.designHeight).h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular((10 / Dimensions.designWidth).w),
                       ),
+                      color: Colors.white,
+                      boxShadow: [BoxShadows.primary],
                     ),
-                  ],
+                    padding: EdgeInsets.symmetric(
+                        vertical: (16 / Dimensions.designHeight).h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add_circle_outline_outlined,
+                          color: AppColors.primary,
+                          size: (20 / Dimensions.designWidth).w,
+                        ),
+                        const SizeBox(width: 10),
+                        Text(
+                          "Add New Recipient",
+                          style: TextStyles.primaryBold.copyWith(
+                            color: AppColors.primary,
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                const SizeBox(height: 30),
+                CustomSearchBox(
+                  hintText: labels[174]["labelText"],
+                  controller: _searchController,
+                  onChanged: onSearchChanged,
+                ),
+                const SizeBox(height: 10),
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: (context, state) {
+                    return Ternary(
+                      condition: isFetchingBeneficiaries,
+                      truthy: const SizeBox(),
+                      falsy: Row(
+                        children: [
+                          Text(
+                            "Search through your ",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.dark50,
+                              fontSize: (12 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          Text(
+                            "${recipients.length} ",
+                            style: TextStyles.primaryBold.copyWith(
+                              color: AppColors.dark50,
+                              fontSize: (12 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                          Text(
+                            "International Recipients.",
+                            style: TextStyles.primaryMedium.copyWith(
+                              color: AppColors.dark50,
+                              fontSize: (12 / Dimensions.designWidth).w,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                const SizeBox(height: 20),
+
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: buildRecipientList,
+                ),
+                const SizeBox(height: 20),
+              ],
             ),
-            const SizeBox(height: 30),
-            CustomSearchBox(
-              hintText: labels[174]["labelText"],
-              controller: _searchController,
-              onChanged: onSearchChanged,
-            ),
-            const SizeBox(height: 10),
-            BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: (context, state) {
-                return Ternary(
-                  condition: isFetchingBeneficiaries,
-                  truthy: const SizeBox(),
-                  falsy: Row(
+          ),
+          isFetchingExchangeRate
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Search through your ",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.dark50,
-                          fontSize: (12 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      Text(
-                        "${recipients.length} ",
-                        style: TextStyles.primaryBold.copyWith(
-                          color: AppColors.dark50,
-                          fontSize: (12 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      Text(
-                        "International Recipients.",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.dark50,
-                          fontSize: (12 / Dimensions.designWidth).w,
-                        ),
+                      SpinKitFadingCircle(
+                        color: AppColors.primary,
+                        size: (50 / Dimensions.designWidth).w,
                       ),
                     ],
                   ),
-                );
-              },
-            ),
-            const SizeBox(height: 20),
-
-            // Text(
-            //   "MY RECIPIENTS",
-            //   style: TextStyles.primaryBold.copyWith(
-            //     color: AppColors.dark50,
-            //     fontSize: (12 / Dimensions.designWidth).w,
-            //   ),
-            // ),
-            // const SizeBox(height: 10),
-            BlocBuilder<ShowButtonBloc, ShowButtonState>(
-              builder: buildRecipientList,
-            ),
-            const SizeBox(height: 20),
-          ],
-        ),
+                )
+              : const SizeBox(),
+        ],
       ),
     );
   }
@@ -283,18 +314,91 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
           itemBuilder: (context, index) {
             RecipientModel item =
                 isShowAll ? recipients[index] : filteredRecipients[index];
+
             return RecipientsTile(
-              // isWithinDhabi: item.isWithinDhabi,
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  Routes.transferAmount,
-                  arguments: SendMoneyArgumentModel(
-                    isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
-                    isWithinDhabi: sendMoneyArgument.isWithinDhabi,
-                    isRemittance: sendMoneyArgument.isRemittance,
-                  ).toMap(),
-                );
+              onTap: () async {
+                if (!isFetchingExchangeRate) {
+                  isFetchingExchangeRate = true;
+                  setState(() {});
+
+                  receiverCurrencyFlag = item.flagImgUrl;
+                  receiverAccountNumber = item.accountNumber;
+                  benCustomerName = item.name;
+                  benAddress = item.address;
+                  benAccountType = item.accountType.toString();
+                  beneficiaryCountryCode = item.countryShortCode;
+                  receiverCurrency = item.currency;
+                  benBankCode = item.benBankCode;
+                  benMobileNo = item.benMobileNo;
+                  benSubBankCode = item.benSubBankCode;
+                  benIdType = item.benIdType;
+                  benIdNo = item.benIdNo;
+                  benIdExpiryDate = item.benIdExpiryDate;
+                  benBankName = item.benBankName;
+                  benSwiftCode = item.benSwiftCode;
+                  benCity = item.benCity;
+                  remittancePurpose = item.remittancePurpose;
+                  sourceOfFunds = item.sourceOfFunds;
+                  relation = item.relation;
+
+                  var getExchRateApiResult =
+                      await MapExchangeRate.mapExchangeRate(
+                    token ?? "",
+                  );
+                  log("getExchRateApiResult -> $getExchRateApiResult");
+
+                  if (getExchRateApiResult["success"]) {
+                    for (var fetchExchangeRate
+                        in getExchRateApiResult["fetchExRates"]) {
+                      if (fetchExchangeRate["exchangeCurrency"] ==
+                          receiverCurrency) {
+                        exchangeRate = fetchExchangeRate["exchangeRate"];
+                        log("exchangeRate -> $exchangeRate");
+                        fees = double.parse(
+                            fetchExchangeRate["transferFee"].split(' ').last);
+                        log("fees -> $fees");
+                        expectedTime = getExchRateApiResult["expectedTime"];
+                        break;
+                      }
+                    }
+
+                    if (context.mounted) {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.transferAmount,
+                        arguments: SendMoneyArgumentModel(
+                          isBetweenAccounts:
+                              sendMoneyArgument.isBetweenAccounts,
+                          isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                          isRemittance: sendMoneyArgument.isRemittance,
+                        ).toMap(),
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.warning,
+                            title: "Error {200}",
+                            message: getExchRateApiResult["message"] ??
+                                "There was an error fetching exchange rate, please try again later.",
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }
+
+                  isFetchingExchangeRate = false;
+                  setState(() {});
+                }
               },
               flagImgUrl: item.flagImgUrl,
               name: item.name,

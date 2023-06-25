@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/repositories/configurations/index.dart';
+import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/shimmers/index.dart';
 import 'package:flutter/material.dart';
@@ -54,6 +55,8 @@ class _AddRecipientDetailsRemittanceScreenState
   int widgetsBuilt = 0;
 
   bool allValid = false;
+
+  bool isFetchingExchangeRate = false;
 
   @override
   void initState() {
@@ -388,19 +391,85 @@ class _AddRecipientDetailsRemittanceScreenState
                     if (allValid &&
                         mandatorySatisfiedCount == (dropDowns + dates)) {
                       return GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.transferAmount,
-                            arguments: SendMoneyArgumentModel(
-                              isBetweenAccounts:
-                                  sendMoneyArgument.isBetweenAccounts,
-                              isWithinDhabi: sendMoneyArgument.isWithinDhabi,
-                              isRemittance: sendMoneyArgument.isRemittance,
-                            ).toMap(),
-                          );
+                        onTap: () async {
+                          if (!isFetchingExchangeRate) {
+                            final ShowButtonBloc showButtonBloc =
+                                context.read<ShowButtonBloc>();
+                            isFetchingExchangeRate = true;
+                            showButtonBloc.add(
+                                ShowButtonEvent(show: isFetchingExchangeRate));
+
+                            var getExchRateApiResult =
+                                await MapExchangeRate.mapExchangeRate(
+                              token ?? "",
+                            );
+                            log("getExchRateApiResult -> $getExchRateApiResult");
+
+                            if (getExchRateApiResult["success"]) {
+                              for (var fetchExchangeRate
+                                  in getExchRateApiResult["fetchExRates"]) {
+                                if (fetchExchangeRate["exchangeCurrency"] ==
+                                    receiverCurrency) {
+                                  exchangeRate =
+                                      fetchExchangeRate["exchangeRate"];
+                                  log("exchangeRate -> $exchangeRate");
+                                  fees = double.parse(
+                                      fetchExchangeRate["transferFee"]
+                                          .split(' ')
+                                          .last);
+                                  log("fees -> $fees");
+                                  expectedTime =
+                                      getExchRateApiResult["expectedTime"];
+                                  break;
+                                }
+                              }
+
+                              if (context.mounted) {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.transferAmount,
+                                  arguments: SendMoneyArgumentModel(
+                                    isBetweenAccounts:
+                                        sendMoneyArgument.isBetweenAccounts,
+                                    isWithinDhabi:
+                                        sendMoneyArgument.isWithinDhabi,
+                                    isRemittance:
+                                        sendMoneyArgument.isRemittance,
+                                  ).toMap(),
+                                );
+                              }
+                            } else {
+                              if (context.mounted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomDialog(
+                                      svgAssetPath: ImageConstants.warning,
+                                      title: "Error {200}",
+                                      message: getExchRateApiResult[
+                                              "message"] ??
+                                          "There was an error fetching exchange rate, please try again later.",
+                                      actionWidget: GradientButton(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        text: labels[346]["labelText"],
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            }
+
+                            isFetchingExchangeRate = false;
+                            showButtonBloc.add(
+                                ShowButtonEvent(show: isFetchingExchangeRate));
+                          }
                         },
                         text: labels[127]["labelText"],
+                        auxWidget: isFetchingExchangeRate
+                            ? const LoaderRow()
+                            : const SizeBox(),
                       );
                     } else {
                       return SolidButton(

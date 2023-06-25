@@ -96,4 +96,5 @@ abstract class BaseConfig {
   String get getDhabiCustomerDetails;
   String get getQuotation;
   String get makeInter;
+  String get getExchangeRate;
 }

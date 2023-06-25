@@ -40,7 +40,7 @@ List<String> typeOfAccountDDs = [
   // {"key": "DD_0004_002", "value": "Savings Account"}
 ];
 
-List bearerDetailDDs = [
+List<String> bearerDetailDDs = [
   // {"key": "DD_0005_001", "value": "I bear the charges (OUR)"},
   // {"key": "DD_0005_002", "value": "Recipient bears the charge (BEN)"},
   // {"key": "DD_0005_003", "value": "We share the charges (SHA)"}

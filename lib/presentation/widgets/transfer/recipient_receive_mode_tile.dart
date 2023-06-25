@@ -23,7 +23,7 @@ class RecipientReceiveModeTile extends StatelessWidget {
   final String limitCurrency;
   final double feeAmount;
   final String feeCurrency;
-  final int eta;
+  final String eta;
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +104,7 @@ class RecipientReceiveModeTile extends StatelessWidget {
                   ),
                   const SizeBox(height: 10),
                   Text(
-                    eta == 0
-                        ? "Instatnt transfer"
-                        : "will arive in $eta business days",
+                    eta,
                     style: TextStyles.primaryMedium.copyWith(
                       color: AppColors.dark50,
                       fontSize: (14 / Dimensions.designWidth).w,

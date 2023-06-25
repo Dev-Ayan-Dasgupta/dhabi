@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
@@ -51,26 +52,56 @@ class _TransferConfirmationScreenState
   }
 
   void populateDetails() {
-    transferConfirmation.add(DetailsTileModel(
-        key: labels[155]["labelText"], value: senderAccountNumber));
-    transferConfirmation.add(DetailsTileModel(
-        key: labels[157]["labelText"], value: receiverAccountNumber));
-    transferConfirmation.add(DetailsTileModel(
-        key: labels[159]["labelText"],
-        value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
-    transferConfirmation.add(DetailsTileModel(
-        key: sendMoneyArgument.isBetweenAccounts
-            ? labels[163]["labelText"]
-            : labels[198]["labelText"],
-        value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
-    transferConfirmation.add(DetailsTileModel(
-        key: labels[165]["labelText"],
-        value: "1 $senderCurrency = $exchangeRate $receiverCurrency"));
-    transferConfirmation.add(DetailsTileModel(
-        key: labels[168]["labelText"], value: "$senderCurrency $fees"));
-    transferConfirmation.add(DetailsTileModel(
-        key: labels[169]["labelText"],
-        value: sendMoneyArgument.isBetweenAccounts ? "Today" : "something"));
+    if (sendMoneyArgument.isBetweenAccounts) {
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[155]["labelText"], value: senderAccountNumber));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[157]["labelText"], value: receiverAccountNumber));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[159]["labelText"],
+          value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
+      transferConfirmation.add(DetailsTileModel(
+          key: sendMoneyArgument.isBetweenAccounts
+              ? labels[163]["labelText"]
+              : labels[198]["labelText"],
+          value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[165]["labelText"],
+          value: "1 $senderCurrency = $exchangeRate $receiverCurrency"));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[168]["labelText"], value: "$senderCurrency ${0}"));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[169]["labelText"],
+          value: sendMoneyArgument.isBetweenAccounts ? "Today" : "something"));
+    } else if (sendMoneyArgument.isRemittance) {
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[155]["labelText"], value: senderAccountNumber));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[157]["labelText"], value: receiverAccountNumber));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[178]["labelText"], value: benCustomerName));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[159]["labelText"],
+          value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
+      transferConfirmation.add(DetailsTileModel(
+          key: sendMoneyArgument.isBetweenAccounts
+              ? labels[163]["labelText"]
+              : labels[198]["labelText"],
+          value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[165]["labelText"],
+          value: "1 $senderCurrency = $exchangeRate $receiverCurrency"));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[168]["labelText"],
+          value: isSenderBearCharges
+              ? "$senderCurrency $fees"
+              : "$receiverCurrency $fees"));
+      transferConfirmation.add(DetailsTileModel(
+          key: "Purpose of Payment", value: remittancePurpose ?? ""));
+      transferConfirmation.add(DetailsTileModel(
+          key: labels[169]["labelText"],
+          value: DateFormat('dd MMMM yyyy').format(DateTime.now())));
+    }
   }
 
   @override

@@ -381,4 +381,9 @@ class EnvConfig implements BaseConfig {
   String get makeInter {
     return dotenv.env['MAKE_INTER'] ?? "";
   }
+
+  @override
+  String get getExchangeRate {
+    return dotenv.env['GET_EXCHANGE_RATE'] ?? "";
+  }
 }

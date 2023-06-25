@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +27,8 @@ class SendMoneyToScreen extends StatefulWidget {
 
 class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
   int selectedAccountIndex = -1;
+
+  bool isFetchingExchangeRate = false;
 
   late SendMoneyArgumentModel sendMoneyArgument;
 
@@ -122,6 +125,8 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
                               final ShowButtonBloc showButtonBloc =
                                   context.read<ShowButtonBloc>();
                               selectedAccountIndex = index;
+                              receiverCurrencyFlag =
+                                  accountDetails[index]["currencyFlagBase64"];
                               receiverAccountNumber =
                                   accountDetails[index]["accountNumber"];
                               receiverCurrency =
@@ -159,21 +164,89 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
                       return SolidButton(
                           onTap: () {}, text: labels[127]["labelText"]);
                     } else {
-                      return GradientButton(
-                        onTap: () {
-                          if (sendMoneyArgument.isBetweenAccounts) {
-                            Navigator.pushNamed(
-                              context,
-                              Routes.transferAmount,
-                              arguments: SendMoneyArgumentModel(
-                                isBetweenAccounts: true,
-                                isWithinDhabi: false,
-                                isRemittance: false,
-                              ).toMap(),
-                            );
-                          }
+                      return BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                        builder: (context, state) {
+                          return GradientButton(
+                            onTap: () async {
+                              if (!isFetchingExchangeRate) {
+                                final ShowButtonBloc showButtonBloc =
+                                    context.read<ShowButtonBloc>();
+                                isFetchingExchangeRate = true;
+                                showButtonBloc.add(ShowButtonEvent(
+                                    show: isFetchingExchangeRate));
+
+                                var getExchRateApiResult =
+                                    await MapExchangeRate.mapExchangeRate(
+                                  token ?? "",
+                                );
+                                log("getExchRateApiResult -> $getExchRateApiResult");
+
+                                if (getExchRateApiResult["success"]) {
+                                  for (var fetchExchangeRate
+                                      in getExchRateApiResult["fetchExRates"]) {
+                                    if (fetchExchangeRate["exchangeCurrency"] ==
+                                        receiverCurrency) {
+                                      exchangeRate =
+                                          fetchExchangeRate["exchangeRate"];
+                                      log("exchangeRate -> $exchangeRate");
+                                      fees = double.parse(
+                                          fetchExchangeRate["transferFee"]
+                                              .split(' ')
+                                              .last);
+                                      log("fees -> $fees");
+                                      expectedTime =
+                                          getExchRateApiResult["expectedTime"];
+                                      break;
+                                    }
+                                  }
+
+                                  if (context.mounted) {
+                                    if (sendMoneyArgument.isBetweenAccounts) {
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.transferAmount,
+                                        arguments: SendMoneyArgumentModel(
+                                          isBetweenAccounts: true,
+                                          isWithinDhabi: false,
+                                          isRemittance: false,
+                                        ).toMap(),
+                                      );
+                                    }
+                                  }
+                                } else {
+                                  if (context.mounted) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CustomDialog(
+                                          svgAssetPath: ImageConstants.warning,
+                                          title: "Error {200}",
+                                          message: getExchRateApiResult[
+                                                  "message"] ??
+                                              "There was an error fetching exchange rate, please try again later.",
+                                          actionWidget: GradientButton(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            text: labels[346]["labelText"],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                }
+
+                                isFetchingExchangeRate = false;
+                                showButtonBloc.add(ShowButtonEvent(
+                                    show: isFetchingExchangeRate));
+                              }
+                            },
+                            text: labels[127]["labelText"],
+                            auxWidget: isFetchingExchangeRate
+                                ? const LoaderRow()
+                                : const SizeBox(),
+                          );
                         },
-                        text: labels[127]["labelText"],
                       );
                     }
                   },
