@@ -1,4 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_firsts
+
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
@@ -38,23 +39,35 @@ class GradientButton extends StatefulWidget {
 
 class _GradientButtonState extends State<GradientButton> {
   bool isBeingTapped = false;
+
+  // int a = 0;
+  // int b = 0;
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      // onTapDown: (value) {
-      //   setState(() {
-      //     isBeingTapped = true;
-      //   });
-      // },
-      // onTapUp: (value) {
-      //   setState(() {
-      //     isBeingTapped = false;
-      //   });
-      // },
-      onTap: () {
+    return GestureDetector(
+      onScaleEnd: (details) {
+        setState(() {
+          isBeingTapped = false;
+        });
+      },
+      onTapDown: (value) {
         setState(() {
           isBeingTapped = true;
+          // a = DateTime.now().millisecondsSinceEpoch;
+          // log("tapdown time -> $a");
         });
+      },
+      onTapUp: (value) async {
+        await Future.delayed(const Duration(milliseconds: 100));
+        setState(() {
+          isBeingTapped = false;
+          // b = DateTime.now().millisecondsSinceEpoch;
+          // log("tapdown time -> $b");
+          // log("difference -> ${b - a}");
+        });
+      },
+      onTap: () {
         widget.onTap();
       },
       child: Container(

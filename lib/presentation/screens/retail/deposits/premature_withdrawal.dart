@@ -305,7 +305,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                       builder: (context) {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.warning,
-                          title: "Error",
+                          title: "Error {200}",
                           message: premWdrwApiResult["message"] ??
                               "There was an error in premature withdrawal of your FD, please try again later",
                           actionWidget: GradientButton(

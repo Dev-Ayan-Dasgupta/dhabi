@@ -55,7 +55,11 @@ class TopicTile extends StatelessWidget {
                           const Color.fromRGBO(0, 184, 48, 0.1),
                     ),
                     child: Center(
-                      child: SvgPicture.asset(iconPath),
+                      child: SvgPicture.asset(
+                        iconPath,
+                        width: (15 / Dimensions.designWidth).w,
+                        height: (15 / Dimensions.designHeight).h,
+                      ),
                     ),
                   ),
                   const SizeBox(width: 10),

@@ -1,3 +1,4 @@
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/recent_transfers_tile.dart';
@@ -13,6 +14,9 @@ class SendMoneyScreen extends StatefulWidget {
 }
 
 class _SendMoneyScreenState extends State<SendMoneyScreen> {
+  final DraggableScrollableController _dsController =
+      DraggableScrollableController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,50 +29,83 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: (22 / Dimensions.designWidth).w,
+              horizontal:
+                  (PaddingConstants.horizontalPadding / Dimensions.designWidth)
+                      .w,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizeBox(height: 10),
                 Text(
-                  "Send Money",
+                  labels[9]["labelText"],
                   style: TextStyles.primaryBold.copyWith(
                     color: AppColors.primary,
                     fontSize: (28 / Dimensions.designWidth).w,
                   ),
                 ),
-                const SizeBox(height: 30),
+                const SizeBox(height: 10),
+                Text(
+                  "Please select an option from the list below",
+                  style: TextStyles.primaryMedium.copyWith(
+                    color: AppColors.dark50,
+                    fontSize: (16 / Dimensions.designWidth).w,
+                  ),
+                ),
+                const SizeBox(height: 20),
                 TopicTile(
                   onTap: () {
-                    Navigator.pushNamed(context, Routes.sendMoneyFrom);
+                    Navigator.pushNamed(
+                      context,
+                      Routes.sendMoneyFrom,
+                      arguments: SendMoneyArgumentModel(
+                        isBetweenAccounts: true,
+                        isWithinDhabi: false,
+                        isRemittance: false,
+                      ).toMap(),
+                    );
                   },
                   iconPath: ImageConstants.moveDown,
-                  text: "Between Accounts",
+                  text: labels[149]["labelText"],
                 ),
                 const SizeBox(height: 10),
                 TopicTile(
                   onTap: () {
-                    Navigator.pushNamed(context, Routes.selectRecipient);
+                    Navigator.pushNamed(
+                      context,
+                      Routes.sendMoneyFrom,
+                      arguments: SendMoneyArgumentModel(
+                        isBetweenAccounts: false,
+                        isWithinDhabi: true,
+                        isRemittance: false,
+                      ).toMap(),
+                    );
                   },
                   iconPath: ImageConstants.accountBalance,
-                  text: "Within Dhabi Account",
+                  text: labels[150]["labelText"],
                 ),
                 const SizeBox(height: 10),
+                // TopicTile(
+                //   onTap: () {
+                //     Navigator.pushNamed(context, Routes.addRecipDetUae);
+                //   },
+                //   iconPath: ImageConstants.flagCircle,
+                //   text: labels[151]["labelText"],
+                // ),
+                // const SizeBox(height: 10),
                 TopicTile(
                   onTap: () {
-                    Navigator.pushNamed(context, Routes.addRecipDetUae);
-                  },
-                  iconPath: ImageConstants.flagCircle,
-                  text: "Within UAE",
-                ),
-                const SizeBox(height: 10),
-                TopicTile(
-                  onTap: () {
-                    Navigator.pushNamed(context, Routes.selectCountry);
+                    Navigator.pushNamed(
+                      context,
+                      Routes.sendMoneyFrom,
+                      arguments: SendMoneyArgumentModel(
+                        isBetweenAccounts: false,
+                        isWithinDhabi: false,
+                        isRemittance: true,
+                      ).toMap(),
+                    );
                   },
                   iconPath: ImageConstants.public,
-                  text: "Foreign Currency Transfer",
+                  text: labels[152]["labelText"],
                 ),
               ],
             ),
@@ -77,72 +114,81 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
             initialChildSize: 0.50,
             minChildSize: 0.50,
             maxChildSize: 1,
+            controller: _dsController,
             builder: (context, scrollController) {
-              return Stack(
+              return ListView(
+                controller: scrollController,
                 children: [
                   Container(
-                    height: 100.h,
+                    height: 90.h,
                     width: 100.w,
                     padding: EdgeInsets.symmetric(
-                      horizontal: (10 / Dimensions.designWidth).w,
+                      horizontal: (PaddingConstants.horizontalPadding /
+                              Dimensions.designWidth)
+                          .w,
                     ),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular((20 / Dimensions.designWidth).w),
+                      border:
+                          Border.all(width: 1, color: const Color(0XFFEEEEEE)),
+                      borderRadius: BorderRadius.only(
+                        topLeft:
+                            Radius.circular((20 / Dimensions.designWidth).w),
+                        topRight:
+                            Radius.circular((20 / Dimensions.designWidth).w),
                       ),
-                      boxShadow: [BoxShadows.primary],
-                      color: Colors.white,
+                      color: const Color(0xFFFFFFFF),
                     ),
-                    child: ListView.builder(
-                      controller: scrollController,
-                      itemCount: 51,
-                      itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return const SizeBox(height: 50);
-                        }
-                        return RecentTransferTile(
-                          onTap: () {},
-                          name: "Sanjay Talreja",
-                          status: "Pending",
-                          amount: 50000,
-                          currency: "AED",
-                          cardNo: "5040098712342534",
-                        );
-                      },
-                    ),
-                  ),
-                  Positioned(
-                    left: 44.w,
-                    top: (10 / Dimensions.designWidth).w,
-                    child: IgnorePointer(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: (10 / Dimensions.designWidth).w,
-                        ),
-                        height: (7 / Dimensions.designWidth).w,
-                        width: (50 / Dimensions.designWidth).w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular((10 / Dimensions.designWidth).w),
+                    child: Column(
+                      children: [
+                        const SizeBox(height: 15),
+                        // ! Clip widget for drag
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: (10 / Dimensions.designWidth).w,
                           ),
-                          color: const Color(0xFFD9D9D9),
+                          height: (7 / Dimensions.designWidth).w,
+                          width: (50 / Dimensions.designWidth).w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular((10 / Dimensions.designWidth).w),
+                            ),
+                            color: const Color(0xFFD9D9D9),
+                          ),
                         ),
-                      ),
+                        const SizeBox(height: 15),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              labels[10]["labelText"],
+                              style: TextStyles.primary.copyWith(
+                                color: AppColors.dark50,
+                                fontSize: (16 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizeBox(height: 15),
+                        Expanded(
+                          child: ListView.builder(
+                            controller: scrollController,
+                            itemCount: 50,
+                            itemBuilder: (context, index) {
+                              return RecentTransferTile(
+                                onTap: () {},
+                                iconPath: ImageConstants.accountBalance,
+                                name: "Sanjay Talreja",
+                                status: "Pending",
+                                amount: 50000,
+                                currency: "AED",
+                                accountNumber: "5040098712342534",
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Positioned(
-                    left: (22 / Dimensions.designWidth).w,
-                    top: (25 / Dimensions.designWidth).w,
-                    child: IgnorePointer(
-                      child: Text(
-                        "Recent Transactions",
-                        style: TextStyles.primary.copyWith(
-                          color: const Color.fromRGBO(9, 9, 9, 0.4),
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               );
             },

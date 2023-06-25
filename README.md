@@ -2,9 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (43)
+## Release notes - 1.0.0 (44)
 
-- Worked on dev issues 223, 251
-- Updated logo in appbar of dashboardsRe-Kyc to exclude mobile verification
-- Changed flow of Re-Kyc to exclude mobile verification
-- Compressed profile picture image
+- Changed onFocussed behaviour of Gradient button
+- Implemented biometric capability and availability checks

@@ -14,3 +14,4 @@ export './token.dart';
 export './local_storage.dart';
 export './account_info.dart';
 export './corporate_permissions.dart';
+export './send_money.dart';

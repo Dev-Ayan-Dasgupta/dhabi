@@ -537,13 +537,12 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                     index][
                                                                 "productCode"] ==
                                                             "1001"
-                                                        ? "Current"
-                                                        : "Savings",
-                                                    currency: accountDetails[
-                                                                index]
-                                                            ["currentBalance"]
-                                                        .split(" ")
-                                                        .first,
+                                                        ? labels[7]["labelText"]
+                                                        : labels[92]
+                                                            ["labelText"],
+                                                    currency:
+                                                        accountDetails[index]
+                                                            ["accountCurrency"],
                                                     amount: accountDetails[
                                                                 index]
                                                             ["currentBalance"]
@@ -1048,7 +1047,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                                           style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),
                                                                                         ),
                                                                                         subtitle: Text(
-                                                                                          accountDetails[index]["productCode"] == "1001" ? "Current" : "Savings",
+                                                                                          accountDetails[index]["productCode"] == "1001" ? labels[7]["labelText"] : labels[92]["labelText"],
                                                                                           style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
                                                                                         ),
                                                                                         trailing: Text(
@@ -1083,7 +1082,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                     ),
                                                                   ),
                                                                   Text(
-                                                                    "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? "Current" : "Savings"} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
+                                                                    "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? labels[7]["labelText"] : labels[92]["labelText"]} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
                                                                     style: TextStyles
                                                                         .primaryMedium
                                                                         .copyWith(
@@ -2056,7 +2055,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                                           style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),
                                                                                         ),
                                                                                         subtitle: Text(
-                                                                                          // accountDetails[index]["productCode"] == "1001" ? "Current" : "Savings",
+                                                                                          // accountDetails[index]["productCode"] == "1001" ? labels[7]["labelText"] : labels[92]["labelText"],
                                                                                           "Fixed Deposit",
                                                                                           style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
                                                                                         ),
@@ -2095,7 +2094,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                               //     //   ),
                                                               //     // ),
                                                               //     // Text(
-                                                              //     //   // "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? "Current" : "Savings"} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
+                                                              //     //   // "${accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001" ? labels[7]["labelText"] : labels[92]["labelText"]} ****${accountDetails[storageChosenAccount ?? 0]["accountNumber"].substring(accountDetails[storageChosenAccount ?? 0]["accountNumber"].length - 4, accountDetails[storageChosenAccount ?? 0]["accountNumber"].length)}",
                                                               //     //   "Fixed ****${depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].substring(depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length - 4, depositDetails[storageChosenFdAccount ?? 0]["depositAccountNumber"].length)}",
                                                               //     //   style: TextStyles
                                                               //     //       .primaryMedium

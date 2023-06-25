@@ -1,9 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class VaultAccountCard extends StatelessWidget {
   const VaultAccountCard({
@@ -15,6 +16,7 @@ class VaultAccountCard extends StatelessWidget {
     required this.accountNo,
     required this.currency,
     required this.amount,
+    required this.isSelected,
   }) : super(key: key);
 
   final bool isVault;
@@ -24,6 +26,7 @@ class VaultAccountCard extends StatelessWidget {
   final String accountNo;
   final String currency;
   final double amount;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +52,8 @@ class VaultAccountCard extends StatelessWidget {
                     Text(
                       "$title ",
                       style: TextStyles.primaryBold.copyWith(
-                        fontSize: (18 / Dimensions.designWidth).w,
-                        color: const Color(0XFF1A3C40),
+                        fontSize: (16 / Dimensions.designWidth).w,
+                        color: AppColors.primaryDark,
                       ),
                     ),
                     isVault
@@ -62,35 +65,60 @@ class VaultAccountCard extends StatelessWidget {
                         : const SizeBox(),
                   ],
                 ),
-                const SizeBox(height: 15),
+                const SizeBox(height: 10),
                 Text(
                   isVault
                       ? "**${accountNo.substring(accountNo.length - 4, accountNo.length)}"
                       : accountNo,
                   style: TextStyles.primaryMedium.copyWith(
                     fontSize: (16 / Dimensions.designWidth).w,
-                    color: const Color(0XFF094148),
+                    color: AppColors.primaryDark,
                   ),
                 ),
               ],
             ),
             const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+            Row(
               children: [
-                Text(
-                  "$currency ${amount.toStringAsFixed(2)}",
-                  style: TextStyles.primaryBold.copyWith(
-                    fontSize: (18 / Dimensions.designWidth).w,
-                    color: const Color(0XFF1A3C40),
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "$currency ${amount.toStringAsFixed(2)}",
+                      style: TextStyles.primaryBold.copyWith(
+                        fontSize: (16 / Dimensions.designWidth).w,
+                        color: AppColors.primaryDark,
+                      ),
+                    ),
+                    const SizeBox(height: 10),
+                    Text(
+                      labels[93]["labelText"],
+                      style: TextStyles.primaryMedium.copyWith(
+                        fontSize: (16 / Dimensions.designWidth).w,
+                        color: AppColors.dark50,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizeBox(height: 15),
-                Text(
-                  "Available Balance",
-                  style: TextStyles.primaryMedium.copyWith(
-                    fontSize: (16 / Dimensions.designWidth).w,
-                    color: const Color.fromRGBO(26, 60, 64, 0.2),
+                const SizeBox(width: 20),
+                Container(
+                  width: (25 / Dimensions.designWidth).w,
+                  height: (25 / Dimensions.designWidth).w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.dark30,
+                      width: isSelected ? 0 : 1,
+                    ),
+                  ),
+                  child: Center(
+                    child: isSelected
+                        ? SvgPicture.asset(
+                            ImageConstants.checkCircle,
+                            width: (25 / Dimensions.designWidth).w,
+                            height: (25 / Dimensions.designWidth).w,
+                          )
+                        : const SizeBox(),
                   ),
                 ),
               ],

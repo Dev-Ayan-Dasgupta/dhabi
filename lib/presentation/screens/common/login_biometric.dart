@@ -39,6 +39,8 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
 
   bool isSendingOtp = false;
 
+  bool isClickable = true;
+
   @override
   void initState() {
     super.initState();
@@ -94,17 +96,19 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
               children: [
                 SolidButton(
                   onTap: () {
-                    isShowBiometric = false;
-                    Navigator.pushReplacementNamed(
-                      context,
-                      Routes.loginPassword,
-                      arguments: LoginPasswordArgumentModel(
-                        emailId: storageEmail ?? "",
-                        userId: storageUserId ?? 0,
-                        userTypeId: storageUserTypeId ?? 1,
-                        companyId: storageCompanyId ?? 0,
-                      ).toMap(),
-                    );
+                    if (isClickable) {
+                      isShowBiometric = false;
+                      Navigator.pushReplacementNamed(
+                        context,
+                        Routes.loginPassword,
+                        arguments: LoginPasswordArgumentModel(
+                          emailId: storageEmail ?? "",
+                          userId: storageUserId ?? 0,
+                          userTypeId: storageUserTypeId ?? 1,
+                          companyId: storageCompanyId ?? 0,
+                        ).toMap(),
+                      );
+                    }
                   },
                   text: "Use password instead",
                   color: Colors.white,
@@ -136,6 +140,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
     log("storageEmail -> $storageEmail");
     log("storagePassword -> $storagePassword");
     await Future.delayed(const Duration(seconds: 3));
+    //
     log("isShowBiometric -> $isShowBiometric");
     if (isShowBiometric) {
       if (persistBiometric!) {
@@ -149,6 +154,10 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
           log("isAuthenticated -> $isAuthenticated");
 
           if (isAuthenticated) {
+            setState(() {
+              isClickable = false;
+            });
+
             if (context.mounted) {
               onSubmit(storagePassword ?? "");
             }

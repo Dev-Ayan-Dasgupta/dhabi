@@ -45,6 +45,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+bool isBioCapable = false;
+
 String fcmToken = "";
 
 String? deviceId;
@@ -63,6 +65,8 @@ List banks = [];
 
 List availableBiometrics = [];
 
+List transferCapabilities = [];
+
 class _SplashScreenState extends State<SplashScreen> {
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
@@ -71,8 +75,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await getBiometricCapability();
       await getDeviceId();
       await getPackageInfo();
+      await getTransferCapabilities();
       await initPlatformState();
       await initConfigurations();
       await initLocalStorageData();
@@ -121,6 +127,17 @@ class _SplashScreenState extends State<SplashScreen> {
     log("maxSavingAccountAllowed -> $maxSavingAccountAllowed");
     log("maxCurrentAccountAllowed -> $maxCurrentAccountAllowed");
     log("selfieScoreMatch -> $selfieScoreMatch");
+  }
+
+  Future<void> getTransferCapabilities() async {
+    try {
+      var transferCapabilitiesAPiResult =
+          await MapTransferCapabilities.mapTransferCapabilities();
+      transferCapabilities =
+          transferCapabilitiesAPiResult["transferCapabilities"];
+    } catch (_) {
+      rethrow;
+    }
   }
 
   void getDhabiCountriesFlagsAndCodes() {
@@ -188,6 +205,11 @@ class _SplashScreenState extends State<SplashScreen> {
       bankNames.add(bank["displayName"]);
     }
     log("bankNames -> $bankNames");
+  }
+
+  Future<void> getBiometricCapability() async {
+    isBioCapable = await LocalAuthentication().canCheckBiometrics;
+    log("isBioCapable -> $isBioCapable");
   }
 
   Future<void> getDeviceId() async {

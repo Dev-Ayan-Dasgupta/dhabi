@@ -146,7 +146,7 @@ class FeeExchangeRate extends StatelessWidget {
                       children: [
                         const SizeBox(width: 10),
                         Text(
-                          "$exchangeRate $exchangeRateReceiverCurrency",
+                          "${exchangeRate.toStringAsFixed(2)} $exchangeRateReceiverCurrency",
                           style: TextStyles.primaryMedium.copyWith(
                             color: const Color(0xFF424242),
                             fontSize: (14 / Dimensions.designWidth).w,
@@ -169,7 +169,7 @@ class FeeExchangeRate extends StatelessWidget {
           ),
         ),
         Positioned(
-          bottom: -(10 / Dimensions.designWidth).w,
+          bottom: -(10 / Dimensions.designHeight).h,
           left: (171.5 / Dimensions.designWidth).w,
           child: Icon(
             Icons.arrow_drop_down_rounded,

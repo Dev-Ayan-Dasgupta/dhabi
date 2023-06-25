@@ -46,6 +46,8 @@ abstract class BaseConfig {
   String get getPrivacyStatement;
   String get getApplicationConfigurations;
   String get getBankDetails;
+  String get getDynamicFields;
+  String get getTransferCapabilities;
 
   // ? Onboarding APIs
 
@@ -87,4 +89,11 @@ abstract class BaseConfig {
   String get createCorporateFd;
   String get getCorporateFdApprovalList;
   String get approveOrDisapproveCorporateFd;
+
+  // ? Payments APIs
+
+  String get makeInternalMoneyTransfer;
+  String get getDhabiCustomerDetails;
+  String get getQuotation;
+  String get makeInter;
 }

@@ -122,7 +122,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                           Row(
                             children: [
                               Text(
-                                "New Password",
+                                labels[48]["labelText"],
                                 style: TextStyles.primaryMedium.copyWith(
                                   color: AppColors.black63,
                                   fontSize: (16 / Dimensions.designWidth).w,
@@ -593,7 +593,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                             // Navigator.pushReplacementNamed(
                             //     context, Routes.loginUserId);
                           },
-                          text: "Understood",
+                          text: labels[346]["labelText"],
                         ),
                       );
                     },

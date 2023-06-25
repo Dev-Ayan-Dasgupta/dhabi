@@ -1,13 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/data/models/widgets/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/search_box.dart';
@@ -15,75 +18,93 @@ import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 
 class SelectRecipientScreen extends StatefulWidget {
-  const SelectRecipientScreen({Key? key}) : super(key: key);
-
+  const SelectRecipientScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+  final Object? argument;
   @override
   State<SelectRecipientScreen> createState() => _SelectRecipientScreenState();
 }
 
 class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
   final TextEditingController _searchController = TextEditingController();
-  List<RecipientModel> recipients = [
-    RecipientModel(
-      isWithinDhabi: true,
-      flagImgUrl:
-          "https://t4.ftcdn.net/jpg/05/22/35/01/240_F_522350125_mPLuK4cNT6RNN6bvpuKZpLGjqbJr5EiL.jpg",
-      name: "Autaz Siddiqui",
-      accountNumber: "11015346101",
-      currency: "USD",
-    ),
-    RecipientModel(
-      isWithinDhabi: true,
-      flagImgUrl:
-          "https://t4.ftcdn.net/jpg/05/22/35/01/240_F_522350125_mPLuK4cNT6RNN6bvpuKZpLGjqbJr5EiL.jpg",
-      name: "Mohammed Akhram",
-      accountNumber: "11015346131",
-      currency: "USD",
-    ),
-    RecipientModel(
-      isWithinDhabi: false,
-      flagImgUrl:
-          "https://t4.ftcdn.net/jpg/05/22/35/01/240_F_522350125_mPLuK4cNT6RNN6bvpuKZpLGjqbJr5EiL.jpg",
-      name: "Ayan Dasgupta",
-      accountNumber: "11015346101",
-      currency: "USD",
-    ),
-    RecipientModel(
-      isWithinDhabi: true,
-      flagImgUrl:
-          "https://t4.ftcdn.net/jpg/05/22/35/01/240_F_522350125_mPLuK4cNT6RNN6bvpuKZpLGjqbJr5EiL.jpg",
-      name: "Samit Ray",
-      accountNumber: "11015346101",
-      currency: "USD",
-    ),
-    RecipientModel(
-      isWithinDhabi: false,
-      flagImgUrl:
-          "https://t4.ftcdn.net/jpg/05/22/35/01/240_F_522350125_mPLuK4cNT6RNN6bvpuKZpLGjqbJr5EiL.jpg",
-      name: "Subhendu Adhikary",
-      accountNumber: "11015346101",
-      currency: "USD",
-    ),
-    RecipientModel(
-      isWithinDhabi: true,
-      flagImgUrl:
-          "https://t4.ftcdn.net/jpg/05/22/35/01/240_F_522350125_mPLuK4cNT6RNN6bvpuKZpLGjqbJr5EiL.jpg",
-      name: "Tirtha Ray",
-      accountNumber: "11015346101",
-      currency: "USD",
-    ),
-    RecipientModel(
-      isWithinDhabi: true,
-      flagImgUrl:
-          "https://t4.ftcdn.net/jpg/05/22/35/01/240_F_522350125_mPLuK4cNT6RNN6bvpuKZpLGjqbJr5EiL.jpg",
-      name: "Walaa Ibrahim",
-      accountNumber: "11015346101",
-      currency: "USD",
-    ),
-  ];
+  List<RecipientModel> recipients = [];
   List<RecipientModel> filteredRecipients = [];
 
   bool isShowAll = true;
+
+  bool isFetchingBeneficiaries = false;
+
+  late SendMoneyArgumentModel sendMoneyArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+    getBeneficiaries();
+  }
+
+  void argumentInitialization() async {
+    sendMoneyArgument =
+        SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
+  Future<void> getBeneficiaries() async {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+
+    try {
+      isFetchingBeneficiaries = true;
+      showButtonBloc.add(ShowButtonEvent(show: isFetchingBeneficiaries));
+      var getBeneficiariesApiResult =
+          await MapGetBeneficiaries.mapGetBeneficiaries(token ?? "");
+      log("getBeneficiariesApiResult -> $getBeneficiariesApiResult");
+
+      if (getBeneficiariesApiResult["success"]) {
+        recipients.clear();
+        for (var beneficiary in getBeneficiariesApiResult["beneficiaries"]) {
+          recipients.add(
+            RecipientModel(
+              beneficiaryId: beneficiary["beneficiaryId"],
+              swiftReference: beneficiary["swiftReference"],
+              flagImgUrl: "",
+              name: beneficiary["name"],
+              accountNumber: beneficiary["accountNumber"],
+              currency: "USD",
+              address: beneficiary["address"],
+              accountType: beneficiary["accountType"],
+              countryShortCode: beneficiary["countryShortCode"],
+            ),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error {200}",
+                message: getBeneficiariesApiResult["message"] ??
+                    "There was an error fetching your beneficiary details, please try again after some time.",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  text: labels[346]["labelText"],
+                ),
+              );
+            },
+          );
+        }
+      }
+      isFetchingBeneficiaries = false;
+      showButtonBloc.add(ShowButtonEvent(show: isFetchingBeneficiaries));
+    } catch (_) {
+      rethrow;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +124,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
           children: [
             //  const SizeBox(height: 10),
             Text(
-              "Select Recipient",
+              labels[172]["labelText"],
               style: TextStyles.primaryBold.copyWith(
                 color: AppColors.primary,
                 fontSize: (28 / Dimensions.designWidth).w,
@@ -111,71 +132,99 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
             ),
             const SizeBox(height: 10),
             Text(
-              "Select a recipient you sent to previously or enter new reciepient details",
+              labels[173]["labelText"],
               style: TextStyles.primaryMedium.copyWith(
-                color: const Color.fromRGBO(129, 129, 129, 0.7),
-                fontSize: (16 / Dimensions.designWidth).w,
+                color: AppColors.dark50,
+                fontSize: (14 / Dimensions.designWidth).w,
               ),
             ),
-            const SizeBox(height: 10),
-            CustomSearchBox(
-              hintText: "Search",
-              controller: _searchController,
-              onChanged: onSearchChanged,
-            ),
-            const SizeBox(height: 10),
+            const SizeBox(height: 30),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, Routes.recipientDetails);
+                Navigator.pushNamed(
+                  context,
+                  Routes.selectCountry,
+                  arguments: SendMoneyArgumentModel(
+                    isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
+                    isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                    isRemittance: sendMoneyArgument.isRemittance,
+                  ).toMap(),
+                );
               },
               child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: (22 / Dimensions.designWidth).w,
-                  vertical: (18 / Dimensions.designWidth).w,
-                ),
+                width: 100.w,
+                height: (50 / Dimensions.designHeight).h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(
-                    Radius.circular(
-                      (10 / Dimensions.designWidth).w,
-                    ),
+                    Radius.circular((10 / Dimensions.designWidth).w),
                   ),
-                  boxShadow: [BoxShadows.primary],
                   color: Colors.white,
+                  boxShadow: [BoxShadows.primary],
                 ),
+                padding: EdgeInsets.symmetric(
+                    vertical: (16 / Dimensions.designHeight).h),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      ImageConstants.addCircle,
-                      width: (20 / Dimensions.designWidth).w,
-                      height: (20 / Dimensions.designWidth).w,
+                    Icon(
+                      Icons.add_circle_outline_outlined,
+                      color: AppColors.primary,
+                      size: (20 / Dimensions.designWidth).w,
                     ),
-                    const SizeBox(width: 15),
+                    const SizeBox(width: 10),
                     Text(
-                      "New Recipients",
-                      style: TextStyles.primary.copyWith(
-                        color: const Color(0XFF252525),
+                      "Add New Recipient",
+                      style: TextStyles.primaryBold.copyWith(
+                        color: AppColors.primary,
                         fontSize: (16 / Dimensions.designWidth).w,
                       ),
                     ),
-                    const Spacer(),
-                    SvgPicture.asset(
-                      ImageConstants.arrowForwardIos,
-                      width: (9.81 / Dimensions.designWidth).w,
-                      height: (16.67 / Dimensions.designWidth).w,
-                    )
                   ],
                 ),
               ),
             ),
             const SizeBox(height: 30),
-            Text(
-              "MY RECIPIENTS",
-              style: TextStyles.primaryBold.copyWith(
-                color: AppColors.dark50,
-                fontSize: (12 / Dimensions.designWidth).w,
-              ),
+            CustomSearchBox(
+              hintText: labels[174]["labelText"],
+              controller: _searchController,
+              onChanged: onSearchChanged,
             ),
             const SizeBox(height: 10),
+            Row(
+              children: [
+                Text(
+                  "Search through your ",
+                  style: TextStyles.primaryMedium.copyWith(
+                    color: AppColors.dark50,
+                    fontSize: (12 / Dimensions.designWidth).w,
+                  ),
+                ),
+                Text(
+                  "46 ",
+                  style: TextStyles.primaryBold.copyWith(
+                    color: AppColors.dark50,
+                    fontSize: (12 / Dimensions.designWidth).w,
+                  ),
+                ),
+                Text(
+                  "International Recipients.",
+                  style: TextStyles.primaryMedium.copyWith(
+                    color: AppColors.dark50,
+                    fontSize: (12 / Dimensions.designWidth).w,
+                  ),
+                ),
+              ],
+            ),
+            const SizeBox(height: 20),
+
+            // Text(
+            //   "MY RECIPIENTS",
+            //   style: TextStyles.primaryBold.copyWith(
+            //     color: AppColors.dark50,
+            //     fontSize: (12 / Dimensions.designWidth).w,
+            //   ),
+            // ),
+            // const SizeBox(height: 10),
             BlocBuilder<ShowButtonBloc, ShowButtonState>(
               builder: buildRecipientList,
             ),
@@ -207,29 +256,39 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
   }
 
   Widget buildRecipientList(BuildContext context, ShowButtonState state) {
-    return Expanded(
-      child: ListView.separated(
-        itemBuilder: (context, index) {
-          RecipientModel item =
-              isShowAll ? recipients[index] : filteredRecipients[index];
-          return RecipientsTile(
-            isWithinDhabi: item.isWithinDhabi,
-            onTap: () {
-              Navigator.pushNamed(context, Routes.transferAmount);
-            },
-            flagImgUrl: item.flagImgUrl,
-            name: item.name,
-            accountNumber: item.accountNumber,
-            currency: item.currency,
-          );
-        },
-        separatorBuilder: (context, index) {
-          return const Divider(
-            color: Color(0XFFDDDDDD),
-            height: 1,
-          );
-        },
-        itemCount: isShowAll ? recipients.length : filteredRecipients.length,
+    return Ternary(
+      condition: isFetchingBeneficiaries,
+      truthy: const Center(child: CircularProgressIndicator()),
+      falsy: Expanded(
+        child: ListView.separated(
+          itemBuilder: (context, index) {
+            RecipientModel item =
+                isShowAll ? recipients[index] : filteredRecipients[index];
+            return RecipientsTile(
+              // isWithinDhabi: item.isWithinDhabi,
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  Routes.transferAmount,
+                  arguments: SendMoneyArgumentModel(
+                    isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
+                    isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                    isRemittance: sendMoneyArgument.isRemittance,
+                  ).toMap(),
+                );
+              },
+              flagImgUrl: item.flagImgUrl,
+              name: item.name,
+              accountNumber: item.accountNumber,
+              currency: item.currency,
+              bankName: "State Bank of India",
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizeBox();
+          },
+          itemCount: isShowAll ? recipients.length : filteredRecipients.length,
+        ),
       ),
     );
   }

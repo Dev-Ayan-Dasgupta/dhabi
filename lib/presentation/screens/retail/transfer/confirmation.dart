@@ -1,14 +1,27 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:dialup_mobile_app/bloc/index.dart';
+import 'package:dialup_mobile_app/data/repositories/accounts/map_customer_account_details.dart';
+import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:local_auth/local_auth.dart';
+
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:local_auth/local_auth.dart';
 
 class TransferConfirmationScreen extends StatefulWidget {
-  const TransferConfirmationScreen({Key? key}) : super(key: key);
+  const TransferConfirmationScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<TransferConfirmationScreen> createState() =>
@@ -17,15 +30,47 @@ class TransferConfirmationScreen extends StatefulWidget {
 
 class _TransferConfirmationScreenState
     extends State<TransferConfirmationScreen> {
-  List<DetailsTileModel> transferConfirmation = [
-    DetailsTileModel(key: "From", value: "11015346101"),
-    DetailsTileModel(key: "To", value: "11015346102"),
-    DetailsTileModel(key: "You Send", value: "USD 1,000"),
-    DetailsTileModel(key: "You Receive", value: "USD 343"),
-    DetailsTileModel(key: "Exchange Rate", value: " 1 AED = 0.34303 USD"),
-    DetailsTileModel(key: "Fees", value: "AED 0.00"),
-    DetailsTileModel(key: "Transfer Date", value: "Today"),
-  ];
+  List<DetailsTileModel> transferConfirmation = [];
+
+  bool isTransferring = false;
+
+  late SendMoneyArgumentModel sendMoneyArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+    populateDetails();
+  }
+
+  void argumentInitialization() async {
+    sendMoneyArgument =
+        SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
+    // exchangeRate = sendMoneyArgument.isBetweenAccounts ? 1 : 0;
+  }
+
+  void populateDetails() {
+    transferConfirmation.add(DetailsTileModel(
+        key: labels[155]["labelText"], value: senderAccountNumber));
+    transferConfirmation.add(DetailsTileModel(
+        key: labels[157]["labelText"], value: receiverAccountNumber));
+    transferConfirmation.add(DetailsTileModel(
+        key: labels[159]["labelText"],
+        value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
+    transferConfirmation.add(DetailsTileModel(
+        key: sendMoneyArgument.isBetweenAccounts
+            ? labels[163]["labelText"]
+            : labels[198]["labelText"],
+        value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
+    transferConfirmation.add(DetailsTileModel(
+        key: labels[165]["labelText"],
+        value: "1 $senderCurrency = $exchangeRate $receiverCurrency"));
+    transferConfirmation.add(DetailsTileModel(
+        key: labels[168]["labelText"], value: "$senderCurrency $fees"));
+    transferConfirmation.add(DetailsTileModel(
+        key: labels[169]["labelText"],
+        value: sendMoneyArgument.isBetweenAccounts ? "Today" : "something"));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +115,7 @@ class _TransferConfirmationScreenState
                       fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 20),
+                  const SizeBox(height: 10),
                   Text(
                     "Please review the transfer details and click proceed to confirm",
                     style: TextStyles.primaryMedium.copyWith(
@@ -90,9 +135,164 @@ class _TransferConfirmationScreenState
             ),
             Column(
               children: [
-                GradientButton(
-                  onTap: biometricPrompt,
-                  text: labels[170]["labelText"],
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: (context, state) {
+                    return GradientButton(
+                      onTap: () async {
+                        if (!isTransferring) {
+                          final ShowButtonBloc showButtonBloc =
+                              context.read<ShowButtonBloc>();
+                          isTransferring = true;
+                          showButtonBloc
+                              .add(ShowButtonEvent(show: isTransferring));
+
+                          if (sendMoneyArgument.isBetweenAccounts) {
+                            log("Internal Transfer APi request -> ${{
+                              "debitAccount": senderAccountNumber,
+                              "creditAccount": receiverAccountNumber,
+                              "debitAmount": senderAmount.toString(),
+                              "currency": senderCurrency,
+                            }}");
+                            var makeInternalTransferApiResult =
+                                await MapInternalMoneyTransfer
+                                    .mapInternalMoneyTransfer(
+                              {
+                                "debitAccount": senderAccountNumber,
+                                "creditAccount": receiverAccountNumber,
+                                "debitAmount": senderAmount.toString(),
+                                "currency": senderCurrency,
+                              },
+                              token ?? "",
+                            );
+                            log("Make Internal Transfer Response -> $makeInternalTransferApiResult");
+                            if (makeInternalTransferApiResult["success"]) {
+                              if (context.mounted) {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.errorSuccessScreen,
+                                  arguments: ErrorArgumentModel(
+                                    hasSecondaryButton: true,
+                                    iconPath:
+                                        ImageConstants.checkCircleOutlined,
+                                    title: "Success!",
+                                    message:
+                                        "Your transaction has been completed\n\nTransfer reference: ${makeInternalTransferApiResult["ftReferenceNumber"]}",
+                                    buttonTextSecondary: "Go Home",
+                                    onTapSecondary: () {
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        Routes.retailDashboard,
+                                        (route) => false,
+                                        arguments: RetailDashboardArgumentModel(
+                                          imgUrl: "",
+                                          name: profileName ?? "",
+                                          isFirst: storageIsFirstLogin == true
+                                              ? false
+                                              : true,
+                                        ).toMap(),
+                                      );
+                                    },
+                                    buttonText: "Make another transaction",
+                                    onTap: () async {
+                                      var result =
+                                          await MapCustomerAccountDetails
+                                              .mapCustomerAccountDetails(
+                                                  token ?? "");
+                                      if (result["success"]) {
+                                        if (context.mounted) {
+                                          // Navigator.pushNamedAndRemoveUntil(
+                                          //   context,
+                                          //   Routes.sendMoneyFrom,
+                                          //   (route) => false,
+                                          //   arguments: SendMoneyArgumentModel(
+                                          //     isBetweenAccounts:
+                                          //         sendMoneyArgument
+                                          //             .isBetweenAccounts,
+                                          //     isWithinDhabi: sendMoneyArgument
+                                          //         .isWithinDhabi,
+                                          //     isRemittance: sendMoneyArgument
+                                          //         .isRemittance,
+                                          //   ).toMap(),
+                                          // );
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          accountDetails =
+                                              result["crCustomerProfileRes"]
+                                                  ["body"]["accountDetails"];
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.sendMoneyFrom,
+                                            arguments: SendMoneyArgumentModel(
+                                              isBetweenAccounts:
+                                                  sendMoneyArgument
+                                                      .isBetweenAccounts,
+                                              isWithinDhabi: sendMoneyArgument
+                                                  .isWithinDhabi,
+                                              isRemittance: sendMoneyArgument
+                                                  .isRemittance,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      } else {
+                                        if (context.mounted) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                svgAssetPath:
+                                                    ImageConstants.warning,
+                                                title: "Error {200}",
+                                                message: result["message"][
+                                                    "Something went wrong, please try again later"],
+                                                actionWidget: GradientButton(
+                                                  onTap: () {},
+                                                  text: labels[346]
+                                                      ["labelText"],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    },
+                                  ).toMap(),
+                                );
+                              }
+                            } else {
+                              if (context.mounted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomDialog(
+                                      svgAssetPath: ImageConstants.warning,
+                                      title: "Error {200}",
+                                      message: makeInternalTransferApiResult[
+                                              "message"][
+                                          "Something went wrong while internal transfer, please try again later"],
+                                      actionWidget: GradientButton(
+                                        onTap: () {},
+                                        text: labels[346]["labelText"],
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            }
+                          }
+
+                          isTransferring = false;
+                          showButtonBloc
+                              .add(ShowButtonEvent(show: isTransferring));
+                        }
+                      },
+                      text: labels[170]["labelText"],
+                      auxWidget:
+                          isTransferring ? const LoaderRow() : const SizeBox(),
+                    );
+                  },
                 ),
                 SizeBox(
                   height: PaddingConstants.bottomPadding +

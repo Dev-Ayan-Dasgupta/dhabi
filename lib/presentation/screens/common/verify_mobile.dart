@@ -42,6 +42,8 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
   int toggles = 0;
   int dhabiCountryIndex = 0;
 
+  Color borderColor = const Color(0xFFEEEEEE);
+
   @override
   void initState() {
     super.initState();
@@ -127,46 +129,55 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
                     ],
                   ),
                   const SizeBox(height: 9),
-                  CustomTextField(
-                    controller: _phoneController,
-                    keyboardType: TextInputType.number,
-                    // isDense: true,
-                    prefixIcon: BlocBuilder<DropdownSelectedBloc,
-                        DropdownSelectedState>(
-                      builder: (context, state) {
-                        return CustomDropdownIsds(
-                          title: "Select a country",
-                          items: dhabiCountryCodesWithFlags,
-                          value: selectedCountry,
-                          onChanged: (value) {
-                            final DropdownSelectedBloc residenceSelectedBloc =
-                                context.read<DropdownSelectedBloc>();
-                            toggles++;
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      return CustomTextField(
+                        borderColor: borderColor,
+                        controller: _phoneController,
+                        keyboardType: TextInputType.number,
+                        prefixIcon: BlocBuilder<DropdownSelectedBloc,
+                            DropdownSelectedState>(
+                          builder: (context, state) {
+                            return CustomDropdownIsds(
+                              title: "Select a country",
+                              items: dhabiCountryCodesWithFlags,
+                              value: selectedCountry,
+                              onChanged: (value) {
+                                final DropdownSelectedBloc
+                                    residenceSelectedBloc =
+                                    context.read<DropdownSelectedBloc>();
+                                toggles++;
 
-                            selectedCountry = value as DropDownCountriesModel;
-                            selectedIsd = selectedCountry.countrynameOrCode;
-                            for (int i = 0; i < dhabiCountries.length; i++) {
-                              if (selectedIsd ==
-                                  "+${dhabiCountries[i]["dialCode"]}") {
-                                dhabiCountryIndex = i;
-                                break;
-                              }
-                            }
+                                selectedCountry =
+                                    value as DropDownCountriesModel;
+                                selectedIsd = selectedCountry.countrynameOrCode;
+                                for (int i = 0;
+                                    i < dhabiCountries.length;
+                                    i++) {
+                                  if (selectedIsd ==
+                                      "+${dhabiCountries[i]["dialCode"]}") {
+                                    dhabiCountryIndex = i;
+                                    break;
+                                  }
+                                }
 
-                            residenceSelectedBloc.add(
-                              DropdownSelectedEvent(
-                                isDropdownSelected: true,
-                                toggles: toggles,
-                              ),
+                                residenceSelectedBloc.add(
+                                  DropdownSelectedEvent(
+                                    isDropdownSelected: true,
+                                    toggles: toggles,
+                                  ),
+                                );
+                              },
                             );
                           },
-                        );
-                      },
-                    ),
-                    suffixIcon: BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                      builder: buildCheckCircle,
-                    ),
-                    onChanged: checkPhoneNumber,
+                        ),
+                        suffixIcon:
+                            BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                          builder: buildCheckCircle,
+                        ),
+                        onChanged: checkPhoneNumber,
+                      );
+                    },
                   ),
                   const SizeBox(height: 9),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
@@ -211,8 +222,11 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
   }
 
   Widget buildErrorMessage(BuildContext context, ShowButtonState state) {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     final numericRegex = RegExp(r'^-?(([0-9]*)|(([0-9]*)([0-9]*)))$');
     if (!(numericRegex.hasMatch(_phoneController.text))) {
+      borderColor = AppColors.red100;
+      showButtonBloc.add(const ShowButtonEvent(show: true));
       return Row(
         children: [
           SvgPicture.asset(ImageConstants.errorSolid),
@@ -228,8 +242,12 @@ class _VerifyMobileScreenState extends State<VerifyMobileScreen> {
       );
     } else {
       if (_isPhoneValid || _phoneController.text.length <= 9) {
+        borderColor = const Color(0XFFEEEEEE);
+        showButtonBloc.add(const ShowButtonEvent(show: true));
         return const SizeBox();
       } else {
+        borderColor = AppColors.red100;
+        showButtonBloc.add(const ShowButtonEvent(show: true));
         return Row(
           children: [
             SvgPicture.asset(ImageConstants.errorSolid),

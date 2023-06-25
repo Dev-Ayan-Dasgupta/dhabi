@@ -210,6 +210,16 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['GET_BANK_DETAILS'] ?? "";
   }
 
+  @override
+  String get getDynamicFields {
+    return dotenv.env['GET_DYNAMIC_FIELDS'] ?? "";
+  }
+
+  @override
+  String get getTransferCapabilities {
+    return dotenv.env['GET_TRANSFER_CAPABILITIES'] ?? "";
+  }
+
   // ? Onboarding APIs
 
   @override
@@ -348,5 +358,27 @@ class EnvConfig implements BaseConfig {
   @override
   String get approveOrDisapproveCorporateFd {
     return dotenv.env['APPROVE_OR_DISAPROVE_CORPORATE_FD'] ?? "";
+  }
+
+  // ? Payments APIs
+
+  @override
+  String get makeInternalMoneyTransfer {
+    return dotenv.env['MAKE_INTERNAL_MONEY_TRANSFER'] ?? "";
+  }
+
+  @override
+  String get getDhabiCustomerDetails {
+    return dotenv.env['GET_DHABI_CUSTOMER_DETAILS'] ?? "";
+  }
+
+  @override
+  String get getQuotation {
+    return dotenv.env['GET_QUOTATION'] ?? "";
+  }
+
+  @override
+  String get makeInter {
+    return dotenv.env['MAKE_INTER'] ?? "";
   }
 }

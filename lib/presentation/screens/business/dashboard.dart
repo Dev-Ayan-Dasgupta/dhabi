@@ -666,13 +666,17 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                 .uaeFlag
                                                             : ImageConstants
                                                                 .usaFlag,
-                                                        accountType: corpCustPermApiResult[
-                                                                            "permissions"]
-                                                                        [index][
-                                                                    "accountType"] ==
-                                                                2
-                                                            ? "Current"
-                                                            : "Savings",
+                                                        accountType:
+                                                            corpCustPermApiResult["permissions"]
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        "accountType"] ==
+                                                                    2
+                                                                ? labels[7][
+                                                                    "labelText"]
+                                                                : labels[92][
+                                                                    "labelText"],
                                                         currency:
                                                             corpCustPermApiResult[
                                                                     "permissions"]
@@ -702,8 +706,9 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                     [index][
                                                                 "accountType"] ==
                                                             2
-                                                        ? "Current"
-                                                        : "Savings",
+                                                        ? labels[7]["labelText"]
+                                                        : labels[92]
+                                                            ["labelText"],
                                                     currency:
                                                         corpCustPermApiResult[
                                                                 "permissions"]
@@ -946,7 +951,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                 },
                                                 imgUrl:
                                                     "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                                accountType: "Savings",
+                                                accountType: labels[92]
+                                                    ["labelText"],
                                                 currency: "AED",
                                                 amount: "0.00",
                                                 subText: "Powered by FH",
@@ -1038,7 +1044,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                   onTap: () {},
                                                   imgUrl:
                                                       "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                                  accountType: "Savings",
+                                                  accountType: labels[92]
+                                                      ["labelText"],
                                                   currency: "AED",
                                                   amount: "0.00",
                                                   subText: "Powered by FH",
@@ -1050,7 +1057,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                               return AccountSummaryTile(
                                                 onTap: () {},
                                                 imgUrl: "",
-                                                accountType: "Savings",
+                                                accountType: labels[92]
+                                                    ["labelText"],
                                                 currency: "USD",
                                                 amount: "0.00",
                                                 subText: "",

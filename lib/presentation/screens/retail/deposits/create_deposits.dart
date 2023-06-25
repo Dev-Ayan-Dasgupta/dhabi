@@ -251,13 +251,13 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                                 ? accountDetails[index]
                                                             ["productCode"] ==
                                                         "1001"
-                                                    ? "Current"
-                                                    : "Savings"
+                                                    ? labels[7]["labelText"]
+                                                    : labels[92]["labelText"]
                                                 : fdSeedAccounts[index]
                                                             .accountType ==
                                                         2
-                                                    ? "Current"
-                                                    : "Savings",
+                                                    ? labels[7]["labelText"]
+                                                    : labels[92]["labelText"],
                                         currency: createDepositArgument.isRetail
                                             ? accountDetails[index]
                                                     ["currentBalance"]

@@ -715,8 +715,8 @@ class _ScannedDetailsScreenState extends State<ScannedDetailsScreen> {
               arguments: ErrorArgumentModel(
                 hasSecondaryButton: false,
                 iconPath: ImageConstants.errorOutlined,
-                title: messages[81]["messageText"],
-                message: messages[29]["messageText"],
+                title: messages[82]["messageText"],
+                message: messages[31]["messageText"],
                 buttonText: "Go Home",
                 // labels[1]["labelText"],
                 onTap: () {

@@ -255,23 +255,33 @@ class AppRouter {
         );
       case Routes.sendMoneyFrom:
         return MaterialPageRoute(
-          builder: (_) => const SendMoneyFromScreen(),
+          builder: (_) => SendMoneyFromScreen(
+            argument: args,
+          ),
         );
       case Routes.sendMoneyTo:
         return MaterialPageRoute(
-          builder: (_) => const SendMoneyToScreen(),
+          builder: (_) => SendMoneyToScreen(
+            argument: args,
+          ),
         );
       case Routes.transferConfirmation:
         return MaterialPageRoute(
-          builder: (_) => const TransferConfirmationScreen(),
+          builder: (_) => TransferConfirmationScreen(
+            argument: args,
+          ),
         );
       case Routes.transferAmount:
         return MaterialPageRoute(
-          builder: (_) => const TransferAmountScreen(),
+          builder: (_) => TransferAmountScreen(
+            argument: args,
+          ),
         );
       case Routes.selectRecipient:
         return MaterialPageRoute(
-          builder: (_) => const SelectRecipientScreen(),
+          builder: (_) => SelectRecipientScreen(
+            argument: args,
+          ),
         );
       case Routes.recipientDetails:
         return MaterialPageRoute(
@@ -279,15 +289,21 @@ class AppRouter {
         );
       case Routes.selectCountry:
         return MaterialPageRoute(
-          builder: (_) => const SelectCountryScreen(),
+          builder: (_) => SelectCountryScreen(
+            argument: args,
+          ),
         );
       case Routes.recipientReceiveMode:
         return MaterialPageRoute(
-          builder: (_) => const RecipientReceiveModeScreen(),
+          builder: (_) => RecipientReceiveModeScreen(
+            argument: args,
+          ),
         );
       case Routes.addRecipDetRem:
         return MaterialPageRoute(
-          builder: (_) => const AddRecipientDetailsRemittanceScreen(),
+          builder: (_) => AddRecipientDetailsRemittanceScreen(
+            argument: args,
+          ),
         );
       case Routes.addRecipDetUae:
         return MaterialPageRoute(

@@ -8,3 +8,5 @@ export './map_terms_and_conditions.dart';
 export './map_privacy_statement.dart';
 export './map_application_configurations.dart';
 export './map_bank_details.dart';
+export './map_dynamic_fields.dart';
+export './map_transfer_capabilities.dart';

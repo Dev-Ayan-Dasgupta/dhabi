@@ -8,3 +8,5 @@ export './get_terms_and_conditions.dart';
 export './get_privacy_statement.dart';
 export './get_application_configurations.dart';
 export './get_bank_details.dart';
+export './get_dynamic_fields.dart';
+export './get_transfer_capabilities.dart';

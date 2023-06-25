@@ -117,7 +117,7 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                               },
                               imgUrl:
                                   "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                              accountType: "Savings",
+                              accountType: labels[92]["labelText"],
                               currency: "AED",
                               amount: "0.00",
                               subText: "Powered by FH",
