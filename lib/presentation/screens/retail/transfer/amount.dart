@@ -1,4 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
+import 'package:cached_memory_image/provider/cached_memory_image_provider.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +15,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:uuid/uuid.dart';
 
 class TransferAmountScreen extends StatefulWidget {
   const TransferAmountScreen({
@@ -49,7 +53,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
   void argumentInitialization() async {
     sendMoneyArgument =
         SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
-    exchangeRate = sendMoneyArgument.isBetweenAccounts ? 1 : 0;
+    exchangeRate = sendMoneyArgument.isBetweenAccounts ? 1 : 0.5;
     fees = sendMoneyArgument.isBetweenAccounts ? 0 : 5;
   }
 
@@ -137,6 +141,15 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                     //   width: (23 / Dimensions.designWidth).w,
                                     //   height: (23 / Dimensions.designWidth).w,
                                     // ),
+                                    CircleAvatar(
+                                      radius:
+                                          ((23 / 2) / Dimensions.designWidth).w,
+                                      backgroundImage:
+                                          CachedMemoryImageProvider(
+                                        const Uuid().v4(),
+                                        bytes: base64Decode(senderCurrencyFlag),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               );
@@ -175,6 +188,13 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                 //   width: (23 / Dimensions.designWidth).w,
                                 //   height: (23 / Dimensions.designWidth).w,
                                 // ),
+                                CircleAvatar(
+                                  radius: ((23 / 2) / Dimensions.designWidth).w,
+                                  backgroundImage: CachedMemoryImageProvider(
+                                    const Uuid().v4(),
+                                    bytes: base64Decode(receiverCurrencyFlag),
+                                  ),
+                                ),
                               ],
                             ),
                           ),

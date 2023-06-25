@@ -4,6 +4,9 @@ String receiverAccountNumber = "";
 String senderCurrency = "";
 String receiverCurrency = "";
 
+String senderCurrencyFlag = "";
+String receiverCurrencyFlag = "";
+
 double senderBalance = 0;
 
 double fees = 0;

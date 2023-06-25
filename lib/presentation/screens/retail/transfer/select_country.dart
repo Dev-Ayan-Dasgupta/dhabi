@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,6 +43,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
   void initState() {
     super.initState();
     argumentInitialization();
+    populateCountries();
   }
 
   void argumentInitialization() async {
@@ -54,7 +57,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
       countries.add(
         CountryTileModel(
           flagImgUrl: country["countryFlagBase64"],
-          country: country,
+          country: shortCodeToCountryName(country["countryShortCode"]),
           currencies: [],
           isBank: country["isBank"],
           isWallet: country["isWallet"],
@@ -122,6 +125,14 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
                       return CountryTile(
                         onTap: () {
                           beneficiaryCountryCode = item.countryShortCode;
+                          log("beneficiaryCountryCode -> $beneficiaryCountryCode");
+                          isBank = item.isBank;
+                          log("isBank -> $isBank");
+                          isWallet = item.isWallet;
+                          log("isWallet -> $isWallet");
+                          receiverCurrency = item.currencyCode;
+                          log("receiverCurrency -> $receiverCurrency");
+                          receiverCurrencyFlag = item.flagImgUrl;
                           Navigator.pushNamed(
                             context,
                             Routes.recipientReceiveMode,
@@ -172,6 +183,17 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
         filteredCountries.add(country);
       }
     }
+  }
+
+  String shortCodeToCountryName(String sc) {
+    String countryName = "";
+    for (var dhabiCountry in dhabiCountries) {
+      if (dhabiCountry["shortCode"] == sc) {
+        countryName = dhabiCountry["countryName"];
+        break;
+      }
+    }
+    return countryName;
   }
 
   @override

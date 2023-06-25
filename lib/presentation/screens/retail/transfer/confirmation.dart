@@ -46,6 +46,7 @@ class _TransferConfirmationScreenState
   void argumentInitialization() async {
     sendMoneyArgument =
         SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
+    log("sendMoneyArgument -> $sendMoneyArgument");
     // exchangeRate = sendMoneyArgument.isBetweenAccounts ? 1 : 0;
   }
 
@@ -200,20 +201,6 @@ class _TransferConfirmationScreenState
                                                   token ?? "");
                                       if (result["success"]) {
                                         if (context.mounted) {
-                                          // Navigator.pushNamedAndRemoveUntil(
-                                          //   context,
-                                          //   Routes.sendMoneyFrom,
-                                          //   (route) => false,
-                                          //   arguments: SendMoneyArgumentModel(
-                                          //     isBetweenAccounts:
-                                          //         sendMoneyArgument
-                                          //             .isBetweenAccounts,
-                                          //     isWithinDhabi: sendMoneyArgument
-                                          //         .isWithinDhabi,
-                                          //     isRemittance: sendMoneyArgument
-                                          //         .isRemittance,
-                                          //   ).toMap(),
-                                          // );
                                           Navigator.pop(context);
                                           Navigator.pop(context);
                                           Navigator.pop(context);
@@ -270,10 +257,168 @@ class _TransferConfirmationScreenState
                                       svgAssetPath: ImageConstants.warning,
                                       title: "Error {200}",
                                       message: makeInternalTransferApiResult[
-                                              "message"][
-                                          "Something went wrong while internal transfer, please try again later"],
+                                              "message"] ??
+                                          "Something went wrong while internal transfer, please try again later",
                                       actionWidget: GradientButton(
-                                        onTap: () {},
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        text: labels[346]["labelText"],
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            }
+                          } else if (sendMoneyArgument.isRemittance) {
+                            log("Remittance request -> ${{
+                              "quotationId": "string",
+                              "sourceCurrency": senderCurrency,
+                              "targetCurrency": receiverCurrency,
+                              "countryCode": beneficiaryCountryCode,
+                              "debitAccount": senderAccountNumber,
+                              "debitAmount": senderAmount,
+                              "benBankCode": benBankCode,
+                              "benMobileNo": benMobileNo,
+                              "benSubBankCode": benSubBankCode,
+                              "accountType": benAccountType,
+                              "benIdType": benIdType,
+                              "benIdNo": benIdNo,
+                              "benIdExpiryDate": benIdExpiryDate,
+                              "benBankName": benBankName,
+                              "benAccountNo": receiverAccountNumber,
+                              "benCustomerName": benCustomerName,
+                              "address": benAddress,
+                              "city": benCity,
+                              "swiftCode": benSwiftCode,
+                              "remittancePurpose": remittancePurpose ?? "",
+                              "sourceOfFunds": sourceOfFunds ?? "",
+                              "relation": relation ?? "",
+                            }}");
+                            var remittanceApiResult = await MapInter.mapInter(
+                              {
+                                "quotationId": "string",
+                                "sourceCurrency": senderCurrency,
+                                "targetCurrency": receiverCurrency,
+                                "countryCode": beneficiaryCountryCode,
+                                "debitAccount": senderAccountNumber,
+                                "debitAmount": senderAmount.toString(),
+                                "benBankCode": benBankCode,
+                                "benMobileNo": benMobileNo,
+                                "benSubBankCode": benSubBankCode,
+                                "accountType": benAccountType,
+                                "benIdType": benIdType,
+                                "benIdNo": benIdNo,
+                                "benIdExpiryDate": benIdExpiryDate,
+                                "benBankName": benBankName,
+                                "benAccountNo": receiverAccountNumber,
+                                "benCustomerName": benCustomerName,
+                                "address": benAddress,
+                                "city": benCity,
+                                "swiftCode": benSwiftCode,
+                                "remittancePurpose": remittancePurpose ?? "",
+                                "sourceOfFunds": sourceOfFunds ?? "",
+                                "relation": relation ?? "",
+                              },
+                              token ?? "",
+                            );
+                            log("Remittance API Response -> $remittanceApiResult");
+                            if (remittanceApiResult["success"]) {
+                              if (context.mounted) {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.errorSuccessScreen,
+                                  arguments: ErrorArgumentModel(
+                                    hasSecondaryButton: true,
+                                    iconPath:
+                                        ImageConstants.checkCircleOutlined,
+                                    title: "Success!",
+                                    message:
+                                        "Your transaction has been completed\n\nTransfer reference: ${remittanceApiResult["ftReferenceNumber"]}",
+                                    buttonTextSecondary: "Go Home",
+                                    onTapSecondary: () {
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        Routes.retailDashboard,
+                                        (route) => false,
+                                        arguments: RetailDashboardArgumentModel(
+                                          imgUrl: "",
+                                          name: profileName ?? "",
+                                          isFirst: storageIsFirstLogin == true
+                                              ? false
+                                              : true,
+                                        ).toMap(),
+                                      );
+                                    },
+                                    buttonText: "Make another transaction",
+                                    onTap: () async {
+                                      var result =
+                                          await MapCustomerAccountDetails
+                                              .mapCustomerAccountDetails(
+                                                  token ?? "");
+                                      if (result["success"]) {
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          Navigator.pop(context);
+                                          accountDetails =
+                                              result["crCustomerProfileRes"]
+                                                  ["body"]["accountDetails"];
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.sendMoneyFrom,
+                                            arguments: SendMoneyArgumentModel(
+                                              isBetweenAccounts:
+                                                  sendMoneyArgument
+                                                      .isBetweenAccounts,
+                                              isWithinDhabi: sendMoneyArgument
+                                                  .isWithinDhabi,
+                                              isRemittance: sendMoneyArgument
+                                                  .isRemittance,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      } else {
+                                        if (context.mounted) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                svgAssetPath:
+                                                    ImageConstants.warning,
+                                                title: "Error {200}",
+                                                message: result["message"][
+                                                    "Something went wrong, please try again later"],
+                                                actionWidget: GradientButton(
+                                                  onTap: () {},
+                                                  text: labels[346]
+                                                      ["labelText"],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    },
+                                  ).toMap(),
+                                );
+                              }
+                            } else {
+                              if (context.mounted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomDialog(
+                                      svgAssetPath: ImageConstants.warning,
+                                      title: "Error {200}",
+                                      message: remittanceApiResult["message"] ??
+                                          "Something went wrong while internal transfer, please try again later",
+                                      actionWidget: GradientButton(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
                                         text: labels[346]["labelText"],
                                       ),
                                     );

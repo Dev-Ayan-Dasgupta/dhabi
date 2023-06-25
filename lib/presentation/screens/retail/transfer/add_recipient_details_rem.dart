@@ -4,6 +4,8 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/repositories/configurations/index.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/widgets/shimmers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -41,10 +43,13 @@ class _AddRecipientDetailsRemittanceScreenState
   List<int> toggles = [];
 
   int textEditingControllersAdded = -1;
-  int dropDownListsAdded = -1;
+  // int dropDownListsAdded = -1;
   int togglesAdded = -1;
   int mandatoryFields = 0;
   int mandatorySatisfiedCount = 0;
+
+  int dropDowns = 0;
+  int dates = 0;
 
   int widgetsBuilt = 0;
 
@@ -79,11 +84,14 @@ class _AddRecipientDetailsRemittanceScreenState
           // if (field["type"] == "Text") {
           textEditingControllers.add(TextEditingController());
           // } else
-          if (field["type"] == "Dropdown") {
-            dropDownLists.add([]);
+          // if (field["type"] == "Dropdown") {
+          if (field["dropdownValues"] != null) {
+            dropDowns++;
           }
+          dropDownLists.add([]);
+          // }
         }
-        log("dropDownLists length -> ${dropDownLists.length}");
+        log("dropDownLists length -> $dropDowns");
       } else {
         if (context.mounted) {
           showDialog(
@@ -119,31 +127,39 @@ class _AddRecipientDetailsRemittanceScreenState
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Ternary(
-        condition: isFetchingFields,
-        truthy: const Center(
-          child: CircularProgressIndicator(),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal:
+              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
         ),
-        falsy: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal:
-                (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
-          ),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      labels[194]["labelText"],
-                      style: TextStyles.primaryBold.copyWith(
-                        color: AppColors.primary,
-                        fontSize: (28 / Dimensions.designWidth).w,
+        child: Column(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    labels[194]["labelText"],
+                    style: TextStyles.primaryBold.copyWith(
+                      color: AppColors.primary,
+                      fontSize: (28 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 20),
+                  Ternary(
+                    condition: isFetchingFields,
+                    truthy: Expanded(
+                      child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          return const ShimmerAddRecipientDetailsTile();
+                        },
+                        separatorBuilder: (context, index) {
+                          return const SizeBox(height: 10);
+                        },
+                        itemCount: 10,
                       ),
                     ),
-                    const SizeBox(height: 20),
-                    Expanded(
+                    falsy: Expanded(
                       child: ListView.builder(
                         itemCount: dynamicFields["dynamicFields"]?.length,
                         itemBuilder: (context, index) {
@@ -151,7 +167,7 @@ class _AddRecipientDetailsRemittanceScreenState
                               dynamicFields["dynamicFields"]?.length) {
                             widgetsBuilt = 0;
                             textEditingControllersAdded = -1;
-                            dropDownListsAdded = -1;
+                            // dropDownListsAdded = -1;
                             togglesAdded = -1;
                           }
                           // if (dynamicFields["dynamicFields"][index]["type"] ==
@@ -159,22 +175,26 @@ class _AddRecipientDetailsRemittanceScreenState
                           textEditingControllersAdded++;
                           log("textEditingControllersAdded -> $textEditingControllersAdded");
                           // } else
-                          if (dynamicFields["dynamicFields"][index]["type"] ==
-                              "Dropdown") {
-                            toggles.add(0);
-                            togglesAdded++;
-                            dropDownListsAdded++;
-                            // dropDownLists.add([]);
-                            dropDownLists[dropDownListsAdded].clear();
-                            log("dropDownListsAdded -> $dropDownListsAdded");
+                          // if (dynamicFields["dynamicFields"][index]["type"] ==
+                          //     "Dropdown") {
+                          toggles.add(0);
+                          togglesAdded++;
+                          // dropDownListsAdded++;
+                          // dropDownLists.add([]);
+                          dropDownLists[index].clear();
+                          // log("dropDownListsAdded -> $dropDownListsAdded");
 
+                          if (dynamicFields["dynamicFields"][index]
+                                  ["dropdownValues"] !=
+                              null) {
                             jsonDecode(dynamicFields["dynamicFields"][index]
                                         ["dropdownValues"]
                                     .replaceAll('\\', ''))
                                 .forEach((key, value) =>
-                                    dropDownLists[dropDownListsAdded]
-                                        .add(value));
-                          }
+                                    dropDownLists[index].add(value));
+                          } else {}
+
+                          // }
 
                           if (dynamicFields["dynamicFields"][index]
                               ["isManadatory"]) {
@@ -264,8 +284,7 @@ class _AddRecipientDetailsRemittanceScreenState
                                               title:
                                                   dynamicFields["dynamicFields"]
                                                       [index]["label"],
-                                              items: dropDownLists[
-                                                  dropDownListsAdded],
+                                              items: dropDownLists[index],
                                               value: dynamicFields[
                                                               "dynamicFields"]
                                                           [index]["fieldId"] ==
@@ -305,88 +324,99 @@ class _AddRecipientDetailsRemittanceScreenState
                           );
                         },
                       ),
-                    )
-                  ],
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizeBox(height: 20),
-                  Row(
-                    children: [
-                      BlocBuilder<CheckBoxBloc, CheckBoxState>(
-                        builder: (context, state) {
-                          if (isChecked) {
-                            return InkWell(
-                              onTap: () {
-                                isChecked = false;
-                                triggerCheckBoxEvent(isChecked);
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                    (5 / Dimensions.designWidth).w),
-                                child: SvgPicture.asset(
-                                  ImageConstants.checkedBox,
-                                  width: (14 / Dimensions.designWidth).w,
-                                  height: (14 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                            );
-                          } else {
-                            return InkWell(
-                              onTap: () {
-                                isChecked = true;
-                                triggerCheckBoxEvent(isChecked);
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.all(
-                                    (5 / Dimensions.designWidth).w),
-                                child: SvgPicture.asset(
-                                  ImageConstants.uncheckedBox,
-                                  width: (14 / Dimensions.designWidth).w,
-                                  height: (14 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                      const SizeBox(width: 5),
-                      Text(
-                        labels[126]["labelText"],
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: const Color(0XFF414141),
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                    builder: (context, state) {
-                      if (allValid &&
-                          mandatorySatisfiedCount == dropDownLists.length) {
-                        return GradientButton(
-                          onTap: () {},
-                          text: labels[127]["labelText"],
-                        );
-                      } else {
-                        return SolidButton(
-                          onTap: () {},
-                          text: labels[127]["labelText"],
-                        );
-                      }
-                    },
-                  ),
-                  SizeBox(
-                    height: PaddingConstants.bottomPadding +
-                        MediaQuery.paddingOf(context).bottom,
+                    ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizeBox(height: 10),
+                Row(
+                  children: [
+                    BlocBuilder<CheckBoxBloc, CheckBoxState>(
+                      builder: (context, state) {
+                        if (isChecked) {
+                          return InkWell(
+                            onTap: () {
+                              isChecked = false;
+                              triggerCheckBoxEvent(isChecked);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(
+                                  (5 / Dimensions.designWidth).w),
+                              child: SvgPicture.asset(
+                                ImageConstants.checkedBox,
+                                width: (14 / Dimensions.designWidth).w,
+                                height: (14 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                          );
+                        } else {
+                          return InkWell(
+                            onTap: () {
+                              isChecked = true;
+                              triggerCheckBoxEvent(isChecked);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(
+                                  (5 / Dimensions.designWidth).w),
+                              child: SvgPicture.asset(
+                                ImageConstants.uncheckedBox,
+                                width: (14 / Dimensions.designWidth).w,
+                                height: (14 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                    const SizeBox(width: 5),
+                    Text(
+                      labels[126]["labelText"],
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: const Color(0XFF414141),
+                        fontSize: (16 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizeBox(height: 10),
+                BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                  builder: (context, state) {
+                    if (allValid &&
+                        mandatorySatisfiedCount == (dropDowns + dates)) {
+                      return GradientButton(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.transferAmount,
+                            arguments: SendMoneyArgumentModel(
+                              isBetweenAccounts:
+                                  sendMoneyArgument.isBetweenAccounts,
+                              isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                              isRemittance: sendMoneyArgument.isRemittance,
+                            ).toMap(),
+                          );
+                        },
+                        text: labels[127]["labelText"],
+                      );
+                    } else {
+                      return SolidButton(
+                        onTap: () {},
+                        text: labels[127]["labelText"],
+                      );
+                    }
+                  },
+                ),
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.paddingOf(context).bottom,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -405,6 +435,10 @@ class _AddRecipientDetailsRemittanceScreenState
       case "BenBankCode":
         benBankCode = p0;
         log("benBankCode -> $benBankCode");
+        break;
+      case "BenSubBankCode":
+        benSubBankCode = p0;
+        log("benSubBankCode -> $benSubBankCode");
         break;
       case "BenCustomerName":
         benCustomerName = p0;

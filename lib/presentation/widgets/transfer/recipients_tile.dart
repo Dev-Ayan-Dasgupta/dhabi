@@ -1,10 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
+import 'package:cached_memory_image/provider/cached_memory_image_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:uuid/uuid.dart';
 
 class RecipientsTile extends StatelessWidget {
   const RecipientsTile({
@@ -31,7 +34,8 @@ class RecipientsTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: (5 / Dimensions.designWidth).w),
+        padding:
+            EdgeInsets.symmetric(vertical: (5 / Dimensions.designHeight).h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +45,7 @@ class RecipientsTile extends StatelessWidget {
               children: [
                 SizedBox(
                   width: (36 / Dimensions.designWidth).w,
-                  height: (46 / Dimensions.designWidth).w,
+                  height: (46 / Dimensions.designHeight).h,
                   child: Stack(
                     children: [
                       Container(
@@ -54,22 +58,24 @@ class RecipientsTile extends StatelessWidget {
                           color: const Color.fromRGBO(0, 184, 148, 0.1),
                         ),
                         child: Center(
-                          child: SvgPicture.asset(
-                            ImageConstants.accountBalance,
-                            width: (15 / Dimensions.designWidth).w,
-                            height: (15 / Dimensions.designWidth).w,
+                          child: CircleAvatar(
+                            radius: ((15 / 2) / Dimensions.designWidth).w,
+                            backgroundImage: CachedMemoryImageProvider(
+                              const Uuid().v4(),
+                              bytes: base64Decode(flagImgUrl),
+                            ),
                           ),
                         ),
                       ),
-                      Positioned(
-                        left: (15 / Dimensions.designWidth).w,
-                        top: (15 / Dimensions.designWidth).w,
-                        child: CustomCircleAvatarAsset(
-                          imgUrl: flagImgUrl,
-                          width: (21 / Dimensions.designWidth).w,
-                          height: (21 / Dimensions.designWidth).w,
-                        ),
-                      ),
+                      // Positioned(
+                      //   left: (15 / Dimensions.designWidth).w,
+                      //   top: (15 / Dimensions.designWidth).w,
+                      //   child: CustomCircleAvatarAsset(
+                      //     imgUrl: flagImgUrl,
+                      //     width: (21 / Dimensions.designWidth).w,
+                      //     height: (21 / Dimensions.designWidth).w,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

@@ -77,36 +77,53 @@ class _RecipientReceiveModeScreenState
               ),
             ),
             const SizeBox(height: 20),
-            RecipientReceiveModeTile(
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  Routes.addRecipDetRem,
-                  arguments: SendMoneyArgumentModel(
-                    isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
-                    isWithinDhabi: sendMoneyArgument.isWithinDhabi,
-                    isRemittance: sendMoneyArgument.isRemittance,
-                  ).toMap(),
-                );
-              },
-              title: "To Bank",
-              limitAmount: 10000,
-              limitCurrency: "EUR",
-              feeAmount: 10,
-              feeCurrency: "USD",
-              eta: 2,
+            Ternary(
+              condition: isBank,
+              truthy: Column(
+                children: [
+                  RecipientReceiveModeTile(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.addRecipDetRem,
+                        arguments: SendMoneyArgumentModel(
+                          isBetweenAccounts:
+                              sendMoneyArgument.isBetweenAccounts,
+                          isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                          isRemittance: sendMoneyArgument.isRemittance,
+                        ).toMap(),
+                      );
+                    },
+                    title: "To Bank",
+                    limitAmount: 10000,
+                    limitCurrency: "EUR",
+                    feeAmount: 10,
+                    feeCurrency: "USD",
+                    eta: 2,
+                  ),
+                  const SizeBox(height: 20),
+                ],
+              ),
+              falsy: const SizeBox(),
             ),
-            const SizeBox(height: 20),
-            RecipientReceiveModeTile(
-              onTap: () {},
-              title: "To Digital Wallet",
-              limitAmount: 20000,
-              limitCurrency: "EUR",
-              feeAmount: 20,
-              feeCurrency: "USD",
-              eta: 0,
+            Ternary(
+              condition: isWallet,
+              truthy: Column(
+                children: [
+                  RecipientReceiveModeTile(
+                    onTap: () {},
+                    title: "To Digital Wallet",
+                    limitAmount: 20000,
+                    limitCurrency: "EUR",
+                    feeAmount: 20,
+                    feeCurrency: "USD",
+                    eta: 0,
+                  ),
+                  const SizeBox(height: 20),
+                ],
+              ),
+              falsy: const SizeBox(),
             ),
-            const SizeBox(height: 20),
             Align(
               alignment: Alignment.center,
               child: InkWell(

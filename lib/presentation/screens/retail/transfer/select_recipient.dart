@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/shimmers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -190,30 +191,38 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
               onChanged: onSearchChanged,
             ),
             const SizeBox(height: 10),
-            Row(
-              children: [
-                Text(
-                  "Search through your ",
-                  style: TextStyles.primaryMedium.copyWith(
-                    color: AppColors.dark50,
-                    fontSize: (12 / Dimensions.designWidth).w,
+            BlocBuilder<ShowButtonBloc, ShowButtonState>(
+              builder: (context, state) {
+                return Ternary(
+                  condition: isFetchingBeneficiaries,
+                  truthy: const SizeBox(),
+                  falsy: Row(
+                    children: [
+                      Text(
+                        "Search through your ",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark50,
+                          fontSize: (12 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      Text(
+                        "${recipients.length} ",
+                        style: TextStyles.primaryBold.copyWith(
+                          color: AppColors.dark50,
+                          fontSize: (12 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      Text(
+                        "International Recipients.",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark50,
+                          fontSize: (12 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Text(
-                  "46 ",
-                  style: TextStyles.primaryBold.copyWith(
-                    color: AppColors.dark50,
-                    fontSize: (12 / Dimensions.designWidth).w,
-                  ),
-                ),
-                Text(
-                  "International Recipients.",
-                  style: TextStyles.primaryMedium.copyWith(
-                    color: AppColors.dark50,
-                    fontSize: (12 / Dimensions.designWidth).w,
-                  ),
-                ),
-              ],
+                );
+              },
             ),
             const SizeBox(height: 20),
 
@@ -258,7 +267,17 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
   Widget buildRecipientList(BuildContext context, ShowButtonState state) {
     return Ternary(
       condition: isFetchingBeneficiaries,
-      truthy: const Center(child: CircularProgressIndicator()),
+      truthy: Expanded(
+        child: ListView.separated(
+          itemBuilder: (context, index) {
+            return const ShimmerSelectRecipientTile();
+          },
+          separatorBuilder: (context, index) {
+            return const SizeBox(height: 10);
+          },
+          itemCount: 12,
+        ),
+      ),
       falsy: Expanded(
         child: ListView.separated(
           itemBuilder: (context, index) {

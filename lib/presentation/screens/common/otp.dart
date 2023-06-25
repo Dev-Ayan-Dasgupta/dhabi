@@ -547,7 +547,10 @@ class _OTPScreenState extends State<OTPScreen> {
                                             if (cifDetails.length == 1) {
                                               cif = getCustomerDetailsResponse[
                                                   "cifDetails"][0]["cif"];
-
+                                              await storage.write(
+                                                  key: "cif", value: cif);
+                                              storageCif = await storage.read(
+                                                  key: "cif");
                                               isCompany =
                                                   getCustomerDetailsResponse[
                                                           "cifDetails"][0]
@@ -562,6 +565,45 @@ class _OTPScreenState extends State<OTPScreen> {
                                                   cif == "null") {
                                                 if (isCompany) {
                                                   if (isCompanyRegistered) {
+                                                    if (context.mounted) {
+                                                      Navigator.pop(context);
+                                                      Navigator
+                                                          .pushReplacementNamed(
+                                                        context,
+                                                        Routes.loginPassword,
+                                                        arguments:
+                                                            LoginPasswordArgumentModel(
+                                                          emailId:
+                                                              storageEmail ??
+                                                                  "",
+                                                          userId:
+                                                              storageUserId ??
+                                                                  0,
+                                                          userTypeId:
+                                                              storageUserTypeId ??
+                                                                  2,
+                                                          companyId:
+                                                              storageCompanyId ??
+                                                                  0,
+                                                        ).toMap(),
+                                                      );
+                                                    }
+                                                  } else {
+                                                    if (context.mounted) {
+                                                      Navigator.pop(context);
+                                                      Navigator
+                                                          .pushReplacementNamed(
+                                                        context,
+                                                        Routes.onboarding,
+                                                        arguments:
+                                                            OnboardingArgumentModel(
+                                                          isInitial: true,
+                                                        ).toMap(),
+                                                      );
+                                                    }
+                                                  }
+                                                } else {
+                                                  if (context.mounted) {
                                                     Navigator.pop(context);
                                                     Navigator
                                                         .pushReplacementNamed(
@@ -581,37 +623,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                                                 0,
                                                       ).toMap(),
                                                     );
-                                                  } else {
-                                                    Navigator.pop(context);
-                                                    Navigator
-                                                        .pushReplacementNamed(
-                                                      context,
-                                                      Routes.onboarding,
-                                                      arguments:
-                                                          OnboardingArgumentModel(
-                                                        isInitial: true,
-                                                      ).toMap(),
-                                                    );
                                                   }
-                                                } else {
-                                                  Navigator.pop(context);
-                                                  Navigator
-                                                      .pushReplacementNamed(
-                                                    context,
-                                                    Routes.loginPassword,
-                                                    arguments:
-                                                        LoginPasswordArgumentModel(
-                                                      emailId:
-                                                          storageEmail ?? "",
-                                                      userId:
-                                                          storageUserId ?? 0,
-                                                      userTypeId:
-                                                          storageUserTypeId ??
-                                                              2,
-                                                      companyId:
-                                                          storageCompanyId ?? 0,
-                                                    ).toMap(),
-                                                  );
                                                 }
                                               }
                                             } else {
@@ -722,7 +734,8 @@ class _OTPScreenState extends State<OTPScreen> {
                             if (context.mounted) {
                               cif = getCustomerDetailsResponse["cifDetails"][0]
                                   ["cif"];
-
+                              await storage.write(key: "cif", value: cif);
+                              storageCif = await storage.read(key: "cif");
                               isCompany =
                                   getCustomerDetailsResponse["cifDetails"][0]
                                       ["isCompany"];
@@ -968,7 +981,10 @@ class _OTPScreenState extends State<OTPScreen> {
                                             if (cifDetails.length == 1) {
                                               cif = getCustomerDetailsResponse[
                                                   "cifDetails"][0]["cif"];
-
+                                              await storage.write(
+                                                  key: "cif", value: cif);
+                                              storageCif = await storage.read(
+                                                  key: "cif");
                                               isCompany =
                                                   getCustomerDetailsResponse[
                                                           "cifDetails"][0]
@@ -983,6 +999,45 @@ class _OTPScreenState extends State<OTPScreen> {
                                                   cif == "null") {
                                                 if (isCompany) {
                                                   if (isCompanyRegistered) {
+                                                    if (context.mounted) {
+                                                      Navigator.pop(context);
+                                                      Navigator
+                                                          .pushReplacementNamed(
+                                                        context,
+                                                        Routes.loginPassword,
+                                                        arguments:
+                                                            LoginPasswordArgumentModel(
+                                                          emailId:
+                                                              storageEmail ??
+                                                                  "",
+                                                          userId:
+                                                              storageUserId ??
+                                                                  0,
+                                                          userTypeId:
+                                                              storageUserTypeId ??
+                                                                  2,
+                                                          companyId:
+                                                              storageCompanyId ??
+                                                                  0,
+                                                        ).toMap(),
+                                                      );
+                                                    }
+                                                  } else {
+                                                    if (context.mounted) {
+                                                      Navigator.pop(context);
+                                                      Navigator
+                                                          .pushReplacementNamed(
+                                                        context,
+                                                        Routes.onboarding,
+                                                        arguments:
+                                                            OnboardingArgumentModel(
+                                                          isInitial: true,
+                                                        ).toMap(),
+                                                      );
+                                                    }
+                                                  }
+                                                } else {
+                                                  if (context.mounted) {
                                                     Navigator.pop(context);
                                                     Navigator
                                                         .pushReplacementNamed(
@@ -1002,37 +1057,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                                                 0,
                                                       ).toMap(),
                                                     );
-                                                  } else {
-                                                    Navigator.pop(context);
-                                                    Navigator
-                                                        .pushReplacementNamed(
-                                                      context,
-                                                      Routes.onboarding,
-                                                      arguments:
-                                                          OnboardingArgumentModel(
-                                                        isInitial: true,
-                                                      ).toMap(),
-                                                    );
                                                   }
-                                                } else {
-                                                  Navigator.pop(context);
-                                                  Navigator
-                                                      .pushReplacementNamed(
-                                                    context,
-                                                    Routes.loginPassword,
-                                                    arguments:
-                                                        LoginPasswordArgumentModel(
-                                                      emailId:
-                                                          storageEmail ?? "",
-                                                      userId:
-                                                          storageUserId ?? 0,
-                                                      userTypeId:
-                                                          storageUserTypeId ??
-                                                              2,
-                                                      companyId:
-                                                          storageCompanyId ?? 0,
-                                                    ).toMap(),
-                                                  );
                                                 }
                                               }
                                             } else {
@@ -1334,7 +1359,10 @@ class _OTPScreenState extends State<OTPScreen> {
                                           if (cifDetails.length == 1) {
                                             cif = getCustomerDetailsResponse[
                                                 "cifDetails"][0]["cif"];
-
+                                            await storage.write(
+                                                key: "cif", value: cif);
+                                            storageCif =
+                                                await storage.read(key: "cif");
                                             isCompany =
                                                 getCustomerDetailsResponse[
                                                         "cifDetails"][0]
@@ -1348,6 +1376,43 @@ class _OTPScreenState extends State<OTPScreen> {
                                             if (cif == null || cif == "null") {
                                               if (isCompany) {
                                                 if (isCompanyRegistered) {
+                                                  if (context.mounted) {
+                                                    Navigator.pop(context);
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      Routes.loginPassword,
+                                                      arguments:
+                                                          LoginPasswordArgumentModel(
+                                                        emailId:
+                                                            storageEmail ?? "",
+                                                        userId:
+                                                            storageUserId ?? 0,
+                                                        userTypeId:
+                                                            storageUserTypeId ??
+                                                                2,
+                                                        companyId:
+                                                            storageCompanyId ??
+                                                                0,
+                                                      ).toMap(),
+                                                    );
+                                                  }
+                                                } else {
+                                                  if (context.mounted) {
+                                                    Navigator.pop(context);
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      Routes.onboarding,
+                                                      arguments:
+                                                          OnboardingArgumentModel(
+                                                        isInitial: true,
+                                                      ).toMap(),
+                                                    );
+                                                  }
+                                                }
+                                              } else {
+                                                if (context.mounted) {
                                                   Navigator.pop(context);
                                                   Navigator
                                                       .pushReplacementNamed(
@@ -1366,33 +1431,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                                           storageCompanyId ?? 0,
                                                     ).toMap(),
                                                   );
-                                                } else {
-                                                  Navigator.pop(context);
-                                                  Navigator
-                                                      .pushReplacementNamed(
-                                                    context,
-                                                    Routes.onboarding,
-                                                    arguments:
-                                                        OnboardingArgumentModel(
-                                                      isInitial: true,
-                                                    ).toMap(),
-                                                  );
                                                 }
-                                              } else {
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacementNamed(
-                                                  context,
-                                                  Routes.loginPassword,
-                                                  arguments:
-                                                      LoginPasswordArgumentModel(
-                                                    emailId: storageEmail ?? "",
-                                                    userId: storageUserId ?? 0,
-                                                    userTypeId:
-                                                        storageUserTypeId ?? 2,
-                                                    companyId:
-                                                        storageCompanyId ?? 0,
-                                                  ).toMap(),
-                                                );
                                               }
                                             }
                                           } else {
