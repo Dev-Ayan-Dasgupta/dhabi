@@ -20,12 +20,12 @@ String beneficiaryCountryCode = "";
 
 // ------ REMITTANCE ------ //
 
-bool isNewBeneficiary = false;
+bool isNewRemittanceBeneficiary = false;
 
 String benBankCode = "";
 String benMobileNo = "";
 String benSubBankCode = "";
-String benAccountType = "";
+int benAccountType = 0;
 String benIdType = "";
 String benIdNo = "";
 String benIdExpiryDate = "";
@@ -38,9 +38,17 @@ String? remittancePurpose;
 String? sourceOfFunds;
 String? relation;
 
+bool isAddRemBeneficiary = false;
+
 bool isBank = false;
 bool isWallet = false;
 
 bool isSenderBearCharges = false;
 
 String expectedTime = "";
+
+// ----- Within Dhabi ----- //
+
+bool isNewWithinDhabiBeneficiary = false;
+
+bool isAddWithinDhabiBeneficiary = false;

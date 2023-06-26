@@ -6,5 +6,10 @@ Digital Banking Application for Dhabi
 
 - Changed onFocussed behaviour of Gradient button
 - Implemented biometric capability and availability checks
-- Send money Internal and Remittance (without biometric and bearer charges) developed
+- Send money Internal, Within Dhabi and Remittance (without biometric and bearer charges) developed
 - Forgot password issue fixed by storing cif details at the time of OTP
+- Fixed From Date after To Date issue
+- Updated 4th image of stories screen
+- FUAT: 47, 46, 17
+- Updated state management issue of displaying error message if a different account tile is created after entering a valid deposit account on a previous tile.
+- FHDHABI: 254, 223

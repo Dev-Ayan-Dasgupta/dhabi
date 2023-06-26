@@ -221,7 +221,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
               builder: (context, state) {
                 if (isFormatSelected &&
                     ((isOneMonth || isThreeMonths || isSixMonths) ||
-                        (isFromDateSelected && isToDateSelected))) {
+                        (isFromDateSelected && isToDateSelected)) &&
+                    auxFromDate.difference(auxToDate).inDays <= 0) {
                   return Column(
                     children: [
                       GradientButton(
@@ -235,6 +236,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                             showButtonBloc.add(
                               ShowButtonEvent(show: isDownloading),
                             );
+
                             if (selectedFormat == "Excel (.xls)") {
                               base64String =
                                   await MapExcelCustomerAccountStatement
@@ -275,21 +277,33 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                               // log("base64 pdf -> $base64String");
                             }
                             openFile(base64String, selectedFormat);
+
                             isDownloading = false;
                             showButtonBloc.add(
                               ShowButtonEvent(show: isDownloading),
                             );
                           }
                         },
-                        text: "Download Now",
+                        text: labels[101]["labelText"],
                         auxWidget:
                             isDownloading ? const LoaderRow() : const SizeBox(),
                       ),
-                      const SizeBox(height: 20),
+                      SizeBox(
+                        height: PaddingConstants.bottomPadding +
+                            MediaQuery.paddingOf(context).bottom,
+                      ),
                     ],
                   );
                 } else {
-                  return const SizeBox();
+                  return Column(
+                    children: [
+                      SolidButton(onTap: () {}, text: labels[101]["labelText"]),
+                      SizeBox(
+                        height: PaddingConstants.bottomPadding +
+                            MediaQuery.paddingOf(context).bottom,
+                      ),
+                    ],
+                  );
                 }
               },
             ),

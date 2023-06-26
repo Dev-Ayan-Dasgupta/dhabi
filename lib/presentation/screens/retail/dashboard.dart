@@ -470,6 +470,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                           SizedBox(
                             height: (277 / Dimensions.designHeight).h,
                             child: TabBarView(
+                              physics: const NeverScrollableScrollPhysics(),
                               controller: tabController,
                               children: [
                                 // ! Home Tab View
@@ -700,11 +701,22 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                         return Padding(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 47.w -
-                                                  ((depositDetails.length - 1) *
-                                                      (6.5 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w)),
+                                                          ((depositDetails
+                                                                      .length -
+                                                                  1) *
+                                                              (6.5 /
+                                                                      Dimensions
+                                                                          .designWidth)
+                                                                  .w) <
+                                                      0
+                                                  ? 0
+                                                  : 47.w -
+                                                      ((depositDetails.length -
+                                                              1) *
+                                                          (6.5 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w)),
                                           child: SizedBox(
                                             width: 90.w,
                                             height:

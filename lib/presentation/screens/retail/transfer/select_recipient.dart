@@ -70,32 +70,62 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
       if (getBeneficiariesApiResult["success"]) {
         recipients.clear();
         for (var beneficiary in getBeneficiariesApiResult["beneficiaries"]) {
-          if (beneficiary["beneficiaryType"] == 2) {
-            recipients.add(
-              RecipientModel(
-                beneficiaryId: beneficiary["beneficiaryId"],
-                swiftReference: beneficiary["swiftReference"],
-                flagImgUrl: beneficiary["countryCodeFlagBase64"],
-                name: beneficiary["name"],
-                accountNumber: beneficiary["accountNumber"],
-                currency: beneficiary["targetCurrency"],
-                address: beneficiary["address"],
-                accountType: beneficiary["accountType"],
-                countryShortCode: beneficiary["countryShortCode"],
-                benBankCode: beneficiary["benBankCode"] ?? "",
-                benMobileNo: beneficiary["benMobileNo"] ?? "",
-                benSubBankCode: beneficiary["benSubBankCode"] ?? "",
-                benIdType: beneficiary["benIdType"] ?? "",
-                benIdNo: beneficiary["benIdNo"] ?? "",
-                benIdExpiryDate: beneficiary["benIdExpiryDate"] ?? "",
-                benBankName: beneficiary["benBankName"] ?? "",
-                benSwiftCode: beneficiary["benSwiftCodeText"] ?? "",
-                benCity: beneficiary["city"] ?? "",
-                remittancePurpose: beneficiary["remittancePurpose"] ?? "",
-                sourceOfFunds: beneficiary["sourceOfFunds"] ?? "",
-                relation: beneficiary["relation"] ?? "",
-              ),
-            );
+          if (sendMoneyArgument.isRemittance) {
+            if (beneficiary["beneficiaryType"] == 2) {
+              recipients.add(
+                RecipientModel(
+                  beneficiaryId: beneficiary["beneficiaryId"],
+                  swiftReference: beneficiary["swiftReference"],
+                  flagImgUrl: beneficiary["currencyFlagBase64"],
+                  name: beneficiary["name"],
+                  accountNumber: beneficiary["accountNumber"],
+                  currency: beneficiary["targetCurrency"],
+                  address: beneficiary["address"],
+                  accountType: beneficiary["accountType"],
+                  countryShortCode: beneficiary["countryCode"],
+                  benBankCode: beneficiary["benBankCode"] ?? "",
+                  benMobileNo: beneficiary["benMobileNo"] ?? "",
+                  benSubBankCode: beneficiary["benSubBankCode"] ?? "",
+                  benIdType: beneficiary["benIdType"] ?? "",
+                  benIdNo: beneficiary["benIdNo"] ?? "",
+                  benIdExpiryDate: beneficiary["benIdExpiryDate"] ?? "",
+                  benBankName: beneficiary["benBankName"] ?? "",
+                  benSwiftCode: beneficiary["benSwiftCodeText"] ?? "",
+                  benCity: beneficiary["city"] ?? "",
+                  remittancePurpose: beneficiary["remittancePurpose"] ?? "",
+                  sourceOfFunds: beneficiary["sourceOfFunds"] ?? "",
+                  relation: beneficiary["relation"] ?? "",
+                ),
+              );
+            }
+          } else if (sendMoneyArgument.isWithinDhabi) {
+            if (beneficiary["beneficiaryType"] == 3) {
+              recipients.add(
+                RecipientModel(
+                  beneficiaryId: beneficiary["beneficiaryId"],
+                  swiftReference: beneficiary["swiftReference"],
+                  flagImgUrl: beneficiary["currencyFlagBase64"],
+                  name: beneficiary["name"],
+                  accountNumber: beneficiary["accountNumber"],
+                  currency: beneficiary["targetCurrency"],
+                  address: beneficiary["address"],
+                  accountType: beneficiary["accountType"],
+                  countryShortCode: beneficiary["countryCode"],
+                  benBankCode: beneficiary["benBankCode"] ?? "",
+                  benMobileNo: beneficiary["benMobileNo"] ?? "",
+                  benSubBankCode: beneficiary["benSubBankCode"] ?? "",
+                  benIdType: beneficiary["benIdType"] ?? "",
+                  benIdNo: beneficiary["benIdNo"] ?? "",
+                  benIdExpiryDate: beneficiary["benIdExpiryDate"] ?? "",
+                  benBankName: beneficiary["benBankName"] ?? "",
+                  benSwiftCode: beneficiary["benSwiftCodeText"] ?? "",
+                  benCity: beneficiary["city"] ?? "",
+                  remittancePurpose: beneficiary["remittancePurpose"] ?? "",
+                  sourceOfFunds: beneficiary["sourceOfFunds"] ?? "",
+                  relation: beneficiary["relation"] ?? "",
+                ),
+              );
+            }
           }
         }
       } else {
@@ -165,16 +195,31 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                 const SizeBox(height: 30),
                 InkWell(
                   onTap: () {
-                    isNewBeneficiary = true;
-                    Navigator.pushNamed(
-                      context,
-                      Routes.selectCountry,
-                      arguments: SendMoneyArgumentModel(
-                        isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
-                        isWithinDhabi: sendMoneyArgument.isWithinDhabi,
-                        isRemittance: sendMoneyArgument.isRemittance,
-                      ).toMap(),
-                    );
+                    if (sendMoneyArgument.isRemittance) {
+                      isNewRemittanceBeneficiary = true;
+                      Navigator.pushNamed(
+                        context,
+                        Routes.selectCountry,
+                        arguments: SendMoneyArgumentModel(
+                          isBetweenAccounts:
+                              sendMoneyArgument.isBetweenAccounts,
+                          isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                          isRemittance: sendMoneyArgument.isRemittance,
+                        ).toMap(),
+                      );
+                    } else {
+                      isNewWithinDhabiBeneficiary = true;
+                      Navigator.pushNamed(
+                        context,
+                        Routes.recipientDetails,
+                        arguments: SendMoneyArgumentModel(
+                          isBetweenAccounts:
+                              sendMoneyArgument.isBetweenAccounts,
+                          isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                          isRemittance: sendMoneyArgument.isRemittance,
+                        ).toMap(),
+                      );
+                    }
                   },
                   child: Container(
                     width: 100.w,
@@ -325,7 +370,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                   receiverAccountNumber = item.accountNumber;
                   benCustomerName = item.name;
                   benAddress = item.address;
-                  benAccountType = item.accountType.toString();
+                  benAccountType = item.accountType;
                   beneficiaryCountryCode = item.countryShortCode;
                   receiverCurrency = item.currency;
                   benBankCode = item.benBankCode;
@@ -341,27 +386,63 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                   sourceOfFunds = item.sourceOfFunds;
                   relation = item.relation;
 
-                  var getExchRateApiResult =
-                      await MapExchangeRate.mapExchangeRate(
-                    token ?? "",
-                  );
-                  log("getExchRateApiResult -> $getExchRateApiResult");
+                  if (sendMoneyArgument.isRemittance) {
+                    var getExchRateApiResult =
+                        await MapExchangeRate.mapExchangeRate(
+                      token ?? "",
+                    );
+                    log("getExchRateApiResult -> $getExchRateApiResult");
 
-                  if (getExchRateApiResult["success"]) {
-                    for (var fetchExchangeRate
-                        in getExchRateApiResult["fetchExRates"]) {
-                      if (fetchExchangeRate["exchangeCurrency"] ==
-                          receiverCurrency) {
-                        exchangeRate = fetchExchangeRate["exchangeRate"];
-                        log("exchangeRate -> $exchangeRate");
-                        fees = double.parse(
-                            fetchExchangeRate["transferFee"].split(' ').last);
-                        log("fees -> $fees");
-                        expectedTime = getExchRateApiResult["expectedTime"];
-                        break;
+                    if (getExchRateApiResult["success"]) {
+                      for (var fetchExchangeRate
+                          in getExchRateApiResult["fetchExRates"]) {
+                        if (fetchExchangeRate["exchangeCurrency"] ==
+                            receiverCurrency) {
+                          exchangeRate =
+                              fetchExchangeRate["exchangeRate"].toDouble();
+                          log("exchangeRate -> $exchangeRate");
+                          fees = double.parse(
+                              fetchExchangeRate["transferFee"].split(' ').last);
+                          log("fees -> $fees");
+                          expectedTime = getExchRateApiResult["expectedTime"];
+                          break;
+                        }
+                      }
+
+                      if (context.mounted) {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.transferAmount,
+                          arguments: SendMoneyArgumentModel(
+                            isBetweenAccounts:
+                                sendMoneyArgument.isBetweenAccounts,
+                            isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                            isRemittance: sendMoneyArgument.isRemittance,
+                          ).toMap(),
+                        );
+                      }
+                    } else {
+                      if (context.mounted) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return CustomDialog(
+                              svgAssetPath: ImageConstants.warning,
+                              title: "Error {200}",
+                              message: getExchRateApiResult["message"] ??
+                                  "There was an error fetching exchange rate, please try again later.",
+                              actionWidget: GradientButton(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                text: labels[346]["labelText"],
+                              ),
+                            );
+                          },
+                        );
                       }
                     }
-
+                  } else {
                     if (context.mounted) {
                       Navigator.pushNamed(
                         context,
@@ -372,26 +453,6 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                           isWithinDhabi: sendMoneyArgument.isWithinDhabi,
                           isRemittance: sendMoneyArgument.isRemittance,
                         ).toMap(),
-                      );
-                    }
-                  } else {
-                    if (context.mounted) {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return CustomDialog(
-                            svgAssetPath: ImageConstants.warning,
-                            title: "Error {200}",
-                            message: getExchRateApiResult["message"] ??
-                                "There was an error fetching exchange rate, please try again later.",
-                            actionWidget: GradientButton(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              text: labels[346]["labelText"],
-                            ),
-                          );
-                        },
                       );
                     }
                   }

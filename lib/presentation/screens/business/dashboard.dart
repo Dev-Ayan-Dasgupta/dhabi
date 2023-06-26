@@ -587,6 +587,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                           SizedBox(
                             height: (277 / Dimensions.designWidth).w,
                             child: TabBarView(
+                              physics: const NeverScrollableScrollPhysics(),
                               controller: tabController,
                               children: [
                                 // ! Home Tab View

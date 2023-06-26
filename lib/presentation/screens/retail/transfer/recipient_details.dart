@@ -1,3 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
 import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
@@ -7,13 +17,14 @@ import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class RecipientDetailsScreen extends StatefulWidget {
-  const RecipientDetailsScreen({Key? key}) : super(key: key);
+  const RecipientDetailsScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<RecipientDetailsScreen> createState() => _RecipientDetailsScreenState();
@@ -22,10 +33,27 @@ class RecipientDetailsScreen extends StatefulWidget {
 class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
   final TextEditingController _ibanController = TextEditingController();
   final TextEditingController _recipientNameController =
-      TextEditingController(text: "Au*******ui");
+      TextEditingController();
   bool isChecked = false;
-  String buttonText = "Search";
+  String buttonText = labels[174]["labelText"];
   bool isProceed = false;
+
+  bool isFetchingCustDets = false;
+  bool isFetchingExchangeRate = false;
+
+  late SendMoneyArgumentModel sendMoneyArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+  }
+
+  void argumentInitialization() async {
+    sendMoneyArgument =
+        SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final ShowButtonBloc proceedBloc = context.read<ShowButtonBloc>();
@@ -46,29 +74,40 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
-                    "Recipient Details",
+                    labels[177]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
                       color: AppColors.primary,
                       fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
-                  const SizeBox(height: 30),
-                  Text(
-                    "IBAN / Account number",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.red100,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  const SizeBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        "IBAN / Account number",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 10),
-                  CustomTextField(
-                    hintText: "Enter IBAN or Account Number",
-                    keyboardType: TextInputType.number,
-                    controller: _ibanController,
-                    onChanged: (p0) {
-                      proceedBloc.add(ShowButtonEvent(show: isProceed));
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      return CustomTextField(
+                        hintText: "Enter IBAN or Account Number",
+                        // keyboardType: TextInputType.number,
+                        enabled: !isProceed,
+                        color:
+                            isProceed ? AppColors.blackEE : Colors.transparent,
+                        controller: _ibanController,
+                        onChanged: (p0) {
+                          proceedBloc.add(ShowButtonEvent(show: isProceed));
+                        },
+                      );
                     },
                   ),
                   const SizeBox(height: 20),
@@ -91,7 +130,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                           ),
                           const SizeBox(width: 5),
                           Text(
-                            "Add this person to my recipient list",
+                            labels[126]["labelText"],
                             style: TextStyles.primaryMedium.copyWith(
                               color: const Color(0XFF414141),
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -108,7 +147,10 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: buildSubmitButton,
                 ),
-                const SizeBox(height: 20),
+                SizeBox(
+                  height: PaddingConstants.bottomPadding +
+                      MediaQuery.paddingOf(context).bottom,
+                ),
               ],
             )
           ],
@@ -128,10 +170,10 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Recipient Name",
+            labels[178]["labelText"],
             style: TextStyles.primaryMedium.copyWith(
-              color: AppColors.red100,
-              fontSize: (16 / Dimensions.designWidth).w,
+              color: AppColors.dark80,
+              fontSize: (14 / Dimensions.designWidth).w,
             ),
           ),
           const SizeBox(height: 10),
@@ -153,6 +195,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
       return InkWell(
         onTap: () {
           isChecked = false;
+          isAddWithinDhabiBeneficiary = isChecked;
           triggerCheckBoxEvent(isChecked);
         },
         child: Padding(
@@ -168,6 +211,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
       return InkWell(
         onTap: () {
           isChecked = true;
+          isAddWithinDhabiBeneficiary = isChecked;
           triggerCheckBoxEvent(isChecked);
         },
         child: Padding(
@@ -186,19 +230,132 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
     final ShowButtonBloc proceedBloc = context.read<ShowButtonBloc>();
     if (_ibanController.text.isNotEmpty) {
       return GradientButton(
-        onTap: () {
-          if (!isProceed) {
-            isProceed = true;
-            buttonText = labels[31]["labelText"];
-            proceedBloc.add(ShowButtonEvent(show: isProceed));
-          } else {
-            Navigator.pushNamed(context, Routes.transferAmount);
+        onTap: () async {
+          final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+          if (!isFetchingCustDets) {
+            if (!isProceed) {
+              isFetchingCustDets = true;
+              showButtonBloc.add(ShowButtonEvent(show: isFetchingCustDets));
+              log("Get Dhabi Cust Dets Request -> ${{
+                "accountNumber": _ibanController.text,
+              }}");
+              var getDhabiCustDetsResult =
+                  await MapDhabiCustomerDetails.mapDhabiCustomerDetails(
+                {
+                  "accountNumber": _ibanController.text,
+                },
+                token ?? "",
+              );
+              log("getDhabiCustDetsResult -> $getDhabiCustDetsResult");
+
+              if (getDhabiCustDetsResult["success"]) {
+                isProceed = true;
+                buttonText = labels[31]["labelText"];
+                _recipientNameController.text =
+                    getDhabiCustDetsResult["customerName"];
+                benCustomerName = getDhabiCustDetsResult["customerName"];
+                receiverAccountNumber = _ibanController.text;
+                receiverCurrency = senderCurrency;
+                receiverCurrencyFlag = senderCurrencyFlag;
+                proceedBloc.add(ShowButtonEvent(show: isProceed));
+              } else {
+                if (context.mounted) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return CustomDialog(
+                        svgAssetPath: ImageConstants.warning,
+                        title: "Error {200}",
+                        message: getDhabiCustDetsResult["message"] ??
+                            "Error getting Dhabi Customer Details",
+                        actionWidget: GradientButton(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          text: labels[346]["labelText"],
+                        ),
+                      );
+                    },
+                  );
+                }
+              }
+              isFetchingCustDets = false;
+              showButtonBloc.add(ShowButtonEvent(show: isFetchingCustDets));
+            } else {
+              if (!isFetchingExchangeRate) {
+                isFetchingExchangeRate = true;
+                showButtonBloc
+                    .add(ShowButtonEvent(show: isFetchingExchangeRate));
+
+                var getExchRateApiResult =
+                    await MapExchangeRate.mapExchangeRate(
+                  token ?? "",
+                );
+                log("getExchRateApiResult -> $getExchRateApiResult");
+
+                if (getExchRateApiResult["success"]) {
+                  for (var fetchExchangeRate
+                      in getExchRateApiResult["fetchExRates"]) {
+                    if (fetchExchangeRate["exchangeCurrency"] ==
+                        receiverCurrency) {
+                      exchangeRate =
+                          fetchExchangeRate["exchangeRate"].toDouble();
+                      log("exchangeRate -> $exchangeRate");
+                      fees = double.parse(
+                          fetchExchangeRate["transferFee"].split(' ').last);
+                      log("fees -> $fees");
+                      expectedTime = getExchRateApiResult["expectedTime"];
+                      break;
+                    }
+                  }
+
+                  if (context.mounted) {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.transferAmount,
+                      arguments: SendMoneyArgumentModel(
+                        isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
+                        isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                        isRemittance: sendMoneyArgument.isRemittance,
+                      ).toMap(),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CustomDialog(
+                          svgAssetPath: ImageConstants.warning,
+                          title: "Error {200}",
+                          message: getExchRateApiResult["message"] ??
+                              "There was an error fetching exchange rate, please try again later.",
+                          actionWidget: GradientButton(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            text: labels[346]["labelText"],
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }
+
+                isFetchingExchangeRate = false;
+                showButtonBloc
+                    .add(ShowButtonEvent(show: isFetchingExchangeRate));
+              }
+            }
           }
         },
         text: buttonText,
+        auxWidget: isFetchingCustDets || isFetchingExchangeRate
+            ? const LoaderRow()
+            : const SizeBox(),
       );
     } else {
-      return const SizeBox();
+      return SolidButton(onTap: () {}, text: labels[174]["labelText"]);
     }
   }
 

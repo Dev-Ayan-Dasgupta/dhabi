@@ -16,6 +16,7 @@ class CountryTile extends StatelessWidget {
     required this.flagImgUrl,
     required this.country,
     required this.currencyCode,
+    required this.supportedCurrencies,
     required this.currencies,
   }) : super(key: key);
 
@@ -23,8 +24,8 @@ class CountryTile extends StatelessWidget {
   final String flagImgUrl;
   final String country;
   final String currencyCode;
+  final List<dynamic> supportedCurrencies;
   final List<String> currencies;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -48,17 +49,17 @@ class CountryTile extends StatelessWidget {
                 Text(
                   country,
                   style: TextStyles.primaryMedium.copyWith(
-                    color: const Color.fromRGBO(66, 66, 66, 0.7),
+                    color: AppColors.primaryDark,
                     fontSize: (18 / Dimensions.designWidth).w,
                   ),
                 ),
               ],
             ),
             Text(
-              // currencies.join(" • "),
-              currencyCode,
+              currencies.join(" • "),
+              // currencyCode,
               style: TextStyles.primaryMedium.copyWith(
-                color: const Color.fromRGBO(66, 66, 66, 0.7),
+                color: AppColors.dark50,
                 fontSize: (16 / Dimensions.designWidth).w,
               ),
             ),

@@ -54,14 +54,22 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
   void populateCountries() {
     countries.clear();
     for (var country in transferCapabilities) {
+      List<String> currencies = [];
+      currencies.clear();
+      for (var supportedCurrency in country["supportedCurrencies"]) {
+        currencies.add(supportedCurrency["currencyCode"]);
+      }
+      log("currencies -> $currencies");
       countries.add(
         CountryTileModel(
           flagImgUrl: country["countryFlagBase64"],
           country: shortCodeToCountryName(country["countryShortCode"]),
-          currencies: [],
-          isBank: country["isBank"],
-          isWallet: country["isWallet"],
-          currencyCode: country["currencyCode"],
+          supportedCurrencies: country["supportedCurrencies"],
+          currencies: currencies,
+          isBank: country["supportedCurrencies"][0]["isBank"],
+          isWallet: country["supportedCurrencies"][0]["isWallet"],
+          currencyCode: country["supportedCurrencies"][0]["currencyCode"],
+          currencyFlag: country["supportedCurrencies"][0]["currencyFlag"],
           countryShortCode: country["countryShortCode"],
         ),
       );
@@ -147,6 +155,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
                         flagImgUrl: item.flagImgUrl,
                         country: item.country,
                         currencies: item.currencies,
+                        supportedCurrencies: item.supportedCurrencies,
                         currencyCode: item.currencyCode,
                       );
                     },

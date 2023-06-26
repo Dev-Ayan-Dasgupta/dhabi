@@ -224,11 +224,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           auxWidget: GradientButton(
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(
-                context,
-                Routes.onboarding,
-                arguments: OnboardingArgumentModel(isInitial: true).toMap(),
-              );
+              if (registrationArgument.isInitial) {
+                Navigator.pushReplacementNamed(
+                  context,
+                  Routes.onboarding,
+                  arguments: OnboardingArgumentModel(isInitial: true).toMap(),
+                );
+              } else {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              }
             },
             text: labels[347]["labelText"],
           ),

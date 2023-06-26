@@ -106,7 +106,9 @@ class _AddRecipientDetailsRemittanceScreenState
                 message: dynamicFields["message"] ??
                     "Error fetching dynamic fields.",
                 actionWidget: GradientButton(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                   text: labels[346]["labelText"],
                 ),
               );
@@ -344,6 +346,7 @@ class _AddRecipientDetailsRemittanceScreenState
                           return InkWell(
                             onTap: () {
                               isChecked = false;
+                              isAddRemBeneficiary = isChecked;
                               triggerCheckBoxEvent(isChecked);
                             },
                             child: Padding(
@@ -360,6 +363,7 @@ class _AddRecipientDetailsRemittanceScreenState
                           return InkWell(
                             onTap: () {
                               isChecked = true;
+                              isAddRemBeneficiary = isChecked;
                               triggerCheckBoxEvent(isChecked);
                             },
                             child: Padding(
@@ -411,7 +415,8 @@ class _AddRecipientDetailsRemittanceScreenState
                                 if (fetchExchangeRate["exchangeCurrency"] ==
                                     receiverCurrency) {
                                   exchangeRate =
-                                      fetchExchangeRate["exchangeRate"];
+                                      fetchExchangeRate["exchangeRate"]
+                                          .toDouble();
                                   log("exchangeRate -> $exchangeRate");
                                   fees = double.parse(
                                       fetchExchangeRate["transferFee"]

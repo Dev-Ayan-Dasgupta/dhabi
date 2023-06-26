@@ -70,6 +70,8 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   bool _keyboardVisible = false;
 
+  Color borderColor = const Color(0XFFEEEEEE);
+
   late CreateDepositArgumentModel createDepositArgument;
 
   @override
@@ -91,15 +93,17 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
         ? accountDetails[0]["accountCurrency"]
         : fdSeedAccounts[0].currency;
     bal = createDepositArgument.isRetail
-        ? double.parse(accountDetails[0]["currentBalance"]
-            .split(' ')
-            .last
-            .replaceAll(',', ''))
-        // .abs()
+        ? double.parse(accountDetails[chosenIndex]["currentBalance"]
+                .split(' ')
+                .last
+                .replaceAll(',', ''))
+            .abs()
         : fdSeedAccounts[0].bal;
     chosenAccountNumber = createDepositArgument.isRetail
         ? accountDetails[storageChosenAccountForCreateFD ?? 0]["accountNumber"]
         : fdSeedAccounts[0].accountNumber;
+
+    log("chosenIndex -> $chosenIndex");
   }
 
   @override
@@ -201,6 +205,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                         onTap: () async {
                                           final ShowButtonBloc showButtonBloc =
                                               context.read<ShowButtonBloc>();
+                                          final ErrorMessageBloc
+                                              errorMessageBloc =
+                                              context.read<ErrorMessageBloc>();
                                           chosenIndex = index;
                                           chosenAccountNumber =
                                               createDepositArgument.isRetail
@@ -221,12 +228,12 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                           );
                                           bal = createDepositArgument.isRetail
                                               ? double.parse(
-                                                  accountDetails[index]
-                                                          ["currentBalance"]
-                                                      .split(' ')
-                                                      .last
-                                                      .replaceAll(',', ''))
-                                              // .abs()
+                                                      accountDetails[index]
+                                                              ["currentBalance"]
+                                                          .split(' ')
+                                                          .last
+                                                          .replaceAll(',', ''))
+                                                  .abs()
                                               : fdSeedAccounts[index].bal;
                                           currency = createDepositArgument
                                                   .isRetail
@@ -235,6 +242,52 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                               : fdSeedAccounts[index].currency;
                                           showButtonBloc.add(ShowButtonEvent(
                                               show: chosenIndex == index));
+
+                                          if (double.parse(
+                                                      _depositController.text) <
+                                                  minAmtReq ||
+                                              double.parse(
+                                                      _depositController.text) >
+                                                  maxAmtReq) {
+                                            errorMsg =
+                                                "Please check the amount limit criteria";
+                                            borderColor = AppColors.red100;
+                                            errorMessageBloc.add(
+                                              ErrorMessageEvent(
+                                                  hasError: errorMsg.isEmpty),
+                                            );
+                                          } else if (double.parse(
+                                                  _depositController.text) >
+                                              bal) {
+                                            errorMsg = "Insufficient fund";
+                                            borderColor = AppColors.red100;
+                                            errorMessageBloc.add(
+                                              ErrorMessageEvent(
+                                                  hasError: errorMsg.isEmpty),
+                                            );
+                                          } else if (fdSeedAccounts
+                                              .isNotEmpty) {
+                                            if (double.parse(
+                                                    _depositController.text) >
+                                                fdSeedAccounts[chosenIndex]
+                                                    .fdCreationThreshold) {
+                                              errorMsg =
+                                                  "FD Creation Threshold Exceeded";
+                                              borderColor = AppColors.red100;
+                                              errorMessageBloc.add(
+                                                ErrorMessageEvent(
+                                                    hasError: errorMsg.isEmpty),
+                                              );
+                                            }
+                                          } else {
+                                            errorMsg = "";
+                                            borderColor =
+                                                const Color(0xFFEEEEEE);
+                                            errorMessageBloc.add(
+                                              ErrorMessageEvent(
+                                                  hasError: errorMsg.isEmpty),
+                                            );
+                                          }
                                         },
                                         imgUrl: createDepositArgument.isRetail
                                             ? accountDetails[index]
@@ -370,11 +423,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                             ],
                           ),
                           const SizeBox(height: 7),
-                          CustomTextField(
-                            controller: _depositController,
-                            keyboardType: TextInputType.number,
-                            hintText: "E.g., 20000",
-                            onChanged: onDepositChanged,
+                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                            builder: (context, state) {
+                              return CustomTextField(
+                                borderColor: borderColor,
+                                controller: _depositController,
+                                keyboardType: TextInputType.number,
+                                hintText: "E.g., 20000",
+                                onChanged: onDepositChanged,
+                              );
+                            },
                           ),
                           const SizeBox(height: 5),
                           BlocBuilder<ErrorMessageBloc, ErrorMessageState>(
@@ -602,7 +660,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       initialDateTime:
                           auxToDate.add(const Duration(seconds: 1)),
                       minimumDate:
-                          DateTime.now().subtract(const Duration(minutes: 10)),
+                          DateTime.now().subtract(const Duration(minutes: 30)),
                       maximumDate:
                           DateTime.now().add(const Duration(days: 30 * 60)),
                       mode: CupertinoDatePickerMode.date,
@@ -1189,23 +1247,27 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     if (double.parse(p0) < minAmtReq || double.parse(p0) > maxAmtReq) {
       errorMsg = "Please check the amount limit criteria";
+      borderColor = AppColors.red100;
       errorMessageBloc.add(
         ErrorMessageEvent(hasError: errorMsg.isEmpty),
       );
     } else if (double.parse(p0) > bal) {
       errorMsg = "Insufficient fund";
+      borderColor = AppColors.red100;
       errorMessageBloc.add(
         ErrorMessageEvent(hasError: errorMsg.isEmpty),
       );
     } else if (fdSeedAccounts.isNotEmpty) {
       if (double.parse(p0) > fdSeedAccounts[chosenIndex].fdCreationThreshold) {
         errorMsg = "FD Creation Threshold Exceeded";
+        borderColor = AppColors.red100;
         errorMessageBloc.add(
           ErrorMessageEvent(hasError: errorMsg.isEmpty),
         );
       }
     } else {
       errorMsg = "";
+      borderColor = const Color(0xFFEEEEEE);
       errorMessageBloc.add(
         ErrorMessageEvent(hasError: errorMsg.isEmpty),
       );

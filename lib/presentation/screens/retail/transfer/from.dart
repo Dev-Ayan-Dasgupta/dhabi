@@ -186,6 +186,16 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                 isRemittance: true,
                               ).toMap(),
                             );
+                          } else {
+                            Navigator.pushNamed(
+                              context,
+                              Routes.selectRecipient,
+                              arguments: SendMoneyArgumentModel(
+                                isBetweenAccounts: false,
+                                isWithinDhabi: true,
+                                isRemittance: false,
+                              ).toMap(),
+                            );
                           }
                         },
                         text: labels[127]["labelText"],

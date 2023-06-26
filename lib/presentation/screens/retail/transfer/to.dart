@@ -187,7 +187,8 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
                                     if (fetchExchangeRate["exchangeCurrency"] ==
                                         receiverCurrency) {
                                       exchangeRate =
-                                          fetchExchangeRate["exchangeRate"];
+                                          fetchExchangeRate["exchangeRate"]
+                                              .toDouble();
                                       log("exchangeRate -> $exchangeRate");
                                       fees = double.parse(
                                           fetchExchangeRate["transferFee"]

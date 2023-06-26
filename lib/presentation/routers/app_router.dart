@@ -285,7 +285,9 @@ class AppRouter {
         );
       case Routes.recipientDetails:
         return MaterialPageRoute(
-          builder: (_) => const RecipientDetailsScreen(),
+          builder: (_) => RecipientDetailsScreen(
+            argument: args,
+          ),
         );
       case Routes.selectCountry:
         return MaterialPageRoute(

@@ -190,7 +190,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                           ),
                           const SizeBox(height: 7),
                           Text(
-                            sendMoneyArgument.isBetweenAccounts
+                            !(sendMoneyArgument.isRemittance)
                                 ? "Expected arrival today"
                                 : expectedTime,
                             style: TextStyles.primaryMedium.copyWith(
