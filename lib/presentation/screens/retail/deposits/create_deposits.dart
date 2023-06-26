@@ -92,10 +92,10 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
         : fdSeedAccounts[0].currency;
     bal = createDepositArgument.isRetail
         ? double.parse(accountDetails[0]["currentBalance"]
-                .split(' ')
-                .last
-                .replaceAll(',', ''))
-            .abs()
+            .split(' ')
+            .last
+            .replaceAll(',', ''))
+        // .abs()
         : fdSeedAccounts[0].bal;
     chosenAccountNumber = createDepositArgument.isRetail
         ? accountDetails[storageChosenAccountForCreateFD ?? 0]["accountNumber"]
@@ -221,12 +221,12 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                           );
                                           bal = createDepositArgument.isRetail
                                               ? double.parse(
-                                                      accountDetails[index]
-                                                              ["currentBalance"]
-                                                          .split(' ')
-                                                          .last
-                                                          .replaceAll(',', ''))
-                                                  .abs()
+                                                  accountDetails[index]
+                                                          ["currentBalance"]
+                                                      .split(' ')
+                                                      .last
+                                                      .replaceAll(',', ''))
+                                              // .abs()
                                               : fdSeedAccounts[index].bal;
                                           currency = createDepositArgument
                                                   .isRetail

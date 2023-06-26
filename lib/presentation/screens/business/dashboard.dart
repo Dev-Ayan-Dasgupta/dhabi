@@ -267,10 +267,9 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                     permission["fdCreationThreshold"].toDouble(),
                 currency: permission["currency"],
                 bal: double.parse(permission["currentBalance"]
-                        .split(" ")
-                        .last
-                        .replaceAll(',', ''))
-                    .abs(),
+                    .split(" ")
+                    .last
+                    .replaceAll(',', '')), // ! abs
                 accountType: permission["accountType"],
               ),
             );
