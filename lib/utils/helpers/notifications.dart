@@ -35,7 +35,7 @@ class LocalNotificationService {
       settings,
       onSelectNotification: (_) async {
         // Navigator.pushNamed(context, Routes.depositStatement);
-        navigatorKey.currentState!.pushNamed(Routes.depositStatement);
+        navigatorKey.currentState!.pushNamed(Routes.notifications);
       },
     );
   }

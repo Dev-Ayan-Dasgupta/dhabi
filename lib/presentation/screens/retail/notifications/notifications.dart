@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/bloc/showButton/index.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/data/repositories/notifications/index.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/notifications/notifications_tile.dart';
 import 'package:dialup_mobile_app/presentation/widgets/shimmers/index.dart';
@@ -19,6 +21,9 @@ class NotificatonsScreen extends StatefulWidget {
   @override
   State<NotificatonsScreen> createState() => _NotificatonsScreenState();
 }
+
+List<int> notificationTypes = [1, 2, 3, 6, 9, 12, 15, 18, 21, 24, 27];
+List<int> checkerNotificationTypes = [3, 6, 9, 12, 15, 18, 21, 24, 27];
 
 class _NotificatonsScreenState extends State<NotificatonsScreen> {
   List<NotificationsTileModel> notifications = [];
@@ -47,13 +52,53 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
         for (var i = 0;
             i < getNotificationsApiResult["notifications"].length;
             i++) {
-          notifications.add(NotificationsTileModel(
+          notifications.add(
+            NotificationsTileModel(
               title: getNotificationsApiResult["notifications"][i]["subject"],
               message: getNotificationsApiResult["notifications"][i]["content"],
               dateTime: DateFormat('EEEE, MMM dd, yyyy, hh:mm').format(
                   DateTime.parse(getNotificationsApiResult["notifications"][i]
                       ["createdOn"])),
-              widget: const SizeBox()));
+              isActionable: getNotificationsApiResult["notifications"][i]
+                  ["isActionable"],
+              widget: notificationTypes.contains(
+                      getNotificationsApiResult["notifications"][i]
+                          ["notificationType"])
+                  ? GradientButton(
+                      width: 25.w,
+                      height: (30 / Dimensions.designHeight).h,
+                      fontSize: (12 / Dimensions.designWidth).w,
+                      borderRadius: (5 / Dimensions.designWidth).w,
+                      onTap: () {
+                        if (checkerNotificationTypes.contains(
+                            getNotificationsApiResult["notifications"][i]
+                                ["notificationType"])) {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.workflowDetails,
+                            arguments: WorkflowArgumentModel(
+                              reference:
+                                  getNotificationsApiResult["notifications"][i]
+                                      ["additionalInformation"],
+                              workflowType:
+                                  getNotificationsApiResult["notifications"][i]
+                                      ["notificationType"],
+                            ).toMap(),
+                          );
+                        }
+                      },
+                      text: getNotificationsApiResult["notifications"][i]
+                                      ["notificationType"] ==
+                                  1 ||
+                              getNotificationsApiResult["notifications"][i]
+                                      ["notificationType"] ==
+                                  2
+                          ? "Update"
+                          : "View Request",
+                    )
+                  : const SizeBox(),
+            ),
+          );
         }
       } else {
         if (context.mounted) {
@@ -176,8 +221,9 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
                               message: item.message,
                               dateTime: item.dateTime,
                               widget: item.widget,
+                              isActionable: item.isActionable,
                               onPressed: (context) async {
-                                if (!isFetchingData) {
+                                if (!isFetchingData && item.isActionable) {
                                   final ShowButtonBloc showButtonBloc =
                                       context.read<ShowButtonBloc>();
                                   isFetchingData = true;

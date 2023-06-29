@@ -312,6 +312,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                     Routes.registration,
                                     arguments: RegistrationArgumentModel(
                                       isInitial: true,
+                                      isUpdateCorpEmail: false,
                                     ).toMap(),
                                   );
                                   break;
@@ -406,6 +407,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                     Routes.applicationAccount,
                                     arguments: ApplicationAccountArgumentModel(
                                       isInitial: true,
+                                      isRetail: true,
                                       savingsAccountsCreated: 0,
                                       currentAccountsCreated: 0,
                                     ).toMap(),
@@ -456,6 +458,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                     Routes.registration,
                                     arguments: RegistrationArgumentModel(
                                       isInitial: true,
+                                      isUpdateCorpEmail: false,
                                     ).toMap(),
                                   );
                               }
@@ -537,6 +540,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                             Routes.registration,
                             arguments: RegistrationArgumentModel(
                               isInitial: true,
+                              isUpdateCorpEmail: false,
                             ).toMap(),
                           );
                         },

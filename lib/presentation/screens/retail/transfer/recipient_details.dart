@@ -317,6 +317,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                         isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
                         isWithinDhabi: sendMoneyArgument.isWithinDhabi,
                         isRemittance: sendMoneyArgument.isRemittance,
+                        isRetail: sendMoneyArgument.isRetail,
                       ).toMap(),
                     );
                   }

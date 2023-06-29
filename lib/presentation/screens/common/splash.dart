@@ -135,6 +135,7 @@ class _SplashScreenState extends State<SplashScreen> {
           await MapTransferCapabilities.mapTransferCapabilities();
       transferCapabilities =
           transferCapabilitiesAPiResult["transferCapabilities"];
+      log("transferCapabilities -> $transferCapabilities");
     } catch (_) {
       rethrow;
     }

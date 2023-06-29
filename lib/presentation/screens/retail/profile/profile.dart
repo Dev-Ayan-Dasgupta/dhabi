@@ -1,20 +1,40 @@
-import 'package:dialup_mobile_app/data/models/index.dart';
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late ProfileArgumentModel profileArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+  }
+
+  void argumentInitialization() {
+    profileArgument =
+        ProfileArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Profile",
+              labels[12]["labelText"],
               style: TextStyles.primaryBold.copyWith(
                 color: AppColors.primary,
                 fontSize: (28 / Dimensions.designWidth).w,
@@ -40,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizeBox(height: 30),
             Text(
-              "Personal Details",
+              labels[22]["labelText"],
               style: TextStyles.primaryMedium.copyWith(
                 color: const Color.fromRGBO(9, 9, 9, 0.7),
                 fontSize: (16 / Dimensions.designWidth).w,
@@ -61,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Name",
+                        labels[23]["labelText"],
                         style: TextStyles.primaryMedium.copyWith(
                           color: const Color.fromRGBO(9, 9, 9, 0.4),
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -81,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Date of Birth",
+                        labels[24]["labelText"],
                         style: TextStyles.primaryMedium.copyWith(
                           color: const Color.fromRGBO(9, 9, 9, 0.4),
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -102,7 +122,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizeBox(height: 20),
             Text(
-              "Contact Details",
+              labels[25]["labelText"],
               style: TextStyles.primaryMedium.copyWith(
                 color: const Color.fromRGBO(9, 9, 9, 0.7),
                 fontSize: (16 / Dimensions.designWidth).w,
@@ -123,7 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Email ID",
+                        labels[26]["labelText"],
                         style: TextStyles.primaryMedium.copyWith(
                           color: const Color.fromRGBO(9, 9, 9, 0.4),
                           fontSize: (16 / Dimensions.designWidth).w,
@@ -142,30 +162,81 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizeBox(width: 20),
                           InkWell(
                             onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                Routes.errorSuccessScreen,
-                                arguments: ErrorArgumentModel(
-                                  hasSecondaryButton: true,
-                                  iconPath: ImageConstants.warning,
-                                  title: labels[250]["labelText"],
-                                  message: messages[53]["messageText"],
-                                  buttonText: labels[31]["labelText"],
-                                  onTap: () {
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      Routes.registration,
-                                      arguments: RegistrationArgumentModel(
-                                              isInitial: false)
-                                          .toMap(),
-                                    );
-                                  },
-                                  buttonTextSecondary: labels[347]["labelText"],
-                                  onTapSecondary: () {
-                                    Navigator.pop(context);
-                                  },
-                                ).toMap(),
-                              );
+                              if (profileArgument.isRetail) {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.errorSuccessScreen,
+                                  arguments: ErrorArgumentModel(
+                                    hasSecondaryButton: true,
+                                    iconPath: ImageConstants.warning,
+                                    title: labels[250]["labelText"],
+                                    message: messages[53]["messageText"],
+                                    buttonText: labels[31]["labelText"],
+                                    onTap: () {
+                                      Navigator.pushReplacementNamed(
+                                        context,
+                                        Routes.registration,
+                                        arguments: RegistrationArgumentModel(
+                                          isInitial: false,
+                                          isUpdateCorpEmail: false,
+                                        ).toMap(),
+                                      );
+                                    },
+                                    buttonTextSecondary: labels[347]
+                                        ["labelText"],
+                                    onTapSecondary: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ).toMap(),
+                                );
+                              } else {
+                                if (canChangeEmailId) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.errorSuccessScreen,
+                                    arguments: ErrorArgumentModel(
+                                      hasSecondaryButton: true,
+                                      iconPath: ImageConstants.warning,
+                                      title: labels[250]["labelText"],
+                                      message: messages[53]["messageText"],
+                                      buttonText: labels[31]["labelText"],
+                                      onTap: () {
+                                        Navigator.pushReplacementNamed(
+                                          context,
+                                          Routes.registration,
+                                          arguments: RegistrationArgumentModel(
+                                            isInitial: false,
+                                            isUpdateCorpEmail: true,
+                                          ).toMap(),
+                                        );
+                                      },
+                                      buttonTextSecondary: labels[347]
+                                          ["labelText"],
+                                      onTapSecondary: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ).toMap(),
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return CustomDialog(
+                                        svgAssetPath: ImageConstants.warning,
+                                        title: "No Permission",
+                                        message:
+                                            "You do not have permission to update your Email ID",
+                                        actionWidget: GradientButton(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          text: labels[346]["labelText"],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              }
                             },
                             child: SvgPicture.asset(
                               ImageConstants.edit,
@@ -205,15 +276,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizeBox(width: 20),
                           InkWell(
                             onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                Routes.verifyMobile,
-                                arguments: VerifyMobileArgumentModel(
-                                  isBusiness: false,
-                                  isUpdate: true,
-                                  isReKyc: false,
-                                ).toMap(),
-                              );
+                              if (profileArgument.isRetail) {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.verifyMobile,
+                                  arguments: VerifyMobileArgumentModel(
+                                    isBusiness: false,
+                                    isUpdate: true,
+                                    isReKyc: false,
+                                  ).toMap(),
+                                );
+                              } else {
+                                if (canChangeMobileNumber) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.verifyMobile,
+                                    arguments: VerifyMobileArgumentModel(
+                                      isBusiness: true,
+                                      isUpdate: true,
+                                      isReKyc: false,
+                                    ).toMap(),
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return CustomDialog(
+                                        svgAssetPath: ImageConstants.warning,
+                                        title: "No Permission",
+                                        message:
+                                            "You do not have permission to update your Mobile Number",
+                                        actionWidget: GradientButton(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          text: labels[346]["labelText"],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              }
                             },
                             child: SvgPicture.asset(
                               ImageConstants.edit,
@@ -234,7 +337,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizeBox(height: 20),
             Text(
-              "Address Details",
+              labels[28]["labelText"],
               style: TextStyles.primaryMedium.copyWith(
                 color: const Color.fromRGBO(9, 9, 9, 0.7),
                 fontSize: (16 / Dimensions.designWidth).w,
@@ -280,8 +383,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizeBox(width: 20),
                           InkWell(
                             onTap: () {
-                              Navigator.pushNamed(
-                                  context, Routes.updateAddress);
+                              if (profileArgument.isRetail) {
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.updateAddress,
+                                  arguments: ProfileArgumentModel(
+                                    isRetail: profileArgument.isRetail,
+                                  ).toMap(),
+                                );
+                              } else {
+                                if (canChangeAddress) {
+                                  Navigator.pushNamed(
+                                    context,
+                                    Routes.updateAddress,
+                                    arguments: ProfileArgumentModel(
+                                      isRetail: profileArgument.isRetail,
+                                    ).toMap(),
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return CustomDialog(
+                                        svgAssetPath: ImageConstants.warning,
+                                        title: "No Permission",
+                                        message:
+                                            "You do not have permission to update your Address",
+                                        actionWidget: GradientButton(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          text: labels[346]["labelText"],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
+                              }
                             },
                             child: SvgPicture.asset(
                               ImageConstants.edit,

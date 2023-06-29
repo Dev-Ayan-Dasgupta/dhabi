@@ -293,8 +293,10 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                                       userTypeId: isPersonalFocussed ? 1 : 2,
                                       companyId: isPersonalFocussed ? 0 : 1,
                                     ).toMap()
-                                  : RegistrationArgumentModel(isInitial: true)
-                                      .toMap(),
+                                  : RegistrationArgumentModel(
+                                      isInitial: true,
+                                      isUpdateCorpEmail: false,
+                                    ).toMap(),
                             );
                           }
                         },
@@ -344,7 +346,10 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
               Navigator.pushReplacementNamed(
                 context,
                 Routes.registration,
-                arguments: RegistrationArgumentModel(isInitial: true).toMap(),
+                arguments: RegistrationArgumentModel(
+                  isInitial: true,
+                  isUpdateCorpEmail: false,
+                ).toMap(),
               );
             },
             text: labels[347]["labelText"],

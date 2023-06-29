@@ -440,6 +440,7 @@ class _AddRecipientDetailsRemittanceScreenState
                                         sendMoneyArgument.isWithinDhabi,
                                     isRemittance:
                                         sendMoneyArgument.isRemittance,
+                                    isRetail: sendMoneyArgument.isRetail,
                                   ).toMap(),
                                 );
                               }

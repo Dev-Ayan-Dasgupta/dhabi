@@ -380,9 +380,12 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                   arguments: ErrorArgumentModel(
                     hasSecondaryButton: false,
                     iconPath: ImageConstants.checkCircleOutlined,
-                    title: "Congratulations!",
-                    message:
-                        "Your deposit account has been created.\nAcc. ${createCorporateFDResult["accountNumber"]}",
+                    title: createCorporateFDResult["isDirectlyCreated"]
+                        ? "Congratulations!"
+                        : "Create Deposit Request Placed",
+                    message: createCorporateFDResult["isDirectlyCreated"]
+                        ? "Your deposit account has been created.\nAcc. ${createCorporateFDResult["reference"]}"
+                        : "${messages[121]["messageText"]}: ${createCorporateFDResult["reference"]}",
                     buttonText: labels[1]["labelText"],
                     onTap: () {
                       Navigator.pushNamedAndRemoveUntil(

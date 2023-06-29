@@ -60,7 +60,7 @@ class DetailsTile extends StatelessWidget {
                     Text(
                       details[index].key,
                       style: TextStyles.primary.copyWith(
-                        color: const Color(0xFF292929),
+                        color: AppColors.dark80,
                         fontSize: (14 / Dimensions.designWidth).w,
                       ),
                     ),
@@ -69,7 +69,7 @@ class DetailsTile extends StatelessWidget {
                       style: TextStyles.primary.copyWith(
                         color: (index == coloredIndex)
                             ? fontColor
-                            : const Color(0xFF292929),
+                            : AppColors.dark80,
                         fontSize: (14 / Dimensions.designWidth).w,
                       ),
                     ),

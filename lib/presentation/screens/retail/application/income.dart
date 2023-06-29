@@ -153,14 +153,20 @@ class _ApplicationIncomeScreenState extends State<ApplicationIncomeScreen> {
             text: labels[127]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
-          const SizeBox(height: PaddingConstants.bottomPadding),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.paddingOf(context).bottom,
+          ),
         ],
       );
     } else {
       return Column(
         children: [
           SolidButton(onTap: () {}, text: labels[127]["labelText"]),
-          const SizeBox(height: PaddingConstants.bottomPadding),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.paddingOf(context).bottom,
+          ),
         ],
       );
     }

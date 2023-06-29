@@ -76,7 +76,10 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
         prematureDetails.clear();
 
         prematureDetails.add(DetailsTileModel(
-            key: "Deposit Account No.",
+            key: "Deposit Account",
+            value: prematureWithdrawalArgument.accountNumber));
+        prematureDetails.add(DetailsTileModel(
+            key: "Debit Account",
             value: apiResult["depositAccountNumber"] ?? ""));
         prematureDetails.add(DetailsTileModel(
             key: "Deposit Amount",

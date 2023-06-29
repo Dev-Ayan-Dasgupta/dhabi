@@ -214,7 +214,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                                   ? accountDetails[index]
                                                       ["accountNumber"]
                                                   : fdSeedAccounts[index]
-                                                      .acountNumber;
+                                                      .accountNumber;
                                           await storage.write(
                                             key: "chosenAccountForCreateFD",
                                             value: index.toString(),
@@ -265,20 +265,6 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                               ErrorMessageEvent(
                                                   hasError: errorMsg.isEmpty),
                                             );
-                                          } else if (fdSeedAccounts
-                                              .isNotEmpty) {
-                                            if (double.parse(
-                                                    _depositController.text) >
-                                                fdSeedAccounts[chosenIndex]
-                                                    .fdCreationThreshold) {
-                                              errorMsg =
-                                                  "FD Creation Threshold Exceeded";
-                                              borderColor = AppColors.red100;
-                                              errorMessageBloc.add(
-                                                ErrorMessageEvent(
-                                                    hasError: errorMsg.isEmpty),
-                                              );
-                                            }
                                           } else {
                                             errorMsg = "";
                                             borderColor =
@@ -415,8 +401,8 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                               Text(
                                 "Deposit Amount (USD)",
                                 style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.black63,
-                                  fontSize: (16 / Dimensions.designWidth).w,
+                                  color: AppColors.dark80,
+                                  fontSize: (14 / Dimensions.designWidth).w,
                                 ),
                               ),
                               const Asterisk(),
@@ -445,7 +431,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                 labels[110]["labelText"],
                                 style: TextStyles.primaryMedium.copyWith(
                                   color: AppColors.dark80,
-                                  fontSize: (16 / Dimensions.designWidth).w,
+                                  fontSize: (14 / Dimensions.designWidth).w,
                                 ),
                               ),
                               const Asterisk(),
@@ -590,14 +576,19 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
       padding: EdgeInsets.symmetric(
           horizontal: 47.w -
               (22 / Dimensions.designWidth).w -
-              ((accountDetails.length - 1) * (6.5 / Dimensions.designWidth).w)),
+              ((createDepositArgument.isRetail
+                      ? accountDetails.length
+                      : fdSeedAccounts.length - 1) *
+                  (6.5 / Dimensions.designWidth).w)),
       child: SizedBox(
         width: 90.w,
         height: (9 / Dimensions.designWidth).w,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: accountDetails.length,
+          itemCount: createDepositArgument.isRetail
+              ? accountDetails.length
+              : fdSeedAccounts.length,
           itemBuilder: (context, index) {
             return ScrollIndicator(
               isCurrent: (index == _scrollIndex),
@@ -813,18 +804,10 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                 labels[112]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
                   color: AppColors.dark80,
-                  fontSize: (16 / Dimensions.designWidth).w,
+                  fontSize: (14 / Dimensions.designWidth).w,
                 ),
               ),
-              // SvgPicture.asset(
-              //   ImageConstants.help,
-              //   width: (16.67 / Dimensions.designWidth).w,
-              //   height: (16.67 / Dimensions.designWidth).w,
-              //   colorFilter: const ColorFilter.mode(
-              //     Color(0XFFA1A1A1),
-              //     BlendMode.srcIn,
-              //   ),
-              // ),
+              const Asterisk(),
             ],
           ),
           const SizeBox(height: 7),
@@ -838,7 +821,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                 labels[113]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
                   color: AppColors.dark80,
-                  fontSize: (16 / Dimensions.designWidth).w,
+                  fontSize: (14 / Dimensions.designWidth).w,
                 ),
               ),
               const Asterisk(),
@@ -854,7 +837,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               Text(
                 labels[114]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
-                  color: AppColors.black63,
+                  color: AppColors.dark50,
                   fontSize: (16 / Dimensions.designWidth).w,
                 ),
               ),
@@ -866,7 +849,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               Text(
                 labels[115]["labelText"],
                 style: TextStyles.primaryMedium.copyWith(
-                  color: AppColors.black63,
+                  color: AppColors.dark50,
                   fontSize: (16 / Dimensions.designWidth).w,
                 ),
               ),
@@ -905,7 +888,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         Text(
                           "No",
                           style: TextStyles.primaryMedium.copyWith(
-                            color: AppColors.black63,
+                            color: AppColors.dark50,
                             fontSize: (16 / Dimensions.designWidth).w,
                           ),
                         ),
@@ -917,7 +900,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         Text(
                           "Yes",
                           style: TextStyles.primaryMedium.copyWith(
-                            color: AppColors.black63,
+                            color: AppColors.dark50,
                             fontSize: (16 / Dimensions.designWidth).w,
                           ),
                         ),
@@ -1125,37 +1108,12 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
           const SizeBox(height: 20),
           GradientButton(
             onTap: () {
-              if (isAutoRenewal) {
-                Navigator.pushNamed(
-                  context,
-                  Routes.depositConfirmation,
-                  arguments: DepositConfirmationArgumentModel(
-                    isRetail: createDepositArgument.isRetail,
-                    currency: currency,
-                    accountNumber: chosenAccountNumber,
-                    depositAmount: double.parse(_depositController.text),
-                    tenureDays: auxToDate.difference(DateTime.now()).inDays,
-                    interestRate: interestRate,
-                    interestAmount: double.parse(_depositController.text) *
-                        (interestRate / 100),
-                    interestPayout: selectedPayout ?? "",
-                    isAutoRenewal: isAutoRenewal,
-                    isAutoTransfer: false,
-                    creditAccountNumber: chosenAccountNumber,
-                    dateOfMaturity: auxToDate,
-                    depositBeneficiary: DepositBeneficiaryModel(
-                      accountNumber: "",
-                      name: "",
-                      address: "",
-                      accountType: 0,
-                      swiftReference: 0,
-                      reasonForSending: "",
-                      saveBeneficiary: false,
-                    ),
-                  ).toMap(),
-                );
-              } else {
-                if (isStandingDirNo) {
+              log("maturity days -> ${auxToDate.difference(DateTime.now()).inDays}");
+              log("payout -> $selectedPayout");
+              log("payout validity -> ${validateMaturity(auxToDate.difference(DateTime.now()).inDays, selectedPayout ?? "")}");
+              if (validateMaturity(auxToDate.difference(DateTime.now()).inDays,
+                  selectedPayout ?? "")) {
+                if (isAutoRenewal) {
                   Navigator.pushNamed(
                     context,
                     Routes.depositConfirmation,
@@ -1164,10 +1122,13 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       currency: currency,
                       accountNumber: chosenAccountNumber,
                       depositAmount: double.parse(_depositController.text),
-                      tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                      tenureDays:
+                          auxToDate.difference(DateTime.now()).inHours <= 0
+                              ? auxToDate.difference(DateTime.now()).inDays
+                              : auxToDate.difference(DateTime.now()).inDays + 1,
                       interestRate: interestRate,
                       interestAmount: double.parse(_depositController.text) *
-                          ((interestRate / 100)),
+                          (interestRate / 100),
                       interestPayout: selectedPayout ?? "",
                       isAutoRenewal: isAutoRenewal,
                       isAutoTransfer: false,
@@ -1185,35 +1146,84 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     ).toMap(),
                   );
                 } else {
-                  Navigator.pushNamed(
-                    context,
-                    Routes.depositBeneficiary,
-                    arguments: DepositConfirmationArgumentModel(
-                      isRetail: createDepositArgument.isRetail,
-                      currency: currency,
-                      accountNumber: chosenAccountNumber,
-                      depositAmount: double.parse(_depositController.text),
-                      tenureDays: auxToDate.difference(DateTime.now()).inDays,
-                      interestRate: interestRate,
-                      interestAmount: double.parse(_depositController.text) *
-                          ((interestRate / 100)),
-                      interestPayout: selectedPayout ?? "",
-                      isAutoRenewal: isAutoRenewal,
-                      isAutoTransfer: true,
-                      creditAccountNumber: chosenAccountNumber,
-                      dateOfMaturity: auxToDate,
-                      depositBeneficiary: DepositBeneficiaryModel(
-                        accountNumber: "",
-                        name: "",
-                        address: "",
-                        accountType: 0,
-                        swiftReference: 0,
-                        reasonForSending: "",
-                        saveBeneficiary: false,
-                      ),
-                    ).toMap(),
-                  );
+                  if (isStandingDirNo) {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.depositConfirmation,
+                      arguments: DepositConfirmationArgumentModel(
+                        isRetail: createDepositArgument.isRetail,
+                        currency: currency,
+                        accountNumber: chosenAccountNumber,
+                        depositAmount: double.parse(_depositController.text),
+                        tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                        interestRate: interestRate,
+                        interestAmount: double.parse(_depositController.text) *
+                            ((interestRate / 100)),
+                        interestPayout: selectedPayout ?? "",
+                        isAutoRenewal: isAutoRenewal,
+                        isAutoTransfer: false,
+                        creditAccountNumber: chosenAccountNumber,
+                        dateOfMaturity: auxToDate,
+                        depositBeneficiary: DepositBeneficiaryModel(
+                          accountNumber: "",
+                          name: "",
+                          address: "",
+                          accountType: 0,
+                          swiftReference: 0,
+                          reasonForSending: "",
+                          saveBeneficiary: false,
+                        ),
+                      ).toMap(),
+                    );
+                  } else {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.depositBeneficiary,
+                      arguments: DepositConfirmationArgumentModel(
+                        isRetail: createDepositArgument.isRetail,
+                        currency: currency,
+                        accountNumber: chosenAccountNumber,
+                        depositAmount: double.parse(_depositController.text),
+                        tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                        interestRate: interestRate,
+                        interestAmount: double.parse(_depositController.text) *
+                            ((interestRate / 100)),
+                        interestPayout: selectedPayout ?? "",
+                        isAutoRenewal: isAutoRenewal,
+                        isAutoTransfer: true,
+                        creditAccountNumber: chosenAccountNumber,
+                        dateOfMaturity: auxToDate,
+                        depositBeneficiary: DepositBeneficiaryModel(
+                          accountNumber: "",
+                          name: "",
+                          address: "",
+                          accountType: 0,
+                          swiftReference: 0,
+                          reasonForSending: "",
+                          saveBeneficiary: false,
+                        ),
+                      ).toMap(),
+                    );
+                  }
                 }
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialog(
+                      svgAssetPath: ImageConstants.warning,
+                      title: "Incorrect Interest Payout",
+                      message:
+                          "Interest payout cannot be longer than the maturity date, please select the payout accordingly.",
+                      actionWidget: GradientButton(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        text: labels[346]["labelText"],
+                      ),
+                    );
+                  },
+                );
               }
             },
             text: labels[31]["labelText"],
@@ -1257,14 +1267,6 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
       errorMessageBloc.add(
         ErrorMessageEvent(hasError: errorMsg.isEmpty),
       );
-    } else if (fdSeedAccounts.isNotEmpty) {
-      if (double.parse(p0) > fdSeedAccounts[chosenIndex].fdCreationThreshold) {
-        errorMsg = "FD Creation Threshold Exceeded";
-        borderColor = AppColors.red100;
-        errorMessageBloc.add(
-          ErrorMessageEvent(hasError: errorMsg.isEmpty),
-        );
-      }
     } else {
       errorMsg = "";
       borderColor = const Color(0xFFEEEEEE);
@@ -1286,6 +1288,27 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
             _depositController.text.isNotEmpty,
       ),
     );
+  }
+
+  bool validateMaturity(int days, String payout) {
+    bool result = true;
+
+    if (days < 30 && (payout != payoutDurationDDs[0])) {
+      result = false;
+    } else if (days < 90 &&
+        (payout != payoutDurationDDs[0] && payout != payoutDurationDDs[1])) {
+      result = false;
+    } else if (days < 180 &&
+        (payout != payoutDurationDDs[0] && payout != payoutDurationDDs[1]) &&
+        payout != payoutDurationDDs[2]) {
+      result = false;
+    } else if (days < 365 && payout == payoutDurationDDs[4]) {
+      result = false;
+    } else {
+      result = true;
+    }
+
+    return result;
   }
 
   @override

@@ -156,6 +156,7 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                                 Routes.applicationAccount,
                                 arguments: ApplicationAccountArgumentModel(
                                   isInitial: true,
+                                  isRetail: true,
                                   savingsAccountsCreated: 0,
                                   currentAccountsCreated: 0,
                                 ).toMap(),
@@ -187,7 +188,10 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                           },
                           text: labels[127]["labelText"],
                         ),
-                        const SizeBox(height: PaddingConstants.bottomPadding),
+                        SizeBox(
+                          height: PaddingConstants.bottomPadding +
+                              MediaQuery.paddingOf(context).bottom,
+                        ),
                       ],
                     );
                   } else {
@@ -195,7 +199,10 @@ class _ApplicationTaxFATCAScreenState extends State<ApplicationTaxFATCAScreen> {
                       children: [
                         SolidButton(
                             onTap: () {}, text: labels[127]["labelText"]),
-                        const SizeBox(height: PaddingConstants.bottomPadding),
+                        SizeBox(
+                          height: PaddingConstants.bottomPadding +
+                              MediaQuery.paddingOf(context).bottom,
+                        ),
                       ],
                     );
                   }

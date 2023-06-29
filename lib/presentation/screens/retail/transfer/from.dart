@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -95,17 +96,28 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                   //   isSelected: false,
                   // ),
                   // const SizeBox(height: 30),
-                  Text(
-                    labels[156]["labelText"],
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.dark80,
-                      fontSize: (14 / Dimensions.designWidth).w,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        labels[156]["labelText"],
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 10),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: accountDetails.length,
+                      itemCount: sendMoneyArgument.isRetail
+                          ? accountDetails.length
+                          : sendMoneyArgument.isBetweenAccounts
+                              ? internalSeedAccounts.length
+                              : sendMoneyArgument.isWithinDhabi
+                                  ? dhabiSeedAccounts.length
+                                  : foreignSeedAccounts.length,
                       separatorBuilder: (context, index) {
                         return const SizeBox(height: 15);
                       },
@@ -118,17 +130,46 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                 final ShowButtonBloc showButtonBloc =
                                     context.read<ShowButtonBloc>();
                                 selectedAccountIndex = index;
-                                senderCurrencyFlag =
-                                    accountDetails[index]["currencyFlagBase64"];
-                                senderAccountNumber =
-                                    accountDetails[index]["accountNumber"];
-                                senderCurrency =
-                                    accountDetails[index]["accountCurrency"];
-                                senderBalance = double.parse(
-                                    accountDetails[index]["currentBalance"]
+                                senderCurrencyFlag = sendMoneyArgument.isRetail
+                                    ? accountDetails[index]
+                                        ["currencyFlagBase64"]
+                                    : sendMoneyArgument.isBetweenAccounts
+                                        ? internalSeedAccounts[index]
+                                            .currencyFlag
+                                        : sendMoneyArgument.isWithinDhabi
+                                            ? dhabiSeedAccounts[index]
+                                                .currencyFlag
+                                            : foreignSeedAccounts[index]
+                                                .currencyFlag;
+                                senderAccountNumber = sendMoneyArgument.isRetail
+                                    ? accountDetails[index]["accountNumber"]
+                                    : sendMoneyArgument.isBetweenAccounts
+                                        ? internalSeedAccounts[index]
+                                            .accountNumber
+                                        : sendMoneyArgument.isWithinDhabi
+                                            ? dhabiSeedAccounts[index]
+                                                .accountNumber
+                                            : foreignSeedAccounts[index]
+                                                .accountNumber;
+                                senderCurrency = sendMoneyArgument.isRetail
+                                    ? accountDetails[index]["accountCurrency"]
+                                    : sendMoneyArgument.isBetweenAccounts
+                                        ? internalSeedAccounts[index].currency
+                                        : sendMoneyArgument.isWithinDhabi
+                                            ? dhabiSeedAccounts[index].currency
+                                            : foreignSeedAccounts[index]
+                                                .currency;
+                                senderBalance = sendMoneyArgument.isRetail
+                                    ? double.parse(accountDetails[index]
+                                            ["currentBalance"]
                                         .split(" ")
                                         .last
-                                        .replaceAll(",", ""));
+                                        .replaceAll(",", ""))
+                                    : sendMoneyArgument.isBetweenAccounts
+                                        ? internalSeedAccounts[index].bal
+                                        : sendMoneyArgument.isWithinDhabi
+                                            ? dhabiSeedAccounts[index].bal
+                                            : foreignSeedAccounts[index].bal;
                                 showButtonBloc.add(ShowButtonEvent(
                                     show: selectedAccountIndex == index));
                               },
@@ -136,14 +177,34 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                   accountDetails[index]["productCode"] == "1001"
                                       ? labels[7]["labelText"]
                                       : labels[92]["labelText"],
-                              accountNo: accountDetails[index]["accountNumber"],
-                              currency: accountDetails[index]
-                                  ["accountCurrency"],
-                              amount: double.parse(accountDetails[index]
-                                      ["currentBalance"]
-                                  .split(" ")
-                                  .last
-                                  .replaceAll(",", "")),
+                              accountNo: sendMoneyArgument.isRetail
+                                  ? accountDetails[index]["accountNumber"]
+                                  : sendMoneyArgument.isBetweenAccounts
+                                      ? internalSeedAccounts[index]
+                                          .accountNumber
+                                      : sendMoneyArgument.isWithinDhabi
+                                          ? dhabiSeedAccounts[index]
+                                              .accountNumber
+                                          : foreignSeedAccounts[index]
+                                              .accountNumber,
+                              currency: sendMoneyArgument.isRetail
+                                  ? accountDetails[index]["accountCurrency"]
+                                  : sendMoneyArgument.isBetweenAccounts
+                                      ? internalSeedAccounts[index].currency
+                                      : sendMoneyArgument.isWithinDhabi
+                                          ? dhabiSeedAccounts[index].currency
+                                          : foreignSeedAccounts[index].currency,
+                              amount: sendMoneyArgument.isRetail
+                                  ? double.parse(accountDetails[index]
+                                          ["currentBalance"]
+                                      .split(" ")
+                                      .last
+                                      .replaceAll(",", ""))
+                                  : sendMoneyArgument.isBetweenAccounts
+                                      ? internalSeedAccounts[index].bal
+                                      : sendMoneyArgument.isWithinDhabi
+                                          ? dhabiSeedAccounts[index].bal
+                                          : foreignSeedAccounts[index].bal,
                               isSelected: selectedAccountIndex == index,
                             );
                           },
@@ -174,6 +235,7 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                 isBetweenAccounts: true,
                                 isWithinDhabi: false,
                                 isRemittance: false,
+                                isRetail: sendMoneyArgument.isRetail,
                               ).toMap(),
                             );
                           } else if (sendMoneyArgument.isRemittance) {
@@ -184,6 +246,7 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                 isBetweenAccounts: false,
                                 isWithinDhabi: false,
                                 isRemittance: true,
+                                isRetail: sendMoneyArgument.isRetail,
                               ).toMap(),
                             );
                           } else {
@@ -194,6 +257,7 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                 isBetweenAccounts: false,
                                 isWithinDhabi: true,
                                 isRemittance: false,
+                                isRetail: sendMoneyArgument.isRetail,
                               ).toMap(),
                             );
                           }

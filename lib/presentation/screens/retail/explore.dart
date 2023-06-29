@@ -21,6 +21,7 @@ class _RetailExploreScreenState extends State<RetailExploreScreen> {
         leading: AppBarAvatar(
           imgUrl: "",
           name: customerName ?? "",
+          onTap: () {},
         ),
         title: SvgPicture.asset(ImageConstants.appBarLogo),
         actions: const [AppBarAction()],

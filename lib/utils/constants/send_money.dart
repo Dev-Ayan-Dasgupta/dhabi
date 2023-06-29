@@ -1,8 +1,11 @@
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
+
 String senderAccountNumber = "";
 String receiverAccountNumber = "";
 
 String senderCurrency = "";
 String receiverCurrency = "";
+List<DropDownCountriesModel> receiverCurrencies = [];
 
 String senderCurrencyFlag = "";
 String receiverCurrencyFlag = "";

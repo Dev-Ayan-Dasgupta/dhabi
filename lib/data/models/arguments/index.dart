@@ -22,3 +22,5 @@ export './set_password.dart';
 export './fd_seed_account.dart';
 export './create_deposit.dart';
 export './send_money.dart';
+export './profile.dart';
+export './workflow.dart';

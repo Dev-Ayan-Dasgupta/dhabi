@@ -360,6 +360,56 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['APPROVE_OR_DISAPROVE_CORPORATE_FD'] ?? "";
   }
 
+  @override
+  String get createAccountCorporate {
+    return dotenv.env['CREATE_ACCOUNT_CORPORATE'] ?? "";
+  }
+
+  @override
+  String get changeAddress {
+    return dotenv.env['CHANGE_ADDRESS'] ?? "";
+  }
+
+  @override
+  String get changeMobileNumber {
+    return dotenv.env['CHANGE_MOBILE_NUMBER'] ?? "";
+  }
+
+  @override
+  String get changeEmailAddress {
+    return dotenv.env['CHANGE_EMAIL_ADDRESS'] ?? "";
+  }
+
+  @override
+  String get closeOrDeactivateAccount {
+    return dotenv.env['CLOSE_OR_DEACTIVATE_ACCOUNT'] ?? "";
+  }
+
+  @override
+  String get makeInternalMoneyTransferCorporate {
+    return dotenv.env['MAKE_INTERNAL_MONEY_TRANSFER_CORPORATE'] ?? "";
+  }
+
+  @override
+  String get makeDhabiMoneyTransfer {
+    return dotenv.env['MAKE_DHABI_MONEY_TRANSFER'] ?? "";
+  }
+
+  @override
+  String get makeForeignMoneyTransfer {
+    return dotenv.env['MAKE_FOREIGN_MONEY_TRANSFER'] ?? "";
+  }
+
+  @override
+  String get getWorkflowDetails {
+    return dotenv.env['GET_WORKFLOW_DETAILS'] ?? "";
+  }
+
+  @override
+  String get approveOrDisapproveWorkflow {
+    return dotenv.env['APPROVE_OR_DISAPROVE_WORKFLOW'] ?? "";
+  }
+
   // ? Payments APIs
 
   @override

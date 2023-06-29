@@ -370,7 +370,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     arguments: OTPArgumentModel(
                       emailOrPhone: storageEmail ?? "",
                       isEmail: true,
-                      isBusiness: false,
+                      isBusiness:
+                          registrationArgument.isUpdateCorpEmail ? true : false,
                       isInitial: registrationArgument.isInitial,
                       isLogin: false,
                       isEmailIdUpdate: !(registrationArgument.isInitial),

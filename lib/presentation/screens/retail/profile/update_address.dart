@@ -1,4 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
+
+import 'package:dialup_mobile_app/data/repositories/corporateAccounts/index.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
@@ -14,12 +20,14 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 
 class UpdateAddressScreen extends StatefulWidget {
-  const UpdateAddressScreen({Key? key}) : super(key: key);
+  const UpdateAddressScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<UpdateAddressScreen> createState() => _UpdateAddressScreenState();
@@ -60,6 +68,19 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
   bool isUploading = false;
 
   bool hasEdited = false;
+
+  late ProfileArgumentModel profileArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+  }
+
+  void argumentInitialization() {
+    profileArgument =
+        ProfileArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +198,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           const SizeBox(height: 10),
                           CustomTextField(
                             // maxLines: 1,
-                            hintText: "Address",
+                            hintText: labels[29]["labelText"],
                             controller: _address1Controller,
                             onChanged: (p0) {
                               if (p0.isEmpty) {
@@ -204,7 +225,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           ),
                           const SizeBox(height: 10),
                           CustomTextField(
-                            hintText: "Address",
+                            hintText: labels[29]["labelText"],
                             // maxLines: 1,
                             controller: _address2Controller,
                             onChanged: (p0) {
@@ -213,7 +234,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           ),
                           const SizeBox(height: 20),
                           Text(
-                            "City",
+                            labels[331]["labelText"],
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.black63,
                               fontSize: (16 / Dimensions.designWidth).w,
@@ -221,7 +242,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                           ),
                           const SizeBox(height: 10),
                           CustomTextField(
-                            hintText: "City",
+                            hintText: labels[331]["labelText"],
                             controller: _cityController,
                             onChanged: (p0) {
                               checkHasEdited();
@@ -325,59 +346,161 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                   isUploading = true;
                   showButtonBloc.add(ShowButtonEvent(show: isUploading));
 
-                  var updateAddressResult =
-                      await MapUpdateRetailAddress.mapUpdateRetailAddress(
-                    {
+                  if (profileArgument.isRetail) {
+                    var updateAddressResult =
+                        await MapUpdateRetailAddress.mapUpdateRetailAddress(
+                      {
+                        "addressLine_1": _address1Controller.text,
+                        "addressLine_2": _address2Controller.text,
+                        "city": _cityController.text,
+                        "state": _stateProvinceController.text,
+                        "countryCode": selectedCountryCode,
+                        "pinCode": _poBoxController.text,
+                      },
+                      token ?? "",
+                    );
+                    log("Update Retail Address API response -> $updateAddressResult");
+
+                    isUploading = true;
+                    showButtonBloc.add(ShowButtonEvent(show: isUploading));
+
+                    if (updateAddressResult["success"]) {
+                      await storage.write(
+                          key: "addressCountry", value: selectedCountryName);
+                      storageAddressCountry =
+                          await storage.read(key: "addressCountry");
+                      await storage.write(
+                          key: "addressLine1", value: _address1Controller.text);
+                      storageAddressLine1 =
+                          await storage.read(key: "addressLine1");
+                      await storage.write(
+                          key: "addressLine2", value: _address2Controller.text);
+                      storageAddressLine2 =
+                          await storage.read(key: "addressLine2");
+
+                      await storage.write(
+                          key: "addressCity", value: _cityController.text);
+                      storageAddressCity =
+                          await storage.read(key: "addressCity");
+                      await storage.write(
+                          key: "addressState",
+                          value: _stateProvinceController.text);
+                      storageAddressState =
+                          await storage.read(key: "addressState");
+
+                      await storage.write(
+                          key: "addressEmirate", value: selectedValue);
+                      storageAddressEmirate =
+                          await storage.read(key: "addressEmirate");
+                      await storage.write(
+                          key: "poBox", value: _poBoxController.text);
+                      storageAddressPoBox = await storage.read(key: "poBox");
+
+                      profileAddress =
+                          "${storageAddressLine1 ?? ""}, ${storageAddressLine2 ?? ""}, ${storageAddressCity ?? ""}, ${storageAddressState ?? ""}, ${storageAddressPoBox ?? ""}";
+                      promptSuccessfulAddressUpdate();
+                    } else {
+                      promptUnsuccessfulAddressUpdate();
+                    }
+                  } else {
+                    log("Update Corporate Address Request -> ${{
                       "addressLine_1": _address1Controller.text,
                       "addressLine_2": _address2Controller.text,
                       "city": _cityController.text,
                       "state": _stateProvinceController.text,
                       "countryCode": selectedCountryCode,
                       "pinCode": _poBoxController.text,
-                    },
-                    token ?? "",
-                  );
-                  log("Update Retail Address API response -> $updateAddressResult");
+                    }}");
 
-                  isUploading = true;
-                  showButtonBloc.add(ShowButtonEvent(show: isUploading));
+                    var updateAddressResult =
+                        await MapChangeAddress.mapChangeAddress(
+                      {
+                        "addressLine_1": _address1Controller.text,
+                        "addressLine_2": _address2Controller.text,
+                        "city": _cityController.text,
+                        "state": _stateProvinceController.text,
+                        "countryCode": selectedCountryCode,
+                        "pinCode": _poBoxController.text,
+                      },
+                      token ?? "",
+                    );
 
-                  if (updateAddressResult["success"]) {
-                    await storage.write(
-                        key: "addressCountry", value: selectedCountryName);
-                    storageAddressCountry =
-                        await storage.read(key: "addressCountry");
-                    await storage.write(
-                        key: "addressLine1", value: _address1Controller.text);
-                    storageAddressLine1 =
-                        await storage.read(key: "addressLine1");
-                    await storage.write(
-                        key: "addressLine2", value: _address2Controller.text);
-                    storageAddressLine2 =
-                        await storage.read(key: "addressLine2");
+                    log("Update Corporate Address API response -> $updateAddressResult");
 
-                    await storage.write(
-                        key: "addressCity", value: _cityController.text);
-                    storageAddressCity = await storage.read(key: "addressCity");
-                    await storage.write(
-                        key: "addressState",
-                        value: _stateProvinceController.text);
-                    storageAddressState =
-                        await storage.read(key: "addressState");
+                    isUploading = true;
+                    showButtonBloc.add(ShowButtonEvent(show: isUploading));
 
-                    await storage.write(
-                        key: "addressEmirate", value: selectedValue);
-                    storageAddressEmirate =
-                        await storage.read(key: "addressEmirate");
-                    await storage.write(
-                        key: "poBox", value: _poBoxController.text);
-                    storageAddressPoBox = await storage.read(key: "poBox");
+                    if (updateAddressResult["success"]) {
+                      if (updateAddressResult["isDirectlyCreated"]) {
+                        await storage.write(
+                            key: "addressCountry", value: selectedCountryName);
+                        storageAddressCountry =
+                            await storage.read(key: "addressCountry");
+                        await storage.write(
+                            key: "addressLine1",
+                            value: _address1Controller.text);
+                        storageAddressLine1 =
+                            await storage.read(key: "addressLine1");
+                        await storage.write(
+                            key: "addressLine2",
+                            value: _address2Controller.text);
+                        storageAddressLine2 =
+                            await storage.read(key: "addressLine2");
 
-                    profileAddress =
-                        "${storageAddressLine1 ?? ""}, ${storageAddressLine2 ?? ""}, ${storageAddressCity ?? ""}, ${storageAddressState ?? ""}, ${storageAddressPoBox ?? ""}";
-                    promptSuccessfulAddressUpdate();
-                  } else {
-                    promptUnsuccessfulAddressUpdate();
+                        await storage.write(
+                            key: "addressCity", value: _cityController.text);
+                        storageAddressCity =
+                            await storage.read(key: "addressCity");
+                        await storage.write(
+                            key: "addressState",
+                            value: _stateProvinceController.text);
+                        storageAddressState =
+                            await storage.read(key: "addressState");
+
+                        await storage.write(
+                            key: "addressEmirate", value: selectedValue);
+                        storageAddressEmirate =
+                            await storage.read(key: "addressEmirate");
+                        await storage.write(
+                            key: "poBox", value: _poBoxController.text);
+                        storageAddressPoBox = await storage.read(key: "poBox");
+
+                        profileAddress =
+                            "${storageAddressLine1 ?? ""}, ${storageAddressLine2 ?? ""}, ${storageAddressCity ?? ""}, ${storageAddressState ?? ""}, ${storageAddressPoBox ?? ""}";
+                        promptSuccessfulAddressUpdate();
+                      } else {
+                        if (context.mounted) {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return CustomDialog(
+                                svgAssetPath:
+                                    ImageConstants.checkCircleOutlined,
+                                title: "Address Update Request Placed",
+                                message:
+                                    "${messages[121]["messageText"]}: ${updateAddressResult["reference"]}",
+                                actionWidget: GradientButton(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      Routes.profile,
+                                      arguments: ProfileArgumentModel(
+                                        isRetail: profileArgument.isRetail,
+                                      ).toMap(),
+                                    );
+                                  },
+                                  text: labels[346]["labelText"],
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      }
+                    } else {
+                      promptUnsuccessfulAddressUpdate();
+                    }
                   }
                 }
               }
@@ -416,7 +539,13 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
             onTap: () {
               Navigator.pop(context);
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, Routes.profile);
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.profile,
+                arguments: ProfileArgumentModel(
+                  isRetail: profileArgument.isRetail,
+                ).toMap(),
+              );
             },
             text: labels[347]["labelText"],
           ),

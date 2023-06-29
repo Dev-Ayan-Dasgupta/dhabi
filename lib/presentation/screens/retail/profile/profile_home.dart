@@ -2,25 +2,31 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:dialup_mobile_app/data/models/index.dart';
-import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
-import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
-import 'package:dialup_mobile_app/main.dart';
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/widgets/profile/edit_profile_photo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/main.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/profile/edit_profile_photo.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 
 class ProfileHomeScreen extends StatefulWidget {
-  const ProfileHomeScreen({Key? key}) : super(key: key);
+  const ProfileHomeScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<ProfileHomeScreen> createState() => _ProfileHomeScreenState();
@@ -33,13 +39,21 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
 
   bool hasProfilePicUpdated = false;
 
+  late ProfileArgumentModel profileArgument;
+
   @override
   void initState() {
     super.initState();
+    argumentInitialization();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await getPackageInfo();
       setState(() {});
     });
+  }
+
+  void argumentInitialization() {
+    profileArgument =
+        ProfileArgumentModel.fromMap(widget.argument as dynamic ?? {});
   }
 
   Future<void> getPackageInfo() async {
@@ -158,10 +172,15 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                                   color: const Color(0XFFFAFAFA),
                                   onTap: () {
                                     Navigator.pushNamed(
-                                        context, Routes.profile);
+                                      context,
+                                      Routes.profile,
+                                      arguments: ProfileArgumentModel(
+                                        isRetail: profileArgument.isRetail,
+                                      ).toMap(),
+                                    );
                                   },
                                   iconPath: ImageConstants.settingsAccountBox,
-                                  text: "Profile",
+                                  text: labels[12]["labelText"],
                                 ),
                                 const SizeBox(height: 10),
                                 TopicTile(
@@ -171,7 +190,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                                         context, Routes.security);
                                   },
                                   iconPath: ImageConstants.security,
-                                  text: "Security",
+                                  text: labels[13]["labelText"],
                                 ),
                                 const SizeBox(height: 10),
                                 TopicTile(
@@ -181,14 +200,14 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                                         context, Routes.requestType);
                                   },
                                   iconPath: ImageConstants.handshake,
-                                  text: "Service Request",
+                                  text: labels[14]["labelText"],
                                 ),
                                 const SizeBox(height: 10),
                                 TopicTile(
                                   color: const Color(0XFFFAFAFA),
                                   onTap: promptUserContactUs,
                                   iconPath: ImageConstants.atTheRate,
-                                  text: "Contact Us",
+                                  text: labels[15]["labelText"],
                                 ),
                                 const SizeBox(height: 10),
                                 TopicTile(
@@ -217,7 +236,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                                     Navigator.pushNamed(context, Routes.faq);
                                   },
                                   iconPath: ImageConstants.faq,
-                                  text: "FAQs",
+                                  text: labels[16]["labelText"],
                                 ),
                                 const SizeBox(height: 10),
                                 TopicTile(
@@ -270,14 +289,14 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                                     }
                                   },
                                   iconPath: ImageConstants.rotate,
-                                  text: "Switch Entities",
+                                  text: labels[17]["labelText"],
                                 ),
                                 const SizeBox(height: 10),
                                 TopicTile(
                                   color: const Color(0XFFFAFAFA),
                                   onTap: promptUserLogout,
                                   iconPath: ImageConstants.logout,
-                                  text: "Logout",
+                                  text: labels[18]["labelText"],
                                   fontColor: AppColors.red100,
                                   highlightColor:
                                       const Color.fromRGBO(201, 69, 64, 0.1),
@@ -354,6 +373,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           message: "If you log out you would need to re-login again",
           auxWidget: GradientButton(
             onTap: () async {
+              fdSeedAccounts.clear();
               await storage.write(key: "loggedOut", value: true.toString());
               storageLoggedOut = await storage.read(key: "loggedOut") == "true";
 

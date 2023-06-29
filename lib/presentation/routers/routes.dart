@@ -65,7 +65,7 @@ class Routes {
   static const String notifications = 'notifications';
   static const String exploreRetail = 'explore-retail';
   static const String exploreBusiness = 'explore-business';
-  static const String businessDepositDetails = 'business-deposit-details';
+  static const String workflowDetails = 'workflow-details';
   static const String dormant = 'dormant';
   static const String captureFace = 'capture-face';
   static const String finalImage = 'final-image';

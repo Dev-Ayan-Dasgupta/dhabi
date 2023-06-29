@@ -89,6 +89,16 @@ abstract class BaseConfig {
   String get createCorporateFd;
   String get getCorporateFdApprovalList;
   String get approveOrDisapproveCorporateFd;
+  String get createAccountCorporate;
+  String get changeAddress;
+  String get changeMobileNumber;
+  String get changeEmailAddress;
+  String get closeOrDeactivateAccount;
+  String get makeInternalMoneyTransferCorporate;
+  String get makeDhabiMoneyTransfer;
+  String get makeForeignMoneyTransfer;
+  String get getWorkflowDetails;
+  String get approveOrDisapproveWorkflow;
 
   // ? Payments APIs
 

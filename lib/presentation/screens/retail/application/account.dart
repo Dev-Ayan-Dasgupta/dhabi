@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
+import 'package:dialup_mobile_app/data/repositories/corporateAccounts/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -47,6 +48,7 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
   void argumentInitialization() {
     applicationAccountArgument = ApplicationAccountArgumentModel.fromMap(
         widget.argument as dynamic ?? {});
+    log("isRetail -> ${applicationAccountArgument.isRetail}");
   }
 
   @override
@@ -525,7 +527,10 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                 : "Add Account",
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
-          const SizeBox(height: PaddingConstants.bottomPadding),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.paddingOf(context).bottom,
+          ),
         ],
       );
     } else {
@@ -537,7 +542,10 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
                 ? labels[288]["labelText"]
                 : "Add Account",
           ),
-          const SizeBox(height: PaddingConstants.bottomPadding),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.paddingOf(context).bottom,
+          ),
         ],
       );
     }
@@ -568,31 +576,104 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
     isUploading = true;
     showButtonBloc.add(ShowButtonEvent(show: isUploading));
-    var responseAccount = await MapCreateAccount.mapCreateAccount(
-        {"accountType": storageAccountType}, token ?? "");
-    log("Create Account API response -> $responseAccount");
-    if (responseAccount["success"]) {
-      if (context.mounted) {
-        promptAccountCreated();
+
+    if (applicationAccountArgument.isRetail) {
+      var responseAccount = await MapCreateAccount.mapCreateAccount(
+          {"accountType": storageAccountType}, token ?? "");
+      log("Create Account API response -> $responseAccount");
+      if (responseAccount["success"]) {
+        if (context.mounted) {
+          promptAccountCreated();
+        }
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error",
+                message: responseAccount["message"] ??
+                    "Error in creating account for retail",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: labels[347]["labelText"],
+                ),
+              );
+            },
+          );
+        }
       }
     } else {
-      if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return CustomDialog(
-              svgAssetPath: ImageConstants.warning,
-              title: "Error",
-              message: responseAccount["message"],
-              actionWidget: GradientButton(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                text: labels[347]["labelText"],
-              ),
+      log("Create Account Corporate Request -> ${{
+        "accountType": storageAccountType,
+      }}");
+      var responseAccount =
+          await MapCreateAccountCorporate.mapCreateAccountCorporate(
+        {
+          "accountType": storageAccountType,
+        },
+        token ?? "",
+      );
+      log("Create Account Corporate API response -> $responseAccount");
+      if (responseAccount["success"]) {
+        if (!(responseAccount["isDirectlyCreated"])) {
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return CustomDialog(
+                  svgAssetPath: ImageConstants.checkCircleOutlined,
+                  title: "Account Open Request Placed",
+                  message:
+                      "${messages[121]["messageText"]}: ${responseAccount["reference"]}",
+                  actionWidget: GradientButton(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(
+                        context,
+                        Routes.businessDashboard,
+                        arguments: RetailDashboardArgumentModel(
+                          imgUrl: storageProfilePhotoBase64 ?? "",
+                          name: profileName ?? "",
+                          isFirst: storageIsFirstLogin == true ? false : true,
+                        ).toMap(),
+                      );
+                    },
+                    text: labels[346]["labelText"],
+                  ),
+                );
+              },
             );
-          },
-        );
+          }
+        } else {
+          if (context.mounted) {
+            promptAccountCreated();
+          }
+        }
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error",
+                message: responseAccount["message"] ??
+                    "Error in creating account for corporate",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: labels[347]["labelText"],
+                ),
+              );
+            },
+          );
+        }
       }
     }
 
@@ -613,17 +694,29 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
             onTap: () {
               Navigator.pop(context);
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(
-                context,
-                Routes.retailDashboard,
-                arguments: RetailDashboardArgumentModel(
-                  imgUrl: "",
-                  name: storageCustomerName ?? "",
-                  isFirst: false,
-                ).toMap(),
-              );
+              if (applicationAccountArgument.isRetail) {
+                Navigator.pushReplacementNamed(
+                  context,
+                  Routes.retailDashboard,
+                  arguments: RetailDashboardArgumentModel(
+                    imgUrl: "",
+                    name: storageCustomerName ?? "",
+                    isFirst: false,
+                  ).toMap(),
+                );
+              } else {
+                Navigator.pushReplacementNamed(
+                  context,
+                  Routes.businessDashboard,
+                  arguments: RetailDashboardArgumentModel(
+                    imgUrl: storageProfilePhotoBase64 ?? "",
+                    name: profileName ?? "",
+                    isFirst: storageIsFirstLogin == true ? false : true,
+                  ).toMap(),
+                );
+              }
             },
-            text: "Done",
+            text: labels[346]["labelText"],
           ),
         );
       },

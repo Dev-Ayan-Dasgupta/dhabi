@@ -138,8 +138,10 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     onTap: () {
                       // TODO: Navigate to forgot password screen
                       Navigator.pushNamed(context, Routes.registration,
-                          arguments: RegistrationArgumentModel(isInitial: false)
-                              .toMap());
+                          arguments: RegistrationArgumentModel(
+                            isInitial: false,
+                            isUpdateCorpEmail: false,
+                          ).toMap());
                     },
                     child: Align(
                       alignment: Alignment.centerRight,

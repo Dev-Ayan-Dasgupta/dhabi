@@ -57,6 +57,7 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                   Routes.registration,
                   arguments: RegistrationArgumentModel(
                     isInitial: true,
+                    isUpdateCorpEmail: false,
                   ).toMap(),
                 );
               },
@@ -272,6 +273,7 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                 // (route) => false,
                 arguments: RegistrationArgumentModel(
                   isInitial: true,
+                  isUpdateCorpEmail: false,
                 ).toMap(),
               );
             },

@@ -205,6 +205,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                               sendMoneyArgument.isBetweenAccounts,
                           isWithinDhabi: sendMoneyArgument.isWithinDhabi,
                           isRemittance: sendMoneyArgument.isRemittance,
+                          isRetail: sendMoneyArgument.isRetail,
                         ).toMap(),
                       );
                     } else {
@@ -217,6 +218,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                               sendMoneyArgument.isBetweenAccounts,
                           isWithinDhabi: sendMoneyArgument.isWithinDhabi,
                           isRemittance: sendMoneyArgument.isRemittance,
+                          isRetail: sendMoneyArgument.isRetail,
                         ).toMap(),
                       );
                     }
@@ -282,7 +284,9 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                             ),
                           ),
                           Text(
-                            "International Recipients.",
+                            sendMoneyArgument.isRemittance
+                                ? "International Recipients."
+                                : "Domestic Recipients",
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.dark50,
                               fontSize: (12 / Dimensions.designWidth).w,
@@ -387,6 +391,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                   relation = item.relation;
 
                   if (sendMoneyArgument.isRemittance) {
+                    receiverCurrencyFlag = senderCurrencyFlag;
                     var getExchRateApiResult =
                         await MapExchangeRate.mapExchangeRate(
                       token ?? "",
@@ -418,6 +423,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                                 sendMoneyArgument.isBetweenAccounts,
                             isWithinDhabi: sendMoneyArgument.isWithinDhabi,
                             isRemittance: sendMoneyArgument.isRemittance,
+                            isRetail: sendMoneyArgument.isRetail,
                           ).toMap(),
                         );
                       }
@@ -443,6 +449,8 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                       }
                     }
                   } else {
+                    receiverCurrencyFlag = senderCurrencyFlag;
+                    exchangeRate = 1;
                     if (context.mounted) {
                       Navigator.pushNamed(
                         context,
@@ -452,6 +460,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                               sendMoneyArgument.isBetweenAccounts,
                           isWithinDhabi: sendMoneyArgument.isWithinDhabi,
                           isRemittance: sendMoneyArgument.isRemittance,
+                          isRetail: sendMoneyArgument.isRetail,
                         ).toMap(),
                       );
                     }

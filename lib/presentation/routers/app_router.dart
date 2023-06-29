@@ -251,7 +251,9 @@ class AppRouter {
         );
       case Routes.sendMoney:
         return MaterialPageRoute(
-          builder: (_) => const SendMoneyScreen(),
+          builder: (_) => SendMoneyScreen(
+            argument: args,
+          ),
         );
       case Routes.sendMoneyFrom:
         return MaterialPageRoute(
@@ -337,11 +339,15 @@ class AppRouter {
         );
       case Routes.profileHome:
         return MaterialPageRoute(
-          builder: (_) => const ProfileHomeScreen(),
+          builder: (_) => ProfileHomeScreen(
+            argument: args,
+          ),
         );
       case Routes.profile:
         return MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
+          builder: (_) => ProfileScreen(
+            argument: args,
+          ),
         );
       case Routes.selectAccount:
         return MaterialPageRoute(
@@ -367,15 +373,19 @@ class AppRouter {
         );
       case Routes.updateAddress:
         return MaterialPageRoute(
-          builder: (_) => const UpdateAddressScreen(),
+          builder: (_) => UpdateAddressScreen(
+            argument: args,
+          ),
         );
       case Routes.notifications:
         return MaterialPageRoute(
           builder: (_) => const NotificatonsScreen(),
         );
-      case Routes.businessDepositDetails:
+      case Routes.workflowDetails:
         return MaterialPageRoute(
-          builder: (_) => const BusinessDepositDetailsScreen(),
+          builder: (_) => WorkflowDetailsScreen(
+            argument: args,
+          ),
         );
       case Routes.exploreBusiness:
         return MaterialPageRoute(

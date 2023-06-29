@@ -91,6 +91,7 @@ class _RecipientReceiveModeScreenState
                               sendMoneyArgument.isBetweenAccounts,
                           isWithinDhabi: sendMoneyArgument.isWithinDhabi,
                           isRemittance: sendMoneyArgument.isRemittance,
+                          isRetail: sendMoneyArgument.isRetail,
                         ).toMap(),
                       );
                     },

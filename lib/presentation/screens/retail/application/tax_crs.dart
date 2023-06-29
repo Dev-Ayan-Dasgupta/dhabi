@@ -1734,6 +1734,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
                     Routes.applicationAccount,
                     arguments: ApplicationAccountArgumentModel(
                       isInitial: true,
+                      isRetail: true,
                       savingsAccountsCreated: 0,
                       currentAccountsCreated: 0,
                     ).toMap(),
@@ -1750,14 +1751,20 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
             text: labels[127]["labelText"],
             auxWidget: isUploading ? const LoaderRow() : const SizeBox(),
           ),
-          const SizeBox(height: PaddingConstants.bottomPadding),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.paddingOf(context).bottom,
+          ),
         ],
       );
     } else {
       return Column(
         children: [
           SolidButton(onTap: () {}, text: labels[127]["labelText"]),
-          const SizeBox(height: PaddingConstants.bottomPadding),
+          SizeBox(
+            height: PaddingConstants.bottomPadding +
+                MediaQuery.paddingOf(context).bottom,
+          ),
         ],
       );
     }

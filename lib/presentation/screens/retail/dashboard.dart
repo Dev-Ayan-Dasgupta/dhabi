@@ -51,6 +51,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   int savingsAccountCount = 0;
   int currentAccountCount = 0;
+
   List depositDetails = [];
 
   List statementList = [];
@@ -370,6 +371,15 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
         leading: AppBarAvatar(
           imgUrl: retailDashboardArgumentModel.imgUrl,
           name: retailDashboardArgumentModel.name,
+          onTap: () {
+            Navigator.pushNamed(
+              context,
+              Routes.profileHome,
+              arguments: ProfileArgumentModel(
+                isRetail: true,
+              ).toMap(),
+            );
+          },
         ),
         title: SvgPicture.asset(
           ImageConstants.appBarLogo,
@@ -509,6 +519,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                         arguments:
                                                             ApplicationAccountArgumentModel(
                                                           isInitial: false,
+                                                          isRetail: true,
                                                           savingsAccountsCreated:
                                                               savingsAccountCount,
                                                           currentAccountsCreated:
@@ -598,7 +609,15 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                           activityText: labels[9]["labelText"],
                                           onTap: () {
                                             Navigator.pushNamed(
-                                                context, Routes.sendMoney);
+                                              context,
+                                              Routes.sendMoney,
+                                              arguments: SendMoneyArgumentModel(
+                                                isBetweenAccounts: false,
+                                                isWithinDhabi: false,
+                                                isRemittance: false,
+                                                isRetail: true,
+                                              ).toMap(),
+                                            );
                                           },
                                         ),
                                       ],
@@ -762,11 +781,28 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                     const SizeBox(height: 15),
                                     InkWell(
                                       onTap: () {
-                                        final ShowButtonBloc showButtonBloc =
-                                            context.read<ShowButtonBloc>();
-                                        tabController.animateTo(1);
-                                        showButtonBloc.add(
-                                            const ShowButtonEvent(show: true));
+                                        // final ShowButtonBloc showButtonBloc =
+                                        //     context.read<ShowButtonBloc>();
+                                        // tabController.animateTo(1);
+                                        // showButtonBloc.add(
+                                        //     const ShowButtonEvent(show: true));
+                                        Navigator.pushNamed(
+                                          context,
+                                          Routes.errorSuccessScreen,
+                                          arguments: ErrorArgumentModel(
+                                            hasSecondaryButton: false,
+                                            iconPath: ImageConstants.happy,
+                                            title: "You're all caught up",
+                                            message: labels[66]["labelText"],
+                                            buttonText: labels[347]
+                                                ["labelText"],
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            buttonTextSecondary: "",
+                                            onTapSecondary: () {},
+                                          ).toMap(),
+                                        );
                                       },
                                       child: const DashboardBannerImage(
                                         imgUrl: ImageConstants.banner3,

@@ -14,6 +14,7 @@ class NotificationsTile extends StatelessWidget {
     required this.dateTime,
     required this.widget,
     required this.onPressed,
+    required this.isActionable,
   }) : super(key: key);
 
   final String title;
@@ -21,6 +22,7 @@ class NotificationsTile extends StatelessWidget {
   final String dateTime;
   final Widget widget;
   final void Function(BuildContext) onPressed;
+  final bool isActionable;
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +34,21 @@ class NotificationsTile extends StatelessWidget {
         color: Colors.white,
       ),
       child: Slidable(
-        endActionPane: ActionPane(
-          extentRatio: 0.25,
-          motion: const ScrollMotion(),
-          children: [
-            SlidableAction(
-              onPressed: onPressed,
-              backgroundColor: AppColors.red100,
-              // foregroundColor: Colors.white,
-              icon: Icons.delete_forever_rounded,
-              label: "Delete",
-            ),
-          ],
-        ),
+        endActionPane: isActionable
+            ? ActionPane(
+                extentRatio: 0.25,
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: onPressed,
+                    backgroundColor: AppColors.red100,
+                    // foregroundColor: Colors.white,
+                    icon: Icons.delete_forever_rounded,
+                    label: "Delete",
+                  ),
+                ],
+              )
+            : null,
         child: Container(
           padding: EdgeInsets.symmetric(
             vertical: (16 / Dimensions.designHeight).h,
@@ -81,6 +85,7 @@ class NotificationsTile extends StatelessWidget {
               const SizeBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     dateTime,

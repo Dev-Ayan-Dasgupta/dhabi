@@ -5,21 +5,25 @@ class SendMoneyArgumentModel {
   final bool isBetweenAccounts;
   final bool isWithinDhabi;
   final bool isRemittance;
+  final bool isRetail;
   SendMoneyArgumentModel({
     required this.isBetweenAccounts,
     required this.isWithinDhabi,
     required this.isRemittance,
+    required this.isRetail,
   });
 
   SendMoneyArgumentModel copyWith({
     bool? isBetweenAccounts,
     bool? isWithinDhabi,
     bool? isRemittance,
+    bool? isRetail,
   }) {
     return SendMoneyArgumentModel(
       isBetweenAccounts: isBetweenAccounts ?? this.isBetweenAccounts,
       isWithinDhabi: isWithinDhabi ?? this.isWithinDhabi,
       isRemittance: isRemittance ?? this.isRemittance,
+      isRetail: isRetail ?? this.isRetail,
     );
   }
 
@@ -28,6 +32,7 @@ class SendMoneyArgumentModel {
       'isBetweenAccounts': isBetweenAccounts,
       'isWithinDhabi': isWithinDhabi,
       'isRemittance': isRemittance,
+      'isRetail': isRetail,
     };
   }
 
@@ -36,6 +41,7 @@ class SendMoneyArgumentModel {
       isBetweenAccounts: map['isBetweenAccounts'] as bool,
       isWithinDhabi: map['isWithinDhabi'] as bool,
       isRemittance: map['isRemittance'] as bool,
+      isRetail: map['isRetail'] as bool,
     );
   }
 
@@ -46,8 +52,9 @@ class SendMoneyArgumentModel {
           json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      'SendMoneyArgumentModel(isBetweenAccounts: $isBetweenAccounts, isWithinDhabi: $isWithinDhabi, isRemittance: $isRemittance)';
+  String toString() {
+    return 'SendMoneyArgumentModel(isBetweenAccounts: $isBetweenAccounts, isWithinDhabi: $isWithinDhabi, isRemittance: $isRemittance, isRetail: $isRetail)';
+  }
 
   @override
   bool operator ==(covariant SendMoneyArgumentModel other) {
@@ -55,12 +62,15 @@ class SendMoneyArgumentModel {
 
     return other.isBetweenAccounts == isBetweenAccounts &&
         other.isWithinDhabi == isWithinDhabi &&
-        other.isRemittance == isRemittance;
+        other.isRemittance == isRemittance &&
+        other.isRetail == isRetail;
   }
 
   @override
-  int get hashCode =>
-      isBetweenAccounts.hashCode ^
-      isWithinDhabi.hashCode ^
-      isRemittance.hashCode;
+  int get hashCode {
+    return isBetweenAccounts.hashCode ^
+        isWithinDhabi.hashCode ^
+        isRemittance.hashCode ^
+        isRetail.hashCode;
+  }
 }

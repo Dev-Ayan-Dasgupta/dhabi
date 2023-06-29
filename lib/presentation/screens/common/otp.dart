@@ -16,6 +16,7 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/accounts/map_customer_details.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
+import 'package:dialup_mobile_app/data/repositories/corporateAccounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/onboarding/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -314,104 +315,164 @@ class _OTPScreenState extends State<OTPScreen> {
               }
             } else {
               if (otpArgumentModel.isEmailIdUpdate) {
-                log("Update Email API request -> ${{
-                  "otp": _pinController.text,
-                  "emailID": updatedEmail,
-                }}");
-                var updateREmailResult =
-                    await MapUpdateRetailEmailId.mapUpdateRetailEmailId(
-                  {
+                if (otpArgumentModel.isBusiness == false) {
+                  log("Update Email API request -> ${{
                     "otp": _pinController.text,
                     "emailID": updatedEmail,
-                  },
-                  token ?? "",
-                );
-                log("Update Email API response -> $updateREmailResult");
-
-                if (updateREmailResult["success"]) {
-                  pinputErrorBloc.add(
-                    PinputErrorEvent(
-                      isError: false,
-                      isComplete: true,
-                      errorCount: pinputErrorCount,
-                    ),
+                  }}");
+                  var updateREmailResult =
+                      await MapUpdateRetailEmailId.mapUpdateRetailEmailId(
+                    {
+                      "otp": _pinController.text,
+                      "emailID": updatedEmail,
+                    },
+                    token ?? "",
                   );
+                  log("Update Email API response -> $updateREmailResult");
 
-                  var result = await MapLogin.mapLogin({
-                    "emailId": updatedEmail,
-                    "userTypeId": storageUserTypeId,
-                    "userId": 1,
-                    "companyId": storageCompanyId,
-                    "password": storagePassword,
-                    "deviceId": storageDeviceId,
-                    "registerDevice": false,
-                    "deviceName": deviceName,
-                    "deviceType": deviceType,
-                    "appVersion": appVersion,
-                    "fcmToken": fcmToken,
-                  });
-                  log("Login API Response -> $result");
-                  token = result["token"];
-                  log("token -> $token");
-
-                  await storage.write(key: "emailAddress", value: updatedEmail);
-                  storageEmail = await storage.read(key: "emailAddress");
-                  log("storageEmail -> $storageEmail");
-                  profileEmailId = storageEmail;
-                  if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CustomDialog(
-                          svgAssetPath: ImageConstants.checkCircleOutlined,
-                          title: "Email ID Updated",
-                          message: messages[54]["messageText"],
-                          actionWidget: GradientButton(
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pushReplacementNamed(
-                                context,
-                                Routes.profile,
-                              );
-                              // Navigator.pop(context);
-                              // Navigator.pushReplacementNamed(
-                              //   context,
-                              //   Routes.loginPassword,
-                              //   arguments: LoginPasswordArgumentModel(
-                              //     emailId: storageEmail ?? "",
-                              //     userId: storageUserId ?? 0,
-                              //     userTypeId: 1,
-                              //     companyId: storageCompanyId ?? 0,
-                              //   ).toMap(),
-                              // );
-                            },
-                            text: labels[346]["labelText"],
-                          ),
-                        );
-                      },
+                  if (updateREmailResult["success"]) {
+                    pinputErrorBloc.add(
+                      PinputErrorEvent(
+                        isError: false,
+                        isComplete: true,
+                        errorCount: pinputErrorCount,
+                      ),
                     );
+
+                    var result = await MapLogin.mapLogin({
+                      "emailId": updatedEmail,
+                      "userTypeId": storageUserTypeId,
+                      "userId": 1,
+                      "companyId": storageCompanyId,
+                      "password": storagePassword,
+                      "deviceId": storageDeviceId,
+                      "registerDevice": false,
+                      "deviceName": deviceName,
+                      "deviceType": deviceType,
+                      "appVersion": appVersion,
+                      "fcmToken": fcmToken,
+                    });
+                    log("Login API Response -> $result");
+                    token = result["token"];
+                    log("token -> $token");
+
+                    await storage.write(
+                        key: "emailAddress", value: updatedEmail);
+                    storageEmail = await storage.read(key: "emailAddress");
+                    log("storageEmail -> $storageEmail");
+                    profileEmailId = storageEmail;
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.checkCircleOutlined,
+                            title: "Email ID Updated",
+                            message: messages[54]["messageText"],
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  Routes.profile,
+                                  arguments: ProfileArgumentModel(
+                                    isRetail: true,
+                                  ).toMap(),
+                                );
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.warning,
+                            title: "Unable to Update",
+                            message: messages[51]["messageText"],
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
                   }
                 } else {
-                  if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CustomDialog(
-                          svgAssetPath: ImageConstants.warning,
-                          title: "Unable to Update",
-                          message: messages[51]["messageText"],
-                          actionWidget: GradientButton(
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            text: labels[346]["labelText"],
-                          ),
-                        );
-                      },
+                  // TODO: Call API to update corporate email
+                  log("Update Corporate Email API request -> ${{
+                    "otp": _pinController.text,
+                    "emailID": updatedEmail,
+                  }}");
+                  var updateREmailResult =
+                      await MapChangeEmailAddress.mapChangeEmailAddress(
+                    {
+                      "otp": _pinController.text,
+                      "emailID": updatedEmail,
+                    },
+                    token ?? "",
+                  );
+                  log("Update Corporate Email API response -> $updateREmailResult");
+
+                  if (updateREmailResult["success"]) {
+                    pinputErrorBloc.add(
+                      PinputErrorEvent(
+                        isError: false,
+                        isComplete: true,
+                        errorCount: pinputErrorCount,
+                      ),
                     );
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.checkCircleOutlined,
+                            title: "Update Request Placed",
+                            message:
+                                "${messages[121]["messageText"]}: ${updateREmailResult["reference"]}",
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.warning,
+                            title: "Unable to Update",
+                            message: messages[51]["messageText"],
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
                   }
                 }
               } else {
@@ -800,6 +861,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                                   arguments:
                                                       RegistrationArgumentModel(
                                                     isInitial: true,
+                                                    isUpdateCorpEmail: false,
                                                   ).toMap(),
                                                 );
                                               }
@@ -921,6 +983,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                               arguments:
                                                   RegistrationArgumentModel(
                                                 isInitial: true,
+                                                isUpdateCorpEmail: false,
                                               ).toMap(),
                                             );
                                           }
@@ -1224,66 +1287,152 @@ class _OTPScreenState extends State<OTPScreen> {
               }
             } else {
               if (otpArgumentModel.isMobileUpdate) {
-                var mobileUpdateResult = await MapUpdateRetailMobileNumber
-                    .mapUpdateRetailMobileNumber(
-                  {
-                    "otp": _pinController.text,
-                    "mobileNumber": otpArgumentModel.emailOrPhone,
-                  },
-                  token ?? "",
-                );
-                log("Update Mobile API response -> $mobileUpdateResult");
-                if (mobileUpdateResult["success"]) {
-                  await storage.write(
-                    key: "mobileNumber",
-                    value: otpArgumentModel.emailOrPhone,
+                if (otpArgumentModel.isBusiness == false) {
+                  var mobileUpdateResult = await MapUpdateRetailMobileNumber
+                      .mapUpdateRetailMobileNumber(
+                    {
+                      "otp": _pinController.text,
+                      "mobileNumber": otpArgumentModel.emailOrPhone,
+                    },
+                    token ?? "",
                   );
-                  storageMobileNumber = await storage.read(key: "mobileNumber");
-                  profileMobileNumber = storageMobileNumber;
-                  if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CustomDialog(
-                          svgAssetPath: ImageConstants.checkCircleOutlined,
-                          title: "Mobile Number Updated",
-                          message: messages[52]["messageText"],
-                          actionWidget: GradientButton(
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pushReplacementNamed(
-                                context,
-                                Routes.profile,
-                              );
-                            },
-                            text: labels[346]["labelText"],
-                          ),
-                        );
-                      },
+                  log("Update Mobile API response -> $mobileUpdateResult");
+                  if (mobileUpdateResult["success"]) {
+                    await storage.write(
+                      key: "mobileNumber",
+                      value: otpArgumentModel.emailOrPhone,
                     );
+                    storageMobileNumber =
+                        await storage.read(key: "mobileNumber");
+                    profileMobileNumber = storageMobileNumber;
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.checkCircleOutlined,
+                            title: "Mobile Number Updated",
+                            message: messages[52]["messageText"],
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  Routes.profile,
+                                  arguments: ProfileArgumentModel(
+                                    isRetail: true,
+                                  ).toMap(),
+                                );
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.warning,
+                            title: "Unable to Update",
+                            message: messages[51]["messageText"],
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
                   }
                 } else {
-                  if (context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return CustomDialog(
-                          svgAssetPath: ImageConstants.warning,
-                          title: "Unable to Update",
-                          message: messages[51]["messageText"],
-                          actionWidget: GradientButton(
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                            text: labels[346]["labelText"],
-                          ),
-                        );
-                      },
-                    );
+                  // TODO: Call API to update corporate mobile
+                  log("corpMobileUpdate Request -> ${{
+                    "otp": _pinController.text,
+                    "mobileNumber": otpArgumentModel.emailOrPhone,
+                  }}");
+                  var corpMobileUpdateResult =
+                      await MapChangeMobileNumber.mapChangeMobileNumber(
+                    {
+                      "otp": _pinController.text,
+                      "mobileNumber": otpArgumentModel.emailOrPhone,
+                    },
+                    token ?? "",
+                  );
+                  log("corpMobileUpdateResult -> $corpMobileUpdateResult");
+
+                  if (corpMobileUpdateResult["success"]) {
+                    if (corpMobileUpdateResult["isDirectlyCreated"]) {
+                      await storage.write(
+                        key: "mobileNumber",
+                        value: otpArgumentModel.emailOrPhone,
+                      );
+                      storageMobileNumber =
+                          await storage.read(key: "mobileNumber");
+                      profileMobileNumber = storageMobileNumber;
+                    }
+
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.checkCircleOutlined,
+                            title: corpMobileUpdateResult["isDirectlyCreated"]
+                                ? "Mobile Number Updated"
+                                : "Update Request Placed",
+                            message: corpMobileUpdateResult["isDirectlyCreated"]
+                                ? messages[52]["messageText"]
+                                : "${messages[121]["messageText"]}: ${corpMobileUpdateResult["reference"]}",
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  Routes.profile,
+                                  arguments: ProfileArgumentModel(
+                                    isRetail: false,
+                                  ).toMap(),
+                                );
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.warning,
+                            title: "Unable to Update",
+                            message: messages[51]["messageText"],
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
                   }
                 }
               } else {

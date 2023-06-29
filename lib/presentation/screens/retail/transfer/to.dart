@@ -59,7 +59,6 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizeBox(height: 10),
             Text(
               labels[157]["labelText"],
               style: TextStyles.primaryBold.copyWith(
@@ -131,6 +130,7 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
                                   accountDetails[index]["accountNumber"];
                               receiverCurrency =
                                   accountDetails[index]["accountCurrency"];
+                              receiverCurrencyFlag = senderCurrencyFlag;
                               log("receiverAccountNumber -> $receiverAccountNumber");
                               showButtonBloc.add(ShowButtonEvent(
                                   show: selectedAccountIndex == index));
@@ -210,6 +210,7 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
                                           isBetweenAccounts: true,
                                           isWithinDhabi: false,
                                           isRemittance: false,
+                                          isRetail: sendMoneyArgument.isRetail,
                                         ).toMap(),
                                       );
                                     }

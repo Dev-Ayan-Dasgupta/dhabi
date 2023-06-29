@@ -1,13 +1,21 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/recent_transfers_tile.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_sizer/flutter_sizer.dart';
 
 class SendMoneyScreen extends StatefulWidget {
-  const SendMoneyScreen({Key? key}) : super(key: key);
+  const SendMoneyScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<SendMoneyScreen> createState() => _SendMoneyScreenState();
@@ -16,6 +24,19 @@ class SendMoneyScreen extends StatefulWidget {
 class _SendMoneyScreenState extends State<SendMoneyScreen> {
   final DraggableScrollableController _dsController =
       DraggableScrollableController();
+
+  late SendMoneyArgumentModel sendMoneyArgument;
+
+  @override
+  void initState() {
+    super.initState();
+    argumentInitialization();
+  }
+
+  void argumentInitialization() async {
+    sendMoneyArgument =
+        SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +75,9 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 const SizeBox(height: 20),
                 TopicTile(
                   onTap: () {
+                    receiverCurrencies.clear();
+                    receiverCurrencies.add(DropDownCountriesModel(
+                        countrynameOrCode: "", countryFlagBase64: ""));
                     Navigator.pushNamed(
                       context,
                       Routes.sendMoneyFrom,
@@ -61,6 +85,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                         isBetweenAccounts: true,
                         isWithinDhabi: false,
                         isRemittance: false,
+                        isRetail: sendMoneyArgument.isRetail,
                       ).toMap(),
                     );
                   },
@@ -70,6 +95,9 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 const SizeBox(height: 10),
                 TopicTile(
                   onTap: () {
+                    receiverCurrencies.clear();
+                    receiverCurrencies.add(DropDownCountriesModel(
+                        countrynameOrCode: "", countryFlagBase64: ""));
                     Navigator.pushNamed(
                       context,
                       Routes.sendMoneyFrom,
@@ -77,6 +105,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                         isBetweenAccounts: false,
                         isWithinDhabi: true,
                         isRemittance: false,
+                        isRetail: sendMoneyArgument.isRetail,
                       ).toMap(),
                     );
                   },
@@ -94,6 +123,9 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 // const SizeBox(height: 10),
                 TopicTile(
                   onTap: () {
+                    receiverCurrencies.clear();
+                    receiverCurrencies.add(DropDownCountriesModel(
+                        countrynameOrCode: "", countryFlagBase64: ""));
                     Navigator.pushNamed(
                       context,
                       Routes.sendMoneyFrom,
@@ -101,6 +133,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                         isBetweenAccounts: false,
                         isWithinDhabi: false,
                         isRemittance: true,
+                        isRetail: sendMoneyArgument.isRetail,
                       ).toMap(),
                     );
                   },

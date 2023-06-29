@@ -289,6 +289,7 @@ class _RetailOnboardingStatusScreenState
                                   Routes.applicationAccount,
                                   arguments: ApplicationAccountArgumentModel(
                                     isInitial: true,
+                                    isRetail: true,
                                     savingsAccountsCreated: 0,
                                     currentAccountsCreated: 0,
                                   ).toMap(),

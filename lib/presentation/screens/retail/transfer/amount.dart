@@ -1,16 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cached_memory_image/provider/cached_memory_image_provider.dart';
+import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
+import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/dropdown_currencies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
@@ -41,6 +44,13 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
 
   Color borderColor = const Color(0XFFEEEEEE);
 
+  DropDownCountriesModel selectedCurrency = DropDownCountriesModel(
+    countryFlagBase64: receiverCurrencies[0].countryFlagBase64,
+    countrynameOrCode: receiverCurrencies[0].countrynameOrCode,
+  );
+
+  bool isFetchingExchangeRate = false;
+
   late SendMoneyArgumentModel sendMoneyArgument;
 
   @override
@@ -54,6 +64,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
         SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
     // exchangeRate = sendMoneyArgument.isBetweenAccounts ? 1 : 0.5;
     // fees = sendMoneyArgument.isBetweenAccounts ? 0 : 5;
+    log("receiverCurrency -> $receiverCurrency");
   }
 
   @override
@@ -80,199 +91,380 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal:
-              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    labels[158]["labelText"],
-                    style: TextStyles.primaryBold.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (28 / Dimensions.designWidth).w,
-                    ),
-                  ),
-                  const SizeBox(height: 10),
-                  Text(
-                    "Please fill the details below",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.dark50,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
-                  ),
-                  const SizeBox(height: 10),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizeBox(height: 10),
-                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: buildYouSend,
-                          ),
-                          const SizeBox(height: 10),
-                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: (context, state) {
-                              return CustomTextField(
-                                borderColor: borderColor,
-                                hintText: "0",
-                                controller: _sendController,
-                                onChanged: onSendChanged,
-                                keyboardType: TextInputType.number,
-                                suffixIcon: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      "$senderCurrency  ",
-                                      style: TextStyles.primaryMedium.copyWith(
-                                        color: AppColors.black63,
-                                        fontSize:
-                                            (16 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                    CircleAvatar(
-                                      radius:
-                                          ((23 / 2) / Dimensions.designWidth).w,
-                                      backgroundImage:
-                                          CachedMemoryImageProvider(
-                                        const Uuid().v4(),
-                                        bytes: base64Decode(senderCurrencyFlag),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                          const SizeBox(height: 7),
-                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: buildSendError,
-                          ),
-                          const SizeBox(height: 10),
-                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: buildExchangeRate,
-                          ),
-                          const SizeBox(height: 10),
-                          BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                            builder: buildYourReceive,
-                          ),
-                          const SizeBox(height: 10),
-                          CustomTextField(
-                            controller: _receiveController,
-                            hintText: "0",
-                            onChanged: (p0) {},
-                            enabled: false,
-                            suffixIcon: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "$receiverCurrency  ",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: AppColors.black63,
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                                CircleAvatar(
-                                  radius: ((23 / 2) / Dimensions.designWidth).w,
-                                  backgroundImage: CachedMemoryImageProvider(
-                                    const Uuid().v4(),
-                                    bytes: base64Decode(receiverCurrencyFlag),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizeBox(height: 7),
-                          Text(
-                            !(sendMoneyArgument.isRemittance)
-                                ? "Expected arrival today"
-                                : expectedTime,
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.dark50,
-                              fontSize: (12 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                          const SizeBox(height: 10),
-                          Ternary(
-                            condition: sendMoneyArgument.isRemittance,
-                            truthy: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      labels[199]["labelText"],
-                                      style: TextStyles.primaryMedium.copyWith(
-                                        color: AppColors.dark80,
-                                        fontSize:
-                                            (14 / Dimensions.designWidth).w,
-                                      ),
-                                    ),
-                                    const Asterisk(),
-                                  ],
-                                ),
-                                const SizeBox(height: 10),
-                                BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                                  builder: (context, state) {
-                                    return CustomDropDown(
-                                      title: "Select who bears charges",
-                                      items: bearerDetailDDs,
-                                      value: selectedBearerReason,
-                                      onChanged: (value) {
-                                        final ShowButtonBloc showButtonBloc =
-                                            context.read<ShowButtonBloc>();
-                                        isBearerTypeSelected = true;
-                                        selectedBearerReason = value as String;
-                                        if (selectedBearerReason ==
-                                            "I bear the charges (OUR)") {
-                                          isSenderBearCharges = true;
-                                        } else {
-                                          isSenderBearCharges = false;
-                                        }
-                                        showButtonBloc.add(ShowButtonEvent(
-                                            show: isBearerTypeSelected));
-                                      },
-                                    );
-                                  },
-                                ),
-                                const SizeBox(height: 7),
-                                Text(
-                                  "Receiver bearing or sharing charges will be applied only in case of feasibility.",
-                                  style: TextStyles.primaryMedium.copyWith(
-                                    color: AppColors.dark50,
-                                    fontSize: (12 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            falsy: const SizeBox(),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  (PaddingConstants.horizontalPadding / Dimensions.designWidth)
+                      .w,
             ),
-            Column(
+            child: Column(
               children: [
-                BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                  builder: buildSubmitButton,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        labels[158]["labelText"],
+                        style: TextStyles.primaryBold.copyWith(
+                          color: AppColors.primary,
+                          fontSize: (28 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const SizeBox(height: 10),
+                      Text(
+                        "Please fill the details below",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark50,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const SizeBox(height: 10),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizeBox(height: 10),
+                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                builder: buildYouSend,
+                              ),
+                              const SizeBox(height: 10),
+                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                builder: (context, state) {
+                                  return CustomTextField(
+                                    borderColor: borderColor,
+                                    hintText: "0",
+                                    controller: _sendController,
+                                    onChanged: onSendChanged,
+                                    keyboardType: TextInputType.number,
+                                    suffixIcon: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "$senderCurrency  ",
+                                          style:
+                                              TextStyles.primaryMedium.copyWith(
+                                            color: AppColors.black63,
+                                            fontSize:
+                                                (16 / Dimensions.designWidth).w,
+                                          ),
+                                        ),
+                                        CircleAvatar(
+                                          radius: ((23 / 2) /
+                                                  Dimensions.designWidth)
+                                              .w,
+                                          backgroundImage:
+                                              CachedMemoryImageProvider(
+                                            const Uuid().v4(),
+                                            bytes: base64Decode(
+                                                senderCurrencyFlag),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizeBox(height: 7),
+                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                builder: buildSendError,
+                              ),
+                              const SizeBox(height: 10),
+                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                builder: buildExchangeRate,
+                              ),
+                              const SizeBox(height: 10),
+                              BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                                builder: buildYourReceive,
+                              ),
+                              const SizeBox(height: 10),
+                              Stack(
+                                children: [
+                                  CustomTextField(
+                                    controller: _receiveController,
+                                    hintText: "0",
+                                    onChanged: (p0) {},
+                                    enabled: false,
+                                    suffixIcon: Ternary(
+                                      condition: receiverCurrencies.length > 1,
+                                      truthy: const SizeBox(),
+                                      falsy: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "$receiverCurrency  ",
+                                            style: TextStyles.primaryMedium
+                                                .copyWith(
+                                              color: AppColors.black63,
+                                              fontSize:
+                                                  (16 / Dimensions.designWidth)
+                                                      .w,
+                                            ),
+                                          ),
+                                          CircleAvatar(
+                                            radius: ((23 / 2) /
+                                                    Dimensions.designWidth)
+                                                .w,
+                                            backgroundImage:
+                                                CachedMemoryImageProvider(
+                                              const Uuid().v4(),
+                                              bytes: base64Decode(
+                                                  receiverCurrencyFlag),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: (7 / Dimensions.designWidth).w,
+                                    right: (20 / Dimensions.designWidth).w,
+                                    child: Ternary(
+                                      condition: receiverCurrencies.length > 1,
+                                      truthy: SizedBox(
+                                        width: 12.w,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            CustomDropdownCurrencies(
+                                              title: "",
+                                              items: receiverCurrencies,
+                                              value: selectedCurrency,
+                                              onChanged: (value) async {
+                                                if (!isFetchingExchangeRate) {
+                                                  selectedCurrency = value
+                                                      as DropDownCountriesModel;
+                                                  for (var i = 0;
+                                                      i <
+                                                          receiverCurrencies
+                                                              .length;
+                                                      i++) {
+                                                    if (selectedCurrency
+                                                            .countrynameOrCode ==
+                                                        receiverCurrencies[i]
+                                                            .countrynameOrCode) {
+                                                      receiverCurrency =
+                                                          selectedCurrency
+                                                              .countrynameOrCode!;
+                                                      break;
+                                                    }
+                                                  }
+
+                                                  isFetchingExchangeRate = true;
+                                                  setState(() {
+                                                    log("isFetchingExchangeRate -> $isFetchingExchangeRate");
+                                                  });
+
+                                                  var getExchRateApiResult =
+                                                      await MapExchangeRate
+                                                          .mapExchangeRate(
+                                                    token ?? "",
+                                                  );
+                                                  log("getExchRateApiResult -> $getExchRateApiResult");
+
+                                                  if (getExchRateApiResult[
+                                                      "success"]) {
+                                                    for (var fetchExchangeRate
+                                                        in getExchRateApiResult[
+                                                            "fetchExRates"]) {
+                                                      if (fetchExchangeRate[
+                                                              "exchangeCurrency"] ==
+                                                          receiverCurrency) {
+                                                        exchangeRate =
+                                                            fetchExchangeRate[
+                                                                    "exchangeRate"]
+                                                                .toDouble();
+                                                        log("exchangeRate -> $exchangeRate");
+                                                        fees = double.parse(
+                                                            fetchExchangeRate[
+                                                                    "transferFee"]
+                                                                .split(' ')
+                                                                .last);
+                                                        log("fees -> $fees");
+                                                        expectedTime =
+                                                            getExchRateApiResult[
+                                                                "expectedTime"];
+                                                        break;
+                                                      }
+                                                    }
+                                                  } else {
+                                                    if (context.mounted) {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return CustomDialog(
+                                                            svgAssetPath:
+                                                                ImageConstants
+                                                                    .warning,
+                                                            title:
+                                                                "Error {200}",
+                                                            message: getExchRateApiResult[
+                                                                    "message"] ??
+                                                                "There was an error fetching exchange rate, please try again later.",
+                                                            actionWidget:
+                                                                GradientButton(
+                                                              onTap: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              text: labels[346]
+                                                                  ["labelText"],
+                                                            ),
+                                                          );
+                                                        },
+                                                      );
+                                                    }
+                                                  }
+
+                                                  _receiveController
+                                                      .text = _sendController
+                                                          .text.isNotEmpty
+                                                      ? (double.parse(
+                                                                  _sendController
+                                                                      .text) *
+                                                              exchangeRate)
+                                                          .toStringAsFixed(2)
+                                                      : "";
+                                                  senderAmount = _sendController
+                                                          .text.isNotEmpty
+                                                      ? double.parse(
+                                                          _sendController.text)
+                                                      : 0;
+                                                  receiverAmount =
+                                                      _sendController
+                                                              .text.isNotEmpty
+                                                          ? double.parse(
+                                                              _receiveController
+                                                                  .text)
+                                                          : 0;
+
+                                                  isFetchingExchangeRate =
+                                                      false;
+                                                  setState(() {
+                                                    log("isFetchingExchangeRate -> $isFetchingExchangeRate");
+                                                  });
+                                                }
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      falsy: const SizeBox(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizeBox(height: 7),
+                              Text(
+                                !(sendMoneyArgument.isRemittance)
+                                    ? "Expected arrival today"
+                                    : expectedTime,
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark50,
+                                  fontSize: (12 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const SizeBox(height: 10),
+                              Ternary(
+                                condition: sendMoneyArgument.isRemittance,
+                                truthy: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          labels[199]["labelText"],
+                                          style:
+                                              TextStyles.primaryMedium.copyWith(
+                                            color: AppColors.dark80,
+                                            fontSize:
+                                                (14 / Dimensions.designWidth).w,
+                                          ),
+                                        ),
+                                        const Asterisk(),
+                                      ],
+                                    ),
+                                    const SizeBox(height: 10),
+                                    BlocBuilder<ShowButtonBloc,
+                                        ShowButtonState>(
+                                      builder: (context, state) {
+                                        return CustomDropDown(
+                                          title: "Select who bears charges",
+                                          items: const ["I Bear Charges"],
+                                          value: selectedBearerReason,
+                                          onChanged: (value) {
+                                            final ShowButtonBloc
+                                                showButtonBloc =
+                                                context.read<ShowButtonBloc>();
+                                            isBearerTypeSelected = true;
+                                            selectedBearerReason =
+                                                value as String;
+                                            if (selectedBearerReason ==
+                                                "I Bear Charges") {
+                                              isSenderBearCharges = true;
+                                            } else {
+                                              isSenderBearCharges = false;
+                                            }
+                                            showButtonBloc.add(ShowButtonEvent(
+                                                show: isBearerTypeSelected));
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    const SizeBox(height: 7),
+                                    Text(
+                                      "Receiver bearing or sharing charges will be applied only in case of feasibility.",
+                                      style: TextStyles.primaryMedium.copyWith(
+                                        color: AppColors.dark50,
+                                        fontSize:
+                                            (12 / Dimensions.designWidth).w,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                falsy: const SizeBox(),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-                SizeBox(
-                  height: PaddingConstants.bottomPadding +
-                      MediaQuery.paddingOf(context).bottom,
+                Column(
+                  children: [
+                    const SizeBox(height: 10),
+                    BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                      builder: buildSubmitButton,
+                    ),
+                    SizeBox(
+                      height: PaddingConstants.bottomPadding +
+                          MediaQuery.paddingOf(context).bottom,
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Ternary(
+            condition: isFetchingExchangeRate,
+            falsy: const SizeBox(),
+            truthy: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SpinKitFadingCircle(
+                    color: AppColors.primary,
+                    size: (50 / Dimensions.designWidth).w,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -390,6 +582,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                   isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
                   isWithinDhabi: sendMoneyArgument.isWithinDhabi,
                   isRemittance: sendMoneyArgument.isRemittance,
+                  isRetail: sendMoneyArgument.isRetail,
                 ).toMap(),
               );
             },
@@ -411,6 +604,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                 isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
                 isWithinDhabi: sendMoneyArgument.isWithinDhabi,
                 isRemittance: sendMoneyArgument.isRemittance,
+                isRetail: sendMoneyArgument.isRetail,
               ).toMap(),
             );
           },

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class CountryTileModel {
   final String flagImgUrl;
@@ -11,6 +13,7 @@ class CountryTileModel {
   final String currencyCode;
   final String currencyFlag;
   final List<String> currencies;
+  final List<DropDownCountriesModel> currencyModels;
   CountryTileModel({
     required this.flagImgUrl,
     required this.country,
@@ -21,6 +24,7 @@ class CountryTileModel {
     required this.currencyCode,
     required this.currencyFlag,
     required this.currencies,
+    required this.currencyModels,
   });
 }
 
