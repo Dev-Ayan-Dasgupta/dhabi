@@ -62,6 +62,13 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
   void argumentInitialization() {
     accountDetailsArgument =
         AccountDetailsArgumentModel.fromMap(widget.argument as dynamic ?? {});
+    populateDisplayStatementList(true, isSentSelected, isReceivedSelected);
+    sortDisplayStatementList(
+      isDateNewest,
+      isDateOldest,
+      isAmountHighest,
+      isAmountLowest,
+    );
   }
 
   @override

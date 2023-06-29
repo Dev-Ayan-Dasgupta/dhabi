@@ -553,42 +553,60 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     fontSize: 14,
                                                   )
                                                 : AccountSummaryTile(
-                                                    onTap: () {
-                                                      Navigator.pushNamed(
-                                                        context,
-                                                        Routes.accountDetails,
-                                                        arguments:
-                                                            AccountDetailsArgumentModel(
-                                                          flagImgUrl:
-                                                              accountDetails[
-                                                                      index][
-                                                                  "currencyFlagBase64"],
-                                                          accountNumber:
-                                                              accountDetails[
-                                                                      index][
-                                                                  "accountNumber"],
-                                                          currency: accountDetails[
-                                                                  index][
-                                                              "accountCurrency"],
-                                                          accountType: accountDetails[
-                                                                          index]
-                                                                      [
-                                                                      "productCode"] ==
-                                                                  "1001"
-                                                              ? "Current"
-                                                              : "Savings",
-                                                          balance: accountDetails[
-                                                                      index][
-                                                                  "currentBalance"]
-                                                              .split(" ")
-                                                              .last,
-                                                          iban: accountDetails[
-                                                              index]["iban"],
-                                                          displayStatementList:
-                                                              statementList,
-                                                          isRetail: true,
-                                                        ).toMap(),
-                                                      );
+                                                    onTap: () async {
+                                                      await storage.write(
+                                                          key: "chosenAccount",
+                                                          value:
+                                                              index.toString());
+                                                      storageChosenAccount = int
+                                                          .parse(await storage.read(
+                                                                  key:
+                                                                      "chosenAccount") ??
+                                                              "0");
+                                                      log("storageChosenAccount -> $storageChosenAccount");
+
+                                                      await getCustomerAccountStatement();
+
+                                                      if (context.mounted) {
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          Routes.accountDetails,
+                                                          arguments:
+                                                              AccountDetailsArgumentModel(
+                                                            flagImgUrl:
+                                                                accountDetails[
+                                                                        index][
+                                                                    "currencyFlagBase64"],
+                                                            accountNumber:
+                                                                accountDetails[
+                                                                        index][
+                                                                    "accountNumber"],
+                                                            currency:
+                                                                accountDetails[
+                                                                        index][
+                                                                    "accountCurrency"],
+                                                            accountType:
+                                                                accountDetails[index]
+                                                                            [
+                                                                            "productCode"] ==
+                                                                        "1001"
+                                                                    ? "Current"
+                                                                    : "Savings",
+                                                            balance: accountDetails[
+                                                                        index][
+                                                                    "currentBalance"]
+                                                                .split(" ")
+                                                                .last,
+                                                            iban:
+                                                                accountDetails[
+                                                                        index]
+                                                                    ["iban"],
+                                                            displayStatementList:
+                                                                statementList,
+                                                            isRetail: true,
+                                                          ).toMap(),
+                                                        );
+                                                      }
                                                     },
                                                     imgUrl: accountDetails[
                                                                     index][

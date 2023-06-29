@@ -775,50 +775,62 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                         fontSize: 14,
                                                       )
                                                     : AccountSummaryTile(
-                                                        onTap: () {
-                                                          Navigator.pushNamed(
-                                                            context,
-                                                            Routes
-                                                                .accountDetails,
-                                                            arguments:
-                                                                AccountDetailsArgumentModel(
-                                                              flagImgUrl: corpCustPermApiResult[
-                                                                          "permissions"]
-                                                                      [index][
-                                                                  "currencyFlagBase64"],
-                                                              accountNumber:
-                                                                  corpCustPermApiResult[
-                                                                              "permissions"]
-                                                                          [
-                                                                          index]
-                                                                      [
-                                                                      "accountNumber"],
-                                                              currency: corpCustPermApiResult[
-                                                                          "permissions"]
-                                                                      [index]
-                                                                  ["currency"],
-                                                              accountType: corpCustPermApiResult["permissions"]
-                                                                              [
-                                                                              index]
-                                                                          [
-                                                                          "accountType"] ==
-                                                                      1
-                                                                  ? "Savings"
-                                                                  : "Current",
-                                                              balance: corpCustPermApiResult[
-                                                                              "permissions"]
-                                                                          [
-                                                                          index]
-                                                                      [
-                                                                      "currentBalance"]
-                                                                  .split(" ")
-                                                                  .last,
-                                                              iban: "",
-                                                              displayStatementList:
-                                                                  statementList,
-                                                              isRetail: false,
-                                                            ).toMap(),
-                                                          );
+                                                        onTap: () async {
+                                                          await storage.write(
+                                                              key:
+                                                                  "chosenAccount",
+                                                              value: index
+                                                                  .toString());
+                                                          storageChosenAccount =
+                                                              int.parse(
+                                                                  await storage.read(
+                                                                          key:
+                                                                              "chosenAccount") ??
+                                                                      "0");
+                                                          log("storageChosenAccount -> $storageChosenAccount");
+
+                                                          await getCustomerAccountStatement();
+                                                          if (context.mounted) {
+                                                            Navigator.pushNamed(
+                                                              context,
+                                                              Routes
+                                                                  .accountDetails,
+                                                              arguments:
+                                                                  AccountDetailsArgumentModel(
+                                                                flagImgUrl: corpCustPermApiResult[
+                                                                            "permissions"]
+                                                                        [index][
+                                                                    "currencyFlagBase64"],
+                                                                accountNumber:
+                                                                    corpCustPermApiResult["permissions"]
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        "accountNumber"],
+                                                                currency: corpCustPermApiResult[
+                                                                            "permissions"]
+                                                                        [index][
+                                                                    "currency"],
+                                                                accountType: corpCustPermApiResult["permissions"][index]
+                                                                            [
+                                                                            "accountType"] ==
+                                                                        1
+                                                                    ? "Savings"
+                                                                    : "Current",
+                                                                balance: corpCustPermApiResult["permissions"]
+                                                                            [
+                                                                            index]
+                                                                        [
+                                                                        "currentBalance"]
+                                                                    .split(" ")
+                                                                    .last,
+                                                                iban: "",
+                                                                displayStatementList:
+                                                                    statementList,
+                                                                isRetail: false,
+                                                              ).toMap(),
+                                                            );
+                                                          }
                                                         },
                                                         imgUrl: corpCustPermApiResult[
                                                                             "permissions"]
@@ -855,46 +867,59 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                         subImgUrl: "",
                                                       )
                                                 : AccountSummaryTile(
-                                                    onTap: () {
-                                                      Navigator.pushNamed(
-                                                        context,
-                                                        Routes.accountDetails,
-                                                        arguments:
-                                                            AccountDetailsArgumentModel(
-                                                          flagImgUrl: corpCustPermApiResult[
-                                                                      "permissions"]
-                                                                  [index][
-                                                              "currencyFlagBase64"],
-                                                          accountNumber:
-                                                              corpCustPermApiResult[
-                                                                          "permissions"]
-                                                                      [index][
-                                                                  "accountNumber"],
-                                                          currency: corpCustPermApiResult[
-                                                                  "permissions"]
-                                                              [
-                                                              index]["currency"],
-                                                          accountType: corpCustPermApiResult[
-                                                                              "permissions"]
-                                                                          [
-                                                                          index]
-                                                                      [
-                                                                      "accountType"] ==
-                                                                  1
-                                                              ? "Savings"
-                                                              : "Current",
-                                                          balance: corpCustPermApiResult[
-                                                                          "permissions"]
-                                                                      [index][
-                                                                  "currentBalance"]
-                                                              .split(" ")
-                                                              .last,
-                                                          iban: "",
-                                                          displayStatementList:
-                                                              statementList,
-                                                          isRetail: false,
-                                                        ).toMap(),
-                                                      );
+                                                    onTap: () async {
+                                                      await storage.write(
+                                                          key: "chosenAccount",
+                                                          value:
+                                                              index.toString());
+                                                      storageChosenAccount = int
+                                                          .parse(await storage.read(
+                                                                  key:
+                                                                      "chosenAccount") ??
+                                                              "0");
+                                                      log("storageChosenAccount -> $storageChosenAccount");
+
+                                                      await getCustomerAccountStatement();
+                                                      if (context.mounted) {
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          Routes.accountDetails,
+                                                          arguments:
+                                                              AccountDetailsArgumentModel(
+                                                            flagImgUrl: corpCustPermApiResult[
+                                                                        "permissions"]
+                                                                    [index][
+                                                                "currencyFlagBase64"],
+                                                            accountNumber:
+                                                                corpCustPermApiResult[
+                                                                            "permissions"]
+                                                                        [index][
+                                                                    "accountNumber"],
+                                                            currency:
+                                                                corpCustPermApiResult[
+                                                                            "permissions"]
+                                                                        [index][
+                                                                    "currency"],
+                                                            accountType:
+                                                                corpCustPermApiResult["permissions"][index]
+                                                                            [
+                                                                            "accountType"] ==
+                                                                        1
+                                                                    ? "Savings"
+                                                                    : "Current",
+                                                            balance: corpCustPermApiResult[
+                                                                            "permissions"]
+                                                                        [index][
+                                                                    "currentBalance"]
+                                                                .split(" ")
+                                                                .last,
+                                                            iban: "",
+                                                            displayStatementList:
+                                                                statementList,
+                                                            isRetail: false,
+                                                          ).toMap(),
+                                                        );
+                                                      }
                                                     },
                                                     imgUrl: corpCustPermApiResult[
                                                                         "permissions"]
