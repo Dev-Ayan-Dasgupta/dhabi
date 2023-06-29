@@ -24,3 +24,4 @@ export './create_deposit.dart';
 export './send_money.dart';
 export './profile.dart';
 export './workflow.dart';
+export './account_details.dart';

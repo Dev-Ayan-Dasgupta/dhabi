@@ -3,7 +3,7 @@ import 'package:dialup_mobile_app/presentation/screens/business/basic_company_de
 import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/select_entity_for_persistent_onboarding.dart';
-import 'package:dialup_mobile_app/presentation/screens/retail/accountDetails/download_statement.dart';
+import 'package:dialup_mobile_app/presentation/screens/retail/accountDetails/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/application/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/cardsVault/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/retail/dashboard.dart';
@@ -384,6 +384,12 @@ class AppRouter {
       case Routes.workflowDetails:
         return MaterialPageRoute(
           builder: (_) => WorkflowDetailsScreen(
+            argument: args,
+          ),
+        );
+      case Routes.accountDetails:
+        return MaterialPageRoute(
+          builder: (_) => AccountDetailsScreen(
             argument: args,
           ),
         );

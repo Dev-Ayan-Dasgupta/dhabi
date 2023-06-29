@@ -304,6 +304,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   Future<void> getCustomerAccountStatement() async {
     try {
+      statementList.clear();
       customerStatement =
           await MapCustomerAccountStatement.mapCustomerAccountStatement(
         {
@@ -322,6 +323,13 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
         displayStatementList.clear();
         displayStatementList.addAll(statementList);
       }
+
+      sortDisplayStatementList(
+        isDateNewest,
+        isDateOldest,
+        isAmountHighest,
+        isAmountLowest,
+      );
     } catch (_) {
       rethrow;
     }
@@ -330,6 +338,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   Future<void> getCustomerFdAccountStatement() async {
     try {
       if (depositDetails.isNotEmpty) {
+        fdStatementList.clear();
         var customerFdAccountApiResult =
             await MapCustomerFdAccountStatement.mapCustomerFdAccountStatement(
           {
@@ -345,6 +354,13 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
         fdStatementList = customerFdAccountApiResult["transactionList"];
         displayFdStatementList.clear();
         displayFdStatementList.addAll(fdStatementList);
+
+        sortDisplayFdStatementList(
+          isFdDateNewest,
+          isFdDateOldest,
+          isFdAmountHighest,
+          isFdAmountLowest,
+        );
       }
     } catch (_) {
       rethrow;
@@ -537,7 +553,43 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     fontSize: 14,
                                                   )
                                                 : AccountSummaryTile(
-                                                    onTap: () {},
+                                                    onTap: () {
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        Routes.accountDetails,
+                                                        arguments:
+                                                            AccountDetailsArgumentModel(
+                                                          flagImgUrl:
+                                                              accountDetails[
+                                                                      index][
+                                                                  "currencyFlagBase64"],
+                                                          accountNumber:
+                                                              accountDetails[
+                                                                      index][
+                                                                  "accountNumber"],
+                                                          currency: accountDetails[
+                                                                  index][
+                                                              "accountCurrency"],
+                                                          accountType: accountDetails[
+                                                                          index]
+                                                                      [
+                                                                      "productCode"] ==
+                                                                  "1001"
+                                                              ? "Current"
+                                                              : "Savings",
+                                                          balance: accountDetails[
+                                                                      index][
+                                                                  "currentBalance"]
+                                                              .split(" ")
+                                                              .last,
+                                                          iban: accountDetails[
+                                                              index]["iban"],
+                                                          displayStatementList:
+                                                              statementList,
+                                                          isRetail: true,
+                                                        ).toMap(),
+                                                      );
+                                                    },
                                                     imgUrl: accountDetails[
                                                                     index][
                                                                 "accountCurrency"] ==
@@ -1079,7 +1131,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                                           storageChosenAccount = int.parse(await storage.read(key: "chosenAccount") ?? "0");
                                                                                           log("storageChosenAccount -> $storageChosenAccount");
 
-                                                                                          getCustomerAccountStatement();
+                                                                                          await getCustomerAccountStatement();
 
                                                                                           isChangingAccount = false;
                                                                                           showButtonBloc.add(
@@ -1399,6 +1451,31 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                                 AppColors.dark50,
                                                                             fontSize: (20 / Dimensions.designWidth).w),
                                                                   ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      final ShowButtonBloc
+                                                                          showButtonBloc =
+                                                                          context
+                                                                              .read<ShowButtonBloc>();
+                                                                      isShowFilter =
+                                                                          false;
+                                                                      showButtonBloc
+                                                                          .add(
+                                                                        ShowButtonEvent(
+                                                                          show:
+                                                                              isShowFilter,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    child: Text(
+                                                                      "Cancel",
+                                                                      style: TextStyles.primaryBold.copyWith(
+                                                                          color: AppColors
+                                                                              .primary,
+                                                                          fontSize:
+                                                                              (16 / Dimensions.designWidth).w),
+                                                                    ),
+                                                                  ),
                                                                 ],
                                                               ),
                                                               const SizeBox(
@@ -1647,6 +1724,31 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                             color:
                                                                                 AppColors.dark50,
                                                                             fontSize: (20 / Dimensions.designWidth).w),
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      final ShowButtonBloc
+                                                                          showButtonBloc =
+                                                                          context
+                                                                              .read<ShowButtonBloc>();
+                                                                      isShowSort =
+                                                                          false;
+                                                                      showButtonBloc
+                                                                          .add(
+                                                                        ShowButtonEvent(
+                                                                          show:
+                                                                              isShowSort,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    child: Text(
+                                                                      "Cancel",
+                                                                      style: TextStyles.primaryBold.copyWith(
+                                                                          color: AppColors
+                                                                              .primary,
+                                                                          fontSize:
+                                                                              (16 / Dimensions.designWidth).w),
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),
@@ -2087,7 +2189,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                                           storageChosenFdAccount = int.parse(await storage.read(key: "chosenFdAccount") ?? "0");
                                                                                           log("storageChosenFdAccount -> $storageChosenFdAccount");
 
-                                                                                          getCustomerFdAccountStatement();
+                                                                                          await getCustomerFdAccountStatement();
 
                                                                                           isChangingDepositAccount = false;
                                                                                           showButtonBloc.add(

@@ -374,6 +374,14 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           auxWidget: GradientButton(
             onTap: () async {
               fdSeedAccounts.clear();
+              dhabiSeedAccounts.clear();
+              domesticSeedAccounts.clear();
+              internalSeedAccounts.clear();
+              foreignSeedAccounts.clear();
+              // statementList.clear();
+              // fdStatementList.clear();
+              // displayStatementList.clear();
+              // displayFdStatementList.clear();
               await storage.write(key: "loggedOut", value: true.toString());
               storageLoggedOut = await storage.read(key: "loggedOut") == "true";
 

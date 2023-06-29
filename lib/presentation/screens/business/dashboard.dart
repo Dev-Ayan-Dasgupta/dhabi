@@ -58,11 +58,6 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
 
   Map<String, dynamic> corpCustPermApiResult = {};
 
-  List statementList = [];
-  List displayStatementList = [];
-  List fdStatementList = [];
-  List displayFdStatementList = [];
-
   int savingsAccountCount = 0;
   int currentAccountCount = 0;
   List depositDetails = [];
@@ -79,6 +74,11 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
   bool isAllSelected = false;
   bool isSentSelected = false;
   bool isReceivedSelected = false;
+
+  List statementList = [];
+  List displayStatementList = [];
+  List fdStatementList = [];
+  List displayFdStatementList = [];
 
   bool isDateNewest = true;
   bool isDateOldest = false;
@@ -516,6 +516,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
 
   Future<void> getCustomerAccountStatement() async {
     try {
+      statementList.clear();
+      displayStatementList.clear();
       customerStatement =
           await MapCustomerAccountStatement.mapCustomerAccountStatement(
         {
@@ -531,9 +533,18 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
       if (customerStatement["flexiAccountStatementRes"]["body"] != null) {
         statementList = customerStatement["flexiAccountStatementRes"]["body"]
             ["statementList"];
-        displayStatementList.clear();
+
         displayStatementList.addAll(statementList);
       }
+
+      log("Actual displayStatementList length -> ${displayStatementList.length}");
+
+      sortDisplayStatementList(
+        isDateNewest,
+        isDateOldest,
+        isAmountHighest,
+        isAmountLowest,
+      );
     } catch (_) {
       rethrow;
     }
@@ -542,6 +553,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
   Future<void> getCustomerFdAccountStatement() async {
     try {
       if (depositDetails.isNotEmpty) {
+        fdStatementList.clear();
         var customerFdAccountApiResult =
             await MapCustomerFdAccountStatement.mapCustomerFdAccountStatement(
           {
@@ -557,6 +569,13 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
         fdStatementList = customerFdAccountApiResult["transactionList"];
         displayFdStatementList.clear();
         displayFdStatementList.addAll(fdStatementList);
+
+        sortDisplayFdStatementList(
+          isFdDateNewest,
+          isFdDateOldest,
+          isFdAmountHighest,
+          isFdAmountLowest,
+        );
       }
     } catch (_) {
       rethrow;
@@ -684,7 +703,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                             ),
                           ),
                           SizedBox(
-                            height: (277 / Dimensions.designWidth).w,
+                            height: (277 / Dimensions.designHeight).h,
                             child: TabBarView(
                               physics: const NeverScrollableScrollPhysics(),
                               controller: tabController,
@@ -756,7 +775,51 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                         fontSize: 14,
                                                       )
                                                     : AccountSummaryTile(
-                                                        onTap: () {},
+                                                        onTap: () {
+                                                          Navigator.pushNamed(
+                                                            context,
+                                                            Routes
+                                                                .accountDetails,
+                                                            arguments:
+                                                                AccountDetailsArgumentModel(
+                                                              flagImgUrl: corpCustPermApiResult[
+                                                                          "permissions"]
+                                                                      [index][
+                                                                  "currencyFlagBase64"],
+                                                              accountNumber:
+                                                                  corpCustPermApiResult[
+                                                                              "permissions"]
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      "accountNumber"],
+                                                              currency: corpCustPermApiResult[
+                                                                          "permissions"]
+                                                                      [index]
+                                                                  ["currency"],
+                                                              accountType: corpCustPermApiResult["permissions"]
+                                                                              [
+                                                                              index]
+                                                                          [
+                                                                          "accountType"] ==
+                                                                      1
+                                                                  ? "Savings"
+                                                                  : "Current",
+                                                              balance: corpCustPermApiResult[
+                                                                              "permissions"]
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      "currentBalance"]
+                                                                  .split(" ")
+                                                                  .last,
+                                                              iban: "",
+                                                              displayStatementList:
+                                                                  statementList,
+                                                              isRetail: false,
+                                                            ).toMap(),
+                                                          );
+                                                        },
                                                         imgUrl: corpCustPermApiResult[
                                                                             "permissions"]
                                                                         [index][
@@ -792,7 +855,47 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                         subImgUrl: "",
                                                       )
                                                 : AccountSummaryTile(
-                                                    onTap: () {},
+                                                    onTap: () {
+                                                      Navigator.pushNamed(
+                                                        context,
+                                                        Routes.accountDetails,
+                                                        arguments:
+                                                            AccountDetailsArgumentModel(
+                                                          flagImgUrl: corpCustPermApiResult[
+                                                                      "permissions"]
+                                                                  [index][
+                                                              "currencyFlagBase64"],
+                                                          accountNumber:
+                                                              corpCustPermApiResult[
+                                                                          "permissions"]
+                                                                      [index][
+                                                                  "accountNumber"],
+                                                          currency: corpCustPermApiResult[
+                                                                  "permissions"]
+                                                              [
+                                                              index]["currency"],
+                                                          accountType: corpCustPermApiResult[
+                                                                              "permissions"]
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      "accountType"] ==
+                                                                  1
+                                                              ? "Savings"
+                                                              : "Current",
+                                                          balance: corpCustPermApiResult[
+                                                                          "permissions"]
+                                                                      [index][
+                                                                  "currentBalance"]
+                                                              .split(" ")
+                                                              .last,
+                                                          iban: "",
+                                                          displayStatementList:
+                                                              statementList,
+                                                          isRetail: false,
+                                                        ).toMap(),
+                                                      );
+                                                    },
                                                     imgUrl: corpCustPermApiResult[
                                                                         "permissions"]
                                                                     [index]
@@ -1452,7 +1555,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                                           storageChosenAccount = int.parse(await storage.read(key: "chosenAccount") ?? "0");
                                                                                           log("storageChosenAccount -> $storageChosenAccount");
 
-                                                                                          getCustomerAccountStatement();
+                                                                                          await getCustomerAccountStatement();
 
                                                                                           isChangingAccount = false;
                                                                                           showButtonBloc.add(
@@ -1692,7 +1795,9 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                 (context,
                                                                     index) {
                                                               return DashboardTransactionListTile(
-                                                                onTap: () {},
+                                                                onTap: () {
+                                                                  log("displayStatementList length -> ${displayStatementList.length}");
+                                                                },
                                                                 isCredit:
                                                                     // true,
                                                                     displayStatementList[index]
@@ -1771,6 +1876,31 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                             color:
                                                                                 AppColors.dark50,
                                                                             fontSize: (20 / Dimensions.designWidth).w),
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      final ShowButtonBloc
+                                                                          showButtonBloc =
+                                                                          context
+                                                                              .read<ShowButtonBloc>();
+                                                                      isShowFilter =
+                                                                          false;
+                                                                      showButtonBloc
+                                                                          .add(
+                                                                        ShowButtonEvent(
+                                                                          show:
+                                                                              isShowFilter,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    child: Text(
+                                                                      "Cancel",
+                                                                      style: TextStyles.primaryBold.copyWith(
+                                                                          color: AppColors
+                                                                              .primary,
+                                                                          fontSize:
+                                                                              (16 / Dimensions.designWidth).w),
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),
@@ -2020,6 +2150,31 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                             color:
                                                                                 AppColors.dark50,
                                                                             fontSize: (20 / Dimensions.designWidth).w),
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      final ShowButtonBloc
+                                                                          showButtonBloc =
+                                                                          context
+                                                                              .read<ShowButtonBloc>();
+                                                                      isShowSort =
+                                                                          false;
+                                                                      showButtonBloc
+                                                                          .add(
+                                                                        ShowButtonEvent(
+                                                                          show:
+                                                                              isShowSort,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    child: Text(
+                                                                      "Cancel",
+                                                                      style: TextStyles.primaryBold.copyWith(
+                                                                          color: AppColors
+                                                                              .primary,
+                                                                          fontSize:
+                                                                              (16 / Dimensions.designWidth).w),
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),
@@ -3428,6 +3583,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
   @override
   void dispose() {
     _scrollController.dispose();
+    _dsController.dispose();
     tabController.dispose();
     super.dispose();
   }

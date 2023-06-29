@@ -37,6 +37,10 @@ class _ActionsScreenState extends State<ActionsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             InfoCard(
+              accountNumber: "",
+              accountType: "",
+              currency: "",
+              balance: "",
               onTap: () {},
               name: "Multazam Siddiqui",
               iban: "AE12 3434 1313 1231 3535 34",

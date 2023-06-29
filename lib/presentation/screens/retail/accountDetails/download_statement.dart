@@ -559,14 +559,18 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                     truthy: CupertinoDatePicker(
                       initialDateTime:
                           auxToDate.add(const Duration(seconds: 1)),
-                      minimumDate: auxFromDate,
+                      minimumDate: auxFromDate.difference(auxToDate).inDays > 0
+                          ? auxToDate
+                          : auxFromDate,
                       maximumDate: DateTime.now(),
                       mode: CupertinoDatePickerMode.date,
                       onDateTimeChanged: onToDateChangediOS,
                     ),
                     falsy: DatePickerWidget(
                       looping: false,
-                      initialDate: auxToDate.add(const Duration(seconds: 1)),
+                      initialDate: auxFromDate.difference(auxToDate).inDays > 0
+                          ? auxFromDate
+                          : auxToDate.add(const Duration(seconds: 1)),
                       firstDate: auxFromDate,
                       lastDate: DateTime.now(),
                       dateFormat: "dd-MMMM-yyyy",

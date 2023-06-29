@@ -40,9 +40,9 @@ class DashboardActivityTile extends StatelessWidget {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            Color(0xFF1A3C40),
-                            Color(0xFF236269),
-                            Color(0xFF1A3C40),
+                            AppColors.primaryDark,
+                            AppColors.primary,
+                            AppColors.primaryDark,
                           ],
                         ))
                     : BoxDecoration(
@@ -75,7 +75,7 @@ class DashboardActivityTile extends StatelessWidget {
         Text(
           activityText,
           style: TextStyles.primary.copyWith(
-            color: const Color(0xFFA1A1A1),
+            color: AppColors.dark50,
             fontSize: (14 / Dimensions.designWidth).w,
           ),
         ),

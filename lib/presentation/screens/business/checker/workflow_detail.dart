@@ -179,6 +179,13 @@ class _WorkflowDetailsScreenState extends State<WorkflowDetailsScreen> {
             value:
                 "${originalRequest["Currency"]} ${originalRequest["DebitAmount"]}"));
         break;
+      case 21:
+        workflowDetails.add(DetailsTileModel(
+            key: "Account Number", value: originalRequest["AccountNumber"]));
+        workflowDetails.add(DetailsTileModel(
+            key: "Close Account",
+            value: originalRequest["CloseAccount"].toString()));
+        break;
       case 27:
         workflowDetails.add(DetailsTileModel(
             key: "Debit Account", value: originalRequest["DebitAccount"]));
