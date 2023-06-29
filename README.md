@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (45)
+## Release notes - 1.0.0 (46)
 
 - Changed onFocussed behaviour of Gradient button
 - Implemented biometric capability and availability checks
