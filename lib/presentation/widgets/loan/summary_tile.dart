@@ -16,8 +16,8 @@ class LoanSummaryTile extends StatelessWidget {
 
   final String currency;
   final double disbursedAmount;
-  final double repaidAmount;
-  final double outstandingAmount;
+  final double? repaidAmount;
+  final double? outstandingAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class LoanSummaryTile extends StatelessWidget {
             children: [
               Container(
                 width: (350 / Dimensions.designWidth).w,
-                height: (10 / Dimensions.designWidth).w,
+                height: (10 / Dimensions.designHeight).h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(
                     Radius.circular((10 / Dimensions.designWidth).w),
@@ -63,9 +63,9 @@ class LoanSummaryTile extends StatelessWidget {
                 ),
               ),
               Container(
-                width: (repaidAmount / disbursedAmount) *
+                width: (repaidAmount ?? 0 / disbursedAmount) *
                     (350 / Dimensions.designWidth).w,
-                height: (10 / Dimensions.designWidth).w,
+                height: (10 / Dimensions.designHeight).h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(
                     Radius.circular((10 / Dimensions.designWidth).w),
@@ -83,7 +83,7 @@ class LoanSummaryTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "$currency ${repaidAmount.toStringAsFixed(2)}",
+                    "$currency ${repaidAmount?.toStringAsFixed(2)}",
                     style: TextStyles.primary.copyWith(
                       color: const Color(0XFF094148),
                       fontSize: (16 / Dimensions.designWidth).w,
@@ -103,7 +103,7 @@ class LoanSummaryTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "$currency ${outstandingAmount.toStringAsFixed(2)}",
+                    "$currency ${outstandingAmount?.toStringAsFixed(2)}",
                     style: TextStyles.primary.copyWith(
                       color: const Color(0XFF094148),
                       fontSize: (16 / Dimensions.designWidth).w,

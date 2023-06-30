@@ -173,7 +173,9 @@ class AppRouter {
 
       case Routes.loanDetails:
         return MaterialPageRoute(
-          builder: (_) => const LoanDetailsScreen(),
+          builder: (_) => LoanDetailsScreen(
+            argument: args,
+          ),
         );
       case Routes.applicationAddress:
         return MaterialPageRoute(

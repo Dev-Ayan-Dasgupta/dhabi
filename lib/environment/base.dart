@@ -18,6 +18,7 @@ abstract class BaseConfig {
   String get fdPrematureWithdraw;
   String get getLoans;
   String get getLoanDetails;
+  String get getLoanStatement;
 
   // ? Authentication APIs
 

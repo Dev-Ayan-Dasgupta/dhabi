@@ -208,6 +208,7 @@ class _TransferConfirmationScreenState
                                 "creditAccount": receiverAccountNumber,
                                 "debitAmount": senderAmount.toString(),
                                 "currency": senderCurrency,
+                                "beneficiaryName": profileName,
                               }}");
                               var makeInternalTransferApiResult =
                                   await MapInternalMoneyTransfer
@@ -217,6 +218,7 @@ class _TransferConfirmationScreenState
                                   "creditAccount": receiverAccountNumber,
                                   "debitAmount": senderAmount.toString(),
                                   "currency": senderCurrency,
+                                  "beneficiaryName": profileName,
                                 },
                                 token ?? "",
                               );
@@ -705,6 +707,7 @@ class _TransferConfirmationScreenState
                                 "creditAccount": receiverAccountNumber,
                                 "debitAmount": senderAmount.toString(),
                                 "currency": senderCurrency,
+                                "beneficiaryName": benCustomerName,
                               }}");
                               var makeInternalTransferApiResult =
                                   await MapInternalMoneyTransfer
@@ -714,6 +717,7 @@ class _TransferConfirmationScreenState
                                   "creditAccount": receiverAccountNumber,
                                   "debitAmount": senderAmount.toString(),
                                   "currency": senderCurrency,
+                                  "beneficiaryName": benCustomerName,
                                 },
                                 token ?? "",
                               );
@@ -1177,6 +1181,7 @@ class _TransferConfirmationScreenState
                                 "creditAccount": receiverAccountNumber,
                                 "debitAmount": senderAmount.toString(),
                                 "currency": senderCurrency,
+                                "beneficiaryName": profileName,
                               }}");
                               var corpInternalMoneyTransferApiResult =
                                   await MapInternalMoneyTransferCorporate
@@ -1186,6 +1191,7 @@ class _TransferConfirmationScreenState
                                   "creditAccount": receiverAccountNumber,
                                   "debitAmount": senderAmount.toString(),
                                   "currency": senderCurrency,
+                                  "beneficiaryName": profileName,
                                 },
                                 token ?? "",
                               );
@@ -2091,6 +2097,7 @@ class _TransferConfirmationScreenState
                                 "creditAccount": receiverAccountNumber,
                                 "debitAmount": senderAmount.toString(),
                                 "currency": senderCurrency,
+                                "beneficiaryName": benCustomerName,
                               }}");
                               var corpDhabiMoneyTransferApiResult =
                                   await MapDhabiMoneyTransfer
@@ -2100,6 +2107,7 @@ class _TransferConfirmationScreenState
                                   "creditAccount": receiverAccountNumber,
                                   "debitAmount": senderAmount.toString(),
                                   "currency": senderCurrency,
+                                  "beneficiaryName": benCustomerName,
                                 },
                                 token ?? "",
                               );

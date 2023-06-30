@@ -62,7 +62,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
   int currentAccountCount = 0;
   List depositDetails = [];
 
-  List loans = [];
+  List loanDetails = [];
 
   List<DetailsTileModel> rates = [];
 
@@ -443,7 +443,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
       log("Get Loans response -> $getLoansApiResult");
 
       if (getLoansApiResult["success"]) {
-        loans.clear();
+        loanDetails.clear();
+        loanDetails = getLoansApiResult["loans"];
       } else {
         if (context.mounted) {
           showDialog(
@@ -1186,53 +1187,91 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                 // ! Loans Tab View
                                 Column(
                                   children: [
-                                    const SizeBox(height: 9.5),
+                                    // const SizeBox(height: 9.5),
                                     Expanded(
                                       child: ListView.builder(
                                         controller: _scrollController,
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: 6,
+                                        itemCount: loanDetails.length,
                                         itemBuilder: (context, index) {
                                           return Padding(
                                             padding: EdgeInsets.only(
-                                              left: (index == 0)
-                                                  ? (15 /
-                                                          Dimensions
-                                                              .designWidth)
-                                                      .w
-                                                  : 0,
-                                            ),
+                                                left: (index == 0)
+                                                    ? (PaddingConstants
+                                                                .horizontalPadding /
+                                                            Dimensions
+                                                                .designWidth)
+                                                        .w
+                                                    : 0,
+                                                top: (5 /
+                                                        Dimensions.designHeight)
+                                                    .h,
+                                                bottom: (13 /
+                                                        Dimensions.designHeight)
+                                                    .h),
                                             child: AccountSummaryTile(
                                               onTap: () {
-                                                Navigator.pushNamed(context,
-                                                    Routes.loanDetails);
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  Routes.loanDetails,
+                                                  arguments:
+                                                      LoanDetailsArgumentModel(
+                                                    accountNumber:
+                                                        loanDetails[index]
+                                                            ["loanAccountNo"],
+                                                    currency: loanDetails[index]
+                                                        ["currency"],
+                                                  ).toMap(),
+                                                );
                                               },
-                                              imgUrl:
-                                                  "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                                              accountType: labels[92]
-                                                  ["labelText"],
-                                              currency: "AED",
-                                              amount: "0.00",
-                                              subText: "Powered by FH",
-                                              subImgUrl:
-                                                  "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+                                              imgUrl: depositDetails[index][
+                                                          "depositAccountCurrency"] ==
+                                                      "AED"
+                                                  ? ImageConstants.uaeFlag
+                                                  : ImageConstants.usaFlag,
+                                              accountType: "",
+                                              currency: loanDetails[index]
+                                                  ["currency"],
+                                              amount: loanDetails[index]
+                                                          ["amount"] >
+                                                      1000000
+                                                  ? "${(loanDetails[index]["amount"] / 1000000).toStringAsFixed(2)} M"
+                                                  : loanDetails[index]
+                                                              ["amount"] >
+                                                          1000000000
+                                                      ? "${(loanDetails[index]["amount"] / 1000000000).toStringAsFixed(2)} B"
+                                                      : loanDetails[index]
+                                                              ["amount"]
+                                                          .toStringAsFixed(2),
+                                              subText: "",
+                                              subImgUrl: "",
                                             ),
                                           );
                                         },
                                       ),
                                     ),
-                                    const SizeBox(height: 10),
+                                    // const SizeBox(height: 10),
                                     BlocBuilder<SummaryTileBloc,
                                         SummaryTileState>(
                                       builder: (context, state) {
                                         return Padding(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 47.w -
-                                                  ((6 - 1) *
-                                                      (6.5 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w)),
+                                                          ((loanDetails.length -
+                                                                  1) *
+                                                              (6.5 /
+                                                                      Dimensions
+                                                                          .designWidth)
+                                                                  .w) <
+                                                      0
+                                                  ? 0
+                                                  : 47.w -
+                                                      ((loanDetails.length -
+                                                              1) *
+                                                          (6.5 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w)),
                                           child: SizedBox(
                                             width: 90.w,
                                             height:
@@ -1241,7 +1280,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                               scrollDirection: Axis.horizontal,
                                               physics:
                                                   const NeverScrollableScrollPhysics(),
-                                              itemCount: 6,
+                                              itemCount: depositDetails.length,
                                               itemBuilder: (context, index) {
                                                 return ScrollIndicator(
                                                   isCurrent:
@@ -1266,12 +1305,12 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                 context, Routes.request);
                                           },
                                         ),
-                                        const SizeBox(width: 40),
-                                        DashboardActivityTile(
-                                          iconPath: ImageConstants.barChart,
-                                          activityText: "Insights",
-                                          onTap: () {},
-                                        ),
+                                        // const SizeBox(width: 40),
+                                        // DashboardActivityTile(
+                                        //   iconPath: ImageConstants.barChart,
+                                        //   activityText: "Insights",
+                                        //   onTap: () {},
+                                        // ),
                                       ],
                                     ),
                                   ],
@@ -1343,7 +1382,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                     // const SizeBox(height: 265)
                   ],
                 ),
-                tabController.index == 3
+                tabController.index == 2 || tabController.index == 3
                     ? const SizeBox()
                     : DraggableScrollableSheet(
                         initialChildSize: 0.39,

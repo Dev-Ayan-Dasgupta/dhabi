@@ -96,6 +96,11 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['GET_LOAN_DETAILS'] ?? "";
   }
 
+  @override
+  String get getLoanStatement {
+    return dotenv.env['GET_LOAN_STATEMENT'] ?? "";
+  }
+
   // ? Authentication APIs
 
   @override

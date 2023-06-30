@@ -15,3 +15,4 @@ export './map_premature_withdrawal_details.dart';
 export './map_fd_premature_withdraw.dart';
 export './map_get_loans.dart';
 export './map_loan_details.dart';
+export './map_loan_statement.dart';
