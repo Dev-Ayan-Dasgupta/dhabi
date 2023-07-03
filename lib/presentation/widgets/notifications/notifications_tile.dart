@@ -34,7 +34,7 @@ class NotificationsTile extends StatelessWidget {
         color: Colors.white,
       ),
       child: Slidable(
-        endActionPane: isActionable
+        endActionPane: !isActionable
             ? ActionPane(
                 extentRatio: 0.25,
                 motion: const ScrollMotion(),

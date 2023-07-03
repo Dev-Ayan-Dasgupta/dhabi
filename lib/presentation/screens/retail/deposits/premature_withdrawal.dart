@@ -102,8 +102,8 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
             value: apiResult["creditAccount"] ?? ""));
         prematureDetails.add(DetailsTileModel(
             key: "Maturity Date",
-            value: DateFormat('dd MMMM yyyy')
-                .format(DateTime.parse(apiResult["fdMaturityDate"]))));
+            value: DateFormat('dd MMMM yyyy').format(
+                DateTime.parse(apiResult["fdMaturityDate"] ?? "1900-01-01"))));
         prematureDetails.add(DetailsTileModel(
             key: "Credit Amount",
             value: "USD ${apiResult["creditAmount"].toString()}"));

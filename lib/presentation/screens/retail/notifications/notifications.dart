@@ -234,7 +234,7 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
                               widget: item.widget,
                               isActionable: item.isActionable,
                               onPressed: (context) async {
-                                if (!isFetchingData && item.isActionable) {
+                                if (!isFetchingData && !(item.isActionable)) {
                                   final ShowButtonBloc showButtonBloc =
                                       context.read<ShowButtonBloc>();
                                   isFetchingData = true;
