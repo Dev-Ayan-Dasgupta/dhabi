@@ -29,6 +29,8 @@ class StatementTypeTile extends StatelessWidget {
           (10 / Dimensions.designWidth).w,
         ),
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+              Radius.circular((10 / Dimensions.designWidth).w)),
           boxShadow: [BoxShadows.primary],
           color: color ?? Colors.white,
         ),
@@ -36,7 +38,7 @@ class StatementTypeTile extends StatelessWidget {
           children: [
             Container(
               width: (58 / Dimensions.designWidth).w,
-              height: (58 / Dimensions.designWidth).w,
+              height: (95 / Dimensions.designHeight).h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(

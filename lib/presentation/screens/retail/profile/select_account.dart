@@ -81,257 +81,267 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
               child: ListView.builder(
                 itemCount: selectAccountArgument.cifDetails.length,
                 itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      BlocBuilder<ShowButtonBloc, ShowButtonState>(
-                        builder: (context, state) {
-                          return SolidButton(
-                            borderColor: selectedIndex == index
-                                ? const Color.fromRGBO(0, 184, 148, 0.21)
-                                : Colors.transparent,
-                            onTap: () async {
-                              isSelected = true;
-                              selectedIndex = index;
-                              final ShowButtonBloc showButtonBloc =
-                                  context.read<ShowButtonBloc>();
-                              showButtonBloc
-                                  .add(ShowButtonEvent(show: isSelected));
-                              cif = selectAccountArgument.cifDetails[index]
-                                  ["cif"];
-                              log("cif -> $cif");
-                              log("cif RTT -> ${cif.runtimeType}");
+                  return Ternary(
+                    condition: selectAccountArgument.cifDetails[index]["cif"] ==
+                        storageCif,
+                    truthy: const SizeBox(),
+                    falsy: Column(
+                      children: [
+                        BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                          builder: (context, state) {
+                            return SolidButton(
+                              borderColor: selectedIndex == index
+                                  ? const Color.fromRGBO(0, 184, 148, 0.21)
+                                  : Colors.transparent,
+                              onTap: () async {
+                                isSelected = true;
+                                selectedIndex = index;
+                                final ShowButtonBloc showButtonBloc =
+                                    context.read<ShowButtonBloc>();
+                                showButtonBloc
+                                    .add(ShowButtonEvent(show: isSelected));
+                                cif = selectAccountArgument.cifDetails[index]
+                                    ["cif"];
+                                log("cif -> $cif");
+                                log("cif RTT -> ${cif.runtimeType}");
 
-                              isCompany = selectAccountArgument
-                                  .cifDetails[index]["isCompany"];
-                              log("isCompany -> $isCompany");
+                                isCompany = selectAccountArgument
+                                    .cifDetails[index]["isCompany"];
+                                log("isCompany -> $isCompany");
 
-                              isCompanyRegistered = selectAccountArgument
-                                  .cifDetails[index]["isCompanyRegistered"];
-                              log("isCompanyRegistered -> $isCompanyRegistered");
+                                isCompanyRegistered = selectAccountArgument
+                                    .cifDetails[index]["isCompanyRegistered"];
+                                log("isCompanyRegistered -> $isCompanyRegistered");
 
-                              log("isLogin -> ${selectAccountArgument.isLogin}");
-                              log("isPwChange -> ${selectAccountArgument.isPwChange}");
+                                log("isLogin -> ${selectAccountArgument.isLogin}");
+                                log("isPwChange -> ${selectAccountArgument.isPwChange}");
 
-                              if (selectAccountArgument.cifDetails[index]
-                                          ["isCompanyRegistered"] ==
-                                      false &&
-                                  selectAccountArgument.cifDetails[index]
-                                          ["isCompany"] ==
-                                      true) {
-                                if (context.mounted) {
-                                  showDialog(
-                                    context: context,
-                                    barrierDismissible: false,
-                                    builder: (context) {
-                                      return CustomDialog(
-                                        svgAssetPath: ImageConstants.warning,
-                                        title: "Application approval pending",
-                                        message:
-                                            "You already have a registration pending. Please contact Dhabi support.",
-                                        actionWidget: GradientButton(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          text: labels[347]["labelText"],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                }
-                              } else {
-                                if (selectAccountArgument.isPwChange) {
-                                  // TODO: call deviceValid API
-                                  var isDeviceValidApiResult =
-                                      await MapIsDeviceValid.mapIsDeviceValid({
-                                    "userId": selectAccountArgument
-                                        .cifDetails[index]["userID"],
-                                    "deviceId": storageDeviceId,
-                                  }, tokenCP ?? "");
-                                  log("isDeviceValidApiResult -> $isDeviceValidApiResult");
-                                  if (isDeviceValidApiResult["success"]) {
-                                    if (!isCompany || isCompanyRegistered) {
-                                      if (context.mounted) {
-                                        Navigator.pushNamed(
-                                          context,
-                                          Routes.setPassword,
-                                          arguments: SetPasswordArgumentModel(
-                                            fromTempPassword: false,
-                                          ).toMap(),
-                                        );
-                                      }
-                                    } else {
-                                      // TODO: show dialog box which Samit sir will share
-                                      if (context.mounted) {
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (context) {
-                                            return CustomDialog(
-                                              svgAssetPath:
-                                                  ImageConstants.warning,
-                                              title:
-                                                  "Application approval pending",
-                                              message:
-                                                  "You already have a registration pending. Please contact Dhabi support.",
-                                              actionWidget: GradientButton(
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                text: labels[347]["labelText"],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    }
-                                  } else {
-                                    var rmorResult =
-                                        await MapRegisteredMobileOtpRequest
-                                            .mapRegisteredMobileOtpRequest(
-                                      {
-                                        "emailId": storageEmail,
-                                        "cif": cif,
-                                      },
-                                      tokenCP ?? "",
-                                    );
-                                    if (rmorResult["success"]) {
-                                      if (context.mounted) {
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          Routes.otp,
-                                          arguments: OTPArgumentModel(
-                                            emailOrPhone:
-                                                rmorResult["mobileNumber"],
-                                            isEmail: false,
-                                            isBusiness: isCompany,
-                                            isInitial: false,
-                                            isLogin: false,
-                                            isEmailIdUpdate: false,
-                                            isMobileUpdate: false,
-                                            isReKyc: false,
-                                          ).toMap(),
-                                        );
-                                      }
-                                    } else {
-                                      if (context.mounted) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return CustomDialog(
-                                              svgAssetPath:
-                                                  ImageConstants.warning,
-                                              title: "Mobile Not Registered",
-                                              message:
-                                                  "You do not have an account registered with this mobile number. Please register an account.",
-                                              actionWidget: GradientButton(
-                                                onTap: () {
-                                                  Navigator
-                                                      .pushReplacementNamed(
-                                                    context,
-                                                    Routes.onboarding,
-                                                    arguments:
-                                                        OnboardingArgumentModel(
-                                                                isInitial: true)
-                                                            .toMap(),
-                                                  );
-                                                },
-                                                text: "Register",
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    }
-                                    // if (context.mounted) {
-                                    //   showDialog(
-                                    //     context: context,
-                                    //     barrierDismissible: false,
-                                    //     builder: (context) {
-                                    //       return CustomDialog(
-                                    //         svgAssetPath:
-                                    //             ImageConstants.warning,
-                                    //         title: "Device Invalid",
-                                    //         message:
-                                    //             "You are trying to login from an unregistered device.",
-                                    //         actionWidget: GradientButton(
-                                    //           onTap: () {
-                                    //             Navigator.pop(context);
-                                    //             Navigator.pushReplacementNamed(
-                                    //               context,
-                                    //               Routes.loginUserId,
-                                    //             );
-                                    //           },
-                                    //           text: labels[347]["labelText"],
-                                    //         ),
-                                    //       );
-                                    //     },
-                                    //   );
-                                    // }
-                                  }
-                                } else {
-                                  if (selectAccountArgument.isLogin) {
-                                    userTypeId =
-                                        selectAccountArgument.cifDetails[index]
-                                                    ["companyId"] ==
-                                                0
-                                            ? 1
-                                            : 2;
-                                    await storage.write(
-                                        key: "userTypeId",
-                                        value: userTypeId.toString());
-                                    storageUserTypeId = int.parse(
-                                        await storage.read(key: "userTypeId") ??
-                                            "");
-                                    companyId = selectAccountArgument
-                                        .cifDetails[index]["companyId"];
-                                    await storage.write(
-                                        key: "companyId",
-                                        value: companyId.toString());
-                                    storageCompanyId = int.parse(
-                                        await storage.read(key: "companyId") ??
-                                            "");
-                                    log("userTypeId -> $userTypeId");
-                                    log("companyId -> $companyId");
-                                    if (context.mounted) {
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.loginPassword,
-                                        arguments: LoginPasswordArgumentModel(
-                                          emailId:
-                                              selectAccountArgument.emailId,
-                                          userId: 0,
-                                          userTypeId: userTypeId,
-                                          companyId: companyId,
-                                        ).toMap(),
-                                      );
-                                    }
-                                  } else {
-                                    // TODO: Navigate to dashboard
-                                    Navigator.pushNamed(
-                                        context, Routes.loginUserId);
-                                  }
-                                }
-                              }
-                            },
-                            text: selectAccountArgument.cifDetails[index]
-                                    ["companyName"] ??
-                                "Personal Account",
-                            subtitle: (selectAccountArgument.cifDetails[index]
+                                if (selectAccountArgument.cifDetails[index]
                                             ["isCompanyRegistered"] ==
                                         false &&
                                     selectAccountArgument.cifDetails[index]
                                             ["isCompany"] ==
-                                        true)
-                                ? "Request Pending"
-                                : null,
-                            color: Colors.white,
-                            boxShadow: [BoxShadows.primary],
-                            fontColor: AppColors.primary,
-                          );
-                        },
-                      ),
-                      const SizeBox(height: 10),
-                    ],
+                                        true) {
+                                  if (context.mounted) {
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (context) {
+                                        return CustomDialog(
+                                          svgAssetPath: ImageConstants.warning,
+                                          title: "Application approval pending",
+                                          message:
+                                              "You already have a registration pending. Please contact Dhabi support.",
+                                          actionWidget: GradientButton(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            text: labels[347]["labelText"],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                } else {
+                                  if (selectAccountArgument.isPwChange) {
+                                    // TODO: call deviceValid API
+                                    var isDeviceValidApiResult =
+                                        await MapIsDeviceValid.mapIsDeviceValid(
+                                            {
+                                          "userId": selectAccountArgument
+                                              .cifDetails[index]["userID"],
+                                          "deviceId": storageDeviceId,
+                                        },
+                                            tokenCP ?? "");
+                                    log("isDeviceValidApiResult -> $isDeviceValidApiResult");
+                                    if (isDeviceValidApiResult["success"]) {
+                                      if (!isCompany || isCompanyRegistered) {
+                                        if (context.mounted) {
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.setPassword,
+                                            arguments: SetPasswordArgumentModel(
+                                              fromTempPassword: false,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      } else {
+                                        // TODO: show dialog box which Samit sir will share
+                                        if (context.mounted) {
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                svgAssetPath:
+                                                    ImageConstants.warning,
+                                                title:
+                                                    "Application approval pending",
+                                                message:
+                                                    "You already have a registration pending. Please contact Dhabi support.",
+                                                actionWidget: GradientButton(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  text: labels[347]
+                                                      ["labelText"],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    } else {
+                                      var rmorResult =
+                                          await MapRegisteredMobileOtpRequest
+                                              .mapRegisteredMobileOtpRequest(
+                                        {
+                                          "emailId": storageEmail,
+                                          "cif": cif,
+                                        },
+                                        tokenCP ?? "",
+                                      );
+                                      if (rmorResult["success"]) {
+                                        if (context.mounted) {
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            Routes.otp,
+                                            arguments: OTPArgumentModel(
+                                              emailOrPhone:
+                                                  rmorResult["mobileNumber"],
+                                              isEmail: false,
+                                              isBusiness: isCompany,
+                                              isInitial: false,
+                                              isLogin: false,
+                                              isEmailIdUpdate: false,
+                                              isMobileUpdate: false,
+                                              isReKyc: false,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      } else {
+                                        if (context.mounted) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                svgAssetPath:
+                                                    ImageConstants.warning,
+                                                title: "Mobile Not Registered",
+                                                message:
+                                                    "You do not have an account registered with this mobile number. Please register an account.",
+                                                actionWidget: GradientButton(
+                                                  onTap: () {
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      Routes.onboarding,
+                                                      arguments:
+                                                          OnboardingArgumentModel(
+                                                                  isInitial:
+                                                                      true)
+                                                              .toMap(),
+                                                    );
+                                                  },
+                                                  text: "Register",
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                      // if (context.mounted) {
+                                      //   showDialog(
+                                      //     context: context,
+                                      //     barrierDismissible: false,
+                                      //     builder: (context) {
+                                      //       return CustomDialog(
+                                      //         svgAssetPath:
+                                      //             ImageConstants.warning,
+                                      //         title: "Device Invalid",
+                                      //         message:
+                                      //             "You are trying to login from an unregistered device.",
+                                      //         actionWidget: GradientButton(
+                                      //           onTap: () {
+                                      //             Navigator.pop(context);
+                                      //             Navigator.pushReplacementNamed(
+                                      //               context,
+                                      //               Routes.loginUserId,
+                                      //             );
+                                      //           },
+                                      //           text: labels[347]["labelText"],
+                                      //         ),
+                                      //       );
+                                      //     },
+                                      //   );
+                                      // }
+                                    }
+                                  } else {
+                                    if (selectAccountArgument.isLogin) {
+                                      userTypeId = selectAccountArgument
+                                                      .cifDetails[index]
+                                                  ["companyId"] ==
+                                              0
+                                          ? 1
+                                          : 2;
+                                      await storage.write(
+                                          key: "userTypeId",
+                                          value: userTypeId.toString());
+                                      storageUserTypeId = int.parse(
+                                          await storage.read(
+                                                  key: "userTypeId") ??
+                                              "");
+                                      companyId = selectAccountArgument
+                                          .cifDetails[index]["companyId"];
+                                      await storage.write(
+                                          key: "companyId",
+                                          value: companyId.toString());
+                                      storageCompanyId = int.parse(await storage
+                                              .read(key: "companyId") ??
+                                          "");
+                                      log("userTypeId -> $userTypeId");
+                                      log("companyId -> $companyId");
+                                      if (context.mounted) {
+                                        Navigator.pushNamed(
+                                          context,
+                                          Routes.loginPassword,
+                                          arguments: LoginPasswordArgumentModel(
+                                            emailId:
+                                                selectAccountArgument.emailId,
+                                            userId: 0,
+                                            userTypeId: userTypeId,
+                                            companyId: companyId,
+                                          ).toMap(),
+                                        );
+                                      }
+                                    } else {
+                                      // TODO: Navigate to dashboard
+                                      Navigator.pushNamed(
+                                          context, Routes.loginUserId);
+                                    }
+                                  }
+                                }
+                              },
+                              text: selectAccountArgument.cifDetails[index]
+                                      ["companyName"] ??
+                                  "Personal Account",
+                              subtitle: (selectAccountArgument.cifDetails[index]
+                                              ["isCompanyRegistered"] ==
+                                          false &&
+                                      selectAccountArgument.cifDetails[index]
+                                              ["isCompany"] ==
+                                          true)
+                                  ? "Request Pending"
+                                  : null,
+                              color: Colors.white,
+                              boxShadow: [BoxShadows.primary],
+                              fontColor: AppColors.primary,
+                            );
+                          },
+                        ),
+                        const SizeBox(height: 10),
+                      ],
+                    ),
                   );
                 },
               ),

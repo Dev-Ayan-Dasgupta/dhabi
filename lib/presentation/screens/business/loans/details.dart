@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
-import 'package:dialup_mobile_app/data/models/widgets/details_tile.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/loan/summary_tile.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -126,7 +125,28 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
-        actions: const [AppBarStatement()],
+        actions: [
+          AppBarStatement(
+            onTapLoan: () async {
+              try {
+                log("loanStmntApi Request -> ${{
+                  "accountNumber": loanDetailsArgument.accountNumber,
+                }}");
+                var loanStmntApiResult =
+                    await MapLoanStatement.mapLoanStatement(
+                  {
+                    "accountNumber": loanDetailsArgument.accountNumber,
+                  },
+                  token ?? "",
+                );
+                log("loanStmntApiResult -> $loanStmntApiResult");
+              } catch (_) {
+                rethrow;
+              }
+            },
+            onTapAmortization: () {},
+          )
+        ],
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

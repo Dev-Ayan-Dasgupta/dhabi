@@ -75,6 +75,8 @@ List<String> noTinReasonDDs = [
 
 List<String> payoutDurationDDs = [];
 
+List<String> loanServiceRequest = [];
+
 List statementDurationDDs = [
   // {"key": "DD_0008_001", "value": "1 Month"},
   // {"key": "DD_0008_002", "value": "3 Months"},

@@ -1,12 +1,15 @@
+import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  static List<int> checkerNotificationTypes = [3, 6, 9, 12, 15, 18, 21, 24, 27];
 
   static void requestIOSPermissions(
       FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) {
@@ -20,7 +23,7 @@ class LocalNotificationService {
         );
   }
 
-  static void initialize(BuildContext context) {
+  static void initialize(String messageType, String additionalInformation) {
     const settings = InitializationSettings(
       iOS: IOSInitializationSettings(
         requestSoundPermission: false,
@@ -33,14 +36,36 @@ class LocalNotificationService {
     // initialize notifications plugin
     notificationsPlugin.initialize(
       settings,
-      onSelectNotification: (_) async {
+      onSelectNotification: (_) {
         // Navigator.pushNamed(context, Routes.depositStatement);
-        navigatorKey.currentState!.pushNamed(Routes.notifications);
+        if (checkerNotificationTypes.contains(int.parse(messageType))) {
+          navigatorKey.currentState!.pushNamed(
+            Routes.workflowDetails,
+            arguments: WorkflowArgumentModel(
+              reference: additionalInformation,
+              workflowType: int.parse(messageType),
+            ).toMap(),
+          );
+        } else {
+          switch (messageType) {
+            case "1":
+              navigatorKey.currentState!.pushNamed(
+                Routes.verificationInitializing,
+                arguments: VerificationInitializationArgumentModel(
+                  isReKyc: true,
+                ).toMap(),
+              );
+              break;
+
+            default:
+              navigatorKey.currentState!.pushNamed(Routes.notifications);
+          }
+        }
       },
     );
   }
 
-  static void display(RemoteMessage message) async {
+  static void display(RemoteMessage message) {
     try {
       // final id = int.parse(const Uuid().v4());
 
@@ -67,7 +92,7 @@ class LocalNotificationService {
         ),
         iOS: IOSNotificationDetails(),
       );
-      await notificationsPlugin.show(
+      notificationsPlugin.show(
         0,
         // id,
         message.notification!.title,

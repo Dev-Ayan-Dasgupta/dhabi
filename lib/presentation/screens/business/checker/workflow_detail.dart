@@ -287,7 +287,81 @@ class _WorkflowDetailsScreenState extends State<WorkflowDetailsScreen> {
                 BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   builder: (context, state) {
                     return GradientButton(
-                      onTap: () async {},
+                      onTap: () async {
+                        final ShowButtonBloc showButtonBloc =
+                            context.read<ShowButtonBloc>();
+                        isApprovingRejecting = true;
+                        showButtonBloc
+                            .add(ShowButtonEvent(show: isApprovingRejecting));
+
+                        log("approveRejectApiResult -> ${{
+                          "reference": workflowArgument.reference,
+                          "approve": true,
+                          "rejectReason": _reasonController.text,
+                        }}");
+                        var approveRejectApiResult =
+                            await MapApproveOrDissaproveWorkflow
+                                .mapApproveOrDissaproveWorkflow(
+                          {
+                            "reference": workflowArgument.reference,
+                            "approve": true,
+                            "rejectReason": _reasonController.text,
+                          },
+                          token ?? "",
+                        );
+                        log("approveRejectApiResult -> $approveRejectApiResult");
+
+                        if (approveRejectApiResult["success"]) {
+                          if (context.mounted) {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CustomDialog(
+                                  svgAssetPath:
+                                      ImageConstants.checkCircleOutlined,
+                                  title: "Request Approved",
+                                  message:
+                                      "You have successfully approved the maker's request.",
+                                  actionWidget: GradientButton(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                      Navigator.pushNamed(
+                                          context, Routes.notifications);
+                                    },
+                                    text: labels[346]["labelText"],
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        } else {
+                          if (context.mounted) {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CustomDialog(
+                                  svgAssetPath: ImageConstants.warning,
+                                  title: "Error {200}",
+                                  message: approveRejectApiResult["message"] ??
+                                      "Error while rejecting request, please try again later",
+                                  actionWidget: GradientButton(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    text: labels[346]["labelText"],
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        }
+
+                        isApprovingRejecting = true;
+                        showButtonBloc
+                            .add(ShowButtonEvent(show: isApprovingRejecting));
+                      },
                       text: "Approve",
                       auxWidget: isApprovingRejecting
                           ? const LoaderRow()

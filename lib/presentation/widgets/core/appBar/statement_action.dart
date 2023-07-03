@@ -1,14 +1,21 @@
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/presentation/widgets/loan/statement_type_tile.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/loan/statement_type_tile.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+
 class AppBarStatement extends StatelessWidget {
+  final VoidCallback onTapLoan;
+  final VoidCallback onTapAmortization;
+
   const AppBarStatement({
-    super.key,
-  });
+    Key? key,
+    required this.onTapLoan,
+    required this.onTapAmortization,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +27,12 @@ class AppBarStatement extends StatelessWidget {
           builder: (context) {
             return Container(
               width: 100.w,
-              height: (225 / Dimensions.designWidth).w,
+              height: (275 / Dimensions.designHeight).h,
               padding: EdgeInsets.all((30 / Dimensions.designWidth).w),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular((20 / Dimensions.designWidth).w),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular((10 / Dimensions.designWidth).w),
+                  topLeft: Radius.circular((10 / Dimensions.designWidth).w),
                 ),
                 color: Colors.white,
               ),
@@ -43,22 +51,22 @@ class AppBarStatement extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       StatementTypeTile(
-                        onTap: () {},
+                        onTap: onTapLoan,
                         iconPath: ImageConstants.checkCircleGreen,
                         text: "Loan",
                       ),
-                      const SizeBox(width: 10),
+                      const SizeBox(width: 25),
                       StatementTypeTile(
-                        onTap: () {},
+                        onTap: onTapAmortization,
                         iconPath: ImageConstants.document,
                         text: "Amortization",
                       ),
-                      const SizeBox(width: 10),
-                      StatementTypeTile(
-                        onTap: () {},
-                        iconPath: ImageConstants.article,
-                        text: "Liability Letter",
-                      ),
+                      // const SizeBox(width: 10),
+                      // StatementTypeTile(
+                      //   onTap: () {},
+                      //   iconPath: ImageConstants.article,
+                      //   text: "Liability Letter",
+                      // ),
                     ],
                   ),
                 ],

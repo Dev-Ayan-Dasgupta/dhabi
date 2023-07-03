@@ -110,6 +110,7 @@ class _SplashScreenState extends State<SplashScreen> {
     populateDD(statementDurationDDs, 7);
     populateDD(payoutDurationDDs, 8);
     populateDD(reasonOfSending, 9);
+    populateDD(loanServiceRequest, 10);
     populateEmirates();
     getPolicies();
     banks = await MapBankDetails.mapBankDetails();
@@ -467,7 +468,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> initFirebaseNotifications() async {
     try {
       // initialize local notification service
-      LocalNotificationService.initialize(context);
+      LocalNotificationService.initialize("0", "");
 
       // initialize firebase
       await Firebase.initializeApp(
@@ -503,6 +504,11 @@ class _SplashScreenState extends State<SplashScreen> {
         if (message != null) {
           log("FCM Message getInitialMessage -> ${message.data}");
           LocalNotificationService.display(message);
+          log("Message Type -> ${message.data["MessageType"]}");
+          LocalNotificationService.initialize(
+            message.data["MessageType"],
+            message.data["AdditionalInfo"],
+          );
         }
       });
 
@@ -514,7 +520,11 @@ class _SplashScreenState extends State<SplashScreen> {
       FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
         log("FCM Message onMessageListen -> ${message.data}");
         LocalNotificationService.display(message);
-        // LocalNotificationService.initialize(context);
+        log("Message Type -> ${message.data["MessageType"]}");
+        LocalNotificationService.initialize(
+          message.data["MessageType"],
+          message.data["AdditionalInfo"],
+        );
       });
     } catch (_) {
       rethrow;

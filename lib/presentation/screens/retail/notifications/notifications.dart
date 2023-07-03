@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/bloc/showButton/index.dart';
+import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/data/repositories/notifications/index.dart';
@@ -83,6 +84,16 @@ class _NotificatonsScreenState extends State<NotificatonsScreen> {
                               workflowType:
                                   getNotificationsApiResult["notifications"][i]
                                       ["notificationType"],
+                            ).toMap(),
+                          );
+                        } else if (getNotificationsApiResult["notifications"][i]
+                                ["notificationType"] ==
+                            1) {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.verificationInitializing,
+                            arguments: VerificationInitializationArgumentModel(
+                              isReKyc: true,
                             ).toMap(),
                           );
                         }

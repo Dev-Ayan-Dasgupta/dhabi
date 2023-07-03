@@ -514,7 +514,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                                                   // "Tax non filer debit Tax non filer debit",
                                                   displayStatementList[index]
                                                       ["transactionType"],
-                                              name: "Alexander Doe",
+                                              name: "",
                                               amount:
                                                   // 50.23,
                                                   (displayStatementList[index][

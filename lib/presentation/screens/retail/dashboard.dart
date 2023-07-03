@@ -145,7 +145,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                   await storage.read(key: "persistBiometric") == "true";
               if (context.mounted) {
                 Navigator.pop(context);
-                showBiometricSuccess();
+                // showBiometricSuccess();
               }
             },
             text: "Enable Now",
@@ -1402,8 +1402,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                             index]
                                                                         [
                                                                         "transactionType"],
-                                                                name:
-                                                                    "Alexander Doe",
+                                                                name: "",
                                                                 amount:
                                                                     // 50.23,
                                                                     (displayStatementList[index]["creditAmount"] !=
