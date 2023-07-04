@@ -248,7 +248,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                           "Add New Recipient",
                           style: TextStyles.primaryBold.copyWith(
                             color: AppColors.primary,
-                            fontSize: (16 / Dimensions.designWidth).w,
+                            fontSize: (14 / Dimensions.designWidth).w,
                           ),
                         ),
                       ],

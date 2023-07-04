@@ -498,7 +498,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       isNotZero = true;
       toggleCaptionsBloc.add(ShowButtonEvent(show: isNotZero));
     }
-    if (double.parse(_sendController.text) > senderBalance) {
+    if (double.parse(_sendController.text) > senderBalance.abs()) {
       isShowButton = false;
       borderColor = AppColors.red100;
       showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));

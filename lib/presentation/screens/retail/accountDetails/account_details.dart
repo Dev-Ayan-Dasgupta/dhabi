@@ -1010,14 +1010,14 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
     }
     if (isSent) {
       for (var statement in accountDetailsArgument.displayStatementList) {
-        if (statement["creditAmount"] != 0) {
+        if (statement["creditAmount"] == 0) {
           displayStatementList.add(statement);
         }
       }
     }
     if (isReceived) {
       for (var statement in accountDetailsArgument.displayStatementList) {
-        if (statement["creditAmount"] == 0) {
+        if (statement["debitAmount"] == 0) {
           displayStatementList.add(statement);
         }
       }

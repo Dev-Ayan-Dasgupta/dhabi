@@ -2454,9 +2454,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                 title: displayFdStatementList[
                                                                         index][
                                                                     "description"],
-                                                                name: displayFdStatementList[
-                                                                        index][
-                                                                    "customerName"],
+                                                                name: "",
+                                                                // displayFdStatementList[
+                                                                //         index][
+                                                                //     "customerName"],
                                                                 amount: double.parse(
                                                                     displayFdStatementList[
                                                                             index]
@@ -3046,14 +3047,14 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     }
     if (isSent) {
       for (var statement in statementList) {
-        if (statement["creditAmount"] != 0) {
+        if (statement["creditAmount"] == 0) {
           displayStatementList.add(statement);
         }
       }
     }
     if (isReceived) {
       for (var statement in statementList) {
-        if (statement["creditAmount"] == 0) {
+        if (statement["debitAmount"] == 0) {
           displayStatementList.add(statement);
         }
       }

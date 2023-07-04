@@ -2926,9 +2926,10 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                 title: displayFdStatementList[
                                                                         index][
                                                                     "description"],
-                                                                name: displayFdStatementList[
-                                                                        index][
-                                                                    "customerName"],
+                                                                name: "",
+                                                                // displayFdStatementList[
+                                                                //         index][
+                                                                //     "customerName"],
                                                                 amount: double.parse(
                                                                     displayFdStatementList[
                                                                             index]
@@ -3589,14 +3590,14 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
     }
     if (isSent) {
       for (var statement in statementList) {
-        if (statement["creditAmount"] != 0) {
+        if (statement["creditAmount"] == 0) {
           displayStatementList.add(statement);
         }
       }
     }
     if (isReceived) {
       for (var statement in statementList) {
-        if (statement["creditAmount"] == 0) {
+        if (statement["debitAmount"] == 0) {
           displayStatementList.add(statement);
         }
       }

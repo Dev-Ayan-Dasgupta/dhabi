@@ -238,7 +238,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                             );
 
                             if (selectedFormat == "Excel (.xls)") {
-                              base64String =
+                              var result =
                                   await MapExcelCustomerAccountStatement
                                       .mapExcelCustomerAccountStatement(
                                 {
@@ -251,7 +251,10 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                                 },
                                 token ?? "",
                               );
-                              // log("base64 xls -> $base64String");
+                              log("Response -> $result");
+
+                              base64String = result["base64Data"];
+                              log("base64 pdf -> $base64String");
                             } else if (selectedFormat == "PDF (.pdf)") {
                               log("Pdf statement API request -> ${{
                                 "accountNumber":
@@ -261,9 +264,9 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                                 "endDate":
                                     DateFormat('yyyy-MM-dd').format(auxToDate),
                               }}");
-                              base64String =
-                                  await MapPdfCustomerAccountStatement
-                                      .mapPdfCustomerAccountStatement(
+
+                              var result = await MapPdfCustomerAccountStatement
+                                  .mapPdfCustomerAccountStatement(
                                 {
                                   "accountNumber":
                                       downloadStatementArgument.accountNumber,
@@ -274,9 +277,35 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                                 },
                                 token ?? "",
                               );
-                              // log("base64 pdf -> $base64String");
+                              log("Response -> $result");
+
+                              base64String = result["base64Data"];
+                              log("base64 pdf -> $base64String");
                             }
-                            openFile(base64String, selectedFormat);
+
+                            if (base64String == null) {
+                              if (context.mounted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return CustomDialog(
+                                      svgAssetPath: ImageConstants.warning,
+                                      title: "No Transactions",
+                                      message:
+                                          "You do not have any transactions for the period selected.",
+                                      actionWidget: GradientButton(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        text: labels[346]["labelText"],
+                                      ),
+                                    );
+                                  },
+                                );
+                              }
+                            } else {
+                              openFile(base64String, selectedFormat);
+                            }
 
                             isDownloading = false;
                             showButtonBloc.add(
