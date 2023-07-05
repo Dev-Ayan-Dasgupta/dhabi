@@ -2,14 +2,14 @@
 import 'dart:convert';
 
 import 'package:cached_memory_image/provider/cached_memory_image_provider.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:dialup_mobile_app/data/models/widgets/dropdown_countries.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/material.dart';
-
-import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:uuid/uuid.dart';
 
 class CustomDropdownCountries extends StatefulWidget {
   const CustomDropdownCountries({
@@ -18,12 +18,16 @@ class CustomDropdownCountries extends StatefulWidget {
     required this.items,
     this.value,
     required this.onChanged,
+    this.height,
+    this.maxHeight,
   }) : super(key: key);
 
   final String title;
   final List<DropDownCountriesModel> items;
   final Object? value;
   final Function(Object?) onChanged;
+  final double? height;
+  final double? maxHeight;
 
   @override
   State<CustomDropdownCountries> createState() =>
@@ -80,7 +84,7 @@ class _CustomDropdownCountriesState extends State<CustomDropdownCountries> {
         value: widget.value,
         onChanged: widget.onChanged,
         buttonStyleData: ButtonStyleData(
-          height: (55 / Dimensions.designHeight).h,
+          height: ((widget.height ?? 55) / Dimensions.designHeight).h,
           width: 100.w,
           padding:
               EdgeInsets.symmetric(horizontal: (14 / Dimensions.designWidth).w),
@@ -103,7 +107,7 @@ class _CustomDropdownCountriesState extends State<CustomDropdownCountries> {
           iconDisabledColor: Colors.grey,
         ),
         dropdownStyleData: DropdownStyleData(
-          maxHeight: (300 / Dimensions.designHeight).h,
+          maxHeight: ((widget.maxHeight ?? 300) / Dimensions.designHeight).h,
           width: 90.w,
           padding: null,
           decoration: BoxDecoration(

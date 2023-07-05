@@ -225,6 +225,11 @@ class EnvConfig implements BaseConfig {
     return dotenv.env['GET_TRANSFER_CAPABILITIES'] ?? "";
   }
 
+  @override
+  String get getFAQs {
+    return dotenv.env['GET_FAQS'] ?? "";
+  }
+
   // ? Onboarding APIs
 
   @override

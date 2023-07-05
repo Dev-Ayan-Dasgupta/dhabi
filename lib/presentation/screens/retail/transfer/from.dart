@@ -1,9 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cached_memory_image/provider/cached_memory_image_provider.dart';
 import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/data/models/widgets/index.dart';
+import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
 import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
 import 'package:flutter/material.dart';
@@ -37,15 +40,74 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
   final TextEditingController _receiveCurrencyController =
       TextEditingController();
 
+  List<DropDownCountriesModel> exchangeCurrencies = [];
+  DropDownCountriesModel? selectedCurrency;
+
+  bool isInitiExchRates = false;
+
+  Map<String, dynamic> getExchangeRateApi = {};
+
+  double exRate = 0;
+
   @override
   void initState() {
     super.initState();
     argumentInitialization();
+    populateExchangeRates();
   }
 
   void argumentInitialization() async {
     sendMoneyArgument =
         SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
+  }
+
+  Future<void> populateExchangeRates() async {
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    try {
+      isInitiExchRates = true;
+      showButtonBloc.add(ShowButtonEvent(show: isInitiExchRates));
+      getExchangeRateApi = await MapExchangeRate.mapExchangeRate(token ?? "");
+      if (getExchangeRateApi["success"]) {
+        exchangeCurrencies.clear();
+        for (var currency in getExchangeRateApi["fetchExRates"]) {
+          exchangeCurrencies.add(DropDownCountriesModel(
+              countrynameOrCode: currency["exchangeCurrency"],
+              countryFlagBase64: currency["currencyFlagBase64"]));
+        }
+        log("exchangeCurrencies -> $exchangeCurrencies");
+        selectedCurrency = DropDownCountriesModel(
+          countryFlagBase64: exchangeCurrencies[0].countryFlagBase64,
+          countrynameOrCode: exchangeCurrencies[0].countrynameOrCode,
+        );
+        exRate =
+            getExchangeRateApi["fetchExRates"][0]["exchangeRate"].toDouble();
+        log("exRate -> $exRate");
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error {200} Exchange Rate",
+                message: getExchangeRateApi["message"] ??
+                    "Error while getting exchange rate, please try again later",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: labels[346]["labelText"],
+                ),
+              );
+            },
+          );
+        }
+      }
+      isInitiExchRates = false;
+      showButtonBloc.add(ShowButtonEvent(show: isInitiExchRates));
+    } catch (_) {
+      rethrow;
+    }
   }
 
   @override
@@ -263,244 +325,300 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                   builder: (context) {
                                     final ShowButtonBloc showButtonBloc =
                                         context.read<ShowButtonBloc>();
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                        bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom,
-                                      ),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(
-                                                (10 / Dimensions.designWidth)
-                                                    .w),
-                                            topRight: Radius.circular(
-                                                (10 / Dimensions.designWidth)
-                                                    .w),
+                                    return BlocBuilder<ShowButtonBloc,
+                                        ShowButtonState>(
+                                      builder: (context, state) {
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context)
+                                                .viewInsets
+                                                .bottom,
                                           ),
-                                          color: Colors.white,
-                                        ),
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: (PaddingConstants
-                                                      .horizontalPadding /
-                                                  Dimensions.designWidth)
-                                              .w,
-                                          vertical:
-                                              (PaddingConstants.bottomPadding /
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular((10 /
+                                                        Dimensions.designWidth)
+                                                    .w),
+                                                topRight: Radius.circular((10 /
+                                                        Dimensions.designWidth)
+                                                    .w),
+                                              ),
+                                              color: Colors.white,
+                                            ),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: (PaddingConstants
+                                                          .horizontalPadding /
+                                                      Dimensions.designWidth)
+                                                  .w,
+                                              vertical: (PaddingConstants
+                                                          .bottomPadding /
                                                       Dimensions.designHeight)
                                                   .h,
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            // ! Clip widget for drag
-                                            Center(
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: (10 /
-                                                          Dimensions
-                                                              .designWidth)
-                                                      .w,
+                                            ),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                // ! Clip widget for drag
+                                                Center(
+                                                  child: Container(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                      vertical: (10 /
+                                                              Dimensions
+                                                                  .designWidth)
+                                                          .w,
+                                                    ),
+                                                    height: (7 /
+                                                            Dimensions
+                                                                .designWidth)
+                                                        .w,
+                                                    width: (50 /
+                                                            Dimensions
+                                                                .designWidth)
+                                                        .w,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular((10 /
+                                                                Dimensions
+                                                                    .designWidth)
+                                                            .w),
+                                                      ),
+                                                      color: const Color(
+                                                          0xFFD9D9D9),
+                                                    ),
+                                                  ),
                                                 ),
-                                                height:
-                                                    (7 / Dimensions.designWidth)
-                                                        .w,
-                                                width: (50 /
-                                                        Dimensions.designWidth)
-                                                    .w,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular((10 /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w),
-                                                  ),
-                                                  color:
-                                                      const Color(0xFFD9D9D9),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizeBox(height: 15),
-                                            Text(
-                                              "1 USD = ",
-                                              style: TextStyles.primaryMedium
-                                                  .copyWith(
-                                                color: AppColors.dark80,
-                                                fontSize: (14 /
-                                                        Dimensions.designWidth)
-                                                    .w,
-                                              ),
-                                            ),
-                                            const SizeBox(height: 15),
-                                            CustomTextField(
-                                              prefixIcon: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  CircleAvatar(
-                                                    radius: ((19 / 2) /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                    backgroundImage:
-                                                        CachedMemoryImageProvider(
-                                                      const Uuid().v4(),
-                                                      bytes: base64Decode(
-                                                          senderCurrencyFlag),
-                                                    ),
-                                                  ),
-                                                  const SizeBox(width: 10),
-                                                  Text(
-                                                    senderCurrency,
-                                                    style: TextStyles
-                                                        .primaryMedium
-                                                        .copyWith(
-                                                      color: AppColors.dark50,
-                                                      fontSize: (14 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w,
-                                                    ),
-                                                  ),
-                                                  const SizeBox(width: 10),
-                                                  Text(
-                                                    "|",
-                                                    style: TextStyles
-                                                        .primaryMedium
-                                                        .copyWith(
-                                                      color: AppColors.dark50,
-                                                      fontSize: (14 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w,
-                                                    ),
-                                                  ),
-                                                  const SizeBox(width: 10),
-                                                ],
-                                              ),
-                                              hintText: "Enter Amount",
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              controller:
-                                                  _sendCurrencyController,
-                                              onChanged: (p0) {
-                                                _receiveCurrencyController
-                                                        .text =
-                                                    (double.parse(p0) * 10)
-                                                        .toString();
-                                              },
-                                            ),
-                                            const SizeBox(height: 10),
-                                            CustomTextField(
-                                              enabled: false,
-                                              prefixIcon: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  CircleAvatar(
-                                                    radius: ((19 / 2) /
-                                                            Dimensions
-                                                                .designWidth)
-                                                        .w,
-                                                    backgroundImage:
-                                                        CachedMemoryImageProvider(
-                                                      const Uuid().v4(),
-                                                      bytes: base64Decode(
-                                                          senderCurrencyFlag),
-                                                    ),
-                                                  ),
-                                                  const SizeBox(width: 10),
-                                                  Text(
-                                                    senderCurrency,
-                                                    style: TextStyles
-                                                        .primaryMedium
-                                                        .copyWith(
-                                                      color: AppColors.dark50,
-                                                      fontSize: (14 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w,
-                                                    ),
-                                                  ),
-                                                  const SizeBox(width: 10),
-                                                  Text(
-                                                    "|",
-                                                    style: TextStyles
-                                                        .primaryMedium
-                                                        .copyWith(
-                                                      color: AppColors.dark50,
-                                                      fontSize: (14 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w,
-                                                    ),
-                                                  ),
-                                                  const SizeBox(width: 10),
-                                                ],
-                                              ),
-                                              hintText: "0.00",
-                                              controller:
-                                                  _receiveCurrencyController,
-                                              onChanged: (p0) {},
-                                            ),
-                                            const SizeBox(height: 15),
-                                            Container(
-                                              width: 100.w,
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: PaddingConstants
-                                                    .horizontalPadding,
-                                                vertical: (10 /
-                                                        Dimensions.designHeight)
-                                                    .h,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(
-                                                    (10 /
+                                                const SizeBox(height: 15),
+                                                Text(
+                                                  "1 USD = $exRate ${selectedCurrency?.countrynameOrCode}",
+                                                  style: TextStyles
+                                                      .primaryMedium
+                                                      .copyWith(
+                                                    color: AppColors.dark80,
+                                                    fontSize: (14 /
                                                             Dimensions
                                                                 .designWidth)
                                                         .w,
                                                   ),
                                                 ),
-                                                color: const Color(0XFFD9D9D9),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.info_outline_rounded,
-                                                    size: (24 /
+                                                const SizeBox(height: 15),
+                                                CustomTextField(
+                                                  prefixIcon: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      CircleAvatar(
+                                                        radius: ((19 / 2) /
+                                                                Dimensions
+                                                                    .designWidth)
+                                                            .w,
+                                                        backgroundImage:
+                                                            CachedMemoryImageProvider(
+                                                          const Uuid().v4(),
+                                                          bytes: base64Decode(
+                                                              senderCurrencyFlag),
+                                                        ),
+                                                      ),
+                                                      const SizeBox(width: 10),
+                                                      Text(
+                                                        senderCurrency,
+                                                        style: TextStyles
+                                                            .primaryMedium
+                                                            .copyWith(
+                                                          color:
+                                                              AppColors.dark80,
+                                                          fontSize: (14 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w,
+                                                        ),
+                                                      ),
+                                                      const SizeBox(width: 10),
+                                                      Text(
+                                                        "|",
+                                                        style: TextStyles
+                                                            .primaryMedium
+                                                            .copyWith(
+                                                          color:
+                                                              AppColors.dark50,
+                                                          fontSize: (14 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w,
+                                                        ),
+                                                      ),
+                                                      const SizeBox(width: 10),
+                                                    ],
+                                                  ),
+                                                  hintText: "Enter Amount",
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  controller:
+                                                      _sendCurrencyController,
+                                                  onChanged: (p0) {
+                                                    _receiveCurrencyController
+                                                            .text =
+                                                        (double.parse(p0) *
+                                                                exRate)
+                                                            .toStringAsFixed(2);
+                                                  },
+                                                ),
+                                                const SizeBox(height: 10),
+                                                Stack(
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SizeBox(width: 35.w),
+                                                        CustomTextField(
+                                                          enabled: false,
+                                                          width: 63.w,
+                                                          hintText: "0.00",
+                                                          controller:
+                                                              _receiveCurrencyController,
+                                                          onChanged: (p0) {},
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 28.w,
+                                                          child:
+                                                              CustomDropdownCountries(
+                                                            height: 60,
+                                                            maxHeight: 200,
+                                                            title: "",
+                                                            items:
+                                                                exchangeCurrencies,
+                                                            value:
+                                                                selectedCurrency,
+                                                            onChanged: (value) {
+                                                              selectedCurrency =
+                                                                  value
+                                                                      as DropDownCountriesModel;
+
+                                                              for (var i = 0;
+                                                                  i <
+                                                                      exchangeCurrencies
+                                                                          .length;
+                                                                  i++) {
+                                                                if (selectedCurrency
+                                                                        ?.countrynameOrCode ==
+                                                                    getExchangeRateApi[
+                                                                            "fetchExRates"][i]
+                                                                        [
+                                                                        "exchangeCurrency"]) {
+                                                                  exRate = getExchangeRateApi["fetchExRates"]
+                                                                              [
+                                                                              i]
+                                                                          [
+                                                                          "exchangeRate"]
+                                                                      .toDouble();
+                                                                  break;
+                                                                }
+                                                              }
+
+                                                              _receiveCurrencyController
+                                                                  .text = (exRate *
+                                                                      double.parse(_sendCurrencyController
+                                                                              .text
+                                                                              .isEmpty
+                                                                          ? "0"
+                                                                          : _sendCurrencyController
+                                                                              .text))
+                                                                  .toStringAsFixed(
+                                                                      2);
+
+                                                              showButtonBloc
+                                                                  .add(
+                                                                const ShowButtonEvent(
+                                                                  show: true,
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                        ),
+                                                        const SizeBox(
+                                                            width: 10),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizeBox(height: 15),
+                                                Container(
+                                                  width: 100.w,
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: PaddingConstants
+                                                        .horizontalPadding,
+                                                    vertical: (10 /
                                                             Dimensions
-                                                                .designWidth)
-                                                        .w,
+                                                                .designHeight)
+                                                        .h,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(
+                                                        (10 /
+                                                                Dimensions
+                                                                    .designWidth)
+                                                            .w,
+                                                      ),
+                                                    ),
                                                     color:
-                                                        AppColors.primaryDark,
+                                                        const Color(0XFFD9D9D9),
                                                   ),
-                                                  const SizeBox(width: 10),
-                                                  Text(
-                                                    "Rates are indicated and subject to change",
-                                                    style: TextStyles
-                                                        .primaryMedium
-                                                        .copyWith(
-                                                      color:
-                                                          AppColors.primaryDark,
-                                                      fontSize: (16 /
-                                                              Dimensions
-                                                                  .designWidth)
-                                                          .w,
-                                                    ),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons
+                                                            .info_outline_rounded,
+                                                        size: (24 /
+                                                                Dimensions
+                                                                    .designWidth)
+                                                            .w,
+                                                        color: AppColors
+                                                            .primaryDark,
+                                                      ),
+                                                      const SizeBox(width: 10),
+                                                      Text(
+                                                        "Rates are indicated and subject to change",
+                                                        style: TextStyles
+                                                            .primaryMedium
+                                                            .copyWith(
+                                                          color: AppColors
+                                                              .primaryDark,
+                                                          fontSize: (16 /
+                                                                  Dimensions
+                                                                      .designWidth)
+                                                              .w,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                                // const SizeBox(height: 15),
+                                                // GradientButton(
+                                                //   onTap: () {
+                                                //     showButtonBloc.add(
+                                                //       const ShowButtonEvent(
+                                                //         show: true,
+                                                //       ),
+                                                //     );
+                                                //   },
+                                                //   text: "Get Exchange Rate",
+                                                // ),
+                                              ],
                                             ),
-                                            const SizeBox(height: 15),
-                                            GradientButton(
-                                                onTap: () {},
-                                                text: "Get Exchange Rate"),
-                                          ],
-                                        ),
-                                      ),
+                                          ),
+                                        );
+                                      },
                                     );
                                   },
                                 );

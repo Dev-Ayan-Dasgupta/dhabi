@@ -10,3 +10,4 @@ export './get_application_configurations.dart';
 export './get_bank_details.dart';
 export './get_dynamic_fields.dart';
 export './get_transfer_capabilities.dart';
+export './get_faqs.dart';

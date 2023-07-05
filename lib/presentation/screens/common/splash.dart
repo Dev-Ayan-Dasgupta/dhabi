@@ -63,6 +63,8 @@ List<String> emirates = [];
 
 List banks = [];
 
+List faqs = [];
+
 List availableBiometrics = [];
 
 List transferCapabilities = [];
@@ -114,6 +116,8 @@ class _SplashScreenState extends State<SplashScreen> {
     populateEmirates();
     getPolicies();
     banks = await MapBankDetails.mapBankDetails();
+    var faqData = await MapFaqs.mapFaqs();
+    faqs = faqData["fAQDatas"];
     populateBankNames();
     log("Init conf ended");
   }

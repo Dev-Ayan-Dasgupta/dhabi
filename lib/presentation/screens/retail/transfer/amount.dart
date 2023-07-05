@@ -78,7 +78,32 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
               if (sendMoneyArgument.isBetweenAccounts) {
                 Navigator.pop(context);
                 Navigator.pop(context);
-              } else {}
+              } else if (sendMoneyArgument.isWithinDhabi) {
+                if (isNewWithinDhabiBeneficiary) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
+              } else {
+                if (isNewRemittanceBeneficiary) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
+              }
             },
             child: Padding(
               padding: EdgeInsets.only(

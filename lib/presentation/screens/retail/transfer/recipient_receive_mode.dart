@@ -42,17 +42,27 @@ class _RecipientReceiveModeScreenState
       appBar: AppBar(
         leading: const AppBarLeading(),
         actions: [
-          Padding(
-            padding: EdgeInsets.only(
-              right: (22 / Dimensions.designWidth).w,
-              top: (20 / Dimensions.designWidth).w,
-            ),
-            child: Text(
-              labels[166]["labelText"],
-              style: TextStyles.primary.copyWith(
-                color: const Color.fromRGBO(65, 65, 65, 0.5),
-                fontSize: (16 / Dimensions.designWidth).w,
-                fontWeight: FontWeight.w600,
+          InkWell(
+            onTap: () {
+              if (isNewRemittanceBeneficiary) {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Navigator.pop(context);
+              } else {}
+            },
+            child: Padding(
+              padding: EdgeInsets.only(
+                right: (22 / Dimensions.designWidth).w,
+                top: (20 / Dimensions.designWidth).w,
+              ),
+              child: Text(
+                labels[166]["labelText"],
+                style: TextStyles.primary.copyWith(
+                  color: const Color.fromRGBO(65, 65, 65, 0.5),
+                  fontSize: (16 / Dimensions.designWidth).w,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           )

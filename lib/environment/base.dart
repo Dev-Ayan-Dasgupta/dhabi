@@ -49,6 +49,7 @@ abstract class BaseConfig {
   String get getBankDetails;
   String get getDynamicFields;
   String get getTransferCapabilities;
+  String get getFAQs;
 
   // ? Onboarding APIs
 
