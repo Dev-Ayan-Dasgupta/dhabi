@@ -41,6 +41,8 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
   bool isFetchingCustDets = false;
   bool isFetchingExchangeRate = false;
 
+  bool isAccNumValid = false;
+
   late SendMoneyArgumentModel sendMoneyArgument;
 
   @override
@@ -97,16 +99,39 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                   const SizeBox(height: 10),
                   BlocBuilder<ShowButtonBloc, ShowButtonState>(
                     builder: (context, state) {
-                      return CustomTextField(
-                        hintText: "Enter IBAN or Account Number",
-                        // keyboardType: TextInputType.number,
-                        enabled: !isProceed,
-                        color:
-                            isProceed ? AppColors.blackEE : Colors.transparent,
-                        controller: _ibanController,
-                        onChanged: (p0) {
-                          proceedBloc.add(ShowButtonEvent(show: isProceed));
-                        },
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomTextField(
+                            hintText: "Enter IBAN or Account Number",
+                            keyboardType: TextInputType.number,
+                            enabled: !isProceed,
+                            color: isProceed
+                                ? AppColors.blackEE
+                                : Colors.transparent,
+                            controller: _ibanController,
+                            onChanged: (p0) {
+                              if (p0.length == 12) {
+                                isAccNumValid = true;
+                              } else {
+                                isAccNumValid = false;
+                              }
+                              proceedBloc.add(ShowButtonEvent(show: isProceed));
+                            },
+                          ),
+                          const SizeBox(height: 7),
+                          Ternary(
+                            condition: isAccNumValid,
+                            truthy: const SizeBox(),
+                            falsy: Text(
+                              "Must be 12 digits",
+                              style: TextStyles.primaryMedium.copyWith(
+                                color: AppColors.red100,
+                                fontSize: (12 / Dimensions.designWidth).w,
+                              ),
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
@@ -228,7 +253,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
 
   Widget buildSubmitButton(BuildContext context, ShowButtonState state) {
     final ShowButtonBloc proceedBloc = context.read<ShowButtonBloc>();
-    if (_ibanController.text.isNotEmpty) {
+    if (isAccNumValid) {
       return GradientButton(
         onTap: () async {
           final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();

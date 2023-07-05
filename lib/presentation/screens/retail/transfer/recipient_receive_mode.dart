@@ -129,20 +129,20 @@ class _RecipientReceiveModeScreenState
               ),
               falsy: const SizeBox(),
             ),
-            Align(
-              alignment: Alignment.center,
-              child: InkWell(
-                onTap: () {},
-                child: Text(
-                  "View Exchange Rates",
-                  style: TextStyles.primaryMedium.copyWith(
-                    color: AppColors.primary,
-                    fontSize: (16 / Dimensions.designWidth).w,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
-            )
+            // Align(
+            //   alignment: Alignment.center,
+            //   child: InkWell(
+            //     onTap: () {},
+            //     child: Text(
+            //       "View Exchange Rates",
+            //       style: TextStyles.primaryMedium.copyWith(
+            //         color: AppColors.primary,
+            //         fontSize: (16 / Dimensions.designWidth).w,
+            //         decoration: TextDecoration.underline,
+            //       ),
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),

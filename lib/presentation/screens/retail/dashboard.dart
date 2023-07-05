@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
@@ -258,6 +259,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       if (customerDetails["success"]) {
         accountDetails =
             customerDetails["crCustomerProfileRes"]["body"]["accountDetails"];
+        senderCurrency = accountDetails[0]["accountCurrency"];
+        senderCurrencyFlag = accountDetails[0]["currencyFlagBase64"];
+        log("senderCurrency -> $senderCurrency");
+        log("senderCurrencyFlag -> $senderCurrencyFlag");
         accountNumbers.clear();
         for (var account in accountDetails) {
           accountNumbers.add(account["accountNumber"]);
@@ -283,12 +288,13 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200}",
+                title: "System Failure",
                 message: customerDetails["message"] ??
                     "Error while getting customer details, please try again later",
                 actionWidget: GradientButton(
                   onTap: () {
                     Navigator.pop(context);
+                    exit(1);
                   },
                   text: labels[346]["labelText"],
                 ),
@@ -592,11 +598,27 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                         "1001"
                                                                     ? "Current"
                                                                     : "Savings",
-                                                            balance: accountDetails[
-                                                                        index][
-                                                                    "currentBalance"]
-                                                                .split(" ")
-                                                                .last,
+                                                            balance: double.parse(accountDetails[index]["currentBalance"]
+                                                                        .split(
+                                                                            " ")
+                                                                        .last
+                                                                        .replaceAll(
+                                                                            ",",
+                                                                            "")) >
+                                                                    1000000000
+                                                                ? "${double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000} B"
+                                                                : double.parse(accountDetails[index]["currentBalance"]
+                                                                            .split(
+                                                                                " ")
+                                                                            .last
+                                                                            .replaceAll(",",
+                                                                                "")) >
+                                                                        1000000
+                                                                    ? "${double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000} M"
+                                                                    : accountDetails[index]
+                                                                            ["currentBalance"]
+                                                                        .split(" ")
+                                                                        .last,
                                                             iban:
                                                                 accountDetails[
                                                                         index]

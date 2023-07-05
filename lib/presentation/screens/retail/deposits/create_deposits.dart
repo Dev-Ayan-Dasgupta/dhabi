@@ -2,7 +2,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +14,7 @@ import 'package:dialup_mobile_app/bloc/index.dart';
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/business/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/dashborad/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -164,18 +164,20 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Select an Account",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.dark80,
-                                  fontSize: (16 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                              const Asterisk(),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Text(
+                          //       "Select an Account",
+                          //       style: TextStyles.primaryMedium.copyWith(
+                          //         color: AppColors.dark80,
+                          //         fontSize: (16 / Dimensions.designWidth).w,
+                          //       ),
+                          //     ),
+                          //     const Asterisk(),
+                          //   ],
+                          // ),
+                          const MandatoryFieldLabel(
+                              labelText: "Select an Account"),
                           const SizeBox(height: 10),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
                             builder: (context, state) {
@@ -396,18 +398,20 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                             ),
                           ),
                           const SizeBox(height: 15),
-                          Row(
-                            children: [
-                              Text(
-                                "Deposit Amount (USD)",
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.dark80,
-                                  fontSize: (14 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                              const Asterisk(),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Text(
+                          //       "Deposit Amount (USD)",
+                          //       style: TextStyles.primaryMedium.copyWith(
+                          //         color: AppColors.dark80,
+                          //         fontSize: (14 / Dimensions.designWidth).w,
+                          //       ),
+                          //     ),
+                          //     const Asterisk(),
+                          //   ],
+                          // ),
+                          const MandatoryFieldLabel(
+                              labelText: "Deposit Amount (USD)"),
                           const SizeBox(height: 7),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
                             builder: (context, state) {
@@ -425,18 +429,20 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                             builder: buildErrorMessage,
                           ),
                           const SizeBox(height: 10),
-                          Row(
-                            children: [
-                              Text(
-                                labels[110]["labelText"],
-                                style: TextStyles.primaryMedium.copyWith(
-                                  color: AppColors.dark80,
-                                  fontSize: (14 / Dimensions.designWidth).w,
-                                ),
-                              ),
-                              const Asterisk(),
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Text(
+                          //       labels[110]["labelText"],
+                          //       style: TextStyles.primaryMedium.copyWith(
+                          //         color: AppColors.dark80,
+                          //         fontSize: (14 / Dimensions.designWidth).w,
+                          //       ),
+                          //     ),
+                          //     const Asterisk(),
+                          //   ],
+                          // ),
+                          MandatoryFieldLabel(
+                              labelText: labels[110]["labelText"]),
                           const SizeBox(height: 10),
                           InkWell(
                             onTap: showDatePickerWidget,
@@ -798,35 +804,37 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
             ),
           ),
           const SizeBox(height: 20),
-          Row(
-            children: [
-              Text(
-                labels[112]["labelText"],
-                style: TextStyles.primaryMedium.copyWith(
-                  color: AppColors.dark80,
-                  fontSize: (14 / Dimensions.designWidth).w,
-                ),
-              ),
-              const Asterisk(),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Text(
+          //       labels[112]["labelText"],
+          //       style: TextStyles.primaryMedium.copyWith(
+          //         color: AppColors.dark80,
+          //         fontSize: (14 / Dimensions.designWidth).w,
+          //       ),
+          //     ),
+          //     const Asterisk(),
+          //   ],
+          // ),
+          MandatoryFieldLabel(labelText: labels[112]["labelText"]),
           const SizeBox(height: 7),
           BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
             builder: buildInterestDropdown,
           ),
           const SizeBox(height: 20),
-          Row(
-            children: [
-              Text(
-                labels[113]["labelText"],
-                style: TextStyles.primaryMedium.copyWith(
-                  color: AppColors.dark80,
-                  fontSize: (14 / Dimensions.designWidth).w,
-                ),
-              ),
-              const Asterisk(),
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Text(
+          //       labels[113]["labelText"],
+          //       style: TextStyles.primaryMedium.copyWith(
+          //         color: AppColors.dark80,
+          //         fontSize: (14 / Dimensions.designWidth).w,
+          //       ),
+          //     ),
+          //     const Asterisk(),
+          //   ],
+          // ),
+          MandatoryFieldLabel(labelText: labels[113]["labelText"]),
           const SizeBox(height: 10),
           Row(
             children: [
@@ -861,23 +869,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
               if (isAutoClosure) {
                 return Column(
                   children: [
-                    RichText(
-                      text: TextSpan(
-                        text: labels[116]["labelText"],
-                        style: TextStyles.primaryMedium.copyWith(
-                            color: AppColors.dark80,
-                            fontSize: (14 / Dimensions.designWidth).w),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: ' * ',
-                            style: TextStyles.primary.copyWith(
-                              color: AppColors.red100,
-                              fontSize: (14 / Dimensions.designWidth).w,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    MandatoryFieldLabel(labelText: labels[116]["labelText"]),
                     const SizeBox(height: 10),
                     Row(
                       children: [
@@ -1316,5 +1308,34 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     _scrollController.dispose();
     _depositController.dispose();
     super.dispose();
+  }
+}
+
+class MandatoryFieldLabel extends StatelessWidget {
+  const MandatoryFieldLabel({
+    Key? key,
+    required this.labelText,
+  }) : super(key: key);
+
+  final String labelText;
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        text: labelText,
+        style: TextStyles.primaryMedium.copyWith(
+            color: AppColors.dark80, fontSize: (12 / Dimensions.designWidth).w),
+        children: <TextSpan>[
+          TextSpan(
+            text: ' * ',
+            style: TextStyles.primary.copyWith(
+              color: AppColors.red100,
+              fontSize: (12 / Dimensions.designWidth).w,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
