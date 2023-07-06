@@ -70,12 +70,17 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     ),
                   ),
                   const SizeBox(height: 20),
-                  Text(
-                    "Password",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.red100,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        "Enter Password",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
                   ),
                   const SizeBox(height: 10),
                   BlocBuilder<ShowPasswordBloc, ShowPasswordState>(
@@ -107,6 +112,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                         );
                       } else {
                         return CustomTextField(
+                          maxLines: 1,
                           controller: _passwordController,
                           suffixIcon: Padding(
                             padding: EdgeInsets.only(
@@ -133,27 +139,27 @@ class _PasswordScreenState extends State<PasswordScreen> {
                       }
                     },
                   ),
-                  const SizeBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      // TODO: Navigate to forgot password screen
-                      Navigator.pushNamed(context, Routes.registration,
-                          arguments: RegistrationArgumentModel(
-                            isInitial: false,
-                            isUpdateCorpEmail: false,
-                          ).toMap());
-                    },
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        labels[47]["labelText"],
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: const Color.fromRGBO(34, 97, 105, 0.5),
-                          fontSize: (16 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                    ),
-                  )
+                  // const SizeBox(height: 10),
+                  // InkWell(
+                  //   onTap: () {
+                  //     // TODO: Navigate to forgot password screen
+                  //     Navigator.pushNamed(context, Routes.registration,
+                  //         arguments: RegistrationArgumentModel(
+                  //           isInitial: false,
+                  //           isUpdateCorpEmail: false,
+                  //         ).toMap());
+                  //   },
+                  //   child: Align(
+                  //     alignment: Alignment.centerRight,
+                  //     child: Text(
+                  //       labels[47]["labelText"],
+                  //       style: TextStyles.primaryMedium.copyWith(
+                  //         color: const Color.fromRGBO(34, 97, 105, 0.5),
+                  //         fontSize: (16 / Dimensions.designWidth).w,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -163,45 +169,17 @@ class _PasswordScreenState extends State<PasswordScreen> {
                   return Column(
                     children: [
                       GradientButton(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.errorSuccessScreen,
-                            arguments: ErrorArgumentModel(
-                              hasSecondaryButton: true,
-                              iconPath: ImageConstants.checkCircleOutlined,
-                              title: "Success!",
-                              message:
-                                  "Your transaction has been completed\n\nTransfer reference: 254455588800",
-                              buttonText: "Home",
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              },
-                              buttonTextSecondary: "Make another transaction",
-                              onTapSecondary: () {
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                              },
-                            ).toMap(),
-                          );
-                        },
+                        onTap: () async {},
                         text: labels[31]["labelText"],
                       ),
                       const SizeBox(height: 20),
                     ],
                   );
                 } else {
-                  return const SizeBox();
+                  return SolidButton(
+                    onTap: () {},
+                    text: labels[31]["labelText"],
+                  );
                 }
               },
             ),

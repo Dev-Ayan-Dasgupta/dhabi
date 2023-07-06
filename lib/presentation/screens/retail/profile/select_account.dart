@@ -144,7 +144,6 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                   }
                                 } else {
                                   if (selectAccountArgument.isPwChange) {
-                                    // TODO: call deviceValid API
                                     var isDeviceValidApiResult =
                                         await MapIsDeviceValid.mapIsDeviceValid(
                                             {
@@ -166,7 +165,6 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                           );
                                         }
                                       } else {
-                                        // TODO: show dialog box which Samit sir will share
                                         if (context.mounted) {
                                           showDialog(
                                             context: context,

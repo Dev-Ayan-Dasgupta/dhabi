@@ -371,7 +371,7 @@ class _TransferConfirmationScreenState
                                 }
                               }
                             } else if (sendMoneyArgument.isRemittance) {
-                              if (isAddRemBeneficiary) {
+                              if (isNewRemittanceBeneficiary) {
                                 bool isBioCapable = await LocalAuthentication()
                                     .canCheckBiometrics;
                                 if (!isBioCapable) {
@@ -1189,7 +1189,7 @@ class _TransferConfirmationScreenState
                                 }
                               }
                             } else {
-                              if (isAddWithinDhabiBeneficiary) {
+                              if (isNewWithinDhabiBeneficiary) {
                                 bool isBioCapable = await LocalAuthentication()
                                     .canCheckBiometrics;
                                 if (!isBioCapable) {
@@ -2524,7 +2524,7 @@ class _TransferConfirmationScreenState
                                 }
                               }
                             } else if (sendMoneyArgument.isRemittance) {
-                              if (isAddRemBeneficiary) {
+                              if (isNewRemittanceBeneficiary) {
                                 bool isBioCapable = await LocalAuthentication()
                                     .canCheckBiometrics;
                                 if (!isBioCapable) {
@@ -3964,7 +3964,7 @@ class _TransferConfirmationScreenState
                                 }
                               }
                             } else {
-                              if (isAddWithinDhabiBeneficiary) {
+                              if (isNewWithinDhabiBeneficiary) {
                                 bool isBioCapable = await LocalAuthentication()
                                     .canCheckBiometrics;
                                 if (!isBioCapable) {
