@@ -285,7 +285,7 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                               context,
                               storageUserTypeId == 1
                                   ? Routes.loginPassword
-                                  : Routes.registration,
+                                  : Routes.onboarding,
                               arguments: storageUserTypeId == 1
                                   ? LoginPasswordArgumentModel(
                                       emailId: createAccountArgumentModel.email,
@@ -293,16 +293,15 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                                       userTypeId: isPersonalFocussed ? 1 : 2,
                                       companyId: isPersonalFocussed ? 0 : 1,
                                     ).toMap()
-                                  : RegistrationArgumentModel(
+                                  : OnboardingArgumentModel(
                                       isInitial: true,
-                                      isUpdateCorpEmail: false,
                                     ).toMap(),
                             );
                           }
                         },
                         text: storageUserTypeId == 1
                             ? labels[205]["labelText"]
-                            : "Register",
+                            : labels[347]["labelText"],
                       ),
                       actionWidget: SolidButton(
                         onTap: () {

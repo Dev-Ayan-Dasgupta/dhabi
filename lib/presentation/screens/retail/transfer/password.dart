@@ -65,7 +65,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                   Text(
                     "Enter your login password to complete the transaction",
                     style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.grey40,
+                      color: AppColors.dark50,
                       fontSize: (16 / Dimensions.designWidth).w,
                     ),
                   ),
@@ -83,7 +83,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                       if (showPassword) {
                         return CustomTextField(
                           controller: _passwordController,
-                          suffix: Padding(
+                          suffixIcon: Padding(
                             padding: EdgeInsets.only(
                                 left: (10 / Dimensions.designWidth).w),
                             child: InkWell(
@@ -108,7 +108,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                       } else {
                         return CustomTextField(
                           controller: _passwordController,
-                          suffix: Padding(
+                          suffixIcon: Padding(
                             padding: EdgeInsets.only(
                                 left: (10 / Dimensions.designWidth).w),
                             child: InkWell(
