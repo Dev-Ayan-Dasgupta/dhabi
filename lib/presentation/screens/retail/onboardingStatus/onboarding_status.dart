@@ -114,13 +114,14 @@ class _RetailOnboardingStatusScreenState
                     condition: !onboardingStatusArgument.isFatca &&
                         !onboardingStatusArgument.isPassport &&
                         onboardingStatusArgument.stepsCompleted == 4,
-                    truthy: Text(
-                      "You will get a free AED Vault powered by FH.",
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.black63,
-                        fontSize: (16 / Dimensions.designWidth).w,
-                      ),
-                    ),
+                    truthy: const SizeBox(),
+                    // Text(
+                    //   "You will get a free AED Vault powered by FH.",
+                    //   style: TextStyles.primaryMedium.copyWith(
+                    //     color: AppColors.black63,
+                    //     fontSize: (16 / Dimensions.designWidth).w,
+                    //   ),
+                    // ),
                     falsy: const SizeBox(),
                   ),
                 ],
