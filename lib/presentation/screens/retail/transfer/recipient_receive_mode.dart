@@ -124,7 +124,19 @@ class _RecipientReceiveModeScreenState
               truthy: Column(
                 children: [
                   RecipientReceiveModeTile(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.addRecipDetRem,
+                        arguments: SendMoneyArgumentModel(
+                          isBetweenAccounts:
+                              sendMoneyArgument.isBetweenAccounts,
+                          isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                          isRemittance: sendMoneyArgument.isRemittance,
+                          isRetail: sendMoneyArgument.isRetail,
+                        ).toMap(),
+                      );
+                    },
                     title: "To Digital Wallet",
                     limitAmount: 20000,
                     limitCurrency: "EUR",

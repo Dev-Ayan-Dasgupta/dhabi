@@ -479,14 +479,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       condition: onboardingArgumentModel.isInitial,
                       truthy: SolidButton(
                         onTap: () async {
-                          // Navigator.pushNamed(context, Routes.exploreDashboard);
-                          Navigator.pushNamed(
-                            context,
-                            Routes.verificationInitializing,
-                            arguments: VerificationInitializationArgumentModel(
-                              isReKyc: false,
-                            ).toMap(),
-                          );
+                          Navigator.pushNamed(context, Routes.exploreDashboard);
+                          // Navigator.pushNamed(
+                          //   context,
+                          //   Routes.verificationInitializing,
+                          //   arguments: VerificationInitializationArgumentModel(
+                          //     isReKyc: false,
+                          //   ).toMap(),
+                          // );
                           // Navigator.pushNamed(context, Routes.loginUserId);
                           // await storage.write(
                           //     key: "stepsCompleted", value: 0.toString());

@@ -79,6 +79,26 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
         leading: const AppBarLeading(),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                Routes.downloadStatement,
+                arguments: DownloadStatementArgumentModel(
+                  accountNumber: accountDetailsArgument.accountNumber,
+                ).toMap(),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: (15 / Dimensions.designWidth).w,
+                vertical: (15 / Dimensions.designWidth).w,
+              ),
+              child: SvgPicture.asset(ImageConstants.statement),
+            ),
+          ),
+        ],
       ),
       body: Stack(
         children: [

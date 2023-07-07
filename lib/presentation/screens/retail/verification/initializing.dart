@@ -148,7 +148,7 @@ class _VerificationInitializingScreenState
             // ),
             CircularPercentIndicator(
               radius: (50 / Dimensions.designWidth).w,
-              percent: progressValue / 100,
+              percent: double.parse(progressValue) / 100,
               lineWidth: 5,
               backgroundColor: AppColors.dark30,
               progressColor: AppColors.primary,
@@ -163,11 +163,11 @@ class _VerificationInitializingScreenState
             ),
             const SizeBox(height: 20),
             Text(
-              progressValue < 25
+              double.parse(progressValue) < 25
                   ? "Hang tight..."
-                  : progressValue < 50
+                  : double.parse(progressValue) < 50
                       ? "Just a few seconds..."
-                      : progressValue < 75
+                      : double.parse(progressValue) < 75
                           ? "Getting things ready..."
                           : "Almost there...",
               style: TextStyles.primaryMedium.copyWith(

@@ -713,6 +713,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                     Navigator.pop(context);
                                                     Navigator.pop(context);
                                                     Navigator.pop(context);
+                                                    Navigator.pop(context);
                                                   } else {
                                                     Navigator.pop(context);
                                                     Navigator.pop(context);

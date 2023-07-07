@@ -22,7 +22,11 @@ class MyHttpOverrides extends HttpOverrides {
 
 List<CameraDescription> cameras = [];
 
-const storage = FlutterSecureStorage();
+const storage = FlutterSecureStorage(
+  aOptions: AndroidOptions(
+    encryptedSharedPreferences: true,
+  ),
+);
 
 bool forceLogout = false;
 final navigatorKey = GlobalKey<NavigatorState>();

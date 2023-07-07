@@ -2085,161 +2085,29 @@ class _TransferConfirmationScreenState
                                           buttonText:
                                               "Make another transaction",
                                           onTap: () async {
-                                            var corpCustPermApiResult =
-                                                await MapCorporateCustomerPermissions
-                                                    .mapCorporateCustomerPermissions(
+                                            var result =
+                                                await MapCustomerAccountDetails
+                                                    .mapCustomerAccountDetails(
                                                         token ?? "");
-                                            if (corpCustPermApiResult[
-                                                "success"]) {
-                                              fdSeedAccounts.clear();
-                                              internalSeedAccounts.clear();
-                                              dhabiSeedAccounts.clear();
-                                              foreignSeedAccounts.clear();
-                                              for (var permission
-                                                  in corpCustPermApiResult[
-                                                      "permissions"]) {
-                                                if (permission["canCreateFD"]) {
-                                                  fdSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "fdCreationThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                                  "currentBalance"]
-                                                              .split(" ")
-                                                              .last
-                                                              .replaceAll(
-                                                                  ',', ''))
-                                                          .abs(),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferInternalFund"]) {
-                                                  internalSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "internalFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferDhabiFund"]) {
-                                                  dhabiSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "dhabiFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferInternationalFund"]) {
-                                                  foreignSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "foreignFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                              }
-
-                                              canCreateSavingsAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCreateSavingsAccount"];
-                                              canCreateCurrentAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCreateCurrentAccount"];
-
-                                              canChangeAddress =
-                                                  corpCustPermApiResult[
-                                                      "canChangeAddress"];
-                                              canChangeMobileNumber =
-                                                  corpCustPermApiResult[
-                                                      "canChangeMobileNumber"];
-                                              canChangeEmailId =
-                                                  corpCustPermApiResult[
-                                                      "canChangeEmailId"];
-
-                                              canUpdateKYC =
-                                                  corpCustPermApiResult[
-                                                      "canUpdateKYC"];
-                                              canCloseAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCloseAccount"];
-                                              canRequestChequeBook =
-                                                  corpCustPermApiResult[
-                                                      "canRequestChequeBook"];
-                                              canRequestCertificate =
-                                                  corpCustPermApiResult[
-                                                      "canRequestCertificate"];
-                                              canRequestAccountStatement =
-                                                  corpCustPermApiResult[
-                                                      "canRequestAccountStatement"];
-                                              canRequestCard =
-                                                  corpCustPermApiResult[
-                                                      "canRequestCard"];
-
+                                            if (result["success"]) {
                                               if (context.mounted) {
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                accountDetails =
-                                                    corpCustPermApiResult[
-                                                            "crCustomerProfileRes"]
-                                                        [
-                                                        "body"]["accountDetails"];
+                                                if (isNewWithinDhabiBeneficiary) {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                } else {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                }
+
+                                                accountDetails = result[
+                                                        "crCustomerProfileRes"]
+                                                    ["body"]["accountDetails"];
                                                 Navigator.pushNamed(
                                                   context,
                                                   Routes.sendMoneyFrom,
@@ -2258,6 +2126,10 @@ class _TransferConfirmationScreenState
                                                         .isRetail,
                                                   ).toMap(),
                                                 );
+                                                isAddWithinDhabiBeneficiary =
+                                                    false;
+                                                isNewWithinDhabiBeneficiary =
+                                                    false;
                                               }
                                             } else {
                                               if (context.mounted) {
@@ -2269,10 +2141,9 @@ class _TransferConfirmationScreenState
                                                           ImageConstants
                                                               .warning,
                                                       title: "Error {200}",
-                                                      message:
-                                                          corpCustPermApiResult[
-                                                                  "message"][
-                                                              "Something went wrong, please try again later"],
+                                                      message: result["message"]
+                                                          [
+                                                          "Something went wrong, please try again later"],
                                                       actionWidget:
                                                           GradientButton(
                                                         onTap: () {

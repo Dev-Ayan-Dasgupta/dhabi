@@ -268,27 +268,27 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               fontSize: (16 / Dimensions.designWidth).w,
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, Routes.termsAndConditions);
-                            },
-                            child: Text(
-                              'Terms & Conditions',
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.primary,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            ' and ',
-                            style: TextStyles.primary.copyWith(
-                              color: const Color.fromRGBO(0, 0, 0, 0.5),
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
-                          ),
+                          // InkWell(
+                          //   onTap: () {
+                          //     Navigator.pushNamed(
+                          //         context, Routes.termsAndConditions);
+                          //   },
+                          //   child: Text(
+                          //     'Terms & Conditions',
+                          //     style: TextStyles.primary.copyWith(
+                          //       color: AppColors.primary,
+                          //       fontSize: (16 / Dimensions.designWidth).w,
+                          //       decoration: TextDecoration.underline,
+                          //     ),
+                          //   ),
+                          // ),
+                          // Text(
+                          //   ' and ',
+                          //   style: TextStyles.primary.copyWith(
+                          //     color: const Color.fromRGBO(0, 0, 0, 0.5),
+                          //     fontSize: (16 / Dimensions.designWidth).w,
+                          //   ),
+                          // ),
                           InkWell(
                             onTap: () {
                               Navigator.pushNamed(

@@ -22,4 +22,4 @@ Digital Banking Application for Dhabi
 9. Updated state management issue of displaying error message if a different account tile is created after entering a valid deposit account on a previous tile.
 
 - FUAT: 61
-- Share button implementation of account detailsgit add .
+- Share button implementation of account details
