@@ -14,6 +14,7 @@ import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AccountDetailsScreen extends StatefulWidget {
   const AccountDetailsScreen({
@@ -99,7 +100,11 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                 ),
                 const SizeBox(height: 20),
                 InfoCard(
-                  onTap: () {},
+                  onTap: () {
+                    Share.share(
+                      "Name: $profileName\nIBAN: ${accountDetailsArgument.iban}\nAccount Number: ${accountDetailsArgument.accountNumber}\nAccount Type: ${accountDetailsArgument.accountType}",
+                    );
+                  },
                   name: profileName ?? "",
                   iban: accountDetailsArgument.iban,
                   bic: "DHILAEAD",

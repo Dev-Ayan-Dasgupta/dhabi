@@ -323,7 +323,9 @@ class AppRouter {
         );
       case Routes.password:
         return MaterialPageRoute(
-          builder: (_) => const PasswordScreen(),
+          builder: (_) => PasswordScreen(
+            argument: args,
+          ),
         );
       case Routes.downloadStatement:
         return MaterialPageRoute(

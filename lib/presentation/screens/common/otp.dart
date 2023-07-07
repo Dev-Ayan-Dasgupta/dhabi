@@ -503,14 +503,12 @@ class _OTPScreenState extends State<OTPScreen> {
 
                     if (cifDetails.isEmpty) {
                       if (context.mounted) {
-                        Navigator.pushReplacementNamed(
+                        Navigator.pushNamedAndRemoveUntil(
                           context,
-                          Routes.loginPassword,
-                          arguments: LoginPasswordArgumentModel(
-                            emailId: storageEmail ?? "",
-                            userId: storageUserId ?? 0,
-                            userTypeId: storageUserTypeId ?? 2,
-                            companyId: storageCompanyId ?? 0,
+                          Routes.onboarding,
+                          (route) => false,
+                          arguments: OnboardingArgumentModel(
+                            isInitial: true,
                           ).toMap(),
                         );
                       }
@@ -686,6 +684,19 @@ class _OTPScreenState extends State<OTPScreen> {
                                                     );
                                                   }
                                                 }
+                                              }
+                                            } else if (cifDetails.isEmpty) {
+                                              if (context.mounted) {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.onboarding,
+                                                  (route) => false,
+                                                  arguments:
+                                                      OnboardingArgumentModel(
+                                                    isInitial: true,
+                                                  ).toMap(),
+                                                );
                                               }
                                             } else {
                                               Navigator.pushReplacementNamed(
@@ -1122,6 +1133,19 @@ class _OTPScreenState extends State<OTPScreen> {
                                                     );
                                                   }
                                                 }
+                                              }
+                                            } else if (cifDetails.isEmpty) {
+                                              if (context.mounted) {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.onboarding,
+                                                  (route) => false,
+                                                  arguments:
+                                                      OnboardingArgumentModel(
+                                                    isInitial: true,
+                                                  ).toMap(),
+                                                );
                                               }
                                             } else {
                                               Navigator.pushReplacementNamed(
@@ -1582,6 +1606,18 @@ class _OTPScreenState extends State<OTPScreen> {
                                                   );
                                                 }
                                               }
+                                            }
+                                          } else if (cifDetails.isEmpty) {
+                                            if (context.mounted) {
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                Routes.onboarding,
+                                                (route) => false,
+                                                arguments:
+                                                    OnboardingArgumentModel(
+                                                  isInitial: true,
+                                                ).toMap(),
+                                              );
                                             }
                                           } else {
                                             Navigator.pushReplacementNamed(

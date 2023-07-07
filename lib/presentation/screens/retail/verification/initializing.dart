@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/arguments/verification_initialization.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_document_reader_api/document_reader.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import 'package:percent_indicator/percent_indicator.dart';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -140,9 +142,38 @@ class _VerificationInitializingScreenState
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SpinKitFadingCircle(
-              color: AppColors.primary,
-              size: (50 / Dimensions.designWidth).w,
+            // SpinKitFadingCircle(
+            //   color: AppColors.primary,
+            //   size: (50 / Dimensions.designWidth).w,
+            // ),
+            CircularPercentIndicator(
+              radius: (50 / Dimensions.designWidth).w,
+              percent: progressValue / 100,
+              lineWidth: 5,
+              backgroundColor: AppColors.dark30,
+              progressColor: AppColors.primary,
+              circularStrokeCap: CircularStrokeCap.round,
+              center: Text(
+                "$progressValue%",
+                style: TextStyles.primaryMedium.copyWith(
+                  fontSize: (14 / Dimensions.designWidth).w,
+                  color: AppColors.dark80,
+                ),
+              ),
+            ),
+            const SizeBox(height: 20),
+            Text(
+              progressValue < 25
+                  ? "Hang tight..."
+                  : progressValue < 50
+                      ? "Just a few seconds..."
+                      : progressValue < 75
+                          ? "Getting things ready..."
+                          : "Almost there...",
+              style: TextStyles.primaryMedium.copyWith(
+                fontSize: (14 / Dimensions.designWidth).w,
+                color: AppColors.dark80,
+              ),
             ),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.center,

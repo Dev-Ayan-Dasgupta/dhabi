@@ -79,8 +79,8 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                 indicatorColor: Colors.transparent,
                 tabs: const [
                   Tab(child: CustomTab(title: "Accounts")),
-                  Tab(child: Text("Loans")),
                   Tab(child: Text("Deposits")),
+                  Tab(child: Text("Explore")),
                 ],
                 isScrollable: true,
                 labelColor: Colors.black,
@@ -116,14 +116,14 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                                   Navigator.pushNamed(context, Routes.vault);
                                 }
                               },
-                              imgUrl:
-                                  "https://static.vecteezy.com/system/resources/previews/004/712/234/non_2x/united-arab-emirates-square-national-flag-vector.jpg",
-                              accountType: labels[92]["labelText"],
-                              currency: "AED",
-                              amount: "0.00",
-                              subText: "Powered by FH",
-                              subImgUrl:
-                                  "https://w7.pngwing.com/pngs/23/320/png-transparent-mastercard-credit-card-visa-payment-service-mastercard-company-orange-logo.png",
+                              imgUrl: ImageConstants.usaFlag,
+                              accountType: index == 0
+                                  ? labels[92]["labelText"]
+                                  : labels[7]["labelText"],
+                              currency: "USD",
+                              amount: "10000.00",
+                              subText: "",
+                              subImgUrl: "",
                             ),
                           );
                         },
@@ -227,13 +227,26 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                   ),
                   Positioned(
                     left: (22 / Dimensions.designWidth).w,
-                    top: (25 / Dimensions.designWidth).w,
+                    top: (25 / Dimensions.designHeight).w,
                     child: IgnorePointer(
                       child: Text(
                         "Recent Transactions",
                         style: TextStyles.primary.copyWith(
                           color: const Color.fromRGBO(9, 9, 9, 0.4),
                           fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    left: (125 / Dimensions.designWidth).w,
+                    top: (100 / Dimensions.designHeight).h,
+                    child: IgnorePointer(
+                      child: Text(
+                        "No Transactions",
+                        style: TextStyles.primaryBold.copyWith(
+                          color: AppColors.dark30,
+                          fontSize: (24 / Dimensions.designWidth).w,
                         ),
                       ),
                     ),

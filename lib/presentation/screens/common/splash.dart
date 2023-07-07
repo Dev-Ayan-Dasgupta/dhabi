@@ -303,6 +303,11 @@ class _SplashScreenState extends State<SplashScreen> {
       await storage.delete(key: "selfiePhoto");
       await storage.delete(key: "photoMatchScore");
       await storage.delete(key: "addressCountry");
+      await storage.delete(key: "addressLine1");
+      await storage.delete(key: "addressLine2");
+      await storage.delete(key: "addressCity");
+      await storage.delete(key: "addressState");
+      await storage.delete(key: "addressEmirate");
       await storage.delete(key: "poBox");
       await storage.delete(key: "incomeSource");
       await storage.delete(key: "isUSFatca");

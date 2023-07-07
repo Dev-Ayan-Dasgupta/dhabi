@@ -378,7 +378,18 @@ class _TransferConfirmationScreenState
                                   // navigate to password screen
                                   if (context.mounted) {
                                     Navigator.pushNamed(
-                                        context, Routes.password);
+                                      context,
+                                      Routes.password,
+                                      arguments: SendMoneyArgumentModel(
+                                        isBetweenAccounts:
+                                            sendMoneyArgument.isBetweenAccounts,
+                                        isWithinDhabi:
+                                            sendMoneyArgument.isWithinDhabi,
+                                        isRemittance:
+                                            sendMoneyArgument.isRemittance,
+                                        isRetail: sendMoneyArgument.isRetail,
+                                      ).toMap(),
+                                    );
                                   }
                                 } else {
                                   List availableBios =
@@ -389,7 +400,18 @@ class _TransferConfirmationScreenState
                                     // navigate to password screen
                                     if (context.mounted) {
                                       Navigator.pushNamed(
-                                          context, Routes.password);
+                                        context,
+                                        Routes.password,
+                                        arguments: SendMoneyArgumentModel(
+                                          isBetweenAccounts: sendMoneyArgument
+                                              .isBetweenAccounts,
+                                          isWithinDhabi:
+                                              sendMoneyArgument.isWithinDhabi,
+                                          isRemittance:
+                                              sendMoneyArgument.isRemittance,
+                                          isRetail: sendMoneyArgument.isRetail,
+                                        ).toMap(),
+                                      );
                                     }
                                   } else {
                                     bool isAuthenticated = await BiometricHelper
@@ -398,7 +420,19 @@ class _TransferConfirmationScreenState
                                       // navigate to password screen
                                       if (context.mounted) {
                                         Navigator.pushNamed(
-                                            context, Routes.password);
+                                          context,
+                                          Routes.password,
+                                          arguments: SendMoneyArgumentModel(
+                                            isBetweenAccounts: sendMoneyArgument
+                                                .isBetweenAccounts,
+                                            isWithinDhabi:
+                                                sendMoneyArgument.isWithinDhabi,
+                                            isRemittance:
+                                                sendMoneyArgument.isRemittance,
+                                            isRetail:
+                                                sendMoneyArgument.isRetail,
+                                          ).toMap(),
+                                        );
                                       }
                                     } else {
                                       log("Remittance request -> ${{
@@ -1196,7 +1230,18 @@ class _TransferConfirmationScreenState
                                   // navigate to pwd screen
                                   if (context.mounted) {
                                     Navigator.pushNamed(
-                                        context, Routes.password);
+                                      context,
+                                      Routes.password,
+                                      arguments: SendMoneyArgumentModel(
+                                        isBetweenAccounts:
+                                            sendMoneyArgument.isBetweenAccounts,
+                                        isWithinDhabi:
+                                            sendMoneyArgument.isWithinDhabi,
+                                        isRemittance:
+                                            sendMoneyArgument.isRemittance,
+                                        isRetail: sendMoneyArgument.isRetail,
+                                      ).toMap(),
+                                    );
                                   }
                                 } else {
                                   List availableBios =
@@ -1207,7 +1252,18 @@ class _TransferConfirmationScreenState
                                     // navigate to pwd screen
                                     if (context.mounted) {
                                       Navigator.pushNamed(
-                                          context, Routes.password);
+                                        context,
+                                        Routes.password,
+                                        arguments: SendMoneyArgumentModel(
+                                          isBetweenAccounts: sendMoneyArgument
+                                              .isBetweenAccounts,
+                                          isWithinDhabi:
+                                              sendMoneyArgument.isWithinDhabi,
+                                          isRemittance:
+                                              sendMoneyArgument.isRemittance,
+                                          isRetail: sendMoneyArgument.isRetail,
+                                        ).toMap(),
+                                      );
                                     }
                                   } else {
                                     bool isAuthenticated = await BiometricHelper
@@ -1216,7 +1272,19 @@ class _TransferConfirmationScreenState
                                       // navigate to pwd screen
                                       if (context.mounted) {
                                         Navigator.pushNamed(
-                                            context, Routes.password);
+                                          context,
+                                          Routes.password,
+                                          arguments: SendMoneyArgumentModel(
+                                            isBetweenAccounts: sendMoneyArgument
+                                                .isBetweenAccounts,
+                                            isWithinDhabi:
+                                                sendMoneyArgument.isWithinDhabi,
+                                            isRemittance:
+                                                sendMoneyArgument.isRemittance,
+                                            isRetail:
+                                                sendMoneyArgument.isRetail,
+                                          ).toMap(),
+                                        );
                                       }
                                     } else {
                                       log("Internal Transfer Api request -> ${{
@@ -2531,7 +2599,18 @@ class _TransferConfirmationScreenState
                                   // Navigate to sm password
                                   if (context.mounted) {
                                     Navigator.pushNamed(
-                                        context, Routes.password);
+                                      context,
+                                      Routes.password,
+                                      arguments: SendMoneyArgumentModel(
+                                        isBetweenAccounts:
+                                            sendMoneyArgument.isBetweenAccounts,
+                                        isWithinDhabi:
+                                            sendMoneyArgument.isWithinDhabi,
+                                        isRemittance:
+                                            sendMoneyArgument.isRemittance,
+                                        isRetail: sendMoneyArgument.isRetail,
+                                      ).toMap(),
+                                    );
                                   }
                                 } else {
                                   List availableBios =
@@ -2542,7 +2621,18 @@ class _TransferConfirmationScreenState
                                     // Navigate to sm password
                                     if (context.mounted) {
                                       Navigator.pushNamed(
-                                          context, Routes.password);
+                                        context,
+                                        Routes.password,
+                                        arguments: SendMoneyArgumentModel(
+                                          isBetweenAccounts: sendMoneyArgument
+                                              .isBetweenAccounts,
+                                          isWithinDhabi:
+                                              sendMoneyArgument.isWithinDhabi,
+                                          isRemittance:
+                                              sendMoneyArgument.isRemittance,
+                                          isRetail: sendMoneyArgument.isRetail,
+                                        ).toMap(),
+                                      );
                                     }
                                   } else {
                                     bool isAuthenticated = await BiometricHelper
@@ -2551,7 +2641,19 @@ class _TransferConfirmationScreenState
                                       // Navigate to sm password
                                       if (context.mounted) {
                                         Navigator.pushNamed(
-                                            context, Routes.password);
+                                          context,
+                                          Routes.password,
+                                          arguments: SendMoneyArgumentModel(
+                                            isBetweenAccounts: sendMoneyArgument
+                                                .isBetweenAccounts,
+                                            isWithinDhabi:
+                                                sendMoneyArgument.isWithinDhabi,
+                                            isRemittance:
+                                                sendMoneyArgument.isRemittance,
+                                            isRetail:
+                                                sendMoneyArgument.isRetail,
+                                          ).toMap(),
+                                        );
                                       }
                                     } else {
                                       log("corpRemittanceApi Request -> ${{
@@ -3971,7 +4073,18 @@ class _TransferConfirmationScreenState
                                   // navigate to pwd screen
                                   if (context.mounted) {
                                     Navigator.pushNamed(
-                                        context, Routes.password);
+                                      context,
+                                      Routes.password,
+                                      arguments: SendMoneyArgumentModel(
+                                        isBetweenAccounts:
+                                            sendMoneyArgument.isBetweenAccounts,
+                                        isWithinDhabi:
+                                            sendMoneyArgument.isWithinDhabi,
+                                        isRemittance:
+                                            sendMoneyArgument.isRemittance,
+                                        isRetail: sendMoneyArgument.isRetail,
+                                      ).toMap(),
+                                    );
                                   }
                                 } else {
                                   List availableBios =
@@ -3982,7 +4095,18 @@ class _TransferConfirmationScreenState
                                     // navigate to pwd screen
                                     if (context.mounted) {
                                       Navigator.pushNamed(
-                                          context, Routes.password);
+                                        context,
+                                        Routes.password,
+                                        arguments: SendMoneyArgumentModel(
+                                          isBetweenAccounts: sendMoneyArgument
+                                              .isBetweenAccounts,
+                                          isWithinDhabi:
+                                              sendMoneyArgument.isWithinDhabi,
+                                          isRemittance:
+                                              sendMoneyArgument.isRemittance,
+                                          isRetail: sendMoneyArgument.isRetail,
+                                        ).toMap(),
+                                      );
                                     }
                                   } else {
                                     bool isAuthenticated = await BiometricHelper
@@ -3991,7 +4115,19 @@ class _TransferConfirmationScreenState
                                       // navigate to pwd screen
                                       if (context.mounted) {
                                         Navigator.pushNamed(
-                                            context, Routes.password);
+                                          context,
+                                          Routes.password,
+                                          arguments: SendMoneyArgumentModel(
+                                            isBetweenAccounts: sendMoneyArgument
+                                                .isBetweenAccounts,
+                                            isWithinDhabi:
+                                                sendMoneyArgument.isWithinDhabi,
+                                            isRemittance:
+                                                sendMoneyArgument.isRemittance,
+                                            isRetail:
+                                                sendMoneyArgument.isRetail,
+                                          ).toMap(),
+                                        );
                                       }
                                     } else {
                                       log("corpDhabiMoneyTransferApiResult Request -> ${{
