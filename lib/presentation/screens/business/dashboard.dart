@@ -818,13 +818,21 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                         1
                                                                     ? "Savings"
                                                                     : "Current",
-                                                                balance: corpCustPermApiResult["permissions"]
-                                                                            [
-                                                                            index]
-                                                                        [
-                                                                        "currentBalance"]
-                                                                    .split(" ")
-                                                                    .last,
+                                                                balance: double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"]
+                                                                            .split(
+                                                                                " ")
+                                                                            .last
+                                                                            .replaceAll(",",
+                                                                                "")) >
+                                                                        1000000000
+                                                                    ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
+                                                                    : double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",",
+                                                                                "")) >
+                                                                            1000000
+                                                                        ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000).toStringAsFixed(2)} M"
+                                                                        : corpCustPermApiResult["permissions"][index]["currentBalance"]
+                                                                            .split(" ")
+                                                                            .last,
                                                                 iban: "",
                                                                 displayStatementList:
                                                                     statementList,
@@ -858,12 +866,27 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                     "permissions"]
                                                                 [
                                                                 index]["currency"],
-                                                        amount: corpCustPermApiResult[
-                                                                        "permissions"]
-                                                                    [index][
-                                                                "currentBalance"]
-                                                            .split(" ")
-                                                            .last,
+                                                        amount: double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"]
+                                                                    .split(" ")
+                                                                    .last
+                                                                    .replaceAll(
+                                                                        ",", "")) >
+                                                                1000000000
+                                                            ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
+                                                            : double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"]
+                                                                        .split(
+                                                                            " ")
+                                                                        .last
+                                                                        .replaceAll(
+                                                                            ",",
+                                                                            "")) >
+                                                                    1000000
+                                                                ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000).toStringAsFixed(2)} M"
+                                                                : corpCustPermApiResult["permissions"]
+                                                                            [index]
+                                                                        ["currentBalance"]
+                                                                    .split(" ")
+                                                                    .last,
                                                         subText: "",
                                                         subImgUrl: "",
                                                       )
@@ -908,12 +931,24 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                         1
                                                                     ? "Savings"
                                                                     : "Current",
-                                                            balance: corpCustPermApiResult[
-                                                                            "permissions"]
-                                                                        [index][
-                                                                    "currentBalance"]
-                                                                .split(" ")
-                                                                .last,
+                                                            balance: double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"]
+                                                                        .split(
+                                                                            " ")
+                                                                        .last
+                                                                        .replaceAll(
+                                                                            ",",
+                                                                            "")) >
+                                                                    1000000000
+                                                                ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
+                                                                : double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(
+                                                                            ",",
+                                                                            "")) >
+                                                                        1000000
+                                                                    ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000).toStringAsFixed(2)} M"
+                                                                    : corpCustPermApiResult["permissions"][index]
+                                                                            ["currentBalance"]
+                                                                        .split(" ")
+                                                                        .last,
                                                             iban: "",
                                                             displayStatementList:
                                                                 statementList,
@@ -1234,12 +1269,12 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                   ["currency"],
                                               amount: loanDetails[index]
                                                           ["amount"] >
-                                                      1000000
-                                                  ? "${(loanDetails[index]["amount"] / 1000000).toStringAsFixed(2)} M"
+                                                      1000000000
+                                                  ? "${(loanDetails[index]["amount"] / 1000000000).toStringAsFixed(2)} B"
                                                   : loanDetails[index]
                                                               ["amount"] >
-                                                          1000000000
-                                                      ? "${(loanDetails[index]["amount"] / 1000000000).toStringAsFixed(2)} B"
+                                                          1000000
+                                                      ? "${(loanDetails[index]["amount"] / 1000000).toStringAsFixed(2)} M"
                                                       : loanDetails[index]
                                                               ["amount"]
                                                           .toStringAsFixed(2),

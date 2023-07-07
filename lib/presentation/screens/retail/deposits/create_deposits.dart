@@ -306,13 +306,34 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                                 .first
                                             : fdSeedAccounts[index].currency,
                                         amount: createDepositArgument.isRetail
-                                            ? accountDetails[index]
-                                                    ["currentBalance"]
-                                                .split(" ")
-                                                .last
-                                            : fdSeedAccounts[index]
-                                                .bal
-                                                .toString(),
+                                            ? double.parse(accountDetails[index]
+                                                            ["currentBalance"]
+                                                        .split(" ")
+                                                        .last
+                                                        .replaceAll(",", "")) >
+                                                    1000000000
+                                                ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
+                                                : double.parse(accountDetails[index][
+                                                                "currentBalance"]
+                                                            .split(" ")
+                                                            .last
+                                                            .replaceAll(
+                                                                ",", "")) >
+                                                        1000000
+                                                    ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} M"
+                                                    : accountDetails[index]
+                                                            ["currentBalance"]
+                                                        .split(" ")
+                                                        .last
+                                            : fdSeedAccounts[index].bal.toDouble() >
+                                                    1000000000
+                                                ? "${(fdSeedAccounts[index].bal.toDouble() / 1000000000).toStringAsFixed(2)} B"
+                                                : fdSeedAccounts[index]
+                                                            .bal
+                                                            .toDouble() >
+                                                        1000000
+                                                    ? "${(fdSeedAccounts[index].bal.toDouble() / 1000000).toStringAsFixed(2)} M"
+                                                    : fdSeedAccounts[index].bal.toString(),
                                         subText: "",
                                         subImgUrl: "",
                                         space: _keyboardVisible ? 17 : 21,
@@ -868,8 +889,11 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
             builder: (context, state) {
               if (isAutoClosure) {
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MandatoryFieldLabel(labelText: labels[116]["labelText"]),
+                    const MandatoryFieldLabel(
+                        labelText:
+                            "Do you want to set Standing Instruction for Maturity?"),
                     const SizeBox(height: 10),
                     Row(
                       children: [

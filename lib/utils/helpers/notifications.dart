@@ -57,6 +57,12 @@ class LocalNotificationService {
               );
               break;
 
+            case "2":
+              navigatorKey.currentState!.pushNamed(
+                Routes.splash,
+              );
+              break;
+
             default:
               navigatorKey.currentState!.pushNamed(Routes.notifications);
           }

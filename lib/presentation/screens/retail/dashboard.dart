@@ -606,7 +606,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                             ",",
                                                                             "")) >
                                                                     1000000000
-                                                                ? "${double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000} B"
+                                                                ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
                                                                 : double.parse(accountDetails[index]["currentBalance"]
                                                                             .split(
                                                                                 " ")
@@ -614,7 +614,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                             .replaceAll(",",
                                                                                 "")) >
                                                                         1000000
-                                                                    ? "${double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000} M"
+                                                                    ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} M"
                                                                     : accountDetails[index]
                                                                             ["currentBalance"]
                                                                         .split(" ")

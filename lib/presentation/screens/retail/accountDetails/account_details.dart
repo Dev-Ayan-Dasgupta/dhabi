@@ -138,129 +138,139 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    DashboardActivityTile(
-                      iconPath: ImageConstants.acUnit,
-                      activityText: labels[70]["labelText"],
-                      onTap: () {
-                        if (accountDetailsArgument.isRetail == false) {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return CustomDialog(
-                                svgAssetPath: ImageConstants.warning,
-                                title: labels[250]["labelText"],
-                                message:
-                                    "This action will temporarily prevent any withdrawals from your corporate account, please confirm.",
-                                auxWidget: BlocBuilder<ShowButtonBloc,
-                                    ShowButtonState>(
-                                  builder: (context, state) {
-                                    return GradientButton(
-                                      onTap: () async {
-                                        if (!isDeactivating) {
-                                          final ShowButtonBloc showButtonBloc =
-                                              context.read<ShowButtonBloc>();
-                                          isDeactivating = true;
-                                          showButtonBloc.add(ShowButtonEvent(
-                                              show: isDeactivating));
+                    Ternary(
+                      condition: accountDetailsArgument.isRetail,
+                      truthy: const SizeBox(),
+                      falsy: DashboardActivityTile(
+                        iconPath: ImageConstants.acUnit,
+                        activityText: labels[70]["labelText"],
+                        onTap: () {
+                          if (accountDetailsArgument.isRetail == false) {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CustomDialog(
+                                  svgAssetPath: ImageConstants.warning,
+                                  title: labels[250]["labelText"],
+                                  message:
+                                      "This action will temporarily prevent any withdrawals from your corporate account, please confirm.",
+                                  auxWidget: BlocBuilder<ShowButtonBloc,
+                                      ShowButtonState>(
+                                    builder: (context, state) {
+                                      return GradientButton(
+                                        onTap: () async {
+                                          if (!isDeactivating) {
+                                            final ShowButtonBloc
+                                                showButtonBloc =
+                                                context.read<ShowButtonBloc>();
+                                            isDeactivating = true;
+                                            showButtonBloc.add(ShowButtonEvent(
+                                                show: isDeactivating));
 
-                                          log("closeDeactApi Request -> ${{
-                                            "accountNumber":
-                                                accountDetailsArgument
-                                                    .accountNumber,
-                                            "closeAccount": false,
-                                          }}");
-                                          var closeDeactApiResult =
-                                              await MapCloseOrDeactivateAccount
-                                                  .mapCloseOrDeactivateAccount(
-                                            {
+                                            log("closeDeactApi Request -> ${{
                                               "accountNumber":
                                                   accountDetailsArgument
                                                       .accountNumber,
                                               "closeAccount": false,
-                                            },
-                                            token ?? "",
-                                          );
-                                          log("closeDeactApiResult -> $closeDeactApiResult");
+                                            }}");
+                                            var closeDeactApiResult =
+                                                await MapCloseOrDeactivateAccount
+                                                    .mapCloseOrDeactivateAccount(
+                                              {
+                                                "accountNumber":
+                                                    accountDetailsArgument
+                                                        .accountNumber,
+                                                "closeAccount": false,
+                                              },
+                                              token ?? "",
+                                            );
+                                            log("closeDeactApiResult -> $closeDeactApiResult");
 
-                                          if (closeDeactApiResult["success"]) {
-                                            if (context.mounted) {
-                                              Navigator.pop(context);
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return CustomDialog(
-                                                    svgAssetPath: ImageConstants
-                                                        .checkCircleOutlined,
-                                                    title:
-                                                        "Deactivation Request Placed",
-                                                    message:
-                                                        "${messages[121]["messageText"]}: ${closeDeactApiResult["reference"]}",
-                                                    actionWidget:
-                                                        GradientButton(
-                                                      onTap: () {
-                                                        Navigator.pop(context);
-                                                        Navigator.pop(context);
-                                                      },
-                                                      text: labels[346]
-                                                          ["labelText"],
-                                                    ),
-                                                  );
-                                                },
-                                              );
+                                            if (closeDeactApiResult[
+                                                "success"]) {
+                                              if (context.mounted) {
+                                                Navigator.pop(context);
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return CustomDialog(
+                                                      svgAssetPath: ImageConstants
+                                                          .checkCircleOutlined,
+                                                      title:
+                                                          "Deactivation Request Placed",
+                                                      message:
+                                                          "${messages[121]["messageText"]}: ${closeDeactApiResult["reference"]}",
+                                                      actionWidget:
+                                                          GradientButton(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        text: labels[346]
+                                                            ["labelText"],
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            } else {
+                                              if (context.mounted) {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return CustomDialog(
+                                                      svgAssetPath:
+                                                          ImageConstants
+                                                              .warning,
+                                                      title: "Error {200}",
+                                                      message: closeDeactApiResult[
+                                                              "message"] ??
+                                                          "Error while placing deactivating acount request, please try again later",
+                                                      actionWidget:
+                                                          GradientButton(
+                                                        onTap: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        text: labels[346]
+                                                            ["labelText"],
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              }
                                             }
-                                          } else {
-                                            if (context.mounted) {
-                                              showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return CustomDialog(
-                                                    svgAssetPath:
-                                                        ImageConstants.warning,
-                                                    title: "Error {200}",
-                                                    message: closeDeactApiResult[
-                                                            "message"] ??
-                                                        "Error while placing deactivating acount request, please try again later",
-                                                    actionWidget:
-                                                        GradientButton(
-                                                      onTap: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      text: labels[346]
-                                                          ["labelText"],
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }
+
+                                            isDeactivating = true;
+                                            showButtonBloc.add(ShowButtonEvent(
+                                                show: isDeactivating));
                                           }
-
-                                          isDeactivating = true;
-                                          showButtonBloc.add(ShowButtonEvent(
-                                              show: isDeactivating));
-                                        }
-                                      },
-                                      text: labels[147]["labelText"],
-                                      auxWidget: isDeactivating
-                                          ? const LoaderRow()
-                                          : const SizeBox(),
-                                    );
-                                  },
-                                ),
-                                actionWidget: SolidButton(
-                                  color: AppColors.primaryBright17,
-                                  fontColor: AppColors.primary,
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  text: "Cancel",
-                                ),
-                              );
-                            },
-                          );
-                        }
-                      },
+                                        },
+                                        text: labels[147]["labelText"],
+                                        auxWidget: isDeactivating
+                                            ? const LoaderRow()
+                                            : const SizeBox(),
+                                      );
+                                    },
+                                  ),
+                                  actionWidget: SolidButton(
+                                    color: AppColors.primaryBright17,
+                                    fontColor: AppColors.primary,
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    text: "Cancel",
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
                     ),
-                    const SizeBox(width: 25),
+                    SizeBox(width: accountDetailsArgument.isRetail ? 0 : 25),
                     DashboardActivityTile(
                       iconPath: ImageConstants.arrowOutward,
                       activityText: labels[9]["labelText"],

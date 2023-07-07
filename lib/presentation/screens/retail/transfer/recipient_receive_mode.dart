@@ -44,12 +44,10 @@ class _RecipientReceiveModeScreenState
         actions: [
           InkWell(
             onTap: () {
-              if (isNewRemittanceBeneficiary) {
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Navigator.pop(context);
-              } else {}
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
             child: Padding(
               padding: EdgeInsets.only(

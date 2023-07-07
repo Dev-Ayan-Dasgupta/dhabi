@@ -23,3 +23,6 @@ Digital Banking Application for Dhabi
 
 - FUAT: 61
 - Share button implementation of account details
+- Removed Freeze button for retail
+- Updated Standing Instruction text
+- Implemented truncation of balance to show millions and billions without overflow
