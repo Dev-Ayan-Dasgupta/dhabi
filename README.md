@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (48)
+## Release notes - 1.0.0 (50)
 
 - FHDHABI: 271, 272, 274, 283,
 - FUAT: 55
