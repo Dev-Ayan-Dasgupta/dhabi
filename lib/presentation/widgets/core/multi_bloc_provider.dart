@@ -63,7 +63,7 @@ class _CustomMultiBlocProviderState extends State<CustomMultiBlocProvider> {
       // ? environment string
       String environment = const String.fromEnvironment(
         'ENVIRONMENT',
-        defaultValue: Environment.dev,
+        defaultValue: Environment.stag,
       );
 
       // ? load environment file
