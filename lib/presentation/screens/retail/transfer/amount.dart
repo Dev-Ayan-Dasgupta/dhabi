@@ -575,9 +575,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
   Widget buildExchangeRate(BuildContext context, ShowButtonState state) {
     return FeeExchangeRate(
       transferFeeCurrency: senderCurrency,
-      transferFee: sendMoneyArgument.isRemittance
-          ? fees
-          : double.parse(0.toStringAsFixed(0)),
+      transferFee: sendMoneyArgument.isRemittance ? fees : 0,
       exchangeRateSenderCurrency: senderCurrency,
       exchangeRate: exchangeRate,
       exchangeRateReceiverCurrency: receiverCurrency,

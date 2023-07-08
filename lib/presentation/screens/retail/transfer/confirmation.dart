@@ -17,7 +17,6 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/helpers/biometric.dart';
 
 class TransferConfirmationScreen extends StatefulWidget {
   const TransferConfirmationScreen({
@@ -95,7 +94,7 @@ class _TransferConfirmationScreenState
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
           value:
-              "1 $senderCurrency = $exchangeRate ${receiverAmount.toStringAsFixed(2)}"));
+              "1 $senderCurrency = ${exchangeRate.toStringAsFixed(2)} $receiverCurrency"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[168]["labelText"],
           value: isSenderBearCharges
@@ -126,7 +125,8 @@ class _TransferConfirmationScreenState
           value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
-          value: "1 $senderCurrency = $exchangeRate $receiverCurrency"));
+          value:
+              "1 $senderCurrency = ${exchangeRate.toStringAsFixed(2)} $receiverCurrency"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[169]["labelText"],
           value: !(sendMoneyArgument.isRemittance) ? "Today" : "something"));
