@@ -328,6 +328,28 @@ class _AcceptTermsAndConditionsScreenState
                                               "true";
                                       log("storageisCompanyRegistered -> $storageisCompanyRegistered");
                                     }
+                                  } else {
+                                    if (context.mounted) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return CustomDialog(
+                                            svgAssetPath:
+                                                ImageConstants.warning,
+                                            title: "Error {200} Create Account",
+                                            message: customerDetails[
+                                                    "message"] ??
+                                                "Error while creating current/savings, please try again later",
+                                            actionWidget: GradientButton(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              text: labels[346]["labelText"],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
                                   }
                                 } else {
                                   if (context.mounted) {
@@ -336,10 +358,10 @@ class _AcceptTermsAndConditionsScreenState
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Error {200} Create Customer",
                                           message: createCustomerResult[
                                                   "message"] ??
-                                              "There was an error, please try again later.",
+                                              "There was an error in creating customer, please try again later.",
                                           actionWidget: GradientButton(
                                             onTap: () {
                                               Navigator.pop(context);
@@ -519,6 +541,26 @@ class _AcceptTermsAndConditionsScreenState
         log("profileEmailId -> $profileEmailId");
         log("profileMobileNumber -> $profileMobileNumber");
         log("profileAddress -> $profileAddress");
+      } else {
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return CustomDialog(
+                svgAssetPath: ImageConstants.warning,
+                title: "Error {200} Profile Data",
+                message: customerDetails["message"] ??
+                    "Error while getting profile data, please try again later",
+                actionWidget: GradientButton(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  text: labels[346]["labelText"],
+                ),
+              );
+            },
+          );
+        }
       }
     } catch (_) {
       rethrow;
