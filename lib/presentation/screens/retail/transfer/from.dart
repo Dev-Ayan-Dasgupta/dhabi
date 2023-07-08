@@ -438,7 +438,7 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                   //                                 ),
                   //                                 hintText: "Enter Amount",
                   //                                 keyboardType:
-                  //                                     TextInputType.number,
+                  //                                     TextInputType.numberWithOptions(decimal: true),
                   //                                 controller:
                   //                                     _sendCurrencyController,
                   //                                 onChanged: (p0) {

@@ -64,13 +64,17 @@ class DetailsTile extends StatelessWidget {
                         fontSize: (14 / Dimensions.designWidth).w,
                       ),
                     ),
-                    Text(
-                      details[index].value,
-                      style: TextStyles.primary.copyWith(
-                        color: (index == coloredIndex)
-                            ? fontColor
-                            : AppColors.dark80,
-                        fontSize: (14 / Dimensions.designWidth).w,
+                    Expanded(
+                      child: Text(
+                        details[index].value,
+                        style: TextStyles.primary.copyWith(
+                          color: (index == coloredIndex)
+                              ? fontColor
+                              : AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
                       ),
                     ),
                   ],

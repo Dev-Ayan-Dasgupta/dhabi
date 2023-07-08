@@ -10,8 +10,8 @@ class RecipientReceiveModeTile extends StatelessWidget {
     Key? key,
     required this.onTap,
     required this.title,
-    required this.limitAmount,
-    required this.limitCurrency,
+    this.limitAmount,
+    this.limitCurrency,
     required this.feeAmount,
     required this.feeCurrency,
     required this.eta,
@@ -19,8 +19,8 @@ class RecipientReceiveModeTile extends StatelessWidget {
 
   final VoidCallback onTap;
   final String title;
-  final double limitAmount;
-  final String limitCurrency;
+  final double? limitAmount;
+  final String? limitCurrency;
   final double feeAmount;
   final String feeCurrency;
   final String eta;
@@ -63,26 +63,30 @@ class RecipientReceiveModeTile extends StatelessWidget {
               color: const Color(0XFFF9F9F9),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Limit",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: const Color(0XFF1A3C40),
-                          fontSize: (16 / Dimensions.designWidth).w,
+                  Ternary(
+                    condition: limitAmount == null,
+                    truthy: const SizeBox(),
+                    falsy: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Limit",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: const Color(0XFF1A3C40),
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "${limitAmount.toStringAsFixed(2)} $limitCurrency",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: const Color(0XFF1A3C40),
-                          fontSize: (16 / Dimensions.designWidth).w,
+                        Text(
+                          "${limitAmount?.toStringAsFixed(2)} $limitCurrency",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: const Color(0XFF1A3C40),
+                            fontSize: (16 / Dimensions.designWidth).w,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const SizeBox(height: 7),
+                  SizeBox(height: limitAmount == null ? 0 : 7),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

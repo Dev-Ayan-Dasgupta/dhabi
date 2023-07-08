@@ -1176,7 +1176,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           const SizeBox(height: 10),
           CustomTextField(
             controller: _tinController,
-            // keyboardType: TextInputType.number,
+            // keyboardType: TextInputType.numberWithOptions(decimal: true),
             onChanged: (p0) {
               if (_tinController.text.isNotEmpty) {
                 isTINvalid = true;
@@ -1224,7 +1224,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           const SizeBox(height: 10),
           CustomTextField(
             controller: _tinController2,
-            // keyboardType: TextInputType.number,
+            // keyboardType: TextInputType.numberWithOptions(decimal: true),
             onChanged: (p0) {
               if (_tinController2.text.isNotEmpty) {
                 isTINvalid2 = true;
@@ -1272,7 +1272,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           const SizeBox(height: 10),
           CustomTextField(
             controller: _tinController3,
-            // keyboardType: TextInputType.number,
+            // keyboardType: TextInputType.numberWithOptions(decimal: true),
             onChanged: (p0) {
               if (_tinController3.text.isNotEmpty) {
                 isTINvalid3 = true;
@@ -1320,7 +1320,7 @@ class _ApplicationTaxCRSScreenState extends State<ApplicationTaxCRSScreen> {
           const SizeBox(height: 10),
           CustomTextField(
             controller: _tinController4,
-            // keyboardType: TextInputType.number,
+            // keyboardType: TextInputType.numberWithOptions(decimal: true),
             onChanged: (p0) {
               if (_tinController4.text.isNotEmpty) {
                 isTINvalid3 = true;
