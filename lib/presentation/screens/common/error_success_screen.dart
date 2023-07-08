@@ -55,6 +55,7 @@ class _ErrorSuccessScreenState extends State<ErrorSuccessScreen> {
                       color: AppColors.dark80,
                       fontSize: (24 / Dimensions.designWidth).w,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   const SizeBox(height: 20),
                   SizedBox(

@@ -276,7 +276,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                       builder: (context, state) {
                         return CustomTextField(
                           controller: _zipController,
-                          // keyboardType: TextInputType.number,
+                          // keyboardType: TextInputType.numberWithOptions(decimal: true),
                           borderColor: const Color(0xFFEEEEEE),
                           onChanged: (p0) {},
                           // hintText: "0000",

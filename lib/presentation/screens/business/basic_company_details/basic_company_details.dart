@@ -178,7 +178,7 @@ class _BasicCompanyDetailsScreenState extends State<BasicCompanyDetailsScreen> {
                           const SizeBox(height: 7),
                           CustomTextField(
                             controller: _tradeLicenseController,
-                            // keyboardType: TextInputType.number,
+                            // keyboardType: TextInputType.numberWithOptions(decimal: true),
                             onChanged: (p0) {
                               if (p0.isEmpty) {
                                 isTradeLicense = false;

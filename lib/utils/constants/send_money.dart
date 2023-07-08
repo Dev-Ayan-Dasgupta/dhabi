@@ -46,6 +46,9 @@ bool isAddRemBeneficiary = false;
 bool isBank = false;
 bool isWallet = false;
 
+bool isBankSelected = false;
+bool isWalletSelected = false;
+
 bool isSenderBearCharges = false;
 
 String expectedTime = "";

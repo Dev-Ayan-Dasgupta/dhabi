@@ -105,7 +105,8 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                         children: [
                           CustomTextField(
                             hintText: "Enter Account Number",
-                            keyboardType: TextInputType.number,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             enabled: !isProceed,
                             color: isProceed
                                 ? AppColors.blackEE

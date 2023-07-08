@@ -64,8 +64,7 @@ class DetailsTile extends StatelessWidget {
                         fontSize: (14 / Dimensions.designWidth).w,
                       ),
                     ),
-                    SizedBox(
-                      width: 75.w,
+                    Expanded(
                       child: Text(
                         details[index].value,
                         style: TextStyles.primary.copyWith(
@@ -75,6 +74,7 @@ class DetailsTile extends StatelessWidget {
                           fontSize: (14 / Dimensions.designWidth).w,
                         ),
                         overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
                       ),
                     ),
                   ],

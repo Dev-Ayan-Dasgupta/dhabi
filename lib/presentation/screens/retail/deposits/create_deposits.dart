@@ -439,7 +439,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                               return CustomTextField(
                                 borderColor: borderColor,
                                 controller: _depositController,
-                                keyboardType: TextInputType.number,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
                                 hintText: "E.g., 20000",
                                 onChanged: onDepositChanged,
                               );
@@ -1143,9 +1145,10 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       accountNumber: chosenAccountNumber,
                       depositAmount: double.parse(_depositController.text),
                       tenureDays:
-                          auxToDate.difference(DateTime.now()).inHours <= 0
-                              ? auxToDate.difference(DateTime.now()).inDays
-                              : auxToDate.difference(DateTime.now()).inDays + 1,
+                          // auxToDate.difference(DateTime.now()).inHours <= 0
+                          //     ? auxToDate.difference(DateTime.now()).inDays
+                          //     : auxToDate.difference(DateTime.now()).inDays + 1,
+                          auxToDate.day - DateTime.now().day,
                       interestRate: interestRate,
                       interestAmount: double.parse(_depositController.text) *
                           (interestRate / 100),
