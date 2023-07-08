@@ -678,7 +678,8 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       initialDateTime:
                           auxToDate.add(const Duration(seconds: 1)),
                       minimumDate:
-                          DateTime.now().subtract(const Duration(minutes: 30)),
+                          auxToDate.subtract(const Duration(minutes: 30)),
+                      // DateTime.now().subtract(const Duration(minutes: 30)),
                       maximumDate:
                           DateTime.now().add(const Duration(days: 30 * 60)),
                       mode: CupertinoDatePickerMode.date,
@@ -691,7 +692,8 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       looping: false,
                       initialDate: auxToDate.add(const Duration(seconds: 1)),
                       firstDate:
-                          DateTime.now().subtract(const Duration(minutes: 10)),
+                          auxToDate.subtract(const Duration(minutes: 30)),
+                      // DateTime.now().subtract(const Duration(minutes: 30)),
                       lastDate:
                           DateTime.now().add(const Duration(days: 30 * 60)),
                       dateFormat: "dd-MMMM-yyyy",
@@ -761,6 +763,8 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     final ShowButtonBloc showPeriodSection = context.read<ShowButtonBloc>();
     for (int i = 0; i < fdRatesDates.length; i++) {
       log("Days difference -> ${fdRatesDates[i].difference(auxToDate).inDays}");
+      log("Hours difference -> ${auxToDate.difference(DateTime.now()).inHours}");
+      log("maturity days -> ${auxToDate.difference(DateTime.now()).inHours <= 0 ? auxToDate.difference(DateTime.now()).inDays : auxToDate.difference(DateTime.now()).inDays + 1}");
       if (fdRatesDates[i].difference(auxToDate).inDays >= 0) {
         interestRate = (fdRates[i]["rate"]).toDouble();
         break;
@@ -1124,7 +1128,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
           const SizeBox(height: 20),
           GradientButton(
             onTap: () {
-              log("maturity days -> ${auxToDate.difference(DateTime.now()).inDays}");
+              log("maturity days -> ${auxToDate.difference(DateTime.now()).inHours <= 0 ? auxToDate.difference(DateTime.now()).inDays : auxToDate.difference(DateTime.now()).inDays + 1}");
               log("payout -> $selectedPayout");
               log("payout validity -> ${validateMaturity(auxToDate.difference(DateTime.now()).inDays, selectedPayout ?? "")}");
               if (validateMaturity(auxToDate.difference(DateTime.now()).inDays,

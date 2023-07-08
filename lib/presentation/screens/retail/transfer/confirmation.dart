@@ -95,7 +95,7 @@ class _TransferConfirmationScreenState
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
           value:
-              "1 $senderCurrency = $exchangeRate ${receiverAmount.toStringAsFixed(2)}"));
+              "1 $senderCurrency = ${exchangeRate.toStringAsFixed(2)} $receiverCurrency"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[168]["labelText"],
           value: isSenderBearCharges
@@ -126,7 +126,8 @@ class _TransferConfirmationScreenState
           value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
-          value: "1 $senderCurrency = $exchangeRate $receiverCurrency"));
+          value:
+              "1 $senderCurrency = ${exchangeRate.toStringAsFixed(2)} $receiverCurrency"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[169]["labelText"],
           value: !(sendMoneyArgument.isRemittance) ? "Today" : "something"));
