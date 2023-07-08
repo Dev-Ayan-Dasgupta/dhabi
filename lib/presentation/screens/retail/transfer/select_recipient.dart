@@ -286,7 +286,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                           Text(
                             sendMoneyArgument.isRemittance
                                 ? "International Recipients."
-                                : "Domestic Recipients",
+                                : "Dhabi Recipients",
                             style: TextStyles.primaryMedium.copyWith(
                               color: AppColors.dark50,
                               fontSize: (12 / Dimensions.designWidth).w,
@@ -474,7 +474,8 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
               name: item.name,
               accountNumber: item.accountNumber,
               currency: item.currency,
-              bankName: "State Bank of India",
+              bankName:
+                  sendMoneyArgument.isRemittance ? item.benBankName : "Dhabi",
             );
           },
           separatorBuilder: (context, index) {
