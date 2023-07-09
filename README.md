@@ -16,9 +16,7 @@ Digital Banking Application for Dhabi
 10. Remove State Bank of India to benBankName ¶
 11. Remove Splash in InkWell ¶
 12. Deposits transaction draggable cancel, absolute sort, reverse color and Remove “All” ¶
-13. Premature withdrawal issue, disable button click till content load
-14. Tenure of 0 days in Create Deposits ¶
-15. Remittance Receive mode limit implementation for wallets
-16. Switch multiple business accounts Kanhai
-17. Decimal point for value entry ¶
-18. errorSuccess screen multiline adjustment in iOS ¶
+13. Tenure of 0 days in Create Deposits ¶
+14. Remittance Receive mode limit implementation for wallets
+15. Decimal point for value entry ¶
+16. errorSuccess screen multiline adjustment in iOS ¶
