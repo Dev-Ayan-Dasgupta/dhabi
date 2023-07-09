@@ -82,8 +82,10 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                 itemCount: selectAccountArgument.cifDetails.length,
                 itemBuilder: (context, index) {
                   return Ternary(
-                    condition: selectAccountArgument.cifDetails[index]["cif"] ==
-                        storageCif,
+                    condition: selectAccountArgument.isSwitching
+                        ? selectAccountArgument.cifDetails[index]["cif"] ==
+                            storageCif
+                        : 1 == 2,
                     truthy: const SizeBox(),
                     falsy: Column(
                       children: [

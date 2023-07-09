@@ -261,6 +261,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                                             cifDetails: cifDetails,
                                             isPwChange: false,
                                             isLogin: true,
+                                            isSwitching: true,
                                             isIncompleteOnboarding: false,
                                           ).toMap(),
                                         );

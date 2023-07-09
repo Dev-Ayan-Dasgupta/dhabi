@@ -522,6 +522,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             cifDetails: cifDetails,
                             isPwChange: false,
                             isLogin: true,
+                            isSwitching: false,
                             isIncompleteOnboarding: false,
                           ).toMap(),
                         );
@@ -709,6 +710,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                                   cifDetails: cifDetails,
                                                   isPwChange: false,
                                                   isLogin: false,
+                                                  isSwitching: false,
                                                   isIncompleteOnboarding: false,
                                                 ).toMap(),
                                               );
@@ -1015,6 +1017,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                     cifDetails: cifDetails,
                                     isPwChange: true,
                                     isLogin: false,
+                                    isSwitching: false,
                                     isIncompleteOnboarding: false,
                                   ).toMap(),
                                 );
@@ -1158,6 +1161,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                                   cifDetails: cifDetails,
                                                   isPwChange: false,
                                                   isLogin: false,
+                                                  isSwitching: false,
                                                   isIncompleteOnboarding: false,
                                                 ).toMap(),
                                               );
@@ -1630,6 +1634,7 @@ class _OTPScreenState extends State<OTPScreen> {
                                                 cifDetails: cifDetails,
                                                 isPwChange: false,
                                                 isLogin: false,
+                                                isSwitching: false,
                                                 isIncompleteOnboarding: false,
                                               ).toMap(),
                                             );
