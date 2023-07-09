@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (56)
+## Release notes - 1.0.0 (57)
 
 1. Exchange rate 2 decimal places ¶
 2. Label 168
@@ -20,3 +20,9 @@ Digital Banking Application for Dhabi
 14. Remittance Receive mode limit implementation for wallets
 15. Decimal point for value entry ¶
 16. errorSuccess screen multiline adjustment in iOS ¶
+17. Auto closure date issue ¶
+18. Multiple year date format issue for tenure ¶
+19. Contact us Dhabi support number
+20. Error {200} to Sorry! ¶
+21. Recent transaction update issue in Retail dashboard ¶
+22. Removed certificate icon in appbar of deposits ¶
