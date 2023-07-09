@@ -86,7 +86,7 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200} Exchange Rate",
+                title: "Sorry!",
                 message: getExchangeRateApi["message"] ??
                     "Error while getting exchange rate, please try again later",
                 actionWidget: GradientButton(

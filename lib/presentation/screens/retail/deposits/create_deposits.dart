@@ -679,9 +679,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     truthy: CupertinoDatePicker(
                       initialDateTime:
                           auxToDate.add(const Duration(seconds: 1)),
-                      minimumDate:
-                          auxToDate.subtract(const Duration(minutes: 30)),
-                      // DateTime.now().subtract(const Duration(minutes: 30)),
+                      minimumDate: DateTime(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                      ),
                       maximumDate:
                           DateTime.now().add(const Duration(days: 30 * 60)),
                       mode: CupertinoDatePickerMode.date,
@@ -693,9 +700,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     falsy: DatePickerWidget(
                       looping: false,
                       initialDate: auxToDate.add(const Duration(seconds: 1)),
-                      firstDate:
-                          auxToDate.subtract(const Duration(minutes: 30)),
-                      // DateTime.now().subtract(const Duration(minutes: 30)),
+                      firstDate: DateTime(
+                        DateTime.now().year,
+                        DateTime.now().month,
+                        DateTime.now().day,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                      ),
                       lastDate:
                           DateTime.now().add(const Duration(days: 30 * 60)),
                       dateFormat: "dd-MMMM-yyyy",
@@ -1145,10 +1159,10 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       accountNumber: chosenAccountNumber,
                       depositAmount: double.parse(_depositController.text),
                       tenureDays:
-                          // auxToDate.difference(DateTime.now()).inHours <= 0
-                          //     ? auxToDate.difference(DateTime.now()).inDays
-                          //     : auxToDate.difference(DateTime.now()).inDays + 1,
-                          auxToDate.day - DateTime.now().day,
+                          auxToDate.difference(DateTime.now()).inHours <= 0
+                              ? auxToDate.difference(DateTime.now()).inDays
+                              : auxToDate.difference(DateTime.now()).inDays + 1,
+                      // auxToDate.day - DateTime.now().day,
                       interestRate: interestRate,
                       interestAmount: double.parse(_depositController.text) *
                           (interestRate / 100),
@@ -1178,7 +1192,11 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         currency: currency,
                         accountNumber: chosenAccountNumber,
                         depositAmount: double.parse(_depositController.text),
-                        tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                        tenureDays:
+                            auxToDate.difference(DateTime.now()).inHours <= 0
+                                ? auxToDate.difference(DateTime.now()).inDays
+                                : auxToDate.difference(DateTime.now()).inDays +
+                                    1,
                         interestRate: interestRate,
                         interestAmount: double.parse(_depositController.text) *
                             ((interestRate / 100)),
@@ -1207,7 +1225,11 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         currency: currency,
                         accountNumber: chosenAccountNumber,
                         depositAmount: double.parse(_depositController.text),
-                        tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                        tenureDays:
+                            auxToDate.difference(DateTime.now()).inHours <= 0
+                                ? auxToDate.difference(DateTime.now()).inDays
+                                : auxToDate.difference(DateTime.now()).inDays +
+                                    1,
                         interestRate: interestRate,
                         interestAmount: double.parse(_depositController.text) *
                             ((interestRate / 100)),

@@ -224,7 +224,7 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                                                       svgAssetPath:
                                                           ImageConstants
                                                               .warning,
-                                                      title: "Error {200}",
+                                                      title: "Sorry!",
                                                       message: closeDeactApiResult[
                                                               "message"] ??
                                                           "Error while placing deactivating acount request, please try again later",

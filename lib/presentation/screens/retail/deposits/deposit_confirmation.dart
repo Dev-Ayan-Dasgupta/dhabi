@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/corporateAccounts/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -58,7 +59,8 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
         value:
             "USD ${depositConfirmationModel.depositAmount.toStringAsFixed(0)}"));
     depositDetails.add(DetailsTileModel(
-        key: "Tenure", value: "${depositConfirmationModel.tenureDays} day(s)"));
+        key: "Tenure",
+        value: DaysToMonths.daysToMonths(depositConfirmationModel.tenureDays)));
     depositDetails.add(DetailsTileModel(
         key: "Interest Rate",
         value: "${depositConfirmationModel.interestRate}%"));

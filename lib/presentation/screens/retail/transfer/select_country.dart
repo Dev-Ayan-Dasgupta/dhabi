@@ -220,7 +220,7 @@ class _SelectCountryScreenState extends State<SelectCountryScreen> {
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: getExchRateApiResult[
                                                   "message"] ??
                                               "There was an error fetching exchange rate, please try again later.",

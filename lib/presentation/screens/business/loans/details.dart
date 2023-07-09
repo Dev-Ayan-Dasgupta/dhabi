@@ -98,7 +98,7 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200}",
+                title: "Sorry!",
                 message: getLoanDetailsApiResult["message"] ??
                     "Error while getting loan details, please try again later",
                 actionWidget: GradientButton(

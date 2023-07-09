@@ -311,6 +311,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
   Future<void> getCustomerAccountStatement() async {
     try {
       statementList.clear();
+      displayStatementList.clear();
       customerStatement =
           await MapCustomerAccountStatement.mapCustomerAccountStatement(
         {
@@ -326,7 +327,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
       if (customerStatement["flexiAccountStatementRes"]["body"] != null) {
         statementList = customerStatement["flexiAccountStatementRes"]["body"]
             ["statementList"];
-        displayStatementList.clear();
+
         displayStatementList.addAll(statementList);
       }
 
