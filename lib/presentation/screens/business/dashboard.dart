@@ -363,7 +363,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200} Permission",
+                title: "Sorry!",
                 message: corpCustPermApiResult["message"] ??
                     "Error fetching account details, please try again later",
                 actionWidget: GradientButton(
@@ -418,7 +418,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200} Cust Details",
+                title: "Sorry!",
                 message: customerDetails["message"] ??
                     "Error while getting customer details, please try again later",
                 actionWidget: GradientButton(
@@ -452,7 +452,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200} Loans",
+                title: "Sorry!",
                 message: getLoansApiResult["message"] ??
                     "Error fetching loan details, please try again later",
                 actionWidget: GradientButton(
@@ -496,7 +496,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200} Corp Cust Details",
+                title: "Sorry!",
                 message: "Error fetching permissions, please try again later",
                 actionWidget: GradientButton(
                   onTap: () {

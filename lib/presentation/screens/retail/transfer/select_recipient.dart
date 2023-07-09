@@ -135,7 +135,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200}",
+                title: "Sorry!",
                 message: getBeneficiariesApiResult["message"] ??
                     "There was an error fetching your beneficiary details, please try again after some time.",
                 actionWidget: GradientButton(
@@ -434,7 +434,7 @@ class _SelectRecipientScreenState extends State<SelectRecipientScreen> {
                           builder: (context) {
                             return CustomDialog(
                               svgAssetPath: ImageConstants.warning,
-                              title: "Error {200}",
+                              title: "Sorry!",
                               message: getExchRateApiResult["message"] ??
                                   "There was an error fetching exchange rate, please try again later.",
                               actionWidget: GradientButton(

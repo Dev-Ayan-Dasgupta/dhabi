@@ -148,20 +148,20 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: (15 / Dimensions.designWidth).w,
-              vertical: (15 / Dimensions.designWidth).w,
-            ),
-            child: InkWell(
-              onTap: () {
-                // Navigator.pushNamed(context, Routes.downloadStatement);
-              },
-              child: SvgPicture.asset(ImageConstants.certificate),
-            ),
-          )
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: EdgeInsets.symmetric(
+        //       horizontal: (15 / Dimensions.designWidth).w,
+        //       vertical: (15 / Dimensions.designWidth).w,
+        //     ),
+        //     child: InkWell(
+        //       onTap: () {
+        //         // Navigator.pushNamed(context, Routes.downloadStatement);
+        //       },
+        //       child: SvgPicture.asset(ImageConstants.certificate),
+        //     ),
+        //   )
+        // ],
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -308,7 +308,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                       builder: (context) {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.warning,
-                          title: "Error {200}",
+                          title: "Sorry!",
                           message: premWdrwApiResult["message"] ??
                               "There was an error in premature withdrawal of your FD, please try again later",
                           actionWidget: GradientButton(

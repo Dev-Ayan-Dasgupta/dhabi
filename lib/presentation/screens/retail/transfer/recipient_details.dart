@@ -292,7 +292,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                     builder: (context) {
                       return CustomDialog(
                         svgAssetPath: ImageConstants.warning,
-                        title: "Error {200}",
+                        title: "Sorry!",
                         message: getDhabiCustDetsResult["message"] ??
                             "Error getting Dhabi Customer Details",
                         actionWidget: GradientButton(
@@ -355,7 +355,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                       builder: (context) {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.warning,
-                          title: "Error {200}",
+                          title: "Sorry!",
                           message: getExchRateApiResult["message"] ??
                               "There was an error fetching exchange rate, please try again later.",
                           actionWidget: GradientButton(

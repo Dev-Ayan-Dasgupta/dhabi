@@ -7,7 +7,6 @@ import 'package:dialup_mobile_app/presentation/widgets/shimmers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
@@ -128,20 +127,20 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: (15 / Dimensions.designWidth).w,
-              vertical: (15 / Dimensions.designWidth).w,
-            ),
-            child: InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, Routes.downloadStatement);
-              },
-              child: SvgPicture.asset(ImageConstants.certificate),
-            ),
-          )
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: EdgeInsets.symmetric(
+        //       horizontal: (15 / Dimensions.designWidth).w,
+        //       vertical: (15 / Dimensions.designWidth).w,
+        //     ),
+        //     child: InkWell(
+        //       onTap: () {
+        //         Navigator.pushNamed(context, Routes.downloadStatement);
+        //       },
+        //       child: SvgPicture.asset(ImageConstants.certificate),
+        //     ),
+        //   )
+        // ],
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
