@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (54)
+## Release notes - 1.0.0 (58)
 
 1. Exchange rate 2 decimal places ¶
 2. Label 168
