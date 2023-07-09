@@ -91,6 +91,8 @@ class _RecipientReceiveModeScreenState
                 children: [
                   RecipientReceiveModeTile(
                     onTap: () {
+                      isBankSelected = true;
+                      isWalletSelected = false;
                       Navigator.pushNamed(
                         context,
                         Routes.addRecipDetRem,
@@ -104,8 +106,8 @@ class _RecipientReceiveModeScreenState
                       );
                     },
                     title: "To Bank",
-                    limitAmount: 10000,
-                    limitCurrency: "EUR",
+                    // limitAmount: 10000,
+                    // limitCurrency: "EUR",
                     feeAmount: sendMoneyArgument.isBetweenAccounts ? 0 : fees,
                     feeCurrency: "USD",
                     eta: sendMoneyArgument.isBetweenAccounts
@@ -123,6 +125,8 @@ class _RecipientReceiveModeScreenState
                 children: [
                   RecipientReceiveModeTile(
                     onTap: () {
+                      isWalletSelected = true;
+                      isBankSelected = false;
                       Navigator.pushNamed(
                         context,
                         Routes.addRecipDetRem,
@@ -136,8 +140,8 @@ class _RecipientReceiveModeScreenState
                       );
                     },
                     title: "To Digital Wallet",
-                    limitAmount: 20000,
-                    limitCurrency: "EUR",
+                    limitAmount: 10000,
+                    limitCurrency: "USD",
                     feeAmount: sendMoneyArgument.isBetweenAccounts ? 0 : fees,
                     feeCurrency: "USD",
                     eta: sendMoneyArgument.isBetweenAccounts

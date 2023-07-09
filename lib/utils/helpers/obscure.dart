@@ -61,4 +61,19 @@ class ObscureHelper {
     }
     return obscuredPhoneNumber;
   }
+
+  static String obscureName(String name) {
+    String obscuredName = "";
+    for (int i = 0; i < name.length - 2; i++) {
+      if (i < 2) {
+        obscuredName = obscuredName + name[i];
+      } else {
+        obscuredName = "$obscuredName*";
+      }
+    }
+    for (int i = name.length - 2; i < name.length; i++) {
+      obscuredName = obscuredName + name[i];
+    }
+    return obscuredName;
+  }
 }

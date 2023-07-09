@@ -6,7 +6,6 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/presentation/widgets/transfer/recent_transfers_tile.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 
 class SendMoneyScreen extends StatefulWidget {
@@ -143,89 +142,89 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
               ],
             ),
           ),
-          DraggableScrollableSheet(
-            initialChildSize: 0.50,
-            minChildSize: 0.50,
-            maxChildSize: 1,
-            controller: _dsController,
-            builder: (context, scrollController) {
-              return ListView(
-                controller: scrollController,
-                children: [
-                  Container(
-                    height: 90.h,
-                    width: 100.w,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: (PaddingConstants.horizontalPadding /
-                              Dimensions.designWidth)
-                          .w,
-                    ),
-                    decoration: BoxDecoration(
-                      border:
-                          Border.all(width: 1, color: const Color(0XFFEEEEEE)),
-                      borderRadius: BorderRadius.only(
-                        topLeft:
-                            Radius.circular((20 / Dimensions.designWidth).w),
-                        topRight:
-                            Radius.circular((20 / Dimensions.designWidth).w),
-                      ),
-                      color: const Color(0xFFFFFFFF),
-                    ),
-                    child: Column(
-                      children: [
-                        const SizeBox(height: 15),
-                        // ! Clip widget for drag
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: (10 / Dimensions.designWidth).w,
-                          ),
-                          height: (7 / Dimensions.designWidth).w,
-                          width: (50 / Dimensions.designWidth).w,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular((10 / Dimensions.designWidth).w),
-                            ),
-                            color: const Color(0xFFD9D9D9),
-                          ),
-                        ),
-                        const SizeBox(height: 15),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              labels[10]["labelText"],
-                              style: TextStyles.primary.copyWith(
-                                color: AppColors.dark50,
-                                fontSize: (16 / Dimensions.designWidth).w,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizeBox(height: 15),
-                        Expanded(
-                          child: ListView.builder(
-                            controller: scrollController,
-                            itemCount: 50,
-                            itemBuilder: (context, index) {
-                              return RecentTransferTile(
-                                onTap: () {},
-                                iconPath: ImageConstants.accountBalance,
-                                name: "Sanjay Talreja",
-                                status: "Pending",
-                                amount: 50000,
-                                currency: "AED",
-                                accountNumber: "5040098712342534",
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
+          // DraggableScrollableSheet(
+          //   initialChildSize: 0.50,
+          //   minChildSize: 0.50,
+          //   maxChildSize: 1,
+          //   controller: _dsController,
+          //   builder: (context, scrollController) {
+          //     return ListView(
+          //       controller: scrollController,
+          //       children: [
+          //         Container(
+          //           height: 90.h,
+          //           width: 100.w,
+          //           padding: EdgeInsets.symmetric(
+          //             horizontal: (PaddingConstants.horizontalPadding /
+          //                     Dimensions.designWidth)
+          //                 .w,
+          //           ),
+          //           decoration: BoxDecoration(
+          //             border:
+          //                 Border.all(width: 1, color: const Color(0XFFEEEEEE)),
+          //             borderRadius: BorderRadius.only(
+          //               topLeft:
+          //                   Radius.circular((20 / Dimensions.designWidth).w),
+          //               topRight:
+          //                   Radius.circular((20 / Dimensions.designWidth).w),
+          //             ),
+          //             color: const Color(0xFFFFFFFF),
+          //           ),
+          //           child: Column(
+          //             children: [
+          //               const SizeBox(height: 15),
+          //               // ! Clip widget for drag
+          //               Container(
+          //                 padding: EdgeInsets.symmetric(
+          //                   vertical: (10 / Dimensions.designWidth).w,
+          //                 ),
+          //                 height: (7 / Dimensions.designWidth).w,
+          //                 width: (50 / Dimensions.designWidth).w,
+          //                 decoration: BoxDecoration(
+          //                   borderRadius: BorderRadius.all(
+          //                     Radius.circular((10 / Dimensions.designWidth).w),
+          //                   ),
+          //                   color: const Color(0xFFD9D9D9),
+          //                 ),
+          //               ),
+          //               const SizeBox(height: 15),
+          //               Row(
+          //                 mainAxisAlignment: MainAxisAlignment.start,
+          //                 children: [
+          //                   Text(
+          //                     labels[10]["labelText"],
+          //                     style: TextStyles.primary.copyWith(
+          //                       color: AppColors.dark50,
+          //                       fontSize: (16 / Dimensions.designWidth).w,
+          //                     ),
+          //                   ),
+          //                 ],
+          //               ),
+          //               const SizeBox(height: 15),
+          //               Expanded(
+          //                 child: ListView.builder(
+          //                   controller: scrollController,
+          //                   itemCount: 50,
+          //                   itemBuilder: (context, index) {
+          //                     return RecentTransferTile(
+          //                       onTap: () {},
+          //                       iconPath: ImageConstants.accountBalance,
+          //                       name: "Sanjay Talreja",
+          //                       status: "Pending",
+          //                       amount: 50000,
+          //                       currency: "AED",
+          //                       accountNumber: "5040098712342534",
+          //                     );
+          //                   },
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ),
+          //       ],
+          //     );
+          //   },
+          // ),
         ],
       ),
     );

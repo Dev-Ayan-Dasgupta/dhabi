@@ -219,6 +219,8 @@ class _CustomMultiBlocProviderState extends State<CustomMultiBlocProvider> {
             navigatorKey: navigatorKey,
             theme: ThemeData(
               primarySwatch: AppColors.primarySwatch,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               appBarTheme: const AppBarTheme(
                 color: Colors.transparent,
                 systemOverlayStyle: SystemUiOverlayStyle(

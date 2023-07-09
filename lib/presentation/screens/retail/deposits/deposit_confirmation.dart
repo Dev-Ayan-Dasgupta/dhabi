@@ -58,7 +58,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
         value:
             "USD ${depositConfirmationModel.depositAmount.toStringAsFixed(0)}"));
     depositDetails.add(DetailsTileModel(
-        key: "Tenure", value: "${depositConfirmationModel.tenureDays} days"));
+        key: "Tenure", value: "${depositConfirmationModel.tenureDays} day(s)"));
     depositDetails.add(DetailsTileModel(
         key: "Interest Rate",
         value: "${depositConfirmationModel.interestRate}%"));

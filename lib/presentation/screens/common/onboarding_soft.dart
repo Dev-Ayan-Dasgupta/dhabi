@@ -11,6 +11,7 @@ import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
@@ -119,6 +120,17 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        toolbarHeight: 0,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          statusBarBrightness: Brightness.dark,
+        ),
+      ),
       body: Stack(
         children: [
           PageView.builder(
@@ -269,7 +281,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           falsy: InkWell(
                             onTap: () {
                               Navigator.pushNamed(
-                                  context, Routes.exploreDashboard);
+                                context,
+                                Routes.exploreDashboard,
+                              );
                             },
                             child: Text(
                               "Explore",

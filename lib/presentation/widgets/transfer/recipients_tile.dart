@@ -71,25 +71,32 @@ class RecipientsTile extends StatelessWidget {
                   ),
                 ),
                 const SizeBox(width: 15),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.primaryDark,
-                        fontSize: (16 / Dimensions.designWidth).w,
+                SizedBox(
+                  width: 55.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.primaryDark,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    const SizeBox(height: 7),
-                    Text(
-                      bankName,
-                      style: TextStyles.primaryMedium.copyWith(
-                        color: AppColors.dark50,
-                        fontSize: (14 / Dimensions.designWidth).w,
+                      const SizeBox(height: 7),
+                      Text(
+                        bankName,
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark50,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 )
               ],
             ),

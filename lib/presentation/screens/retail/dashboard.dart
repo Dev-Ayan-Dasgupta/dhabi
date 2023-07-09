@@ -2324,66 +2324,66 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                             //   ),
                                                             // ),
                                                             // const SizeBox(width: 10),
-                                                            InkWell(
-                                                              onTap: () {
-                                                                // final ShowButtonBloc
-                                                                //     showButtonBloc =
-                                                                //     context.read<
-                                                                //         ShowButtonBloc>();
-                                                                // isShowFilter = true;
-                                                                // showButtonBloc.add(
-                                                                //   ShowButtonEvent(
-                                                                //       show:
-                                                                //           isShowFilter),
-                                                                // );
-                                                              },
-                                                              child: Row(
-                                                                children: [
-                                                                  SvgPicture
-                                                                      .asset(
-                                                                    ImageConstants
-                                                                        .filter,
-                                                                    width: (12 /
-                                                                            Dimensions.designHeight)
-                                                                        .w,
-                                                                    height: (12 /
-                                                                            Dimensions.designWidth)
-                                                                        .w,
-                                                                  ),
-                                                                  const SizeBox(
-                                                                      width: 5),
-                                                                  Text(
-                                                                    filterTextFD,
-                                                                    style: TextStyles
-                                                                        .primaryMedium
-                                                                        .copyWith(
-                                                                      color: AppColors
-                                                                          .primary,
-                                                                      fontSize:
-                                                                          (14 / Dimensions.designWidth)
-                                                                              .w,
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            const SizeBox(
-                                                                width: 10),
-                                                            Text(
-                                                              "|",
-                                                              style: TextStyles
-                                                                  .primaryMedium
-                                                                  .copyWith(
-                                                                color: AppColors
-                                                                    .dark50,
-                                                                fontSize: (16 /
-                                                                        Dimensions
-                                                                            .designWidth)
-                                                                    .w,
-                                                              ),
-                                                            ),
-                                                            const SizeBox(
-                                                                width: 10),
+                                                            // InkWell(
+                                                            //   onTap: () {
+                                                            //     // final ShowButtonBloc
+                                                            //     //     showButtonBloc =
+                                                            //     //     context.read<
+                                                            //     //         ShowButtonBloc>();
+                                                            //     // isShowFilter = true;
+                                                            //     // showButtonBloc.add(
+                                                            //     //   ShowButtonEvent(
+                                                            //     //       show:
+                                                            //     //           isShowFilter),
+                                                            //     // );
+                                                            //   },
+                                                            //   child: Row(
+                                                            //     children: [
+                                                            //       SvgPicture
+                                                            //           .asset(
+                                                            //         ImageConstants
+                                                            //             .filter,
+                                                            //         width: (12 /
+                                                            //                 Dimensions.designHeight)
+                                                            //             .w,
+                                                            //         height: (12 /
+                                                            //                 Dimensions.designWidth)
+                                                            //             .w,
+                                                            //       ),
+                                                            //       const SizeBox(
+                                                            //           width: 5),
+                                                            //       Text(
+                                                            //         filterTextFD,
+                                                            //         style: TextStyles
+                                                            //             .primaryMedium
+                                                            //             .copyWith(
+                                                            //           color: AppColors
+                                                            //               .primary,
+                                                            //           fontSize:
+                                                            //               (14 / Dimensions.designWidth)
+                                                            //                   .w,
+                                                            //         ),
+                                                            //       ),
+                                                            //     ],
+                                                            //   ),
+                                                            // ),
+                                                            // const SizeBox(
+                                                            //     width: 10),
+                                                            // Text(
+                                                            //   "|",
+                                                            //   style: TextStyles
+                                                            //       .primaryMedium
+                                                            //       .copyWith(
+                                                            //     color: AppColors
+                                                            //         .dark50,
+                                                            //     fontSize: (16 /
+                                                            //             Dimensions
+                                                            //                 .designWidth)
+                                                            //         .w,
+                                                            //   ),
+                                                            // ),
+                                                            // const SizeBox(
+                                                            //     width: 10),
                                                             InkWell(
                                                               onTap: () {
                                                                 final ShowButtonBloc
@@ -2472,7 +2472,11 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                     index) {
                                                               return DashboardTransactionListTile(
                                                                 onTap: () {},
-                                                                isCredit: true,
+                                                                isCredit: double.parse(
+                                                                        displayFdStatementList[index]
+                                                                            [
+                                                                            "amount"]) >
+                                                                    0,
                                                                 title: displayFdStatementList[
                                                                         index][
                                                                     "description"],
@@ -2481,10 +2485,10 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                 //         index][
                                                                 //     "customerName"],
                                                                 amount: double.parse(
-                                                                    displayFdStatementList[
-                                                                            index]
-                                                                        [
-                                                                        "amount"]),
+                                                                        displayFdStatementList[index]
+                                                                            [
+                                                                            "amount"])
+                                                                    .abs(),
                                                                 currency: displayFdStatementList[
                                                                         index][
                                                                     "amountCurrency"],
@@ -2788,6 +2792,31 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                             color:
                                                                                 AppColors.dark50,
                                                                             fontSize: (20 / Dimensions.designWidth).w),
+                                                                  ),
+                                                                  InkWell(
+                                                                    onTap: () {
+                                                                      final ShowButtonBloc
+                                                                          showButtonBloc =
+                                                                          context
+                                                                              .read<ShowButtonBloc>();
+                                                                      isShowDepositSort =
+                                                                          false;
+                                                                      showButtonBloc
+                                                                          .add(
+                                                                        ShowButtonEvent(
+                                                                          show:
+                                                                              isShowDepositSort,
+                                                                        ),
+                                                                      );
+                                                                    },
+                                                                    child: Text(
+                                                                      "Cancel",
+                                                                      style: TextStyles.primaryBold.copyWith(
+                                                                          color: AppColors
+                                                                              .primary,
+                                                                          fontSize:
+                                                                              (16 / Dimensions.designWidth).w),
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),
@@ -3114,12 +3143,12 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           .compareTo(DateTime.parse(b["bookingDate"])));
     }
     if (isHighest) {
-      displayFdStatementList.sort((a, b) =>
-          (double.parse(b["amount"]).compareTo(double.parse(a["amount"]))));
+      displayFdStatementList.sort((a, b) => ((double.parse(b["amount"]).abs())
+          .compareTo((double.parse(a["amount"]).abs()))));
     }
     if (isLowest) {
-      displayFdStatementList.sort((a, b) =>
-          (double.parse(a["amount"]).compareTo(double.parse(b["amount"]))));
+      displayFdStatementList.sort((a, b) => ((double.parse(a["amount"]).abs())
+          .compareTo((double.parse(b["amount"]).abs()))));
     }
   }
 

@@ -8,12 +8,14 @@ class SelectAccountArgumentModel {
   final List cifDetails;
   final bool isPwChange;
   final bool isLogin;
+  final bool isSwitching;
   final bool isIncompleteOnboarding;
   SelectAccountArgumentModel({
     required this.emailId,
     required this.cifDetails,
     required this.isPwChange,
     required this.isLogin,
+    required this.isSwitching,
     required this.isIncompleteOnboarding,
   });
 
@@ -22,6 +24,7 @@ class SelectAccountArgumentModel {
     List? cifDetails,
     bool? isPwChange,
     bool? isLogin,
+    bool? isSwitching,
     bool? isIncompleteOnboarding,
   }) {
     return SelectAccountArgumentModel(
@@ -29,6 +32,7 @@ class SelectAccountArgumentModel {
       cifDetails: cifDetails ?? this.cifDetails,
       isPwChange: isPwChange ?? this.isPwChange,
       isLogin: isLogin ?? this.isLogin,
+      isSwitching: isSwitching ?? this.isSwitching,
       isIncompleteOnboarding:
           isIncompleteOnboarding ?? this.isIncompleteOnboarding,
     );
@@ -40,6 +44,7 @@ class SelectAccountArgumentModel {
       'cifDetails': cifDetails,
       'isPwChange': isPwChange,
       'isLogin': isLogin,
+      'isSwitching': isSwitching,
       'isIncompleteOnboarding': isIncompleteOnboarding,
     };
   }
@@ -50,6 +55,7 @@ class SelectAccountArgumentModel {
       cifDetails: List.from((map['cifDetails'] as List)),
       isPwChange: map['isPwChange'] as bool,
       isLogin: map['isLogin'] as bool,
+      isSwitching: map['isSwitching'] as bool,
       isIncompleteOnboarding: map['isIncompleteOnboarding'] as bool,
     );
   }
@@ -62,7 +68,7 @@ class SelectAccountArgumentModel {
 
   @override
   String toString() {
-    return 'SelectAccountArgumentModel(emailId: $emailId, cifDetails: $cifDetails, isPwChange: $isPwChange, isLogin: $isLogin, isIncompleteOnboarding: $isIncompleteOnboarding)';
+    return 'SelectAccountArgumentModel(emailId: $emailId, cifDetails: $cifDetails, isPwChange: $isPwChange, isLogin: $isLogin, isSwitching: $isSwitching, isIncompleteOnboarding: $isIncompleteOnboarding)';
   }
 
   @override
@@ -73,6 +79,7 @@ class SelectAccountArgumentModel {
         listEquals(other.cifDetails, cifDetails) &&
         other.isPwChange == isPwChange &&
         other.isLogin == isLogin &&
+        other.isSwitching == isSwitching &&
         other.isIncompleteOnboarding == isIncompleteOnboarding;
   }
 
@@ -82,6 +89,7 @@ class SelectAccountArgumentModel {
         cifDetails.hashCode ^
         isPwChange.hashCode ^
         isLogin.hashCode ^
+        isSwitching.hashCode ^
         isIncompleteOnboarding.hashCode;
   }
 }

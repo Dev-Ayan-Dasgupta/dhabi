@@ -273,7 +273,9 @@ class _SelectAccountTypeScreenState extends State<SelectAccountTypeScreen> {
                           : "Application approval pending",
                       message: storageUserTypeId == 1
                           ? messages[70]["messageText"]
-                          : result["message"],
+                          : result["message"] == "" || result["message"] == null
+                              ? "You already have a registration pending. Please contact Dhabi support."
+                              : result["message"],
                       auxWidget: GradientButton(
                         onTap: () async {
                           await storage.write(

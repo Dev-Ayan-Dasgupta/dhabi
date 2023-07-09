@@ -171,7 +171,9 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                     hintText: "0",
                                     controller: _sendController,
                                     onChanged: onSendChanged,
-                                    keyboardType: TextInputType.number,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                            decimal: true),
                                     suffixIcon: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -531,6 +533,13 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       isNotZero = true;
       toggleCaptionsBloc.add(ShowButtonEvent(show: isNotZero));
     }
+    if (isWalletSelected) {
+      if (double.parse(_sendController.text) > 10000) {
+        isShowButton = false;
+        borderColor = AppColors.red100;
+        showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));
+      }
+    }
     if (double.parse(_sendController.text) > senderBalance) {
       // ! abs()
       isShowButton = false;
@@ -561,7 +570,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
         ),
         Text(
           isShowButton
-              ? "Available to transfer $senderCurrency $senderBalance"
+              ? "Available to transfer $senderCurrency ${isWalletSelected ? senderBalance > 10000 ? 10000 : senderBalance : senderBalance}"
               : " ${messages[11]["messageText"]}",
           style: TextStyles.primaryMedium.copyWith(
             color: isShowButton ? AppColors.dark50 : AppColors.red100,
@@ -575,7 +584,9 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
   Widget buildExchangeRate(BuildContext context, ShowButtonState state) {
     return FeeExchangeRate(
       transferFeeCurrency: senderCurrency,
-      transferFee: sendMoneyArgument.isBetweenAccounts ? 0 : fees,
+      transferFee: sendMoneyArgument.isRemittance
+          ? fees
+          : double.parse(0.toStringAsFixed(0)),
       exchangeRateSenderCurrency: senderCurrency,
       exchangeRate: exchangeRate,
       exchangeRateReceiverCurrency: receiverCurrency,
@@ -598,7 +609,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
             fontSize: (14 / Dimensions.designWidth).w,
           ),
         ),
-        const Asterisk(),
+        // const Asterisk(),
       ],
     );
   }

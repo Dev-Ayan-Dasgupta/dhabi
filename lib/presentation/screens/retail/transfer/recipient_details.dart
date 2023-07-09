@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -87,7 +88,7 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                   Row(
                     children: [
                       Text(
-                        "IBAN / Account number",
+                        "Account Number",
                         style: TextStyles.primaryMedium.copyWith(
                           color: AppColors.dark80,
                           fontSize: (14 / Dimensions.designWidth).w,
@@ -103,8 +104,9 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomTextField(
-                            hintText: "Enter IBAN or Account Number",
-                            keyboardType: TextInputType.number,
+                            hintText: "Enter Account Number",
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
                             enabled: !isProceed,
                             color: isProceed
                                 ? AppColors.blackEE
@@ -276,8 +278,8 @@ class _RecipientDetailsScreenState extends State<RecipientDetailsScreen> {
               if (getDhabiCustDetsResult["success"]) {
                 isProceed = true;
                 buttonText = labels[31]["labelText"];
-                _recipientNameController.text =
-                    getDhabiCustDetsResult["customerName"];
+                _recipientNameController.text = ObscureHelper.obscureName(
+                    getDhabiCustDetsResult["customerName"]);
                 benCustomerName = getDhabiCustDetsResult["customerName"];
                 receiverAccountNumber = _ibanController.text;
                 receiverCurrency = senderCurrency;
