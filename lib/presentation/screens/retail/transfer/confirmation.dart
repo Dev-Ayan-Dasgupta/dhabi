@@ -61,12 +61,16 @@ class _TransferConfirmationScreenState
           key: labels[157]["labelText"], value: receiverAccountNumber));
       transferConfirmation.add(DetailsTileModel(
           key: labels[159]["labelText"],
-          value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
+          value:
+              "$senderCurrency ${NumberFormat('#,000.00').format(senderAmount)
+              // senderAmount.toStringAsFixed(2)
+              }"));
       transferConfirmation.add(DetailsTileModel(
           key: sendMoneyArgument.isBetweenAccounts
               ? labels[163]["labelText"]
               : labels[198]["labelText"],
-          value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
+          value:
+              "$receiverCurrency ${NumberFormat('#,000.00').format(receiverAmount)}"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
           value:

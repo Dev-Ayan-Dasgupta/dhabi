@@ -18,6 +18,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class TransferAmountScreen extends StatefulWidget {
@@ -361,21 +362,28 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                                           .text.isNotEmpty
                                                       ? (double.parse(
                                                                   _sendController
-                                                                      .text) *
+                                                                      .text
+                                                                      .replaceAll(
+                                                                          ',',
+                                                                          '')) *
                                                               exchangeRate)
                                                           .toStringAsFixed(2)
                                                       : "";
                                                   senderAmount = _sendController
                                                           .text.isNotEmpty
                                                       ? double.parse(
-                                                          _sendController.text)
+                                                          _sendController.text
+                                                              .replaceAll(
+                                                                  ',', ''))
                                                       : 0;
                                                   receiverAmount =
                                                       _sendController
                                                               .text.isNotEmpty
                                                           ? double.parse(
                                                               _receiveController
-                                                                  .text)
+                                                                  .text
+                                                                  .replaceAll(
+                                                                      ',', ''))
                                                           : 0;
 
                                                   isFetchingExchangeRate =
@@ -527,26 +535,46 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
 
     if (_sendController.text.length < initLength) {
       _sendController.text =
-          (double.parse(_sendController.text) / 10).toStringAsFixed(2);
+          (double.parse(_sendController.text.replaceAll(',', '')) / 10)
+              .toStringAsFixed(2);
+      if (double.parse(_sendController.text.replaceAll(',', '')) > 1000) {
+        _sendController.text = NumberFormat('#,000.00')
+            .format(double.parse(_sendController.text.replaceAll(',', '')));
+      }
       _sendController.selection = TextSelection.fromPosition(
           TextPosition(offset: _sendController.text.length));
       _receiveController.text =
-          (double.parse(_sendController.text) * exchangeRate)
+          (double.parse(_sendController.text.replaceAll(',', '')) *
+                  exchangeRate)
               .toStringAsFixed(2);
+      if (double.parse(_receiveController.text.replaceAll(',', '')) > 1000) {
+        _receiveController.text = NumberFormat('#,000.00')
+            .format(double.parse(_receiveController.text.replaceAll(',', '')));
+      }
     } else {
       _sendController.text =
-          (double.parse(_sendController.text) * 10).toStringAsFixed(2);
+          (double.parse(_sendController.text.replaceAll(',', '')) * 10)
+              .toStringAsFixed(2);
+      if (double.parse(_sendController.text.replaceAll(',', '')) > 1000) {
+        _sendController.text = NumberFormat('#,000.00')
+            .format(double.parse(_sendController.text.replaceAll(',', '')));
+      }
       _sendController.selection = TextSelection.fromPosition(
           TextPosition(offset: _sendController.text.length));
       _receiveController.text =
-          (double.parse(_sendController.text) * exchangeRate)
+          (double.parse(_sendController.text.replaceAll(',', '')) *
+                  exchangeRate)
               .toStringAsFixed(2);
+      if (double.parse(_receiveController.text.replaceAll(',', '')) > 1000) {
+        _receiveController.text = NumberFormat('#,000.00')
+            .format(double.parse(_receiveController.text.replaceAll(',', '')));
+      }
     }
 
     initLength = _sendController.text.length;
 
     if (_sendController.text.isEmpty ||
-        double.parse(_sendController.text) == 0 ||
+        double.parse(_sendController.text.replaceAll(',', '')) == 0 ||
         _sendController.text == "0.00") {
       if (_sendController.text.isEmpty) {
         _receiveController.clear();
@@ -558,13 +586,14 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       toggleCaptionsBloc.add(ShowButtonEvent(show: isNotZero));
     }
     if (isWalletSelected) {
-      if (double.parse(_sendController.text) > 10000) {
+      if (double.parse(_sendController.text.replaceAll(',', '')) > 10000) {
         isShowButton = false;
         borderColor = AppColors.red100;
         showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));
       }
     }
-    if (double.parse(_sendController.text) > senderBalance) {
+    if (double.parse(_sendController.text.replaceAll(',', '')) >
+        senderBalance) {
       // ! abs()
       isShowButton = false;
       borderColor = AppColors.red100;
@@ -575,8 +604,8 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));
     }
 
-    senderAmount = double.parse(_sendController.text);
-    receiverAmount = double.parse(_receiveController.text);
+    senderAmount = double.parse(_sendController.text.replaceAll(',', ''));
+    receiverAmount = double.parse(_receiveController.text.replaceAll(',', ''));
   }
 
   Widget buildSendError(BuildContext context, ShowButtonState state) {

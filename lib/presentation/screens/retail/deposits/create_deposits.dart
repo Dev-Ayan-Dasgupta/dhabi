@@ -248,11 +248,13 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                           showButtonBloc.add(ShowButtonEvent(
                                               show: chosenIndex == index));
 
-                                          if (double.parse(
-                                                      _depositController.text) <
+                                          if (double.parse(_depositController
+                                                      .text
+                                                      .replaceAll(',', '')) <
                                                   minAmtReq ||
-                                              double.parse(
-                                                      _depositController.text) >
+                                              double.parse(_depositController
+                                                      .text
+                                                      .replaceAll(',', '')) >
                                                   maxAmtReq) {
                                             errorMsg =
                                                 "Please check the amount limit criteria";
@@ -262,7 +264,8 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                                   hasError: errorMsg.isEmpty),
                                             );
                                           } else if (double.parse(
-                                                  _depositController.text) >
+                                                  _depositController.text
+                                                      .replaceAll(',', '')) >
                                               bal) {
                                             errorMsg = "Insufficient fund";
                                             borderColor = AppColors.red100;
@@ -1160,14 +1163,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       isRetail: createDepositArgument.isRetail,
                       currency: currency,
                       accountNumber: chosenAccountNumber,
-                      depositAmount: double.parse(_depositController.text),
+                      depositAmount: double.parse(
+                          _depositController.text.replaceAll(',', '')),
                       tenureDays:
                           auxToDate.difference(DateTime.now()).inHours <= 0
                               ? auxToDate.difference(DateTime.now()).inDays
                               : auxToDate.difference(DateTime.now()).inDays + 1,
                       // auxToDate.day - DateTime.now().day,
                       interestRate: interestRate,
-                      interestAmount: double.parse(_depositController.text) *
+                      interestAmount: double.parse(
+                              _depositController.text.replaceAll(',', '')) *
                           (interestRate / 100),
                       interestPayout: selectedPayout ?? "",
                       isAutoRenewal: isAutoRenewal,
@@ -1194,14 +1199,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         isRetail: createDepositArgument.isRetail,
                         currency: currency,
                         accountNumber: chosenAccountNumber,
-                        depositAmount: double.parse(_depositController.text),
+                        depositAmount: double.parse(
+                            _depositController.text.replaceAll(',', '')),
                         tenureDays:
                             auxToDate.difference(DateTime.now()).inHours <= 0
                                 ? auxToDate.difference(DateTime.now()).inDays
                                 : auxToDate.difference(DateTime.now()).inDays +
                                     1,
                         interestRate: interestRate,
-                        interestAmount: double.parse(_depositController.text) *
+                        interestAmount: double.parse(
+                                _depositController.text.replaceAll(',', '')) *
                             ((interestRate / 100)),
                         interestPayout: selectedPayout ?? "",
                         isAutoRenewal: isAutoRenewal,
@@ -1227,14 +1234,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         isRetail: createDepositArgument.isRetail,
                         currency: currency,
                         accountNumber: chosenAccountNumber,
-                        depositAmount: double.parse(_depositController.text),
+                        depositAmount: double.parse(
+                            _depositController.text.replaceAll(',', '')),
                         tenureDays:
                             auxToDate.difference(DateTime.now()).inHours <= 0
                                 ? auxToDate.difference(DateTime.now()).inDays
                                 : auxToDate.difference(DateTime.now()).inDays +
                                     1,
                         interestRate: interestRate,
-                        interestAmount: double.parse(_depositController.text) *
+                        interestAmount: double.parse(
+                                _depositController.text.replaceAll(',', '')) *
                             ((interestRate / 100)),
                         interestPayout: selectedPayout ?? "",
                         isAutoRenewal: isAutoRenewal,
@@ -1306,26 +1315,38 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
     if (_depositController.text.length < initLength) {
       _depositController.text =
-          (double.parse(_depositController.text) / 10).toStringAsFixed(2);
+          (double.parse(_depositController.text.replaceAll(',', '')) / 10)
+              .toStringAsFixed(2);
+      if (double.parse(_depositController.text.replaceAll(',', '')) > 1000) {
+        _depositController.text = NumberFormat('#,000.00')
+            .format(double.parse(_depositController.text.replaceAll(',', '')));
+      }
+
       _depositController.selection = TextSelection.fromPosition(
           TextPosition(offset: _depositController.text.length));
     } else {
       _depositController.text =
-          (double.parse(_depositController.text) * 10).toStringAsFixed(2);
+          (double.parse(_depositController.text.replaceAll(',', '')) * 10)
+              .toStringAsFixed(2);
+      if (double.parse(_depositController.text.replaceAll(',', '')) > 1000) {
+        _depositController.text = NumberFormat('#,000.00')
+            .format(double.parse(_depositController.text.replaceAll(',', '')));
+      }
       _depositController.selection = TextSelection.fromPosition(
           TextPosition(offset: _depositController.text.length));
     }
 
     initLength = _depositController.text.length;
 
-    if (double.parse(_depositController.text) < minAmtReq ||
-        double.parse(_depositController.text) > maxAmtReq) {
+    if (double.parse(_depositController.text.replaceAll(',', '')) < minAmtReq ||
+        double.parse(_depositController.text.replaceAll(',', '')) > maxAmtReq) {
       errorMsg = "Please check the amount limit criteria";
       borderColor = AppColors.red100;
       errorMessageBloc.add(
         ErrorMessageEvent(hasError: errorMsg.isEmpty),
       );
-    } else if (double.parse(_depositController.text) > bal) {
+    } else if (double.parse(_depositController.text.replaceAll(',', '')) >
+        bal) {
       errorMsg = "Insufficient fund";
       borderColor = AppColors.red100;
       errorMessageBloc.add(
