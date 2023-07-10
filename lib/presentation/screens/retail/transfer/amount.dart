@@ -33,7 +33,8 @@ class TransferAmountScreen extends StatefulWidget {
 }
 
 class _TransferAmountScreenState extends State<TransferAmountScreen> {
-  final TextEditingController _sendController = TextEditingController();
+  final TextEditingController _sendController =
+      TextEditingController(text: "0.00");
   final TextEditingController _receiveController = TextEditingController();
 
   bool isShowButton = true;
@@ -48,6 +49,8 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
     countryFlagBase64: receiverCurrencies[0].countryFlagBase64,
     countrynameOrCode: receiverCurrencies[0].countrynameOrCode,
   );
+
+  int initLength = 4;
 
   bool isFetchingExchangeRate = false;
 
@@ -521,8 +524,30 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
   void onSendChanged(String p0) {
     final ShowButtonBloc showProceedButtonBloc = context.read<ShowButtonBloc>();
     final ShowButtonBloc toggleCaptionsBloc = context.read<ShowButtonBloc>();
+
+    if (_sendController.text.length < initLength) {
+      _sendController.text =
+          (double.parse(_sendController.text) / 10).toStringAsFixed(2);
+      _sendController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _sendController.text.length));
+      _receiveController.text =
+          (double.parse(_sendController.text) * exchangeRate)
+              .toStringAsFixed(2);
+    } else {
+      _sendController.text =
+          (double.parse(_sendController.text) * 10).toStringAsFixed(2);
+      _sendController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _sendController.text.length));
+      _receiveController.text =
+          (double.parse(_sendController.text) * exchangeRate)
+              .toStringAsFixed(2);
+    }
+
+    initLength = _sendController.text.length;
+
     if (_sendController.text.isEmpty ||
-        double.parse(_sendController.text) == 0) {
+        double.parse(_sendController.text) == 0 ||
+        _sendController.text == "0.00") {
       if (_sendController.text.isEmpty) {
         _receiveController.clear();
       }
@@ -549,8 +574,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       borderColor = const Color(0XFFEEEEEE);
       showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));
     }
-    _receiveController.text =
-        (double.parse(p0) * exchangeRate).toStringAsFixed(2);
+
     senderAmount = double.parse(_sendController.text);
     receiverAmount = double.parse(_receiveController.text);
   }

@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (57)
+## Release notes - 1.0.0 (58)
 
 1. Exchange rate 2 decimal places ¶
 2. Label 168
@@ -26,3 +26,5 @@ Digital Banking Application for Dhabi
 20. Error {200} to Sorry! ¶
 21. Recent transaction update issue in Retail dashboard ¶
 22. Removed certificate icon in appbar of deposits ¶
+23. Changed ruting to stories screen after business registration
+24. Changed textfield behaviour of amount field for send money and FD creation

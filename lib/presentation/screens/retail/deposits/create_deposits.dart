@@ -36,11 +36,14 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
   int _scrollIndex = 0;
 
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _depositController = TextEditingController();
+  final TextEditingController _depositController =
+      TextEditingController(text: "0.00");
 
   final double minAmtReq = 10000;
   final double maxAmtReq = 100000;
   double bal = 0;
+
+  int initLength = 4;
 
   String currency = "";
 
@@ -1300,13 +1303,29 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     final ErrorMessageBloc errorMessageBloc = context.read<ErrorMessageBloc>();
     final ShowButtonBloc showPeriodSection = context.read<ShowButtonBloc>();
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    if (double.parse(p0) < minAmtReq || double.parse(p0) > maxAmtReq) {
+
+    if (_depositController.text.length < initLength) {
+      _depositController.text =
+          (double.parse(_depositController.text) / 10).toStringAsFixed(2);
+      _depositController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _depositController.text.length));
+    } else {
+      _depositController.text =
+          (double.parse(_depositController.text) * 10).toStringAsFixed(2);
+      _depositController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _depositController.text.length));
+    }
+
+    initLength = _depositController.text.length;
+
+    if (double.parse(_depositController.text) < minAmtReq ||
+        double.parse(_depositController.text) > maxAmtReq) {
       errorMsg = "Please check the amount limit criteria";
       borderColor = AppColors.red100;
       errorMessageBloc.add(
         ErrorMessageEvent(hasError: errorMsg.isEmpty),
       );
-    } else if (double.parse(p0) > bal) {
+    } else if (double.parse(_depositController.text) > bal) {
       errorMsg = "Insufficient fund";
       borderColor = AppColors.red100;
       errorMessageBloc.add(
