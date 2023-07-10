@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class ExploreDashboardScreen extends StatefulWidget {
   const ExploreDashboardScreen({Key? key}) : super(key: key);
@@ -121,7 +122,8 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                                   ? labels[92]["labelText"]
                                   : labels[7]["labelText"],
                               currency: "USD",
-                              amount: "10000.00",
+                              amount: NumberFormat('#,000.00')
+                                  .format(double.parse("10000.00")),
                               subText: "",
                               subImgUrl: "",
                             ),

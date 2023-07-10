@@ -12,6 +12,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class SendMoneyToScreen extends StatefulWidget {
   const SendMoneyToScreen({
@@ -141,11 +142,12 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
                                     : labels[92]["labelText"],
                             accountNo: accountDetails[index]["accountNumber"],
                             currency: accountDetails[index]["accountCurrency"],
-                            amount: double.parse(accountDetails[index]
-                                    ["currentBalance"]
-                                .split(" ")
-                                .last
-                                .replaceAll(",", "")),
+                            amount: NumberFormat('#,000.00').format(
+                                double.parse(accountDetails[index]
+                                        ["currentBalance"]
+                                    .split(" ")
+                                    .last
+                                    .replaceAll(",", ""))),
                             isSelected: selectedAccountIndex == index,
                           ),
                         ),

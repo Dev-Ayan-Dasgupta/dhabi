@@ -25,7 +25,7 @@ class VaultAccountCard extends StatelessWidget {
   final String? imgUrl;
   final String accountNo;
   final String currency;
-  final double amount;
+  final String amount;
   final bool isSelected;
 
   @override
@@ -84,7 +84,7 @@ class VaultAccountCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "$currency ${amount.toStringAsFixed(2)}",
+                      "$currency $amount",
                       style: TextStyles.primaryBold.copyWith(
                         fontSize: (16 / Dimensions.designWidth).w,
                         color: AppColors.primaryDark,

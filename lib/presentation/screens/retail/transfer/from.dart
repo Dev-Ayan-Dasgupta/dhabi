@@ -15,6 +15,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/vault_account_card.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class SendMoneyFromScreen extends StatefulWidget {
   const SendMoneyFromScreen({
@@ -267,16 +268,20 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                           ? dhabiSeedAccounts[index].currency
                                           : foreignSeedAccounts[index].currency,
                               amount: sendMoneyArgument.isRetail
-                                  ? double.parse(accountDetails[index]
-                                          ["currentBalance"]
-                                      .split(" ")
-                                      .last
-                                      .replaceAll(",", ""))
+                                  ? NumberFormat('#,000.00').format(
+                                      double.parse(accountDetails[index]
+                                              ["currentBalance"]
+                                          .split(" ")
+                                          .last
+                                          .replaceAll(",", "")))
                                   : sendMoneyArgument.isBetweenAccounts
-                                      ? internalSeedAccounts[index].bal
+                                      ? NumberFormat('#,000.00').format(
+                                          internalSeedAccounts[index].bal)
                                       : sendMoneyArgument.isWithinDhabi
-                                          ? dhabiSeedAccounts[index].bal
-                                          : foreignSeedAccounts[index].bal,
+                                          ? NumberFormat('#,000.00').format(
+                                              dhabiSeedAccounts[index].bal)
+                                          : NumberFormat('#,000.00').format(
+                                              foreignSeedAccounts[index].bal),
                               isSelected: selectedAccountIndex == index,
                             );
                           },

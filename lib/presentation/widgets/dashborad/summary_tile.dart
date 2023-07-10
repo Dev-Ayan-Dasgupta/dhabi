@@ -134,8 +134,12 @@ class AccountSummaryTile extends StatelessWidget {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: NumberFormat('#,000.00')
-                        .format(double.parse(amount.replaceAll(',', ''))),
+                    text: amount == ""
+                        ? ""
+                        : double.parse(amount.replaceAll(',', '')) > 1000
+                            ? NumberFormat('#,000.00').format(
+                                double.parse(amount.replaceAll(',', '')))
+                            : amount,
                     style: TextStyles.primary.copyWith(
                         color: AppColors.primary,
                         fontSize: ((fontSize ?? 20) / Dimensions.designWidth).w,

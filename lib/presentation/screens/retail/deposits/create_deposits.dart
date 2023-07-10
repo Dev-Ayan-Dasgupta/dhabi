@@ -389,7 +389,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                       ),
                                     ),
                                     Text(
-                                      "USD ${minAmtReq.toStringAsFixed(2)}",
+                                      "USD ${NumberFormat('#,000.00').format(minAmtReq)}",
                                       style: TextStyles.primaryMedium.copyWith(
                                         color: AppColors.primary,
                                         fontSize:
@@ -412,7 +412,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                       ),
                                     ),
                                     Text(
-                                      "USD ${maxAmtReq.toStringAsFixed(2)}",
+                                      "USD ${NumberFormat('#,000.00').format(maxAmtReq)}",
                                       style: TextStyles.primaryMedium.copyWith(
                                         color: AppColors.primary,
                                         fontSize:
