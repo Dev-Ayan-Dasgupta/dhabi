@@ -731,7 +731,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     .h),
                                         controller: _scrollController,
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: depositDetails.length + 1,
+                                        itemCount: depositDetails.length,
                                         itemBuilder: (context, index) {
                                           return Padding(
                                             padding: EdgeInsets.only(
@@ -862,6 +862,21 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                             promptUserForRates();
                                             // Navigator.pushNamed(
                                             //     context, Routes.interestRates);
+                                          },
+                                        ),
+                                        const SizeBox(width: 25),
+                                        DashboardActivityTile(
+                                          iconPath: ImageConstants.add,
+                                          activityText: "Create Deposit",
+                                          onTap: () {
+                                            Navigator.pushNamed(
+                                              context,
+                                              Routes.createDeposits,
+                                              arguments:
+                                                  CreateDepositArgumentModel(
+                                                isRetail: true,
+                                              ).toMap(),
+                                            );
                                           },
                                         ),
                                       ],

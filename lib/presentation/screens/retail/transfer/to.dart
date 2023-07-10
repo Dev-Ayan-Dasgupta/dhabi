@@ -142,12 +142,23 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
                                     : labels[92]["labelText"],
                             accountNo: accountDetails[index]["accountNumber"],
                             currency: accountDetails[index]["accountCurrency"],
-                            amount: NumberFormat('#,000.00').format(
-                                double.parse(accountDetails[index]
-                                        ["currentBalance"]
-                                    .split(" ")
-                                    .last
-                                    .replaceAll(",", ""))),
+                            amount: double.parse(accountDetails[index]
+                                            ["currentBalance"]
+                                        .split(" ")
+                                        .last
+                                        .replaceAll(",", "")) >
+                                    1000
+                                ? NumberFormat('#,000.00').format(double.parse(
+                                    accountDetails[index]["currentBalance"]
+                                        .split(" ")
+                                        .last
+                                        .replaceAll(",", "")))
+                                : double.parse(accountDetails[index]
+                                            ["currentBalance"]
+                                        .split(" ")
+                                        .last
+                                        .replaceAll(",", ""))
+                                    .toStringAsFixed(2),
                             isSelected: selectedAccountIndex == index,
                           ),
                         ),

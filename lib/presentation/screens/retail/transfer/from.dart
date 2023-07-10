@@ -268,20 +268,35 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                           ? dhabiSeedAccounts[index].currency
                                           : foreignSeedAccounts[index].currency,
                               amount: sendMoneyArgument.isRetail
-                                  ? NumberFormat('#,000.00').format(
-                                      double.parse(accountDetails[index]
-                                              ["currentBalance"]
-                                          .split(" ")
-                                          .last
-                                          .replaceAll(",", "")))
-                                  : sendMoneyArgument.isBetweenAccounts
+                                  ? double.parse(accountDetails[index]
+                                                  ["currentBalance"]
+                                              .split(" ")
+                                              .last
+                                              .replaceAll(",", "")) >
+                                          1000
                                       ? NumberFormat('#,000.00').format(
-                                          internalSeedAccounts[index].bal)
+                                          double.parse(accountDetails[index]
+                                                  ["currentBalance"]
+                                              .split(" ")
+                                              .last
+                                              .replaceAll(",", "")))
+                                      : double.parse(accountDetails[index]
+                                                  ["currentBalance"]
+                                              .split(" ")
+                                              .last
+                                              .replaceAll(",", ""))
+                                          .toStringAsFixed(2)
+                                  : sendMoneyArgument.isBetweenAccounts
+                                      ? internalSeedAccounts[index].bal > 1000
+                                          ? NumberFormat('#,000.00').format(internalSeedAccounts[index].bal)
+                                          : internalSeedAccounts[index].bal.toStringAsFixed(2)
                                       : sendMoneyArgument.isWithinDhabi
-                                          ? NumberFormat('#,000.00').format(
-                                              dhabiSeedAccounts[index].bal)
-                                          : NumberFormat('#,000.00').format(
-                                              foreignSeedAccounts[index].bal),
+                                          ? dhabiSeedAccounts[index].bal > 1000
+                                              ? NumberFormat('#,000.00').format(dhabiSeedAccounts[index].bal)
+                                              : dhabiSeedAccounts[index].bal.toStringAsFixed(2)
+                                          : foreignSeedAccounts[index].bal > 1000
+                                              ? NumberFormat('#,000.00').format(foreignSeedAccounts[index].bal)
+                                              : foreignSeedAccounts[index].bal,
                               isSelected: selectedAccountIndex == index,
                             );
                           },
