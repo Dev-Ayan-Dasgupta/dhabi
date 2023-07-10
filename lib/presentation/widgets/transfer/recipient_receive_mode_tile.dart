@@ -19,9 +19,9 @@ class RecipientReceiveModeTile extends StatelessWidget {
 
   final VoidCallback onTap;
   final String title;
-  final double? limitAmount;
+  final String? limitAmount;
   final String? limitCurrency;
-  final double feeAmount;
+  final String feeAmount;
   final String feeCurrency;
   final String eta;
 
@@ -77,7 +77,7 @@ class RecipientReceiveModeTile extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${limitAmount?.toStringAsFixed(2)} $limitCurrency",
+                          "$limitAmount $limitCurrency",
                           style: TextStyles.primaryMedium.copyWith(
                             color: const Color(0XFF1A3C40),
                             fontSize: (16 / Dimensions.designWidth).w,
@@ -98,7 +98,7 @@ class RecipientReceiveModeTile extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "${feeAmount.toStringAsFixed(2)} $feeCurrency",
+                        "$feeAmount $feeCurrency",
                         style: TextStyles.primaryMedium.copyWith(
                           color: const Color(0XFF1A3C40),
                           fontSize: (16 / Dimensions.designWidth).w,

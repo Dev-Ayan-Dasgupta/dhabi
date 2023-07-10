@@ -7,6 +7,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/recipient_receive_mode_tile.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class RecipientReceiveModeScreen extends StatefulWidget {
   const RecipientReceiveModeScreen({
@@ -108,7 +109,9 @@ class _RecipientReceiveModeScreenState
                     title: "To Bank",
                     // limitAmount: 10000,
                     // limitCurrency: "EUR",
-                    feeAmount: sendMoneyArgument.isBetweenAccounts ? 0 : fees,
+                    feeAmount: sendMoneyArgument.isBetweenAccounts
+                        ? "0"
+                        : fees.toString(),
                     feeCurrency: "USD",
                     eta: sendMoneyArgument.isBetweenAccounts
                         ? "Immediate arrival"
@@ -140,9 +143,11 @@ class _RecipientReceiveModeScreenState
                       );
                     },
                     title: "To Digital Wallet",
-                    limitAmount: 10000,
+                    limitAmount: NumberFormat('#,000.00').format(10000),
                     limitCurrency: "USD",
-                    feeAmount: sendMoneyArgument.isBetweenAccounts ? 0 : fees,
+                    feeAmount: sendMoneyArgument.isBetweenAccounts
+                        ? "0"
+                        : fees.toString(),
                     feeCurrency: "USD",
                     eta: sendMoneyArgument.isBetweenAccounts
                         ? "Immediate arrival"

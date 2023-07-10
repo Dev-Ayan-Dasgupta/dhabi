@@ -29,3 +29,4 @@ Digital Banking Application for Dhabi
 23. Changed routing to stories screen after business registration
 24. Changed textfield behaviour of amount field for send money and FD creation
 25. Implemeted thousands comma separation
+26. Updated Create Deposits button
