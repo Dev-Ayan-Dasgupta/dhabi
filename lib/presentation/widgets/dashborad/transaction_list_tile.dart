@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class DashboardTransactionListTile extends StatelessWidget {
   const DashboardTransactionListTile({
@@ -108,8 +109,8 @@ class DashboardTransactionListTile extends StatelessWidget {
               children: [
                 Text(
                   isCredit
-                      ? "${amount.toStringAsFixed(2)} $currency"
-                      : "- ${amount.toStringAsFixed(2)} $currency",
+                      ? "${NumberFormat('#,000.00').format(amount)} $currency"
+                      : "- ${NumberFormat('#,000.00').format(amount)} $currency",
                   style: TextStyles.primaryBold.copyWith(
                     color:
                         isCredit ? AppColors.green100 : AppColors.primaryDark,

@@ -66,23 +66,27 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
             value: getFDDetailsResult["depositAccountNo"]));
         depositDetails.add(DetailsTileModel(
             key: "Deposit Amount",
-            value: "USD ${getFDDetailsResult["depositAmount"]}"));
+            value:
+                "USD ${NumberFormat('#,000.00').format(double.parse(getFDDetailsResult["depositAmount"]))}"));
         depositDetails.add(DetailsTileModel(
             key: "Tenure", value: "${getFDDetailsResult["tenure"] ?? ""}"));
         depositDetails.add(DetailsTileModel(
             key: "Total Interest Earned",
-            value: "USD ${getFDDetailsResult["interestAmount"]}"));
+            value:
+                "USD ${NumberFormat('#,000.00').format(double.parse(getFDDetailsResult["interestAmount"]))}"));
         depositDetails.add(DetailsTileModel(
             key: "Interest Payout",
             value: getFDDetailsResult["interestPayout"]));
         depositDetails.add(DetailsTileModel(
             key: "Payout Amount",
-            value: "USD ${getFDDetailsResult["payoutAmount"].toString()}"));
+            value:
+                "USD ${NumberFormat('#,000.00').format(double.parse(getFDDetailsResult["interestAmount"]))}"));
         depositDetails.add(DetailsTileModel(
             key: "On Maturity", value: getFDDetailsResult["onMaturity"]));
         depositDetails.add(DetailsTileModel(
             key: "Maturity Amount",
-            value: "USD ${getFDDetailsResult["maturityAmount"].toString()}"));
+            value:
+                "USD ${NumberFormat('#,000.00').format(getFDDetailsResult["maturityAmount"])}"));
         depositDetails.add(DetailsTileModel(
             key: "Credit Account",
             value: getFDDetailsResult["creditAccountNo"]));

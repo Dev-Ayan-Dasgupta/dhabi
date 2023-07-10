@@ -83,7 +83,8 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
             value: apiResult["depositAccountNumber"] ?? ""));
         prematureDetails.add(DetailsTileModel(
             key: "Deposit Amount",
-            value: "USD ${apiResult["fdAmount"].toString()}"));
+            value:
+                "USD ${NumberFormat('#,000.00').format(double.parse(apiResult["fdAmount"]))}"));
         prematureDetails.add(DetailsTileModel(
             key: "Open Date",
             value: DateFormat('dd MMMM yyyy')
@@ -106,7 +107,8 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                 DateTime.parse(apiResult["fdMaturityDate"] ?? "1900-01-01"))));
         prematureDetails.add(DetailsTileModel(
             key: "Credit Amount",
-            value: "USD ${apiResult["creditAmount"].toString()}"));
+            value:
+                "USD ${NumberFormat('#,000.00').format(apiResult["creditAmount"])}"));
         prematureDetails.add(DetailsTileModel(
             key: "Penalty Rate",
             value: "${apiResult["penaltyRate"].toString()} %"));

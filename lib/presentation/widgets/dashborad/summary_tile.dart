@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class AccountSummaryTile extends StatelessWidget {
   const AccountSummaryTile({
@@ -133,7 +134,8 @@ class AccountSummaryTile extends StatelessWidget {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: amount,
+                    text: NumberFormat('#,000.00')
+                        .format(double.parse(amount.replaceAll(',', ''))),
                     style: TextStyles.primary.copyWith(
                         color: AppColors.primary,
                         fontSize: ((fontSize ?? 20) / Dimensions.designWidth).w,
