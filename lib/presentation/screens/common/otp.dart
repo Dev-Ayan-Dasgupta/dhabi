@@ -700,20 +700,32 @@ class _OTPScreenState extends State<OTPScreen> {
                                                 );
                                               }
                                             } else {
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                Routes.selectAccount,
-                                                arguments:
-                                                    SelectAccountArgumentModel(
-                                                  emailId: otpArgumentModel
-                                                      .emailOrPhone,
-                                                  cifDetails: cifDetails,
-                                                  isPwChange: false,
-                                                  isLogin: false,
-                                                  isSwitching: false,
-                                                  isIncompleteOnboarding: false,
-                                                ).toMap(),
-                                              );
+                                              // Navigator.pushReplacementNamed(
+                                              //   context,
+                                              //   Routes.selectAccount,
+                                              //   arguments:
+                                              //       SelectAccountArgumentModel(
+                                              //     emailId: otpArgumentModel
+                                              //         .emailOrPhone,
+                                              //     cifDetails: cifDetails,
+                                              //     isPwChange: false,
+                                              //     isLogin: false,
+                                              //     isSwitching: false,
+                                              //     isIncompleteOnboarding: false,
+                                              //   ).toMap(),
+                                              // );
+                                              if (context.mounted) {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.onboarding,
+                                                  (route) => false,
+                                                  arguments:
+                                                      OnboardingArgumentModel(
+                                                    isInitial: true,
+                                                  ).toMap(),
+                                                );
+                                              }
                                             }
                                           }
                                           isLoading = false;
@@ -1151,20 +1163,32 @@ class _OTPScreenState extends State<OTPScreen> {
                                                 );
                                               }
                                             } else {
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                Routes.selectAccount,
-                                                arguments:
-                                                    SelectAccountArgumentModel(
-                                                  emailId: otpArgumentModel
-                                                      .emailOrPhone,
-                                                  cifDetails: cifDetails,
-                                                  isPwChange: false,
-                                                  isLogin: false,
-                                                  isSwitching: false,
-                                                  isIncompleteOnboarding: false,
-                                                ).toMap(),
-                                              );
+                                              // Navigator.pushReplacementNamed(
+                                              //   context,
+                                              //   Routes.selectAccount,
+                                              //   arguments:
+                                              //       SelectAccountArgumentModel(
+                                              //     emailId: otpArgumentModel
+                                              //         .emailOrPhone,
+                                              //     cifDetails: cifDetails,
+                                              //     isPwChange: false,
+                                              //     isLogin: false,
+                                              //     isSwitching: false,
+                                              //     isIncompleteOnboarding: false,
+                                              //   ).toMap(),
+                                              // );
+                                              if (context.mounted) {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.onboarding,
+                                                  (route) => false,
+                                                  arguments:
+                                                      OnboardingArgumentModel(
+                                                    isInitial: true,
+                                                  ).toMap(),
+                                                );
+                                              }
                                             }
                                           }
                                           isLoading = false;
@@ -1624,20 +1648,31 @@ class _OTPScreenState extends State<OTPScreen> {
                                               );
                                             }
                                           } else {
-                                            Navigator.pushReplacementNamed(
-                                              context,
-                                              Routes.selectAccount,
-                                              arguments:
-                                                  SelectAccountArgumentModel(
-                                                emailId: otpArgumentModel
-                                                    .emailOrPhone,
-                                                cifDetails: cifDetails,
-                                                isPwChange: false,
-                                                isLogin: false,
-                                                isSwitching: false,
-                                                isIncompleteOnboarding: false,
-                                              ).toMap(),
-                                            );
+                                            // Navigator.pushReplacementNamed(
+                                            //   context,
+                                            //   Routes.selectAccount,
+                                            //   arguments:
+                                            //       SelectAccountArgumentModel(
+                                            //     emailId: otpArgumentModel
+                                            //         .emailOrPhone,
+                                            //     cifDetails: cifDetails,
+                                            //     isPwChange: false,
+                                            //     isLogin: false,
+                                            //     isSwitching: false,
+                                            //     isIncompleteOnboarding: false,
+                                            //   ).toMap(),
+                                            // );
+                                            if (context.mounted) {
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                Routes.onboarding,
+                                                (route) => false,
+                                                arguments:
+                                                    OnboardingArgumentModel(
+                                                  isInitial: true,
+                                                ).toMap(),
+                                              );
+                                            }
                                           }
                                         }
                                         isLoading = false;
