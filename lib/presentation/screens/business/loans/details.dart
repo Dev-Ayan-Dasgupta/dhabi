@@ -79,11 +79,11 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
         loanDetails.add(DetailsTileModel(
             key: "Instalment Amount",
             value:
-                "${loanDetailsArgument.currency} ${getLoanDetailsApiResult["installmentAmount"]}"));
+                "${loanDetailsArgument.currency} ${double.parse(getLoanDetailsApiResult["installmentAmount"]) > 1000 ? NumberFormat('#,000.00').format(double.parse(getLoanDetailsApiResult["installmentAmount"])) : double.parse(getLoanDetailsApiResult["installmentAmount"]).toStringAsFixed(2)}"));
         loanDetails.add(DetailsTileModel(
             key: "Overdue Amount",
             value:
-                "${loanDetailsArgument.currency} ${getLoanDetailsApiResult["overdueAmount"]}"));
+                "${loanDetailsArgument.currency} ${double.parse(getLoanDetailsApiResult["overdueAmount"]) > 1000 ? NumberFormat('#,000.00').format(double.parse(getLoanDetailsApiResult["overdueAmount"])) : double.parse(getLoanDetailsApiResult["overdueAmount"]).toStringAsFixed(2)}"));
         loanDetails.add(DetailsTileModel(
             key: "Balance Tenure",
             value: "${getLoanDetailsApiResult["balanceTenor"]} months"));

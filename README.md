@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (61)
+## Release notes - 1.0.0 (62)
 
 1. Exchange rate 2 decimal places ¶
 2. Label 168
@@ -30,3 +30,5 @@ Digital Banking Application for Dhabi
 24. Changed textfield behaviour of amount field for send money and FD creation
 25. Implemeted thousands comma separation
 26. Updated Create Deposits button
+27. Updated calendar in create deposits to 7 days
+28. Made create deposits dropdown dynamic
