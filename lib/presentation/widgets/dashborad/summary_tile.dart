@@ -134,8 +134,10 @@ class AccountSummaryTile extends StatelessWidget {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    text: amount == ""
-                        ? ""
+                    text: amount == "" ||
+                            amount.contains("M") ||
+                            amount.contains("B")
+                        ? amount
                         : double.parse(amount.replaceAll(',', '')) > 1000
                             ? NumberFormat('#,000.00').format(
                                 double.parse(amount.replaceAll(',', '')))

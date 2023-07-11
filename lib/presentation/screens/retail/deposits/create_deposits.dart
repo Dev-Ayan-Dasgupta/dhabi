@@ -60,8 +60,21 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   String? selectedPayout;
 
+  int maturityDays = 7;
+
+  List<String> dynamicPayoutDropdowns = [];
+
   String date = "";
-  DateTime auxToDate = DateTime.now();
+  DateTime auxToDate = DateTime(
+    DateTime.now().add(const Duration(days: 7)).year,
+    DateTime.now().add(const Duration(days: 7)).month,
+    DateTime.now().add(const Duration(days: 7)).day,
+    0,
+    0,
+    0,
+    0,
+    0,
+  );
 
   double interestRate = 0;
 
@@ -167,20 +180,20 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Row(
-                          //   children: [
-                          //     Text(
-                          //       "Select an Account",
-                          //       style: TextStyles.primaryMedium.copyWith(
-                          //         color: AppColors.dark80,
-                          //         fontSize: (16 / Dimensions.designWidth).w,
-                          //       ),
-                          //     ),
-                          //     const Asterisk(),
-                          //   ],
-                          // ),
-                          const MandatoryFieldLabel(
-                              labelText: "Select an Account"),
+                          Row(
+                            children: [
+                              Text(
+                                "Select an Account",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          // const MandatoryFieldLabel(
+                          // labelText: "Select an Account"),
                           const SizeBox(height: 10),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
                             builder: (context, state) {
@@ -425,20 +438,20 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                             ),
                           ),
                           const SizeBox(height: 15),
-                          // Row(
-                          //   children: [
-                          //     Text(
-                          //       "Deposit Amount (USD)",
-                          //       style: TextStyles.primaryMedium.copyWith(
-                          //         color: AppColors.dark80,
-                          //         fontSize: (14 / Dimensions.designWidth).w,
-                          //       ),
-                          //     ),
-                          //     const Asterisk(),
-                          //   ],
-                          // ),
-                          const MandatoryFieldLabel(
-                              labelText: "Deposit Amount (USD)"),
+                          Row(
+                            children: [
+                              Text(
+                                "Deposit Amount (USD)",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (14 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          // const MandatoryFieldLabel(
+                          //     labelText: "Deposit Amount (USD)"),
                           const SizeBox(height: 7),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
                             builder: (context, state) {
@@ -458,20 +471,20 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                             builder: buildErrorMessage,
                           ),
                           const SizeBox(height: 10),
-                          // Row(
-                          //   children: [
-                          //     Text(
-                          //       labels[110]["labelText"],
-                          //       style: TextStyles.primaryMedium.copyWith(
-                          //         color: AppColors.dark80,
-                          //         fontSize: (14 / Dimensions.designWidth).w,
-                          //       ),
-                          //     ),
-                          //     const Asterisk(),
-                          //   ],
-                          // ),
-                          MandatoryFieldLabel(
-                              labelText: labels[110]["labelText"]),
+                          Row(
+                            children: [
+                              Text(
+                                labels[110]["labelText"],
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (14 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          // MandatoryFieldLabel(
+                          //     labelText: labels[110]["labelText"]),
                           const SizeBox(height: 10),
                           InkWell(
                             onTap: showDatePickerWidget,
@@ -686,9 +699,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       initialDateTime:
                           auxToDate.add(const Duration(seconds: 1)),
                       minimumDate: DateTime(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day,
+                        DateTime.now().add(const Duration(days: 7)).year,
+                        DateTime.now().add(const Duration(days: 7)).month,
+                        DateTime.now().add(const Duration(days: 7)).day,
                         0,
                         0,
                         0,
@@ -707,9 +720,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       looping: false,
                       initialDate: auxToDate.add(const Duration(seconds: 1)),
                       firstDate: DateTime(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day,
+                        DateTime.now().add(const Duration(days: 7)).year,
+                        DateTime.now().add(const Duration(days: 7)).month,
+                        DateTime.now().add(const Duration(days: 7)).day,
                         0,
                         0,
                         0,
@@ -792,8 +805,21 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
         break;
       }
     }
+    maturityDays = auxToDate.difference(DateTime.now()).inHours <= 0
+        ? auxToDate.difference(DateTime.now()).inDays
+        : auxToDate.difference(DateTime.now()).inDays + 1;
     date = DateFormat('d MMMM, yyyy').format(auxToDate);
     dateSelectionBloc.add(const DateSelectionEvent(isDateSelected: true));
+
+    final DropdownSelectedBloc dropdownSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    getPayoutDropdown(maturityDays);
+    selectedPayout = dynamicPayoutDropdowns[0];
+    isShowButton = true;
+    dropdownSelectedBloc.add(
+      DropdownSelectedEvent(isDropdownSelected: true, toggles: 1),
+    );
+
     showPeriod = true;
     showPeriodSection.add(
       ShowButtonEvent(
@@ -851,37 +877,47 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
             ),
           ),
           const SizeBox(height: 20),
-          // Row(
-          //   children: [
-          //     Text(
-          //       labels[112]["labelText"],
-          //       style: TextStyles.primaryMedium.copyWith(
-          //         color: AppColors.dark80,
-          //         fontSize: (14 / Dimensions.designWidth).w,
-          //       ),
-          //     ),
-          //     const Asterisk(),
-          //   ],
-          // ),
-          MandatoryFieldLabel(labelText: labels[112]["labelText"]),
-          const SizeBox(height: 7),
-          BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-            builder: buildInterestDropdown,
+          Row(
+            children: [
+              Text(
+                labels[112]["labelText"],
+                style: TextStyles.primaryMedium.copyWith(
+                  color: AppColors.dark80,
+                  fontSize: (14 / Dimensions.designWidth).w,
+                ),
+              ),
+              const Asterisk(),
+            ],
           ),
+
+          // MandatoryFieldLabel(labelText: labels[112]["labelText"]),
+          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+            builder: (context, state) {
+              return Column(
+                children: [
+                  const SizeBox(height: 7),
+                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                    builder: buildInterestDropdown,
+                  ),
+                ],
+              );
+            },
+          ),
+
           const SizeBox(height: 20),
-          // Row(
-          //   children: [
-          //     Text(
-          //       labels[113]["labelText"],
-          //       style: TextStyles.primaryMedium.copyWith(
-          //         color: AppColors.dark80,
-          //         fontSize: (14 / Dimensions.designWidth).w,
-          //       ),
-          //     ),
-          //     const Asterisk(),
-          //   ],
-          // ),
-          MandatoryFieldLabel(labelText: labels[113]["labelText"]),
+          Row(
+            children: [
+              Text(
+                labels[113]["labelText"],
+                style: TextStyles.primaryMedium.copyWith(
+                  color: AppColors.dark80,
+                  fontSize: (14 / Dimensions.designWidth).w,
+                ),
+              ),
+              const Asterisk(),
+            ],
+          ),
+          // MandatoryFieldLabel(labelText: labels[113]["labelText"]),
           const SizeBox(height: 10),
           Row(
             children: [
@@ -917,9 +953,21 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const MandatoryFieldLabel(
-                        labelText:
-                            "Do you want to set Standing Instruction for Maturity?"),
+                    Row(
+                      children: [
+                        Text(
+                          "Do you want to set Standing Instruction for Maturity?",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.dark80,
+                            fontSize: (14 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const Asterisk(),
+                      ],
+                    ),
+                    // const MandatoryFieldLabel(
+                    //     labelText:
+                    //         "Do you want to set Standing Instruction for Maturity?"),
                     const SizeBox(height: 10),
                     Row(
                       children: [
@@ -967,10 +1015,37 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
       BuildContext context, DropdownSelectedState state) {
     return CustomDropDown(
       title: "Select from the list",
-      items: payoutDurationDDs,
+      items: getPayoutDropdown(maturityDays),
+      // payoutDurationDDs,
       value: selectedPayout,
       onChanged: onDropdownChanged,
     );
+  }
+
+  List<String> getPayoutDropdown(int days) {
+    dynamicPayoutDropdowns = [];
+    if (days < 30) {
+      dynamicPayoutDropdowns = [payoutDurationDDs[0]];
+    } else if (days >= 30 && days < 90) {
+      dynamicPayoutDropdowns = [payoutDurationDDs[0], payoutDurationDDs[1]];
+    } else if (days >= 90 && days < 180) {
+      dynamicPayoutDropdowns = [
+        payoutDurationDDs[0],
+        payoutDurationDDs[1],
+        payoutDurationDDs[2]
+      ];
+    } else if (days >= 180 && days < 365) {
+      dynamicPayoutDropdowns = [
+        payoutDurationDDs[0],
+        payoutDurationDDs[1],
+        payoutDurationDDs[2],
+        payoutDurationDDs[3]
+      ];
+    } else {
+      dynamicPayoutDropdowns = payoutDurationDDs;
+    }
+    log("result -> $dynamicPayoutDropdowns");
+    return dynamicPayoutDropdowns;
   }
 
   void onDropdownChanged(Object? value) {
