@@ -1679,7 +1679,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                                             Navigator.pop(context1);
                                                                                           }
                                                                                         },
-                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.uaeFlag),
+                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.usaFlag),
                                                                                         title: Text(
                                                                                           accountDetails[index]["accountNumber"],
                                                                                           style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),
@@ -2738,7 +2738,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                                             Navigator.pop(context1);
                                                                                           }
                                                                                         },
-                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.uaeFlag),
+                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.usaFlag),
                                                                                         title: Text(
                                                                                           depositDetails[index]["depositAccountNumber"],
                                                                                           style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),

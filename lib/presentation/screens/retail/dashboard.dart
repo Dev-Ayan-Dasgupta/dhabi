@@ -572,6 +572,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                               "0");
                                                       log("storageChosenAccount -> $storageChosenAccount");
 
+                                                      await getCustomerAcountDetails();
                                                       await getCustomerAccountStatement();
 
                                                       if (context.mounted) {
@@ -1197,7 +1198,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                                             Navigator.pop(context1);
                                                                                           }
                                                                                         },
-                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.uaeFlag),
+                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.usaFlag),
                                                                                         title: Text(
                                                                                           accountDetails[index]["accountNumber"],
                                                                                           style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),
@@ -2254,7 +2255,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                                             Navigator.pop(context1);
                                                                                           }
                                                                                         },
-                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.uaeFlag),
+                                                                                        leading: const CustomCircleAvatarAsset(imgUrl: ImageConstants.usaFlag),
                                                                                         title: Text(
                                                                                           depositDetails[index]["depositAccountNumber"],
                                                                                           style: TextStyles.primaryBold.copyWith(color: AppColors.primary, fontSize: (16 / Dimensions.designWidth).w),

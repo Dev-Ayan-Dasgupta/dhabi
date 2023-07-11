@@ -32,3 +32,6 @@ Digital Banking Application for Dhabi
 26. Updated Create Deposits button
 27. Updated calendar in create deposits to 7 days
 28. Made create deposits dropdown dynamic
+29. Changed app icon
+30. Changed UAE flag to USA flag
+31. iOS decimal point removed
