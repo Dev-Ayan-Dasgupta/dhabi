@@ -76,6 +76,7 @@ class DashboardTransactionListTile extends StatelessWidget {
                 const SizeBox(width: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                       width: 45.w,
@@ -88,18 +89,18 @@ class DashboardTransactionListTile extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizeBox(height: 7),
-                    SizedBox(
-                      width: 45.w,
-                      child: Text(
-                        name,
-                        style: TextStyles.primary.copyWith(
-                          color: AppColors.grey40,
-                          fontSize: (14 / Dimensions.designWidth).w,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    // const SizeBox(height: 7),
+                    // SizedBox(
+                    //   width: 45.w,
+                    //   child: Text(
+                    //     name,
+                    //     style: TextStyles.primary.copyWith(
+                    //       color: AppColors.grey40,
+                    //       fontSize: (14 / Dimensions.designWidth).w,
+                    //     ),
+                    //     overflow: TextOverflow.ellipsis,
+                    //   ),
+                    // ),
                   ],
                 )
               ],

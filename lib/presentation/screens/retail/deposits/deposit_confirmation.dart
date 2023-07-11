@@ -69,7 +69,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
     depositDetails.add(DetailsTileModel(
         key: "Interest Amount",
         value:
-            "USD ${depositConfirmationModel.interestAmount.toStringAsFixed(2)}"));
+            "USD ${depositConfirmationModel.interestAmount > 1000 ? NumberFormat('#,000.00').format(depositConfirmationModel.interestAmount) : depositConfirmationModel.interestAmount.toStringAsFixed(2)}"));
     depositDetails.add(DetailsTileModel(
         key: "Interest Payout",
         value: depositConfirmationModel.interestPayout));
