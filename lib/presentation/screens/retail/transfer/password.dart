@@ -216,7 +216,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                   "benBankCode": benBankCode,
                                   "benMobileNo": benMobileNo,
                                   "benSubBankCode": benSubBankCode,
-                                  "accountType": benAccountType.toString(),
+                                  "accountType":
+                                      isBankSelected ? "Account" : "Wallet",
                                   "benIdType": benIdType,
                                   "benIdNo": benIdNo,
                                   "benIdExpiryDate": benIdExpiryDate,
@@ -242,7 +243,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                     "benBankCode": benBankCode,
                                     "benMobileNo": benMobileNo,
                                     "benSubBankCode": benSubBankCode,
-                                    "accountType": benAccountType.toString(),
+                                    "accountType":
+                                        isBankSelected ? "Account" : "Wallet",
                                     "benIdType": benIdType,
                                     "benIdNo": benIdNo,
                                     "benIdExpiryDate": benIdExpiryDate,
@@ -1081,7 +1083,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                   "benBankCode": benBankCode,
                                   "benMobileNo": benMobileNo,
                                   "benSubBankCode": benSubBankCode,
-                                  "accountType": benAccountType.toString(),
+                                  "accountType":
+                                      isBankSelected ? "Account" : "Wallet",
                                   "benIdType": benIdType,
                                   "benIdNo": benIdNo,
                                   "benIdExpiryDate": benIdExpiryDate,
@@ -1108,7 +1111,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                     "benBankCode": benBankCode,
                                     "benMobileNo": benMobileNo,
                                     "benSubBankCode": benSubBankCode,
-                                    "accountType": benAccountType.toString(),
+                                    "accountType":
+                                        isBankSelected ? "Account" : "Wallet",
                                     "benIdType": benIdType,
                                     "benIdNo": benIdNo,
                                     "benIdExpiryDate": benIdExpiryDate,
