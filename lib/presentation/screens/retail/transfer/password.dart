@@ -207,7 +207,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                             if (sendMoneyArgument.isRetail) {
                               if (sendMoneyArgument.isRemittance) {
                                 log("Remittance request -> ${{
-                                  "quotationId": "string",
+                                  "quotationId": quotationId,
                                   "sourceCurrency": senderCurrency,
                                   "targetCurrency": receiverCurrency,
                                   "countryCode": beneficiaryCountryCode,
@@ -234,7 +234,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                 var remittanceApiResult =
                                     await MapInter.mapInter(
                                   {
-                                    "quotationId": "string",
+                                    "quotationId": quotationId,
                                     "sourceCurrency": senderCurrency,
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
@@ -1074,7 +1074,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                             } else {
                               if (sendMoneyArgument.isRemittance) {
                                 log("corpRemittanceApi Request -> ${{
-                                  "quotationId": "string",
+                                  "quotationId": quotationId,
                                   "sourceCurrency": senderCurrency,
                                   "targetCurrency": receiverCurrency,
                                   "countryCode": beneficiaryCountryCode,
@@ -1102,7 +1102,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                     await MapForeignMoneyTransfer
                                         .mapForeignMoneyTransfer(
                                   {
-                                    "quotationId": "string",
+                                    "quotationId": quotationId,
                                     "sourceCurrency": senderCurrency,
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
@@ -2431,7 +2431,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                             : const SizeBox(),
                       ),
                       SizeBox(
-                        height: MediaQuery.paddingOf(context).bottom,
+                        height: PaddingConstants.bottomPadding +
+                            MediaQuery.paddingOf(context).bottom,
                       ),
                     ],
                   );
@@ -2443,7 +2444,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                         text: labels[31]["labelText"],
                       ),
                       SizeBox(
-                        height: MediaQuery.paddingOf(context).bottom,
+                        height: PaddingConstants.bottomPadding +
+                            MediaQuery.paddingOf(context).bottom,
                       ),
                     ],
                   );

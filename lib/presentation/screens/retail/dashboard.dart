@@ -237,7 +237,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     isFetchingAccountDetails = true;
     showButtonBloc.add(ShowButtonEvent(show: isFetchingAccountDetails));
     await getCustomerAcountDetails();
-    Future.wait(
+    await Future.wait(
         [getCustomerAccountStatement(), getCustomerFdAccountStatement()]);
     // await getCustomerAccountStatement();
     // await getCustomerFdAccountStatement();

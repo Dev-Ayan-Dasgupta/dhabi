@@ -9,7 +9,6 @@ import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/dropdown_currencies.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -55,6 +54,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
   int initLength = 4;
 
   bool isFetchingExchangeRate = false;
+  bool isFetchingQuotation = false;
 
   late SendMoneyArgumentModel sendMoneyArgument;
 
@@ -595,7 +595,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       }
     }
     if (double.parse(_sendController.text.replaceAll(',', '')) >
-        senderBalance) {
+        senderBalance.abs()) {
       // ! abs()
       isShowButton = false;
       borderColor = AppColors.red100;
@@ -671,19 +671,99 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       if (sendMoneyArgument.isRemittance) {
         if (isBearerTypeSelected) {
           return GradientButton(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                Routes.transferConfirmation,
-                arguments: SendMoneyArgumentModel(
-                  isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
-                  isWithinDhabi: sendMoneyArgument.isWithinDhabi,
-                  isRemittance: sendMoneyArgument.isRemittance,
-                  isRetail: sendMoneyArgument.isRetail,
-                ).toMap(),
-              );
+            onTap: () async {
+              if (sendMoneyArgument.isRemittance) {
+                if (!isFetchingQuotation) {
+                  final ShowButtonBloc showButtonBloc =
+                      context.read<ShowButtonBloc>();
+                  isFetchingQuotation = true;
+                  showButtonBloc
+                      .add(ShowButtonEvent(show: isFetchingQuotation));
+
+                  log("Quotation API Request -> ${{
+                    "isAccount": isBankSelected,
+                    "beneficiaryAccountNumber": receiverAccountNumber,
+                    "beneficiaryMobile": benMobileNo,
+                    "beneficiaryCountryCode": beneficiaryCountryCode,
+                    "requestAmount": _sendController.text.replaceAll(',', ''),
+                    "sourceCurrency": senderCurrency,
+                    "targetCurrency": receiverCurrency,
+                  }}");
+                  var quotationApiResult = await MapQuotation.mapQuotation(
+                    {
+                      "isAccount": isBankSelected,
+                      "beneficiaryAccountNumber": receiverAccountNumber,
+                      "beneficiaryMobile": benMobileNo,
+                      "beneficiaryCountryCode": beneficiaryCountryCode,
+                      "requestAmount": _sendController.text.replaceAll(',', ''),
+                      "sourceCurrency": senderCurrency,
+                      "targetCurrency": receiverCurrency,
+                    },
+                    token ?? "",
+                  );
+                  log("quotationApiResult -> $quotationApiResult");
+
+                  if (quotationApiResult["success"]) {
+                    quotationId = quotationApiResult["quotationReferenceNo"];
+                    senderAmount =
+                        double.parse(quotationApiResult["exchangeAmount"]);
+                    if (context.mounted) {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.transferConfirmation,
+                        arguments: SendMoneyArgumentModel(
+                          isBetweenAccounts:
+                              sendMoneyArgument.isBetweenAccounts,
+                          isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                          isRemittance: sendMoneyArgument.isRemittance,
+                          isRetail: sendMoneyArgument.isRetail,
+                        ).toMap(),
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.warning,
+                            title: "Sorry!",
+                            message: quotationApiResult["message"] ??
+                                "There was an error in getting quotation, please try again later.",
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }
+
+                  isFetchingQuotation = false;
+                  showButtonBloc
+                      .add(ShowButtonEvent(show: isFetchingQuotation));
+                }
+              } else {
+                if (context.mounted) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.transferConfirmation,
+                    arguments: SendMoneyArgumentModel(
+                      isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
+                      isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                      isRemittance: sendMoneyArgument.isRemittance,
+                      isRetail: sendMoneyArgument.isRetail,
+                    ).toMap(),
+                  );
+                }
+              }
             },
             text: labels[127]["labelText"],
+            auxWidget:
+                isFetchingQuotation ? const LoaderRow() : const SizeBox(),
           );
         } else {
           return SolidButton(

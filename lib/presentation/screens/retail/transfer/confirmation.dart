@@ -62,9 +62,7 @@ class _TransferConfirmationScreenState
       transferConfirmation.add(DetailsTileModel(
           key: labels[159]["labelText"],
           value:
-              "$senderCurrency ${senderAmount >= 1000 ? NumberFormat('#,000.00').format(senderAmount) : senderAmount.toStringAsFixed(2)
-              // senderAmount.toStringAsFixed(2)
-              }"));
+              "$senderCurrency ${senderAmount >= 1000 ? NumberFormat('#,000.00').format(senderAmount) : senderAmount.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: sendMoneyArgument.isBetweenAccounts
               ? labels[163]["labelText"]
@@ -89,12 +87,14 @@ class _TransferConfirmationScreenState
           key: labels[178]["labelText"], value: benCustomerName));
       transferConfirmation.add(DetailsTileModel(
           key: labels[159]["labelText"],
-          value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
+          value:
+              "$senderCurrency ${senderAmount >= 1000 ? NumberFormat('#,000.00').format(senderAmount) : senderAmount.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: sendMoneyArgument.isBetweenAccounts
               ? labels[163]["labelText"]
               : labels[198]["labelText"],
-          value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
+          value:
+              "$receiverCurrency ${receiverAmount >= 1000 ? NumberFormat('#,000.00').format(receiverAmount) : receiverAmount}"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
           value:
@@ -102,8 +102,8 @@ class _TransferConfirmationScreenState
       transferConfirmation.add(DetailsTileModel(
           key: labels[168]["labelText"],
           value: isSenderBearCharges
-              ? "$senderCurrency $fees"
-              : "$receiverCurrency $fees"));
+              ? "$senderCurrency ${fees.toStringAsFixed(2)}"
+              : "$receiverCurrency ${fees.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: "Purpose of Payment", value: remittancePurpose ?? ""));
       transferConfirmation.add(DetailsTileModel(
@@ -121,12 +121,14 @@ class _TransferConfirmationScreenState
               : benCustomerName));
       transferConfirmation.add(DetailsTileModel(
           key: labels[159]["labelText"],
-          value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
+          value:
+              "$senderCurrency ${senderAmount >= 1000 ? NumberFormat('#,000.00').format(senderAmount) : senderAmount.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: sendMoneyArgument.isBetweenAccounts
               ? labels[163]["labelText"]
               : labels[198]["labelText"],
-          value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
+          value:
+              "$receiverCurrency ${receiverAmount >= 1000 ? NumberFormat('#,000.00').format(receiverAmount) : receiverAmount}"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
           value:
@@ -210,7 +212,6 @@ class _TransferConfirmationScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
                     labels[164]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
@@ -446,7 +447,7 @@ class _TransferConfirmationScreenState
                                       }
                                     } else {
                                       log("Remittance request -> ${{
-                                        "quotationId": "string",
+                                        "quotationId": quotationId,
                                         "sourceCurrency": senderCurrency,
                                         "targetCurrency": receiverCurrency,
                                         "countryCode": beneficiaryCountryCode,
@@ -475,7 +476,7 @@ class _TransferConfirmationScreenState
                                       var remittanceApiResult =
                                           await MapInter.mapInter(
                                         {
-                                          "quotationId": "string",
+                                          "quotationId": quotationId,
                                           "sourceCurrency": senderCurrency,
                                           "targetCurrency": receiverCurrency,
                                           "countryCode": beneficiaryCountryCode,
@@ -855,7 +856,7 @@ class _TransferConfirmationScreenState
                                 }
                               } else {
                                 log("Remittance request -> ${{
-                                  "quotationId": "string",
+                                  "quotationId": quotationId,
                                   "sourceCurrency": senderCurrency,
                                   "targetCurrency": receiverCurrency,
                                   "countryCode": beneficiaryCountryCode,
@@ -882,7 +883,7 @@ class _TransferConfirmationScreenState
                                 var remittanceApiResult =
                                     await MapInter.mapInter(
                                   {
-                                    "quotationId": "string",
+                                    "quotationId": quotationId,
                                     "sourceCurrency": senderCurrency,
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
@@ -2534,7 +2535,7 @@ class _TransferConfirmationScreenState
                                       }
                                     } else {
                                       log("corpRemittanceApi Request -> ${{
-                                        "quotationId": "string",
+                                        "quotationId": quotationId,
                                         "sourceCurrency": senderCurrency,
                                         "targetCurrency": receiverCurrency,
                                         "countryCode": beneficiaryCountryCode,
@@ -2564,7 +2565,7 @@ class _TransferConfirmationScreenState
                                           await MapForeignMoneyTransfer
                                               .mapForeignMoneyTransfer(
                                         {
-                                          "quotationId": "string",
+                                          "quotationId": quotationId,
                                           "sourceCurrency": senderCurrency,
                                           "targetCurrency": receiverCurrency,
                                           "countryCode": beneficiaryCountryCode,
@@ -3278,7 +3279,7 @@ class _TransferConfirmationScreenState
                                 }
                               } else {
                                 log("corpRemittanceApi Request -> ${{
-                                  "quotationId": "string",
+                                  "quotationId": quotationId,
                                   "sourceCurrency": senderCurrency,
                                   "targetCurrency": receiverCurrency,
                                   "countryCode": beneficiaryCountryCode,
@@ -3306,7 +3307,7 @@ class _TransferConfirmationScreenState
                                     await MapForeignMoneyTransfer
                                         .mapForeignMoneyTransfer(
                                   {
-                                    "quotationId": "string",
+                                    "quotationId": quotationId,
                                     "sourceCurrency": senderCurrency,
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,

@@ -41,6 +41,8 @@ String? remittancePurpose;
 String? sourceOfFunds;
 String? relation;
 
+String quotationId = "";
+
 bool isAddRemBeneficiary = false;
 
 bool isBank = false;
