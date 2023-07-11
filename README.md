@@ -35,3 +35,4 @@ Digital Banking Application for Dhabi
 29. Changed app icon
 30. Changed UAE flag to USA flag
 31. iOS decimal point removed
+32. Implemented Duration dropdown for account statement download
