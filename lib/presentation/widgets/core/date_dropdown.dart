@@ -26,7 +26,8 @@ class DateDropdown extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(
               Radius.circular((10 / Dimensions.designWidth).w)),
-          boxShadow: [BoxShadows.primary],
+          // boxShadow: [BoxShadows.primary],
+          border: Border.all(color: const Color(0XFFEEEEEE), width: 1),
           color: Colors.white,
         ),
         child: Row(

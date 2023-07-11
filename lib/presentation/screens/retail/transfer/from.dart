@@ -287,14 +287,14 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                               .replaceAll(",", ""))
                                           .toStringAsFixed(2)
                                   : sendMoneyArgument.isBetweenAccounts
-                                      ? internalSeedAccounts[index].bal > 1000
+                                      ? internalSeedAccounts[index].bal >= 1000
                                           ? NumberFormat('#,000.00').format(internalSeedAccounts[index].bal)
                                           : internalSeedAccounts[index].bal.toStringAsFixed(2)
                                       : sendMoneyArgument.isWithinDhabi
-                                          ? dhabiSeedAccounts[index].bal > 1000
+                                          ? dhabiSeedAccounts[index].bal >= 1000
                                               ? NumberFormat('#,000.00').format(dhabiSeedAccounts[index].bal)
                                               : dhabiSeedAccounts[index].bal.toStringAsFixed(2)
-                                          : foreignSeedAccounts[index].bal > 1000
+                                          : foreignSeedAccounts[index].bal >= 1000
                                               ? NumberFormat('#,000.00').format(foreignSeedAccounts[index].bal)
                                               : foreignSeedAccounts[index].bal,
                               isSelected: selectedAccountIndex == index,

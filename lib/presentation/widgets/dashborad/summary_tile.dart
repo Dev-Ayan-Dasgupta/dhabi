@@ -138,7 +138,7 @@ class AccountSummaryTile extends StatelessWidget {
                             amount.contains("M") ||
                             amount.contains("B")
                         ? amount
-                        : double.parse(amount.replaceAll(',', '')) > 1000
+                        : double.parse(amount.replaceAll(',', '')) >= 1000
                             ? NumberFormat('#,000.00').format(
                                 double.parse(amount.replaceAll(',', '')))
                             : amount,

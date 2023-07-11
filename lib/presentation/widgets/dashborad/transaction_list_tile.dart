@@ -110,8 +110,8 @@ class DashboardTransactionListTile extends StatelessWidget {
               children: [
                 Text(
                   isCredit
-                      ? "${amount > 1000 ? NumberFormat('#,000.00').format(amount) : amount.toStringAsFixed(2)} $currency"
-                      : "- ${amount > 1000 ? NumberFormat('#,000.00').format(amount) : amount.toStringAsFixed(2)} $currency",
+                      ? "${amount >= 1000 ? NumberFormat('#,000.00').format(amount) : amount.toStringAsFixed(2)} $currency"
+                      : "- ${amount >= 1000 ? NumberFormat('#,000.00').format(amount) : amount.toStringAsFixed(2)} $currency",
                   style: TextStyles.primaryBold.copyWith(
                     color:
                         isCredit ? AppColors.green100 : AppColors.primaryDark,

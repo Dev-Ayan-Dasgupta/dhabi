@@ -62,7 +62,7 @@ class _TransferConfirmationScreenState
       transferConfirmation.add(DetailsTileModel(
           key: labels[159]["labelText"],
           value:
-              "$senderCurrency ${senderAmount > 1000 ? NumberFormat('#,000.00').format(senderAmount) : senderAmount.toStringAsFixed(2)
+              "$senderCurrency ${senderAmount >= 1000 ? NumberFormat('#,000.00').format(senderAmount) : senderAmount.toStringAsFixed(2)
               // senderAmount.toStringAsFixed(2)
               }"));
       transferConfirmation.add(DetailsTileModel(
@@ -70,7 +70,7 @@ class _TransferConfirmationScreenState
               ? labels[163]["labelText"]
               : labels[198]["labelText"],
           value:
-              "$receiverCurrency ${receiverAmount > 1000 ? NumberFormat('#,000.00').format(receiverAmount) : receiverAmount}"));
+              "$receiverCurrency ${receiverAmount >= 1000 ? NumberFormat('#,000.00').format(receiverAmount) : receiverAmount}"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
           value:

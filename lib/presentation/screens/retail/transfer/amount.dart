@@ -9,6 +9,7 @@ import 'package:dialup_mobile_app/data/models/widgets/index.dart';
 import 'package:dialup_mobile_app/data/repositories/payments/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/dropdown_currencies.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -175,9 +176,10 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                     hintText: "0",
                                     controller: _sendController,
                                     onChanged: onSendChanged,
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                            decimal: true),
+                                    keyboardType: TextInputType.number,
+                                    // inputFormatters: [
+                                    //   FilteringTextInputFormatter.digitsOnly
+                                    // ],
                                     suffixIcon: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -537,7 +539,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       _sendController.text =
           (double.parse(_sendController.text.replaceAll(',', '')) / 10)
               .toStringAsFixed(2);
-      if (double.parse(_sendController.text.replaceAll(',', '')) > 1000) {
+      if (double.parse(_sendController.text.replaceAll(',', '')) >= 1000) {
         _sendController.text = NumberFormat('#,000.00')
             .format(double.parse(_sendController.text.replaceAll(',', '')));
       }
@@ -547,7 +549,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
           (double.parse(_sendController.text.replaceAll(',', '')) *
                   exchangeRate)
               .toStringAsFixed(2);
-      if (double.parse(_receiveController.text.replaceAll(',', '')) > 1000) {
+      if (double.parse(_receiveController.text.replaceAll(',', '')) >= 1000) {
         _receiveController.text = NumberFormat('#,000.00')
             .format(double.parse(_receiveController.text.replaceAll(',', '')));
       }
@@ -555,7 +557,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       _sendController.text =
           (double.parse(_sendController.text.replaceAll(',', '')) * 10)
               .toStringAsFixed(2);
-      if (double.parse(_sendController.text.replaceAll(',', '')) > 1000) {
+      if (double.parse(_sendController.text.replaceAll(',', '')) >= 1000) {
         _sendController.text = NumberFormat('#,000.00')
             .format(double.parse(_sendController.text.replaceAll(',', '')));
       }
@@ -565,7 +567,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
           (double.parse(_sendController.text.replaceAll(',', '')) *
                   exchangeRate)
               .toStringAsFixed(2);
-      if (double.parse(_receiveController.text.replaceAll(',', '')) > 1000) {
+      if (double.parse(_receiveController.text.replaceAll(',', '')) >= 1000) {
         _receiveController.text = NumberFormat('#,000.00')
             .format(double.parse(_receiveController.text.replaceAll(',', '')));
       }
@@ -586,7 +588,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       toggleCaptionsBloc.add(ShowButtonEvent(show: isNotZero));
     }
     if (isWalletSelected) {
-      if (double.parse(_sendController.text.replaceAll(',', '')) > 10000) {
+      if (double.parse(_sendController.text.replaceAll(',', '')) >= 10000) {
         isShowButton = false;
         borderColor = AppColors.red100;
         showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));
@@ -622,7 +624,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
         ),
         Text(
           isShowButton
-              ? "Available to transfer $senderCurrency ${isWalletSelected ? senderBalance > 10000 ? 10000 : senderBalance : senderBalance}"
+              ? "Available to transfer $senderCurrency ${isWalletSelected ? senderBalance >= 10000 ? 10000 : senderBalance : senderBalance}"
               : " ${messages[11]["messageText"]}",
           style: TextStyles.primaryMedium.copyWith(
             color: isShowButton ? AppColors.dark50 : AppColors.red100,

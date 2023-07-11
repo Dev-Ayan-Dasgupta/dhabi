@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_holo_date_picker/widget/date_picker_widget.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -458,9 +459,10 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                               return CustomTextField(
                                 borderColor: borderColor,
                                 controller: _depositController,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
+                                // inputFormatters: [
+                                //   FilteringTextInputFormatter.digitsOnly
+                                // ],
+                                keyboardType: TextInputType.number,
                                 hintText: "E.g., 20000",
                                 onChanged: onDepositChanged,
                               );
@@ -1392,7 +1394,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
       _depositController.text =
           (double.parse(_depositController.text.replaceAll(',', '')) / 10)
               .toStringAsFixed(2);
-      if (double.parse(_depositController.text.replaceAll(',', '')) > 1000) {
+      if (double.parse(_depositController.text.replaceAll(',', '')) >= 1000) {
         _depositController.text = NumberFormat('#,000.00')
             .format(double.parse(_depositController.text.replaceAll(',', '')));
       }
@@ -1403,7 +1405,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
       _depositController.text =
           (double.parse(_depositController.text.replaceAll(',', '')) * 10)
               .toStringAsFixed(2);
-      if (double.parse(_depositController.text.replaceAll(',', '')) > 1000) {
+      if (double.parse(_depositController.text.replaceAll(',', '')) >= 1000) {
         _depositController.text = NumberFormat('#,000.00')
             .format(double.parse(_depositController.text.replaceAll(',', '')));
       }

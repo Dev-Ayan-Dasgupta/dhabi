@@ -85,7 +85,7 @@ class VaultAccountCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "$currency ${double.parse(amount.replaceAll(',', '')).abs() > 1000 ? NumberFormat('#,000.00').format(double.parse(amount.replaceAll(',', ''))) : double.parse(amount.replaceAll(',', '')).toStringAsFixed(2)} ",
+                      "$currency ${double.parse(amount.replaceAll(',', '')).abs() >= 1000 ? NumberFormat('#,000.00').format(double.parse(amount.replaceAll(',', ''))) : double.parse(amount.replaceAll(',', '')).toStringAsFixed(2)} ",
                       style: TextStyles.primaryBold.copyWith(
                         fontSize: (16 / Dimensions.designWidth).w,
                         color: AppColors.primaryDark,

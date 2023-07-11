@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/utils/constants/index.dart';
@@ -32,6 +33,7 @@ class CustomTextField extends StatefulWidget {
     this.minLines,
     this.maxLines,
     this.maxLength,
+    this.inputFormatters,
   }) : super(key: key);
 
   final bool? isDense;
@@ -59,6 +61,7 @@ class CustomTextField extends StatefulWidget {
   final int? minLines;
   final int? maxLines;
   final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -86,7 +89,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         color: widget.color ?? Colors.transparent,
       ),
-      child: TextField(
+      child: TextFormField(
+        inputFormatters: widget.inputFormatters ?? [],
         controller: widget.controller,
         enabled: widget.enabled,
         minLines: widget.minLines,
