@@ -135,7 +135,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                 showBiometricLater();
               }
             },
-            text: labels[127]["labelText"],
+            text: "Later",
             color: AppColors.primaryBright17,
             fontColor: AppColors.primary,
           ),
@@ -147,7 +147,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                   await storage.read(key: "persistBiometric") == "true";
               if (context.mounted) {
                 Navigator.pop(context);
-                // showBiometricSuccess();
+                showBiometricSuccess();
               }
             },
             text: "Enable Now",
@@ -167,8 +167,15 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           message:
               "Enjoy the added convenience and security in using the app with biometric authentication.",
           actionWidget: GradientButton(
-            onTap: () {
-              Navigator.pop(context);
+            onTap: () async {
+              await storage.write(
+                  key: "persistBiometric", value: true.toString());
+              persistBiometric =
+                  await storage.read(key: "persistBiometric") == "true";
+              if (context.mounted) {
+                Navigator.pop(context);
+                // showBiometricSuccess();
+              }
             },
             text: labels[293]["labelText"],
           ),
@@ -446,6 +453,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                 BlocBuilder<TabbarBloc, TabbarState>(
                                   builder: (context, state) {
                                     return TabBar(
+                                      padding: EdgeInsets.zero,
+                                      labelPadding: EdgeInsets.zero,
                                       splashFactory: NoSplash.splashFactory,
                                       overlayColor:
                                           MaterialStateProperty.all<Color>(
@@ -465,21 +474,23 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                       indicatorColor: Colors.transparent,
                                       tabs: [
                                         Tab(
-                                          child: tabController.index == 0
-                                              ? const CustomTab(title: "Home")
-                                              : const Text("Home"),
+                                          child: CustomTab(
+                                            title: "Home",
+                                            isSelected:
+                                                tabController.index == 0,
+                                          ),
                                         ),
                                         Tab(
-                                          child: tabController.index == 1
-                                              ? const CustomTab(
-                                                  title: "Deposits")
-                                              : const Text("Deposits"),
+                                          child: CustomTab(
+                                              title: "Deposits",
+                                              isSelected:
+                                                  tabController.index == 1),
                                         ),
                                         Tab(
-                                          child: tabController.index == 2
-                                              ? const CustomTab(
-                                                  title: "Explore")
-                                              : const Text("Explore"),
+                                          child: CustomTab(
+                                              title: "Explore",
+                                              isSelected:
+                                                  tabController.index == 2),
                                         ),
                                       ],
                                       isScrollable: true,

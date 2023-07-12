@@ -36,3 +36,6 @@ Digital Banking Application for Dhabi
 30. Changed UAE flag to USA flag
 31. iOS decimal point removed
 32. Implemented Duration dropdown for account statement download
+33. Implemented lazy loading for dashboard
+34. Put spinner while waiting for login after biometric validation
+35. Fixed alignment issue of tabs in dashboard

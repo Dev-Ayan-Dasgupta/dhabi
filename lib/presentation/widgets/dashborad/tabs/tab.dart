@@ -8,23 +8,29 @@ class CustomTab extends StatelessWidget {
   const CustomTab({
     Key? key,
     required this.title,
+    required this.isSelected,
   }) : super(key: key);
   final String title;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: (20 / Dimensions.designWidth).w,
-        vertical: (10 / Dimensions.designWidth).w,
+        vertical: (10 / Dimensions.designHeight).h,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
           Radius.circular((10 / Dimensions.designWidth).w),
         ),
-        color: const Color(0XFFE8EBEC),
+        color: isSelected ? const Color(0XFFE8EBEC) : Colors.transparent,
       ),
-      child: Text(title),
+      child: Text(
+        title,
+        style: TextStyles.primaryMedium.copyWith(
+            color: AppColors.dark80, fontSize: (14 / Dimensions.designWidth).w),
+      ),
     );
   }
 }
