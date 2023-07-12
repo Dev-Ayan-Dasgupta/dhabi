@@ -28,7 +28,7 @@ Digital Banking Application for Dhabi
 22. Removed certificate icon in appbar of premature withdrawal ¶
 23. Changed routing to stories screen after business registration
 24. Changed textfield behaviour of amount field for send money and FD creation
-25. Implemeted thousands comma separation
+25. Implemented thousands comma separation
 26. Updated Create Deposits button
 27. Updated calendar in create deposits to 7 days
 28. Made create deposits dropdown dynamic
