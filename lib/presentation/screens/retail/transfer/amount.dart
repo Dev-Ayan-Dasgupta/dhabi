@@ -688,6 +688,10 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                     "requestAmount": _sendController.text.replaceAll(',', ''),
                     "sourceCurrency": senderCurrency,
                     "targetCurrency": receiverCurrency,
+                    "customerMobileNo": storageMobileNumber,
+                    "benCustomerName": benCustomerName,
+                    "benBankName": benBankName,
+                    "benBankCode": benBankCode,
                   }}");
                   var quotationApiResult = await MapQuotation.mapQuotation(
                     {
@@ -698,6 +702,10 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                       "requestAmount": _sendController.text.replaceAll(',', ''),
                       "sourceCurrency": senderCurrency,
                       "targetCurrency": receiverCurrency,
+                      "customerMobileNo": storageMobileNumber,
+                      "benCustomerName": benCustomerName,
+                      "benBankName": benBankName,
+                      "benBankCode": benBankCode,
                     },
                     token ?? "",
                   );

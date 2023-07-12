@@ -1547,13 +1547,17 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                   context,
                                                                   Routes
                                                                       .downloadStatement,
-                                                                  arguments:
-                                                                      DownloadStatementArgumentModel(
-                                                                    accountNumber:
-                                                                        accountDetails[0]
-                                                                            [
-                                                                            "accountNumber"],
-                                                                  ).toMap(),
+                                                                  arguments: DownloadStatementArgumentModel(
+                                                                          accountNumber: accountDetails[storageChosenAccount ?? 0]
+                                                                              [
+                                                                              "accountNumber"],
+                                                                          ibanNumber: accountDetails[storageChosenAccount ?? 0]
+                                                                              [
+                                                                              "iban"],
+                                                                          accountType: accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001"
+                                                                              ? "Current"
+                                                                              : "Savings")
+                                                                      .toMap(),
                                                                 );
                                                               },
                                                               child: Row(
@@ -2463,6 +2467,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                         false;
                                                                     sortText =
                                                                         "Highest";
+                                                                    log("sortText -> $sortText");
                                                                     sortDisplayStatementList(
                                                                       isDateNewest,
                                                                       isDateOldest,
@@ -2514,6 +2519,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                         true;
                                                                     sortText =
                                                                         "Lowest";
+                                                                    log("sortText -> $sortText");
                                                                     sortDisplayStatementList(
                                                                       isDateNewest,
                                                                       isDateOldest,
@@ -2598,13 +2604,17 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                   context,
                                                                   Routes
                                                                       .downloadStatement,
-                                                                  arguments:
-                                                                      DownloadStatementArgumentModel(
-                                                                    accountNumber:
-                                                                        accountDetails[0]
-                                                                            [
-                                                                            "accountNumber"],
-                                                                  ).toMap(),
+                                                                  arguments: DownloadStatementArgumentModel(
+                                                                          accountNumber: accountDetails[storageChosenAccount ?? 0]
+                                                                              [
+                                                                              "accountNumber"],
+                                                                          ibanNumber: accountDetails[storageChosenAccount ?? 0]
+                                                                              [
+                                                                              "iban"],
+                                                                          accountType: accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001"
+                                                                              ? "Current"
+                                                                              : "Savings")
+                                                                      .toMap(),
                                                                 );
                                                               },
                                                               child: Row(
@@ -3707,12 +3717,14 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
           .compareTo(DateTime.parse(b["bookingDate"])));
     }
     if (isHighest) {
-      displayStatementList.sort((a, b) => (double.parse(b["creditAmount"])
-          .compareTo(double.parse(a["creditAmount"]))));
+      displayStatementList.sort((a, b) =>
+          (double.parse(b["creditAmount"].toString())
+              .compareTo(double.parse(a["creditAmount"].toString()))));
     }
     if (isLowest) {
-      displayStatementList.sort((a, b) => (double.parse(a["creditAmount"])
-          .compareTo(double.parse(b["creditAmount"]))));
+      displayStatementList.sort((a, b) =>
+          (double.parse(a["creditAmount"].toString())
+              .compareTo(double.parse(b["creditAmount"].toString()))));
     }
   }
 

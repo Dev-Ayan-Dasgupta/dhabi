@@ -34,7 +34,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late OnboardingArgumentModel onboardingArgumentModel;
 
   final padding = (PaddingConstants.horizontalPadding / Dimensions.designWidth);

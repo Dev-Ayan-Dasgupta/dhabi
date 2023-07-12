@@ -293,12 +293,28 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                             );
 
                             if (selectedFormat == "Excel (.xls)") {
+                              log("Excel request -> ${{
+                                "accountNumber":
+                                    downloadStatementArgument.accountNumber,
+                                "accountType":
+                                    downloadStatementArgument.accountType,
+                                "ibanNumber":
+                                    downloadStatementArgument.ibanNumber,
+                                "startDate": DateFormat('yyyy-MM-dd')
+                                    .format(auxFromDate),
+                                "endDate":
+                                    DateFormat('yyyy-MM-dd').format(auxToDate)
+                              }}");
                               var result =
                                   await MapExcelCustomerAccountStatement
                                       .mapExcelCustomerAccountStatement(
                                 {
                                   "accountNumber":
                                       downloadStatementArgument.accountNumber,
+                                  "accountType":
+                                      downloadStatementArgument.accountType,
+                                  "ibanNumber":
+                                      downloadStatementArgument.ibanNumber,
                                   "startDate": DateFormat('yyyy-MM-dd')
                                       .format(auxFromDate),
                                   "endDate":
@@ -309,11 +325,15 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                               log("Response -> $result");
 
                               base64String = result["base64Data"];
-                              log("base64 pdf -> $base64String");
+                              // log("base64 excel -> $base64String");
                             } else if (selectedFormat == "PDF (.pdf)") {
                               log("Pdf statement API request -> ${{
                                 "accountNumber":
                                     downloadStatementArgument.accountNumber,
+                                "accountType":
+                                    downloadStatementArgument.accountType,
+                                "ibanNumber":
+                                    downloadStatementArgument.ibanNumber,
                                 "startDate": DateFormat('yyyy-MM-dd')
                                     .format(auxFromDate),
                                 "endDate":
@@ -325,6 +345,10 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                                 {
                                   "accountNumber":
                                       downloadStatementArgument.accountNumber,
+                                  "accountType":
+                                      downloadStatementArgument.accountType,
+                                  "ibanNumber":
+                                      downloadStatementArgument.ibanNumber,
                                   "startDate": DateFormat('yyyy-MM-dd')
                                       .format(auxFromDate),
                                   "endDate": DateFormat('yyyy-MM-dd')
@@ -335,7 +359,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                               log("Response -> $result");
 
                               base64String = result["base64Data"];
-                              log("base64 pdf -> $base64String");
+                              // log("base64 pdf -> $base64String");
                             }
 
                             if (base64String == null) {

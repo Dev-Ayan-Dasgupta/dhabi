@@ -2,7 +2,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dialup_mobile_app/bloc/showButton/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -38,6 +40,8 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
   bool isUploading = false;
 
   bool hasProfilePicUpdated = false;
+
+  bool isLoggingOut = false;
 
   late ProfileArgumentModel profileArgument;
 
@@ -371,71 +375,86 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
           svgAssetPath: ImageConstants.warning,
           title: labels[250]["labelText"],
           message: "If you log out you would need to re-login again",
-          auxWidget: GradientButton(
-            onTap: () async {
-              fdSeedAccounts.clear();
-              dhabiSeedAccounts.clear();
-              domesticSeedAccounts.clear();
-              internalSeedAccounts.clear();
-              foreignSeedAccounts.clear();
-              // statementList.clear();
-              // fdStatementList.clear();
-              // displayStatementList.clear();
-              // displayFdStatementList.clear();
-              await storage.write(key: "loggedOut", value: true.toString());
-              storageLoggedOut = await storage.read(key: "loggedOut") == "true";
+          auxWidget: BlocBuilder<ShowButtonBloc, ShowButtonState>(
+            builder: (context, state) {
+              return GradientButton(
+                onTap: () async {
+                  if (!isLoggingOut) {
+                    final ShowButtonBloc showButtonBloc =
+                        context.read<ShowButtonBloc>();
+                    isLoggingOut = true;
+                    showButtonBloc.add(ShowButtonEvent(show: isLoggingOut));
+                    fdSeedAccounts.clear();
+                    dhabiSeedAccounts.clear();
+                    domesticSeedAccounts.clear();
+                    internalSeedAccounts.clear();
+                    foreignSeedAccounts.clear();
+                    // statementList.clear();
+                    // fdStatementList.clear();
+                    // displayStatementList.clear();
+                    // displayFdStatementList.clear();
+                    await storage.write(
+                        key: "loggedOut", value: true.toString());
+                    storageLoggedOut =
+                        await storage.read(key: "loggedOut") == "true";
 
-              await storage.delete(key: "hasFirstLoggedIn");
-              await storage.delete(key: "isFirstLogin");
-              await storage.delete(key: "userId");
-              await storage.delete(key: "password");
-              await storage.delete(key: "emailAddress");
-              await storage.delete(key: "userTypeId");
-              await storage.delete(key: "companyId");
-              // await storage.delete(key: "persistBiometric");
-              await storage.delete(key: "stepsCompleted");
-              await storage.delete(key: "isEid");
-              await storage.delete(key: "fullName");
-              await storage.delete(key: "eiDNumber");
-              await storage.delete(key: "passportNumber");
-              await storage.delete(key: "nationality");
-              await storage.delete(key: "nationalityCode");
-              await storage.delete(key: "issuingStateCode");
-              await storage.delete(key: "expiryDate");
-              await storage.delete(key: "dob");
-              await storage.delete(key: "gender");
-              await storage.delete(key: "photo");
-              await storage.delete(key: "docPhoto");
-              await storage.delete(key: "selfiePhoto");
-              await storage.delete(key: "photoMatchScore");
-              await storage.delete(key: "addressCountry");
-              await storage.delete(key: "poBox");
-              await storage.delete(key: "incomeSource");
-              await storage.delete(key: "isUSFatca");
-              await storage.delete(key: "taxCountry");
-              await storage.delete(key: "isTinYes");
-              await storage.delete(key: "crsTin");
-              await storage.delete(key: "noTinReason");
-              await storage.delete(key: "accountType");
-              await storage.delete(key: "cif");
-              await storage.delete(key: "isCompany");
-              await storage.delete(key: "isCompanyRegistered");
-              await storage.delete(key: "retailLoggedIn");
-              await storage.delete(key: "customerName");
-              await storage.delete(key: "chosenAccount");
-              if (context.mounted) {
-                Navigator.pop(context);
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  Routes.onboarding,
-                  (routes) => false,
-                  arguments: OnboardingArgumentModel(
-                    isInitial: true,
-                  ).toMap(),
-                );
-              }
+                    await storage.delete(key: "hasFirstLoggedIn");
+                    await storage.delete(key: "isFirstLogin");
+                    await storage.delete(key: "userId");
+                    await storage.delete(key: "password");
+                    await storage.delete(key: "emailAddress");
+                    await storage.delete(key: "userTypeId");
+                    await storage.delete(key: "companyId");
+                    // await storage.delete(key: "persistBiometric");
+                    await storage.delete(key: "stepsCompleted");
+                    await storage.delete(key: "isEid");
+                    await storage.delete(key: "fullName");
+                    await storage.delete(key: "eiDNumber");
+                    await storage.delete(key: "passportNumber");
+                    await storage.delete(key: "nationality");
+                    await storage.delete(key: "nationalityCode");
+                    await storage.delete(key: "issuingStateCode");
+                    await storage.delete(key: "expiryDate");
+                    await storage.delete(key: "dob");
+                    await storage.delete(key: "gender");
+                    await storage.delete(key: "photo");
+                    await storage.delete(key: "docPhoto");
+                    await storage.delete(key: "selfiePhoto");
+                    await storage.delete(key: "photoMatchScore");
+                    await storage.delete(key: "addressCountry");
+                    await storage.delete(key: "poBox");
+                    await storage.delete(key: "incomeSource");
+                    await storage.delete(key: "isUSFatca");
+                    await storage.delete(key: "taxCountry");
+                    await storage.delete(key: "isTinYes");
+                    await storage.delete(key: "crsTin");
+                    await storage.delete(key: "noTinReason");
+                    await storage.delete(key: "accountType");
+                    await storage.delete(key: "cif");
+                    await storage.delete(key: "isCompany");
+                    await storage.delete(key: "isCompanyRegistered");
+                    await storage.delete(key: "retailLoggedIn");
+                    await storage.delete(key: "customerName");
+                    await storage.delete(key: "chosenAccount");
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.onboarding,
+                        (routes) => false,
+                        arguments: OnboardingArgumentModel(
+                          isInitial: true,
+                        ).toMap(),
+                      );
+                    }
+                    isLoggingOut = false;
+                    showButtonBloc.add(ShowButtonEvent(show: isLoggingOut));
+                  }
+                },
+                text: "Yes, I am sure",
+                auxWidget: isLoggingOut ? const LoaderRow() : const SizeBox(),
+              );
             },
-            text: "Yes, I am sure",
           ),
           actionWidget: SolidButton(
             color: AppColors.primaryBright17,

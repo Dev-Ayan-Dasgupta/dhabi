@@ -40,4 +40,7 @@ Digital Banking Application for Dhabi
 34. Put spinner while waiting for login after biometric validation
 35. Fixed alignment issue of tabs in dashboard
 36. Fixed routing to business dashboard after corporate money transfer
-37. Fixed change password
+37. Fixed change password issue for multiple accounts
+38. Updated api call for pdf and excel download statement
+39. Fixed highest/lowest sort issue of statement in draggable sheet
+40. Changed tabbar color
