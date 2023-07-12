@@ -79,7 +79,11 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
                 controller: tabController,
                 indicatorColor: Colors.transparent,
                 tabs: const [
-                  Tab(child: CustomTab(title: "Accounts")),
+                  Tab(
+                      child: CustomTab(
+                    title: "Accounts",
+                    isSelected: true,
+                  )),
                   Tab(child: Text("Deposits")),
                   Tab(child: Text("Explore")),
                 ],

@@ -2241,11 +2241,12 @@ class _TransferConfirmationScreenState
                                       onTapSecondary: () {
                                         Navigator.pushNamedAndRemoveUntil(
                                           context,
-                                          Routes.retailDashboard,
+                                          Routes.businessDashboard,
                                           (route) => false,
                                           arguments:
                                               RetailDashboardArgumentModel(
-                                            imgUrl: "",
+                                            imgUrl:
+                                                storageProfilePhotoBase64 ?? "",
                                             name: profileName ?? "",
                                             isFirst: storageIsFirstLogin == true
                                                 ? false
@@ -2685,11 +2686,13 @@ class _TransferConfirmationScreenState
                                                     Navigator
                                                         .pushNamedAndRemoveUntil(
                                                       context,
-                                                      Routes.retailDashboard,
+                                                      Routes.businessDashboard,
                                                       (route) => false,
                                                       arguments:
                                                           RetailDashboardArgumentModel(
-                                                        imgUrl: "",
+                                                        imgUrl:
+                                                            storageProfilePhotoBase64 ??
+                                                                "",
                                                         name: profileName ?? "",
                                                         isFirst:
                                                             storageIsFirstLogin ==
@@ -4123,11 +4126,13 @@ class _TransferConfirmationScreenState
                                                     Navigator
                                                         .pushNamedAndRemoveUntil(
                                                       context,
-                                                      Routes.retailDashboard,
+                                                      Routes.businessDashboard,
                                                       (route) => false,
                                                       arguments:
                                                           RetailDashboardArgumentModel(
-                                                        imgUrl: "",
+                                                        imgUrl:
+                                                            storageProfilePhotoBase64 ??
+                                                                "",
                                                         name: profileName ?? "",
                                                         isFirst:
                                                             storageIsFirstLogin ==
