@@ -1209,11 +1209,13 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                             onTapSecondary: () {
                                               Navigator.pushNamedAndRemoveUntil(
                                                 context,
-                                                Routes.retailDashboard,
+                                                Routes.businessDashboard,
                                                 (route) => false,
                                                 arguments:
                                                     RetailDashboardArgumentModel(
-                                                  imgUrl: "",
+                                                  imgUrl:
+                                                      storageProfilePhotoBase64 ??
+                                                          "",
                                                   name: profileName ?? "",
                                                   isFirst:
                                                       storageIsFirstLogin ==
@@ -1844,11 +1846,13 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                   false;
                                               Navigator.pushNamedAndRemoveUntil(
                                                 context,
-                                                Routes.retailDashboard,
+                                                Routes.businessDashboard,
                                                 (route) => false,
                                                 arguments:
                                                     RetailDashboardArgumentModel(
-                                                  imgUrl: "",
+                                                  imgUrl:
+                                                      storageProfilePhotoBase64 ??
+                                                          "",
                                                   name: profileName ?? "",
                                                   isFirst:
                                                       storageIsFirstLogin ==
