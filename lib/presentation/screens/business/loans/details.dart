@@ -79,11 +79,11 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
         loanDetails.add(DetailsTileModel(
             key: "Instalment Amount",
             value:
-                "${loanDetailsArgument.currency} ${getLoanDetailsApiResult["installmentAmount"]}"));
+                "${loanDetailsArgument.currency} ${double.parse(getLoanDetailsApiResult["installmentAmount"]) >= 1000 ? NumberFormat('#,000.00').format(double.parse(getLoanDetailsApiResult["installmentAmount"])) : double.parse(getLoanDetailsApiResult["installmentAmount"]).toStringAsFixed(2)}"));
         loanDetails.add(DetailsTileModel(
             key: "Overdue Amount",
             value:
-                "${loanDetailsArgument.currency} ${getLoanDetailsApiResult["overdueAmount"]}"));
+                "${loanDetailsArgument.currency} ${double.parse(getLoanDetailsApiResult["overdueAmount"]) >= 1000 ? NumberFormat('#,000.00').format(double.parse(getLoanDetailsApiResult["overdueAmount"])) : double.parse(getLoanDetailsApiResult["overdueAmount"]).toStringAsFixed(2)}"));
         loanDetails.add(DetailsTileModel(
             key: "Balance Tenure",
             value: "${getLoanDetailsApiResult["balanceTenor"]} months"));
@@ -98,7 +98,7 @@ class _LoanDetailsScreenState extends State<LoanDetailsScreen> {
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200}",
+                title: "Sorry!",
                 message: getLoanDetailsApiResult["message"] ??
                     "Error while getting loan details, please try again later",
                 actionWidget: GradientButton(

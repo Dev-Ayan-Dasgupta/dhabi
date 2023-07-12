@@ -61,12 +61,14 @@ class _TransferConfirmationScreenState
           key: labels[157]["labelText"], value: receiverAccountNumber));
       transferConfirmation.add(DetailsTileModel(
           key: labels[159]["labelText"],
-          value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
+          value:
+              "$senderCurrency ${senderAmount >= 1000 ? NumberFormat('#,000.00').format(senderAmount) : senderAmount.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: sendMoneyArgument.isBetweenAccounts
               ? labels[163]["labelText"]
               : labels[198]["labelText"],
-          value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
+          value:
+              "$receiverCurrency ${receiverAmount >= 1000 ? NumberFormat('#,000.00').format(receiverAmount) : receiverAmount}"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
           value:
@@ -85,12 +87,14 @@ class _TransferConfirmationScreenState
           key: labels[178]["labelText"], value: benCustomerName));
       transferConfirmation.add(DetailsTileModel(
           key: labels[159]["labelText"],
-          value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
+          value:
+              "$senderCurrency ${senderAmount >= 1000 ? NumberFormat('#,000.00').format(senderAmount) : senderAmount.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: sendMoneyArgument.isBetweenAccounts
               ? labels[163]["labelText"]
               : labels[198]["labelText"],
-          value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
+          value:
+              "$receiverCurrency ${receiverAmount >= 1000 ? NumberFormat('#,000.00').format(receiverAmount) : receiverAmount}"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
           value:
@@ -98,8 +102,8 @@ class _TransferConfirmationScreenState
       transferConfirmation.add(DetailsTileModel(
           key: labels[168]["labelText"],
           value: isSenderBearCharges
-              ? "$senderCurrency $fees"
-              : "$receiverCurrency $fees"));
+              ? "$senderCurrency ${fees.toStringAsFixed(2)}"
+              : "$receiverCurrency ${fees.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: "Purpose of Payment", value: remittancePurpose ?? ""));
       transferConfirmation.add(DetailsTileModel(
@@ -117,12 +121,14 @@ class _TransferConfirmationScreenState
               : benCustomerName));
       transferConfirmation.add(DetailsTileModel(
           key: labels[159]["labelText"],
-          value: "$senderCurrency ${senderAmount.toStringAsFixed(2)}"));
+          value:
+              "$senderCurrency ${senderAmount >= 1000 ? NumberFormat('#,000.00').format(senderAmount) : senderAmount.toStringAsFixed(2)}"));
       transferConfirmation.add(DetailsTileModel(
           key: sendMoneyArgument.isBetweenAccounts
               ? labels[163]["labelText"]
               : labels[198]["labelText"],
-          value: "$receiverCurrency ${receiverAmount.toStringAsFixed(2)}"));
+          value:
+              "$receiverCurrency ${receiverAmount >= 1000 ? NumberFormat('#,000.00').format(receiverAmount) : receiverAmount}"));
       transferConfirmation.add(DetailsTileModel(
           key: labels[165]["labelText"],
           value:
@@ -206,7 +212,6 @@ class _TransferConfirmationScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizeBox(height: 10),
                   Text(
                     labels[164]["labelText"],
                     style: TextStyles.primaryBold.copyWith(
@@ -335,7 +340,7 @@ class _TransferConfirmationScreenState
                                                 return CustomDialog(
                                                   svgAssetPath:
                                                       ImageConstants.warning,
-                                                  title: "Error {200}",
+                                                  title: "Sorry!",
                                                   message: result["message"][
                                                       "Something went wrong, please try again later"],
                                                   actionWidget: GradientButton(
@@ -361,7 +366,7 @@ class _TransferConfirmationScreenState
                                     builder: (context) {
                                       return CustomDialog(
                                         svgAssetPath: ImageConstants.warning,
-                                        title: "Error {200}",
+                                        title: "Sorry!",
                                         message: makeInternalTransferApiResult[
                                                 "message"] ??
                                             "Something went wrong while internal transfer, please try again later",
@@ -442,7 +447,7 @@ class _TransferConfirmationScreenState
                                       }
                                     } else {
                                       log("Remittance request -> ${{
-                                        "quotationId": "string",
+                                        "quotationId": quotationId,
                                         "sourceCurrency": senderCurrency,
                                         "targetCurrency": receiverCurrency,
                                         "countryCode": beneficiaryCountryCode,
@@ -451,8 +456,9 @@ class _TransferConfirmationScreenState
                                         "benBankCode": benBankCode,
                                         "benMobileNo": benMobileNo,
                                         "benSubBankCode": benSubBankCode,
-                                        "accountType":
-                                            benAccountType.toString(),
+                                        "accountType": isBankSelected
+                                            ? "Account"
+                                            : "Wallet",
                                         "benIdType": benIdType,
                                         "benIdNo": benIdNo,
                                         "benIdExpiryDate": benIdExpiryDate,
@@ -470,7 +476,7 @@ class _TransferConfirmationScreenState
                                       var remittanceApiResult =
                                           await MapInter.mapInter(
                                         {
-                                          "quotationId": "string",
+                                          "quotationId": quotationId,
                                           "sourceCurrency": senderCurrency,
                                           "targetCurrency": receiverCurrency,
                                           "countryCode": beneficiaryCountryCode,
@@ -480,8 +486,9 @@ class _TransferConfirmationScreenState
                                           "benBankCode": benBankCode,
                                           "benMobileNo": benMobileNo,
                                           "benSubBankCode": benSubBankCode,
-                                          "accountType":
-                                              benAccountType.toString(),
+                                          "accountType": isBankSelected
+                                              ? "Account"
+                                              : "Wallet",
                                           "benIdType": benIdType,
                                           "benIdNo": benIdNo,
                                           "benIdExpiryDate": benIdExpiryDate,
@@ -647,8 +654,7 @@ class _TransferConfirmationScreenState
                                                               svgAssetPath:
                                                                   ImageConstants
                                                                       .warning,
-                                                              title:
-                                                                  "Error {200}",
+                                                              title: "Sorry!",
                                                               message: result[
                                                                       "message"]
                                                                   [
@@ -683,8 +689,7 @@ class _TransferConfirmationScreenState
                                                   return CustomDialog(
                                                     svgAssetPath:
                                                         ImageConstants.warning,
-                                                    title:
-                                                        "Error {200} Create Beneficiary",
+                                                    title: "Sorry!",
                                                     message:
                                                         createBeneficiaryAPiResult[
                                                                 "message"] ??
@@ -799,8 +804,7 @@ class _TransferConfirmationScreenState
                                                             svgAssetPath:
                                                                 ImageConstants
                                                                     .warning,
-                                                            title:
-                                                                "Error {200}",
+                                                            title: "Sorry!",
                                                             message: result[
                                                                     "message"][
                                                                 "Something went wrong, please try again later"],
@@ -831,7 +835,7 @@ class _TransferConfirmationScreenState
                                               return CustomDialog(
                                                 svgAssetPath:
                                                     ImageConstants.warning,
-                                                title: "Error {200}",
+                                                title: "Sorry!",
                                                 message: remittanceApiResult[
                                                         "message"] ??
                                                     "Something went wrong while remittance transfer, please try again later",
@@ -852,7 +856,7 @@ class _TransferConfirmationScreenState
                                 }
                               } else {
                                 log("Remittance request -> ${{
-                                  "quotationId": "string",
+                                  "quotationId": quotationId,
                                   "sourceCurrency": senderCurrency,
                                   "targetCurrency": receiverCurrency,
                                   "countryCode": beneficiaryCountryCode,
@@ -861,7 +865,8 @@ class _TransferConfirmationScreenState
                                   "benBankCode": benBankCode,
                                   "benMobileNo": benMobileNo,
                                   "benSubBankCode": benSubBankCode,
-                                  "accountType": benAccountType.toString(),
+                                  "accountType":
+                                      isBankSelected ? "Account" : "Wallet",
                                   "benIdType": benIdType,
                                   "benIdNo": benIdNo,
                                   "benIdExpiryDate": benIdExpiryDate,
@@ -878,7 +883,7 @@ class _TransferConfirmationScreenState
                                 var remittanceApiResult =
                                     await MapInter.mapInter(
                                   {
-                                    "quotationId": "string",
+                                    "quotationId": quotationId,
                                     "sourceCurrency": senderCurrency,
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
@@ -887,7 +892,8 @@ class _TransferConfirmationScreenState
                                     "benBankCode": benBankCode,
                                     "benMobileNo": benMobileNo,
                                     "benSubBankCode": benSubBankCode,
-                                    "accountType": benAccountType.toString(),
+                                    "accountType":
+                                        isBankSelected ? "Account" : "Wallet",
                                     "benIdType": benIdType,
                                     "benIdNo": benIdNo,
                                     "benIdExpiryDate": benIdExpiryDate,
@@ -1042,7 +1048,7 @@ class _TransferConfirmationScreenState
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message: result[
                                                                 "message"][
                                                             "Something went wrong, please try again later"],
@@ -1075,8 +1081,7 @@ class _TransferConfirmationScreenState
                                             return CustomDialog(
                                               svgAssetPath:
                                                   ImageConstants.warning,
-                                              title:
-                                                  "Error {200} Create Beneficiary",
+                                              title: "Sorry!",
                                               message: createBeneficiaryAPiResult[
                                                       "message"] ??
                                                   "Something went wrong while adding beneficiary, please try again later",
@@ -1182,7 +1187,7 @@ class _TransferConfirmationScreenState
                                                       svgAssetPath:
                                                           ImageConstants
                                                               .warning,
-                                                      title: "Error {200}",
+                                                      title: "Sorry!",
                                                       message: result["message"]
                                                           [
                                                           "Something went wrong, please try again later"],
@@ -1212,7 +1217,7 @@ class _TransferConfirmationScreenState
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: remittanceApiResult[
                                                   "message"] ??
                                               "Something went wrong while remittance transfer, please try again later",
@@ -1486,8 +1491,7 @@ class _TransferConfirmationScreenState
                                                               svgAssetPath:
                                                                   ImageConstants
                                                                       .warning,
-                                                              title:
-                                                                  "Error {200}",
+                                                              title: "Sorry!",
                                                               message: result[
                                                                       "message"]
                                                                   [
@@ -1519,8 +1523,7 @@ class _TransferConfirmationScreenState
                                                   return CustomDialog(
                                                     svgAssetPath:
                                                         ImageConstants.warning,
-                                                    title:
-                                                        "Error {200} Create Beneficiary",
+                                                    title: "Sorry!",
                                                     message:
                                                         createBeneficiaryAPiResult[
                                                                 "message"] ??
@@ -1787,8 +1790,7 @@ class _TransferConfirmationScreenState
                                                             svgAssetPath:
                                                                 ImageConstants
                                                                     .warning,
-                                                            title:
-                                                                "Error {200}",
+                                                            title: "Sorry!",
                                                             message: corpCustPermApiResult[
                                                                     "message"][
                                                                 "Something went wrong, please try again later"],
@@ -1821,7 +1823,7 @@ class _TransferConfirmationScreenState
                                               return CustomDialog(
                                                 svgAssetPath:
                                                     ImageConstants.warning,
-                                                title: "Error {200}",
+                                                title: "Sorry!",
                                                 message:
                                                     makeInternalTransferApiResult[
                                                             "message"] ??
@@ -2013,7 +2015,7 @@ class _TransferConfirmationScreenState
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message: result[
                                                                 "message"][
                                                             "Something went wrong, please try again later"],
@@ -2043,8 +2045,7 @@ class _TransferConfirmationScreenState
                                             return CustomDialog(
                                               svgAssetPath:
                                                   ImageConstants.warning,
-                                              title:
-                                                  "Error {200} Create Beneficiary",
+                                              title: "Sorry!",
                                               message: createBeneficiaryAPiResult[
                                                       "message"] ??
                                                   "Something went wrong while adding beneficiary, please try again later",
@@ -2146,7 +2147,7 @@ class _TransferConfirmationScreenState
                                                       svgAssetPath:
                                                           ImageConstants
                                                               .warning,
-                                                      title: "Error {200}",
+                                                      title: "Sorry!",
                                                       message: result["message"]
                                                           [
                                                           "Something went wrong, please try again later"],
@@ -2178,7 +2179,7 @@ class _TransferConfirmationScreenState
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: makeInternalTransferApiResult[
                                                   "message"] ??
                                               "Something went wrong while within Dhabi transfer, please try again later",
@@ -2426,7 +2427,7 @@ class _TransferConfirmationScreenState
                                                 return CustomDialog(
                                                   svgAssetPath:
                                                       ImageConstants.warning,
-                                                  title: "Error {200}",
+                                                  title: "Sorry!",
                                                   message: corpCustPermApiResult[
                                                           "message"][
                                                       "Something went wrong, please try again later"],
@@ -2453,7 +2454,7 @@ class _TransferConfirmationScreenState
                                     builder: (context) {
                                       return CustomDialog(
                                         svgAssetPath: ImageConstants.warning,
-                                        title: "Error {200}",
+                                        title: "Sorry!",
                                         message: corpInternalMoneyTransferApiResult[
                                                 "message"] ??
                                             "Something went wrong while corporate internal transfer, please try again later",
@@ -2534,7 +2535,7 @@ class _TransferConfirmationScreenState
                                       }
                                     } else {
                                       log("corpRemittanceApi Request -> ${{
-                                        "quotationId": "string",
+                                        "quotationId": quotationId,
                                         "sourceCurrency": senderCurrency,
                                         "targetCurrency": receiverCurrency,
                                         "countryCode": beneficiaryCountryCode,
@@ -2543,8 +2544,9 @@ class _TransferConfirmationScreenState
                                         "benBankCode": benBankCode,
                                         "benMobileNo": benMobileNo,
                                         "benSubBankCode": benSubBankCode,
-                                        "accountType":
-                                            benAccountType.toString(),
+                                        "accountType": isBankSelected
+                                            ? "Account"
+                                            : "Wallet",
                                         "benIdType": benIdType,
                                         "benIdNo": benIdNo,
                                         "benIdExpiryDate": benIdExpiryDate,
@@ -2563,7 +2565,7 @@ class _TransferConfirmationScreenState
                                           await MapForeignMoneyTransfer
                                               .mapForeignMoneyTransfer(
                                         {
-                                          "quotationId": "string",
+                                          "quotationId": quotationId,
                                           "sourceCurrency": senderCurrency,
                                           "targetCurrency": receiverCurrency,
                                           "countryCode": beneficiaryCountryCode,
@@ -2573,8 +2575,9 @@ class _TransferConfirmationScreenState
                                           "benBankCode": benBankCode,
                                           "benMobileNo": benMobileNo,
                                           "benSubBankCode": benSubBankCode,
-                                          "accountType":
-                                              benAccountType.toString(),
+                                          "accountType": isBankSelected
+                                              ? "Account"
+                                              : "Wallet",
                                           "benIdType": benIdType,
                                           "benIdNo": benIdNo,
                                           "benIdExpiryDate": benIdExpiryDate,
@@ -2916,8 +2919,7 @@ class _TransferConfirmationScreenState
                                                               svgAssetPath:
                                                                   ImageConstants
                                                                       .warning,
-                                                              title:
-                                                                  "Error {200}",
+                                                              title: "Sorry!",
                                                               message: corpCustPermApiResult[
                                                                       "message"]
                                                                   [
@@ -2952,8 +2954,7 @@ class _TransferConfirmationScreenState
                                                   return CustomDialog(
                                                     svgAssetPath:
                                                         ImageConstants.warning,
-                                                    title:
-                                                        "Error {200} Create Beneficiary",
+                                                    title: "Sorry!",
                                                     message:
                                                         createBeneficiaryAPiResult[
                                                                 "message"] ??
@@ -3223,8 +3224,7 @@ class _TransferConfirmationScreenState
                                                             svgAssetPath:
                                                                 ImageConstants
                                                                     .warning,
-                                                            title:
-                                                                "Error {200}",
+                                                            title: "Sorry!",
                                                             message: corpCustPermApiResult[
                                                                     "message"][
                                                                 "Something went wrong, please try again later"],
@@ -3258,7 +3258,7 @@ class _TransferConfirmationScreenState
                                               return CustomDialog(
                                                 svgAssetPath:
                                                     ImageConstants.warning,
-                                                title: "Error {200}",
+                                                title: "Sorry!",
                                                 message: corpRemittanceApiResult[
                                                         "message"] ??
                                                     "Something went wrong while remittance transfer, please try again later",
@@ -3279,7 +3279,7 @@ class _TransferConfirmationScreenState
                                 }
                               } else {
                                 log("corpRemittanceApi Request -> ${{
-                                  "quotationId": "string",
+                                  "quotationId": quotationId,
                                   "sourceCurrency": senderCurrency,
                                   "targetCurrency": receiverCurrency,
                                   "countryCode": beneficiaryCountryCode,
@@ -3288,7 +3288,8 @@ class _TransferConfirmationScreenState
                                   "benBankCode": benBankCode,
                                   "benMobileNo": benMobileNo,
                                   "benSubBankCode": benSubBankCode,
-                                  "accountType": benAccountType.toString(),
+                                  "accountType":
+                                      isBankSelected ? "Account" : "Wallet",
                                   "benIdType": benIdType,
                                   "benIdNo": benIdNo,
                                   "benIdExpiryDate": benIdExpiryDate,
@@ -3306,7 +3307,7 @@ class _TransferConfirmationScreenState
                                     await MapForeignMoneyTransfer
                                         .mapForeignMoneyTransfer(
                                   {
-                                    "quotationId": "string",
+                                    "quotationId": quotationId,
                                     "sourceCurrency": senderCurrency,
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
@@ -3315,7 +3316,8 @@ class _TransferConfirmationScreenState
                                     "benBankCode": benBankCode,
                                     "benMobileNo": benMobileNo,
                                     "benSubBankCode": benSubBankCode,
-                                    "accountType": benAccountType.toString(),
+                                    "accountType":
+                                        isBankSelected ? "Account" : "Wallet",
                                     "benIdType": benIdType,
                                     "benIdNo": benIdNo,
                                     "benIdExpiryDate": benIdExpiryDate,
@@ -3624,7 +3626,7 @@ class _TransferConfirmationScreenState
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message:
                                                             corpCustPermApiResult[
                                                                     "message"][
@@ -3658,8 +3660,7 @@ class _TransferConfirmationScreenState
                                             return CustomDialog(
                                               svgAssetPath:
                                                   ImageConstants.warning,
-                                              title:
-                                                  "Error {200} Create Beneficiary",
+                                              title: "Sorry!",
                                               message: createBeneficiaryAPiResult[
                                                       "message"] ??
                                                   "Something went wrong while adding beneficiary, please try again later",
@@ -3892,7 +3893,7 @@ class _TransferConfirmationScreenState
                                                       svgAssetPath:
                                                           ImageConstants
                                                               .warning,
-                                                      title: "Error {200}",
+                                                      title: "Sorry!",
                                                       message:
                                                           corpCustPermApiResult[
                                                                   "message"][
@@ -3926,7 +3927,7 @@ class _TransferConfirmationScreenState
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: corpRemittanceApiResult[
                                                   "message"] ??
                                               "Something went wrong while remittance transfer, please try again later",
@@ -4375,8 +4376,7 @@ class _TransferConfirmationScreenState
                                                               svgAssetPath:
                                                                   ImageConstants
                                                                       .warning,
-                                                              title:
-                                                                  "Error {200}",
+                                                              title: "Sorry!",
                                                               message: corpCustPermApiResult[
                                                                       "message"]
                                                                   [
@@ -4408,8 +4408,7 @@ class _TransferConfirmationScreenState
                                                   return CustomDialog(
                                                     svgAssetPath:
                                                         ImageConstants.warning,
-                                                    title:
-                                                        "Error {200} Create Beneficiary",
+                                                    title: "Sorry!",
                                                     message:
                                                         createBeneficiaryAPiResult[
                                                                 "message"] ??
@@ -4667,8 +4666,7 @@ class _TransferConfirmationScreenState
                                                               svgAssetPath:
                                                                   ImageConstants
                                                                       .warning,
-                                                              title:
-                                                                  "Error {200}",
+                                                              title: "Sorry!",
                                                               message: corpCustPermApiResult[
                                                                       "message"] ??
                                                                   "Error fetching account details, please try again later",
@@ -4722,8 +4720,7 @@ class _TransferConfirmationScreenState
                                                             svgAssetPath:
                                                                 ImageConstants
                                                                     .warning,
-                                                            title:
-                                                                "Error {200}",
+                                                            title: "Sorry!",
                                                             message: corpCustPermApiResult[
                                                                     "message"][
                                                                 "Something went wrong, please try again later"],
@@ -4754,7 +4751,7 @@ class _TransferConfirmationScreenState
                                               return CustomDialog(
                                                 svgAssetPath:
                                                     ImageConstants.warning,
-                                                title: "Error {200}",
+                                                title: "Sorry!",
                                                 message:
                                                     corpDhabiMoneyTransferApiResult[
                                                             "message"] ??
@@ -5100,7 +5097,7 @@ class _TransferConfirmationScreenState
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message:
                                                             corpCustPermApiResult[
                                                                     "message"][
@@ -5131,8 +5128,7 @@ class _TransferConfirmationScreenState
                                             return CustomDialog(
                                               svgAssetPath:
                                                   ImageConstants.warning,
-                                              title:
-                                                  "Error {200} Create Beneficiary",
+                                              title: "Sorry!",
                                               message: createBeneficiaryAPiResult[
                                                       "message"] ??
                                                   "Something went wrong while adding beneficiary, please try again later",
@@ -5352,7 +5348,7 @@ class _TransferConfirmationScreenState
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message: corpCustPermApiResult[
                                                                 "message"] ??
                                                             "Error fetching account details, please try again later",
@@ -5404,7 +5400,7 @@ class _TransferConfirmationScreenState
                                                       svgAssetPath:
                                                           ImageConstants
                                                               .warning,
-                                                      title: "Error {200}",
+                                                      title: "Sorry!",
                                                       message:
                                                           corpCustPermApiResult[
                                                                   "message"][
@@ -5435,7 +5431,7 @@ class _TransferConfirmationScreenState
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: corpDhabiMoneyTransferApiResult[
                                                   "message"] ??
                                               "Something went wrong while corporate domestic transfer, please try again later",

@@ -336,7 +336,7 @@ class _AcceptTermsAndConditionsScreenState
                                           return CustomDialog(
                                             svgAssetPath:
                                                 ImageConstants.warning,
-                                            title: "Error {200} Create Account",
+                                            title: "Sorry!",
                                             message: customerDetails[
                                                     "message"] ??
                                                 "Error while creating current/savings, please try again later",
@@ -358,7 +358,7 @@ class _AcceptTermsAndConditionsScreenState
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200} Create Customer",
+                                          title: "Sorry!",
                                           message: createCustomerResult[
                                                   "message"] ??
                                               "There was an error in creating customer, please try again later.",
@@ -548,7 +548,7 @@ class _AcceptTermsAndConditionsScreenState
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200} Profile Data",
+                title: "Sorry!",
                 message: customerDetails["message"] ??
                     "Error while getting profile data, please try again later",
                 actionWidget: GradientButton(

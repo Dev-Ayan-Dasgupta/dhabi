@@ -83,7 +83,8 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
             value: apiResult["depositAccountNumber"] ?? ""));
         prematureDetails.add(DetailsTileModel(
             key: "Deposit Amount",
-            value: "USD ${apiResult["fdAmount"].toString()}"));
+            value:
+                "USD ${NumberFormat('#,000.00').format(double.parse(apiResult["fdAmount"]))}"));
         prematureDetails.add(DetailsTileModel(
             key: "Open Date",
             value: DateFormat('dd MMMM yyyy')
@@ -106,7 +107,8 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                 DateTime.parse(apiResult["fdMaturityDate"] ?? "1900-01-01"))));
         prematureDetails.add(DetailsTileModel(
             key: "Credit Amount",
-            value: "USD ${apiResult["creditAmount"].toString()}"));
+            value:
+                "USD ${NumberFormat('#,000.00').format(apiResult["creditAmount"])}"));
         prematureDetails.add(DetailsTileModel(
             key: "Penalty Rate",
             value: "${apiResult["penaltyRate"].toString()} %"));
@@ -148,20 +150,20 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: const AppBarLeading(),
-        actions: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: (15 / Dimensions.designWidth).w,
-              vertical: (15 / Dimensions.designWidth).w,
-            ),
-            child: InkWell(
-              onTap: () {
-                // Navigator.pushNamed(context, Routes.downloadStatement);
-              },
-              child: SvgPicture.asset(ImageConstants.certificate),
-            ),
-          )
-        ],
+        // actions: [
+        //   Padding(
+        //     padding: EdgeInsets.symmetric(
+        //       horizontal: (15 / Dimensions.designWidth).w,
+        //       vertical: (15 / Dimensions.designWidth).w,
+        //     ),
+        //     child: InkWell(
+        //       onTap: () {
+        //         // Navigator.pushNamed(context, Routes.downloadStatement);
+        //       },
+        //       child: SvgPicture.asset(ImageConstants.certificate),
+        //     ),
+        //   )
+        // ],
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -308,7 +310,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                       builder: (context) {
                         return CustomDialog(
                           svgAssetPath: ImageConstants.warning,
-                          title: "Error {200}",
+                          title: "Sorry!",
                           message: premWdrwApiResult["message"] ??
                               "There was an error in premature withdrawal of your FD, please try again later",
                           actionWidget: GradientButton(

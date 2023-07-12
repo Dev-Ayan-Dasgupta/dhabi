@@ -350,8 +350,7 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
         return CustomDialog(
           svgAssetPath: ImageConstants.sentimentSatisfied,
           title: "Hey, there!",
-          message:
-              "Please check FAQs.\nIf you do not find your query,\nContact us at +971 200 0000",
+          message: "${labels[62]["labelText"]}\n${labels[63]["labelText"]}",
           actionWidget: GradientButton(
             onTap: () {
               Navigator.pop(context);

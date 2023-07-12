@@ -81,7 +81,7 @@ class _WorkflowDetailsScreenState extends State<WorkflowDetailsScreen> {
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200}",
+                title: "Sorry!",
                 message: customerDetails["message"] ??
                     "Error while getting workflow details, please try again later",
                 actionWidget: GradientButton(
@@ -343,7 +343,7 @@ class _WorkflowDetailsScreenState extends State<WorkflowDetailsScreen> {
                               builder: (context) {
                                 return CustomDialog(
                                   svgAssetPath: ImageConstants.warning,
-                                  title: "Error {200}",
+                                  title: "Sorry!",
                                   message: approveRejectApiResult["message"] ??
                                       "Error while rejecting request, please try again later",
                                   actionWidget: GradientButton(
@@ -502,7 +502,7 @@ class _WorkflowDetailsScreenState extends State<WorkflowDetailsScreen> {
                     //                                     svgAssetPath:
                     //                                         ImageConstants
                     //                                             .warning,
-                    //                                     title: "Error {200}",
+                    //                                     title: "Sorry!",
                     //                                     message: approveRejectApiResult[
                     //                                             "message"] ??
                     //                                         "Error while rejecting request, please try again later",
@@ -716,7 +716,7 @@ class _WorkflowDetailsScreenState extends State<WorkflowDetailsScreen> {
                                                   return CustomDialog(
                                                     svgAssetPath:
                                                         ImageConstants.warning,
-                                                    title: "Error {200}",
+                                                    title: "Sorry!",
                                                     message: approveRejectApiResult[
                                                             "message"] ??
                                                         "Error while rejecting request, please try again later",

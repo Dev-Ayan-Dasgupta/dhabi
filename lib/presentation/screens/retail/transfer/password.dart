@@ -207,7 +207,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                             if (sendMoneyArgument.isRetail) {
                               if (sendMoneyArgument.isRemittance) {
                                 log("Remittance request -> ${{
-                                  "quotationId": "string",
+                                  "quotationId": quotationId,
                                   "sourceCurrency": senderCurrency,
                                   "targetCurrency": receiverCurrency,
                                   "countryCode": beneficiaryCountryCode,
@@ -216,7 +216,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                   "benBankCode": benBankCode,
                                   "benMobileNo": benMobileNo,
                                   "benSubBankCode": benSubBankCode,
-                                  "accountType": benAccountType.toString(),
+                                  "accountType":
+                                      isBankSelected ? "Account" : "Wallet",
                                   "benIdType": benIdType,
                                   "benIdNo": benIdNo,
                                   "benIdExpiryDate": benIdExpiryDate,
@@ -233,7 +234,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                 var remittanceApiResult =
                                     await MapInter.mapInter(
                                   {
-                                    "quotationId": "string",
+                                    "quotationId": quotationId,
                                     "sourceCurrency": senderCurrency,
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
@@ -242,7 +243,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                     "benBankCode": benBankCode,
                                     "benMobileNo": benMobileNo,
                                     "benSubBankCode": benSubBankCode,
-                                    "accountType": benAccountType.toString(),
+                                    "accountType":
+                                        isBankSelected ? "Account" : "Wallet",
                                     "benIdType": benIdType,
                                     "benIdNo": benIdNo,
                                     "benIdExpiryDate": benIdExpiryDate,
@@ -398,7 +400,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message: result[
                                                                 "message"][
                                                             "Something went wrong, please try again later"],
@@ -431,8 +433,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                             return CustomDialog(
                                               svgAssetPath:
                                                   ImageConstants.warning,
-                                              title:
-                                                  "Error {200} Create Beneficiary",
+                                              title: "Sorry!",
                                               message: createBeneficiaryAPiResult[
                                                       "message"] ??
                                                   "Something went wrong while adding beneficiary, please try again later",
@@ -540,7 +541,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                       svgAssetPath:
                                                           ImageConstants
                                                               .warning,
-                                                      title: "Error {200}",
+                                                      title: "Sorry!",
                                                       message: result["message"]
                                                           [
                                                           "Something went wrong, please try again later"],
@@ -570,7 +571,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: remittanceApiResult[
                                                   "message"] ??
                                               "Something went wrong while remittance transfer, please try again later",
@@ -760,7 +761,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message: result[
                                                                 "message"][
                                                             "Something went wrong, please try again later"],
@@ -790,8 +791,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                             return CustomDialog(
                                               svgAssetPath:
                                                   ImageConstants.warning,
-                                              title:
-                                                  "Error {200} Create Beneficiary",
+                                              title: "Sorry!",
                                               message: createBeneficiaryAPiResult[
                                                       "message"] ??
                                                   "Something went wrong while adding beneficiary, please try again later",
@@ -1022,7 +1022,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                       svgAssetPath:
                                                           ImageConstants
                                                               .warning,
-                                                      title: "Error {200}",
+                                                      title: "Sorry!",
                                                       message:
                                                           corpCustPermApiResult[
                                                                   "message"][
@@ -1055,7 +1055,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: makeInternalTransferApiResult[
                                                   "message"] ??
                                               "Something went wrong while within Dhabi transfer, please try again later",
@@ -1074,7 +1074,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                             } else {
                               if (sendMoneyArgument.isRemittance) {
                                 log("corpRemittanceApi Request -> ${{
-                                  "quotationId": "string",
+                                  "quotationId": quotationId,
                                   "sourceCurrency": senderCurrency,
                                   "targetCurrency": receiverCurrency,
                                   "countryCode": beneficiaryCountryCode,
@@ -1083,7 +1083,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                   "benBankCode": benBankCode,
                                   "benMobileNo": benMobileNo,
                                   "benSubBankCode": benSubBankCode,
-                                  "accountType": benAccountType.toString(),
+                                  "accountType":
+                                      isBankSelected ? "Account" : "Wallet",
                                   "benIdType": benIdType,
                                   "benIdNo": benIdNo,
                                   "benIdExpiryDate": benIdExpiryDate,
@@ -1101,7 +1102,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                     await MapForeignMoneyTransfer
                                         .mapForeignMoneyTransfer(
                                   {
-                                    "quotationId": "string",
+                                    "quotationId": quotationId,
                                     "sourceCurrency": senderCurrency,
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
@@ -1110,7 +1111,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                     "benBankCode": benBankCode,
                                     "benMobileNo": benMobileNo,
                                     "benSubBankCode": benSubBankCode,
-                                    "accountType": benAccountType.toString(),
+                                    "accountType":
+                                        isBankSelected ? "Account" : "Wallet",
                                     "benIdType": benIdType,
                                     "benIdNo": benIdNo,
                                     "benIdExpiryDate": benIdExpiryDate,
@@ -1420,7 +1422,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message:
                                                             corpCustPermApiResult[
                                                                     "message"][
@@ -1454,8 +1456,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                             return CustomDialog(
                                               svgAssetPath:
                                                   ImageConstants.warning,
-                                              title:
-                                                  "Error {200} Create Beneficiary",
+                                              title: "Sorry!",
                                               message: createBeneficiaryAPiResult[
                                                       "message"] ??
                                                   "Something went wrong while adding beneficiary, please try again later",
@@ -1689,7 +1690,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                       svgAssetPath:
                                                           ImageConstants
                                                               .warning,
-                                                      title: "Error {200}",
+                                                      title: "Sorry!",
                                                       message:
                                                           corpCustPermApiResult[
                                                                   "message"][
@@ -1723,7 +1724,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: corpRemittanceApiResult[
                                                   "message"] ??
                                               "Something went wrong while remittance transfer, please try again later",
@@ -2066,7 +2067,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message:
                                                             corpCustPermApiResult[
                                                                     "message"][
@@ -2097,8 +2098,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                             return CustomDialog(
                                               svgAssetPath:
                                                   ImageConstants.warning,
-                                              title:
-                                                  "Error {200} Create Beneficiary",
+                                              title: "Sorry!",
                                               message: createBeneficiaryAPiResult[
                                                       "message"] ??
                                                   "Something went wrong while adding beneficiary, please try again later",
@@ -2320,7 +2320,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                         svgAssetPath:
                                                             ImageConstants
                                                                 .warning,
-                                                        title: "Error {200}",
+                                                        title: "Sorry!",
                                                         message: corpCustPermApiResult[
                                                                 "message"] ??
                                                             "Error fetching account details, please try again later",
@@ -2372,7 +2372,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                       svgAssetPath:
                                                           ImageConstants
                                                               .warning,
-                                                      title: "Error {200}",
+                                                      title: "Sorry!",
                                                       message:
                                                           corpCustPermApiResult[
                                                                   "message"][
@@ -2403,7 +2403,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: corpDhabiMoneyTransferApiResult[
                                                   "message"] ??
                                               "Something went wrong while corporate domestic transfer, please try again later",
@@ -2431,7 +2431,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                             : const SizeBox(),
                       ),
                       SizeBox(
-                        height: MediaQuery.paddingOf(context).bottom,
+                        height: PaddingConstants.bottomPadding +
+                            MediaQuery.paddingOf(context).bottom,
                       ),
                     ],
                   );
@@ -2443,7 +2444,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                         text: labels[31]["labelText"],
                       ),
                       SizeBox(
-                        height: MediaQuery.paddingOf(context).bottom,
+                        height: PaddingConstants.bottomPadding +
+                            MediaQuery.paddingOf(context).bottom,
                       ),
                     ],
                   );

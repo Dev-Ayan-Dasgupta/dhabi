@@ -77,7 +77,7 @@ List<String> payoutDurationDDs = [];
 
 List<String> loanServiceRequest = [];
 
-List statementDurationDDs = [
+List<String> statementDurationDDs = [
   // {"key": "DD_0008_001", "value": "1 Month"},
   // {"key": "DD_0008_002", "value": "3 Months"},
   // {"key": "DD_0008_003", "value": "6 Months"}

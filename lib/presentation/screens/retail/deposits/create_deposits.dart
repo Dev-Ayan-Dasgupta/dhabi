@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_holo_date_picker/widget/date_picker_widget.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -36,11 +37,14 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
   int _scrollIndex = 0;
 
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _depositController = TextEditingController();
+  final TextEditingController _depositController =
+      TextEditingController(text: "0.00");
 
   final double minAmtReq = 10000;
   final double maxAmtReq = 100000;
   double bal = 0;
+
+  int initLength = 4;
 
   String currency = "";
 
@@ -57,8 +61,21 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   String? selectedPayout;
 
+  int maturityDays = 7;
+
+  List<String> dynamicPayoutDropdowns = [];
+
   String date = "";
-  DateTime auxToDate = DateTime.now();
+  DateTime auxToDate = DateTime(
+    DateTime.now().add(const Duration(days: 7)).year,
+    DateTime.now().add(const Duration(days: 7)).month,
+    DateTime.now().add(const Duration(days: 7)).day,
+    0,
+    0,
+    0,
+    0,
+    0,
+  );
 
   double interestRate = 0;
 
@@ -164,20 +181,20 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Row(
-                          //   children: [
-                          //     Text(
-                          //       "Select an Account",
-                          //       style: TextStyles.primaryMedium.copyWith(
-                          //         color: AppColors.dark80,
-                          //         fontSize: (16 / Dimensions.designWidth).w,
-                          //       ),
-                          //     ),
-                          //     const Asterisk(),
-                          //   ],
-                          // ),
-                          const MandatoryFieldLabel(
-                              labelText: "Select an Account"),
+                          Row(
+                            children: [
+                              Text(
+                                "Select an Account",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          // const MandatoryFieldLabel(
+                          // labelText: "Select an Account"),
                           const SizeBox(height: 10),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
                             builder: (context, state) {
@@ -245,11 +262,13 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                           showButtonBloc.add(ShowButtonEvent(
                                               show: chosenIndex == index));
 
-                                          if (double.parse(
-                                                      _depositController.text) <
+                                          if (double.parse(_depositController
+                                                      .text
+                                                      .replaceAll(',', '')) <
                                                   minAmtReq ||
-                                              double.parse(
-                                                      _depositController.text) >
+                                              double.parse(_depositController
+                                                      .text
+                                                      .replaceAll(',', '')) >
                                                   maxAmtReq) {
                                             errorMsg =
                                                 "Please check the amount limit criteria";
@@ -259,7 +278,8 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                                   hasError: errorMsg.isEmpty),
                                             );
                                           } else if (double.parse(
-                                                  _depositController.text) >
+                                                  _depositController.text
+                                                      .replaceAll(',', '')) >
                                               bal) {
                                             errorMsg = "Insufficient fund";
                                             borderColor = AppColors.red100;
@@ -383,7 +403,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                       ),
                                     ),
                                     Text(
-                                      "USD ${minAmtReq.toStringAsFixed(2)}",
+                                      "USD ${NumberFormat('#,000.00').format(minAmtReq)}",
                                       style: TextStyles.primaryMedium.copyWith(
                                         color: AppColors.primary,
                                         fontSize:
@@ -406,7 +426,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                       ),
                                     ),
                                     Text(
-                                      "USD ${maxAmtReq.toStringAsFixed(2)}",
+                                      "USD ${NumberFormat('#,000.00').format(maxAmtReq)}",
                                       style: TextStyles.primaryMedium.copyWith(
                                         color: AppColors.primary,
                                         fontSize:
@@ -419,29 +439,30 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                             ),
                           ),
                           const SizeBox(height: 15),
-                          // Row(
-                          //   children: [
-                          //     Text(
-                          //       "Deposit Amount (USD)",
-                          //       style: TextStyles.primaryMedium.copyWith(
-                          //         color: AppColors.dark80,
-                          //         fontSize: (14 / Dimensions.designWidth).w,
-                          //       ),
-                          //     ),
-                          //     const Asterisk(),
-                          //   ],
-                          // ),
-                          const MandatoryFieldLabel(
-                              labelText: "Deposit Amount (USD)"),
+                          Row(
+                            children: [
+                              Text(
+                                "Deposit Amount (USD)",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (14 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          // const MandatoryFieldLabel(
+                          //     labelText: "Deposit Amount (USD)"),
                           const SizeBox(height: 7),
                           BlocBuilder<ShowButtonBloc, ShowButtonState>(
                             builder: (context, state) {
                               return CustomTextField(
                                 borderColor: borderColor,
                                 controller: _depositController,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
+                                // inputFormatters: [
+                                //   FilteringTextInputFormatter.digitsOnly
+                                // ],
+                                keyboardType: TextInputType.number,
                                 hintText: "E.g., 20000",
                                 onChanged: onDepositChanged,
                               );
@@ -452,20 +473,20 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                             builder: buildErrorMessage,
                           ),
                           const SizeBox(height: 10),
-                          // Row(
-                          //   children: [
-                          //     Text(
-                          //       labels[110]["labelText"],
-                          //       style: TextStyles.primaryMedium.copyWith(
-                          //         color: AppColors.dark80,
-                          //         fontSize: (14 / Dimensions.designWidth).w,
-                          //       ),
-                          //     ),
-                          //     const Asterisk(),
-                          //   ],
-                          // ),
-                          MandatoryFieldLabel(
-                              labelText: labels[110]["labelText"]),
+                          Row(
+                            children: [
+                              Text(
+                                labels[110]["labelText"],
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (14 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          // MandatoryFieldLabel(
+                          //     labelText: labels[110]["labelText"]),
                           const SizeBox(height: 10),
                           InkWell(
                             onTap: showDatePickerWidget,
@@ -679,9 +700,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     truthy: CupertinoDatePicker(
                       initialDateTime:
                           auxToDate.add(const Duration(seconds: 1)),
-                      minimumDate:
-                          auxToDate.subtract(const Duration(minutes: 30)),
-                      // DateTime.now().subtract(const Duration(minutes: 30)),
+                      minimumDate: DateTime(
+                        DateTime.now().add(const Duration(days: 7)).year,
+                        DateTime.now().add(const Duration(days: 7)).month,
+                        DateTime.now().add(const Duration(days: 7)).day,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                      ),
                       maximumDate:
                           DateTime.now().add(const Duration(days: 30 * 60)),
                       mode: CupertinoDatePickerMode.date,
@@ -693,9 +721,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     falsy: DatePickerWidget(
                       looping: false,
                       initialDate: auxToDate.add(const Duration(seconds: 1)),
-                      firstDate:
-                          auxToDate.subtract(const Duration(minutes: 30)),
-                      // DateTime.now().subtract(const Duration(minutes: 30)),
+                      firstDate: DateTime(
+                        DateTime.now().add(const Duration(days: 7)).year,
+                        DateTime.now().add(const Duration(days: 7)).month,
+                        DateTime.now().add(const Duration(days: 7)).day,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                      ),
                       lastDate:
                           DateTime.now().add(const Duration(days: 30 * 60)),
                       dateFormat: "dd-MMMM-yyyy",
@@ -772,8 +807,21 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
         break;
       }
     }
+    maturityDays = auxToDate.difference(DateTime.now()).inHours <= 0
+        ? auxToDate.difference(DateTime.now()).inDays
+        : auxToDate.difference(DateTime.now()).inDays + 1;
     date = DateFormat('d MMMM, yyyy').format(auxToDate);
     dateSelectionBloc.add(const DateSelectionEvent(isDateSelected: true));
+
+    final DropdownSelectedBloc dropdownSelectedBloc =
+        context.read<DropdownSelectedBloc>();
+    getPayoutDropdown(maturityDays);
+    selectedPayout = dynamicPayoutDropdowns[0];
+    isShowButton = true;
+    dropdownSelectedBloc.add(
+      DropdownSelectedEvent(isDropdownSelected: true, toggles: 1),
+    );
+
     showPeriod = true;
     showPeriodSection.add(
       ShowButtonEvent(
@@ -831,37 +879,47 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
             ),
           ),
           const SizeBox(height: 20),
-          // Row(
-          //   children: [
-          //     Text(
-          //       labels[112]["labelText"],
-          //       style: TextStyles.primaryMedium.copyWith(
-          //         color: AppColors.dark80,
-          //         fontSize: (14 / Dimensions.designWidth).w,
-          //       ),
-          //     ),
-          //     const Asterisk(),
-          //   ],
-          // ),
-          MandatoryFieldLabel(labelText: labels[112]["labelText"]),
-          const SizeBox(height: 7),
-          BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
-            builder: buildInterestDropdown,
+          Row(
+            children: [
+              Text(
+                labels[112]["labelText"],
+                style: TextStyles.primaryMedium.copyWith(
+                  color: AppColors.dark80,
+                  fontSize: (14 / Dimensions.designWidth).w,
+                ),
+              ),
+              const Asterisk(),
+            ],
           ),
+
+          // MandatoryFieldLabel(labelText: labels[112]["labelText"]),
+          BlocBuilder<ShowButtonBloc, ShowButtonState>(
+            builder: (context, state) {
+              return Column(
+                children: [
+                  const SizeBox(height: 7),
+                  BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
+                    builder: buildInterestDropdown,
+                  ),
+                ],
+              );
+            },
+          ),
+
           const SizeBox(height: 20),
-          // Row(
-          //   children: [
-          //     Text(
-          //       labels[113]["labelText"],
-          //       style: TextStyles.primaryMedium.copyWith(
-          //         color: AppColors.dark80,
-          //         fontSize: (14 / Dimensions.designWidth).w,
-          //       ),
-          //     ),
-          //     const Asterisk(),
-          //   ],
-          // ),
-          MandatoryFieldLabel(labelText: labels[113]["labelText"]),
+          Row(
+            children: [
+              Text(
+                labels[113]["labelText"],
+                style: TextStyles.primaryMedium.copyWith(
+                  color: AppColors.dark80,
+                  fontSize: (14 / Dimensions.designWidth).w,
+                ),
+              ),
+              const Asterisk(),
+            ],
+          ),
+          // MandatoryFieldLabel(labelText: labels[113]["labelText"]),
           const SizeBox(height: 10),
           Row(
             children: [
@@ -897,9 +955,21 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const MandatoryFieldLabel(
-                        labelText:
-                            "Do you want to set Standing Instruction for Maturity?"),
+                    Row(
+                      children: [
+                        Text(
+                          "Do you want to set Standing Instruction for Maturity?",
+                          style: TextStyles.primaryMedium.copyWith(
+                            color: AppColors.dark80,
+                            fontSize: (14 / Dimensions.designWidth).w,
+                          ),
+                        ),
+                        const Asterisk(),
+                      ],
+                    ),
+                    // const MandatoryFieldLabel(
+                    //     labelText:
+                    //         "Do you want to set Standing Instruction for Maturity?"),
                     const SizeBox(height: 10),
                     Row(
                       children: [
@@ -947,10 +1017,37 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
       BuildContext context, DropdownSelectedState state) {
     return CustomDropDown(
       title: "Select from the list",
-      items: payoutDurationDDs,
+      items: getPayoutDropdown(maturityDays),
+      // payoutDurationDDs,
       value: selectedPayout,
       onChanged: onDropdownChanged,
     );
+  }
+
+  List<String> getPayoutDropdown(int days) {
+    dynamicPayoutDropdowns = [];
+    if (days < 30) {
+      dynamicPayoutDropdowns = [payoutDurationDDs[0]];
+    } else if (days >= 30 && days < 90) {
+      dynamicPayoutDropdowns = [payoutDurationDDs[0], payoutDurationDDs[1]];
+    } else if (days >= 90 && days < 180) {
+      dynamicPayoutDropdowns = [
+        payoutDurationDDs[0],
+        payoutDurationDDs[1],
+        payoutDurationDDs[2]
+      ];
+    } else if (days >= 180 && days < 365) {
+      dynamicPayoutDropdowns = [
+        payoutDurationDDs[0],
+        payoutDurationDDs[1],
+        payoutDurationDDs[2],
+        payoutDurationDDs[3]
+      ];
+    } else {
+      dynamicPayoutDropdowns = payoutDurationDDs;
+    }
+    log("result -> $dynamicPayoutDropdowns");
+    return dynamicPayoutDropdowns;
   }
 
   void onDropdownChanged(Object? value) {
@@ -1143,14 +1240,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       isRetail: createDepositArgument.isRetail,
                       currency: currency,
                       accountNumber: chosenAccountNumber,
-                      depositAmount: double.parse(_depositController.text),
+                      depositAmount: double.parse(
+                          _depositController.text.replaceAll(',', '')),
                       tenureDays:
-                          // auxToDate.difference(DateTime.now()).inHours <= 0
-                          //     ? auxToDate.difference(DateTime.now()).inDays
-                          //     : auxToDate.difference(DateTime.now()).inDays + 1,
-                          auxToDate.day - DateTime.now().day,
+                          auxToDate.difference(DateTime.now()).inHours <= 0
+                              ? auxToDate.difference(DateTime.now()).inDays
+                              : auxToDate.difference(DateTime.now()).inDays + 1,
+                      // auxToDate.day - DateTime.now().day,
                       interestRate: interestRate,
-                      interestAmount: double.parse(_depositController.text) *
+                      interestAmount: double.parse(
+                              _depositController.text.replaceAll(',', '')) *
                           (interestRate / 100),
                       interestPayout: selectedPayout ?? "",
                       isAutoRenewal: isAutoRenewal,
@@ -1177,10 +1276,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         isRetail: createDepositArgument.isRetail,
                         currency: currency,
                         accountNumber: chosenAccountNumber,
-                        depositAmount: double.parse(_depositController.text),
-                        tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                        depositAmount: double.parse(
+                            _depositController.text.replaceAll(',', '')),
+                        tenureDays:
+                            auxToDate.difference(DateTime.now()).inHours <= 0
+                                ? auxToDate.difference(DateTime.now()).inDays
+                                : auxToDate.difference(DateTime.now()).inDays +
+                                    1,
                         interestRate: interestRate,
-                        interestAmount: double.parse(_depositController.text) *
+                        interestAmount: double.parse(
+                                _depositController.text.replaceAll(',', '')) *
                             ((interestRate / 100)),
                         interestPayout: selectedPayout ?? "",
                         isAutoRenewal: isAutoRenewal,
@@ -1206,10 +1311,16 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         isRetail: createDepositArgument.isRetail,
                         currency: currency,
                         accountNumber: chosenAccountNumber,
-                        depositAmount: double.parse(_depositController.text),
-                        tenureDays: auxToDate.difference(DateTime.now()).inDays,
+                        depositAmount: double.parse(
+                            _depositController.text.replaceAll(',', '')),
+                        tenureDays:
+                            auxToDate.difference(DateTime.now()).inHours <= 0
+                                ? auxToDate.difference(DateTime.now()).inDays
+                                : auxToDate.difference(DateTime.now()).inDays +
+                                    1,
                         interestRate: interestRate,
-                        interestAmount: double.parse(_depositController.text) *
+                        interestAmount: double.parse(
+                                _depositController.text.replaceAll(',', '')) *
                             ((interestRate / 100)),
                         interestPayout: selectedPayout ?? "",
                         isAutoRenewal: isAutoRenewal,
@@ -1278,13 +1389,41 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
     final ErrorMessageBloc errorMessageBloc = context.read<ErrorMessageBloc>();
     final ShowButtonBloc showPeriodSection = context.read<ShowButtonBloc>();
     final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
-    if (double.parse(p0) < minAmtReq || double.parse(p0) > maxAmtReq) {
+
+    if (_depositController.text.length < initLength) {
+      _depositController.text =
+          (double.parse(_depositController.text.replaceAll(',', '')) / 10)
+              .toStringAsFixed(2);
+      if (double.parse(_depositController.text.replaceAll(',', '')) >= 1000) {
+        _depositController.text = NumberFormat('#,000.00')
+            .format(double.parse(_depositController.text.replaceAll(',', '')));
+      }
+
+      _depositController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _depositController.text.length));
+    } else {
+      _depositController.text =
+          (double.parse(_depositController.text.replaceAll(',', '')) * 10)
+              .toStringAsFixed(2);
+      if (double.parse(_depositController.text.replaceAll(',', '')) >= 1000) {
+        _depositController.text = NumberFormat('#,000.00')
+            .format(double.parse(_depositController.text.replaceAll(',', '')));
+      }
+      _depositController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _depositController.text.length));
+    }
+
+    initLength = _depositController.text.length;
+
+    if (double.parse(_depositController.text.replaceAll(',', '')) < minAmtReq ||
+        double.parse(_depositController.text.replaceAll(',', '')) > maxAmtReq) {
       errorMsg = "Please check the amount limit criteria";
       borderColor = AppColors.red100;
       errorMessageBloc.add(
         ErrorMessageEvent(hasError: errorMsg.isEmpty),
       );
-    } else if (double.parse(p0) > bal) {
+    } else if (double.parse(_depositController.text.replaceAll(',', '')) >
+        bal) {
       errorMsg = "Insufficient fund";
       borderColor = AppColors.red100;
       errorMessageBloc.add(

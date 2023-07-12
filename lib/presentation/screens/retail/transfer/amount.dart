@@ -18,6 +18,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 class TransferAmountScreen extends StatefulWidget {
@@ -33,7 +34,8 @@ class TransferAmountScreen extends StatefulWidget {
 }
 
 class _TransferAmountScreenState extends State<TransferAmountScreen> {
-  final TextEditingController _sendController = TextEditingController();
+  final TextEditingController _sendController =
+      TextEditingController(text: "0.00");
   final TextEditingController _receiveController = TextEditingController();
 
   bool isShowButton = true;
@@ -49,7 +51,10 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
     countrynameOrCode: receiverCurrencies[0].countrynameOrCode,
   );
 
+  int initLength = 4;
+
   bool isFetchingExchangeRate = false;
+  bool isFetchingQuotation = false;
 
   late SendMoneyArgumentModel sendMoneyArgument;
 
@@ -171,9 +176,10 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                     hintText: "0",
                                     controller: _sendController,
                                     onChanged: onSendChanged,
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                            decimal: true),
+                                    keyboardType: TextInputType.number,
+                                    // inputFormatters: [
+                                    //   FilteringTextInputFormatter.digitsOnly
+                                    // ],
                                     suffixIcon: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -334,8 +340,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                                             svgAssetPath:
                                                                 ImageConstants
                                                                     .warning,
-                                                            title:
-                                                                "Error {200}",
+                                                            title: "Sorry!",
                                                             message: getExchRateApiResult[
                                                                     "message"] ??
                                                                 "There was an error fetching exchange rate, please try again later.",
@@ -359,21 +364,28 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                                                           .text.isNotEmpty
                                                       ? (double.parse(
                                                                   _sendController
-                                                                      .text) *
+                                                                      .text
+                                                                      .replaceAll(
+                                                                          ',',
+                                                                          '')) *
                                                               exchangeRate)
                                                           .toStringAsFixed(2)
                                                       : "";
                                                   senderAmount = _sendController
                                                           .text.isNotEmpty
                                                       ? double.parse(
-                                                          _sendController.text)
+                                                          _sendController.text
+                                                              .replaceAll(
+                                                                  ',', ''))
                                                       : 0;
                                                   receiverAmount =
                                                       _sendController
                                                               .text.isNotEmpty
                                                           ? double.parse(
                                                               _receiveController
-                                                                  .text)
+                                                                  .text
+                                                                  .replaceAll(
+                                                                      ',', ''))
                                                           : 0;
 
                                                   isFetchingExchangeRate =
@@ -522,8 +534,50 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
   void onSendChanged(String p0) {
     final ShowButtonBloc showProceedButtonBloc = context.read<ShowButtonBloc>();
     final ShowButtonBloc toggleCaptionsBloc = context.read<ShowButtonBloc>();
+
+    if (_sendController.text.length < initLength) {
+      _sendController.text =
+          (double.parse(_sendController.text.replaceAll(',', '')) / 10)
+              .toStringAsFixed(2);
+      if (double.parse(_sendController.text.replaceAll(',', '')) >= 1000) {
+        _sendController.text = NumberFormat('#,000.00')
+            .format(double.parse(_sendController.text.replaceAll(',', '')));
+      }
+      _sendController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _sendController.text.length));
+      _receiveController.text =
+          (double.parse(_sendController.text.replaceAll(',', '')) *
+                  exchangeRate)
+              .toStringAsFixed(2);
+      if (double.parse(_receiveController.text.replaceAll(',', '')) >= 1000) {
+        _receiveController.text = NumberFormat('#,000.00')
+            .format(double.parse(_receiveController.text.replaceAll(',', '')));
+      }
+    } else {
+      _sendController.text =
+          (double.parse(_sendController.text.replaceAll(',', '')) * 10)
+              .toStringAsFixed(2);
+      if (double.parse(_sendController.text.replaceAll(',', '')) >= 1000) {
+        _sendController.text = NumberFormat('#,000.00')
+            .format(double.parse(_sendController.text.replaceAll(',', '')));
+      }
+      _sendController.selection = TextSelection.fromPosition(
+          TextPosition(offset: _sendController.text.length));
+      _receiveController.text =
+          (double.parse(_sendController.text.replaceAll(',', '')) *
+                  exchangeRate)
+              .toStringAsFixed(2);
+      if (double.parse(_receiveController.text.replaceAll(',', '')) >= 1000) {
+        _receiveController.text = NumberFormat('#,000.00')
+            .format(double.parse(_receiveController.text.replaceAll(',', '')));
+      }
+    }
+
+    initLength = _sendController.text.length;
+
     if (_sendController.text.isEmpty ||
-        double.parse(_sendController.text) == 0) {
+        double.parse(_sendController.text.replaceAll(',', '')) == 0 ||
+        _sendController.text == "0.00") {
       if (_sendController.text.isEmpty) {
         _receiveController.clear();
       }
@@ -534,13 +588,14 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       toggleCaptionsBloc.add(ShowButtonEvent(show: isNotZero));
     }
     if (isWalletSelected) {
-      if (double.parse(_sendController.text) > 10000) {
+      if (double.parse(_sendController.text.replaceAll(',', '')) >= 10000) {
         isShowButton = false;
         borderColor = AppColors.red100;
         showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));
       }
     }
-    if (double.parse(_sendController.text) > senderBalance) {
+    if (double.parse(_sendController.text.replaceAll(',', '')) >
+        senderBalance.abs()) {
       // ! abs()
       isShowButton = false;
       borderColor = AppColors.red100;
@@ -550,10 +605,9 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       borderColor = const Color(0XFFEEEEEE);
       showProceedButtonBloc.add(ShowButtonEvent(show: isShowButton));
     }
-    _receiveController.text =
-        (double.parse(p0) * exchangeRate).toStringAsFixed(2);
-    senderAmount = double.parse(_sendController.text);
-    receiverAmount = double.parse(_receiveController.text);
+
+    senderAmount = double.parse(_sendController.text.replaceAll(',', ''));
+    receiverAmount = double.parse(_receiveController.text.replaceAll(',', ''));
   }
 
   Widget buildSendError(BuildContext context, ShowButtonState state) {
@@ -570,7 +624,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
         ),
         Text(
           isShowButton
-              ? "Available to transfer $senderCurrency ${isWalletSelected ? senderBalance > 10000 ? 10000 : senderBalance : senderBalance}"
+              ? "Available to transfer $senderCurrency ${isWalletSelected ? senderBalance >= 10000 ? 10000 : senderBalance : senderBalance}"
               : " ${messages[11]["messageText"]}",
           style: TextStyles.primaryMedium.copyWith(
             color: isShowButton ? AppColors.dark50 : AppColors.red100,
@@ -584,9 +638,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
   Widget buildExchangeRate(BuildContext context, ShowButtonState state) {
     return FeeExchangeRate(
       transferFeeCurrency: senderCurrency,
-      transferFee: sendMoneyArgument.isRemittance
-          ? fees
-          : double.parse(0.toStringAsFixed(0)),
+      transferFee: sendMoneyArgument.isRemittance ? fees : 0,
       exchangeRateSenderCurrency: senderCurrency,
       exchangeRate: exchangeRate,
       exchangeRateReceiverCurrency: receiverCurrency,
@@ -619,19 +671,99 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
       if (sendMoneyArgument.isRemittance) {
         if (isBearerTypeSelected) {
           return GradientButton(
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                Routes.transferConfirmation,
-                arguments: SendMoneyArgumentModel(
-                  isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
-                  isWithinDhabi: sendMoneyArgument.isWithinDhabi,
-                  isRemittance: sendMoneyArgument.isRemittance,
-                  isRetail: sendMoneyArgument.isRetail,
-                ).toMap(),
-              );
+            onTap: () async {
+              if (sendMoneyArgument.isRemittance) {
+                if (!isFetchingQuotation) {
+                  final ShowButtonBloc showButtonBloc =
+                      context.read<ShowButtonBloc>();
+                  isFetchingQuotation = true;
+                  showButtonBloc
+                      .add(ShowButtonEvent(show: isFetchingQuotation));
+
+                  log("Quotation API Request -> ${{
+                    "isAccount": isBankSelected,
+                    "beneficiaryAccountNumber": receiverAccountNumber,
+                    "beneficiaryMobile": benMobileNo,
+                    "beneficiaryCountryCode": beneficiaryCountryCode,
+                    "requestAmount": _sendController.text.replaceAll(',', ''),
+                    "sourceCurrency": senderCurrency,
+                    "targetCurrency": receiverCurrency,
+                  }}");
+                  var quotationApiResult = await MapQuotation.mapQuotation(
+                    {
+                      "isAccount": isBankSelected,
+                      "beneficiaryAccountNumber": receiverAccountNumber,
+                      "beneficiaryMobile": benMobileNo,
+                      "beneficiaryCountryCode": beneficiaryCountryCode,
+                      "requestAmount": _sendController.text.replaceAll(',', ''),
+                      "sourceCurrency": senderCurrency,
+                      "targetCurrency": receiverCurrency,
+                    },
+                    token ?? "",
+                  );
+                  log("quotationApiResult -> $quotationApiResult");
+
+                  if (quotationApiResult["success"]) {
+                    quotationId = quotationApiResult["quotationReferenceNo"];
+                    senderAmount =
+                        double.parse(quotationApiResult["exchangeAmount"]);
+                    if (context.mounted) {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.transferConfirmation,
+                        arguments: SendMoneyArgumentModel(
+                          isBetweenAccounts:
+                              sendMoneyArgument.isBetweenAccounts,
+                          isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                          isRemittance: sendMoneyArgument.isRemittance,
+                          isRetail: sendMoneyArgument.isRetail,
+                        ).toMap(),
+                      );
+                    }
+                  } else {
+                    if (context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CustomDialog(
+                            svgAssetPath: ImageConstants.warning,
+                            title: "Sorry!",
+                            message: quotationApiResult["message"] ??
+                                "There was an error in getting quotation, please try again later.",
+                            actionWidget: GradientButton(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              text: labels[346]["labelText"],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  }
+
+                  isFetchingQuotation = false;
+                  showButtonBloc
+                      .add(ShowButtonEvent(show: isFetchingQuotation));
+                }
+              } else {
+                if (context.mounted) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.transferConfirmation,
+                    arguments: SendMoneyArgumentModel(
+                      isBetweenAccounts: sendMoneyArgument.isBetweenAccounts,
+                      isWithinDhabi: sendMoneyArgument.isWithinDhabi,
+                      isRemittance: sendMoneyArgument.isRemittance,
+                      isRetail: sendMoneyArgument.isRetail,
+                    ).toMap(),
+                  );
+                }
+              }
             },
             text: labels[127]["labelText"],
+            auxWidget:
+                isFetchingQuotation ? const LoaderRow() : const SizeBox(),
           );
         } else {
           return SolidButton(

@@ -45,6 +45,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
   int toggles = 0;
 
   String? selectedFormat;
+  String? selectedDuration;
 
   DateTime auxFromDate = DateTime.now();
   DateTime tempFromDate = DateTime.now();
@@ -57,6 +58,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
   bool isOneMonth = false;
   bool isThreeMonths = false;
   bool isSixMonths = false;
+
+  bool isDurationSelected = false;
 
   bool isFolderCreated = false;
   Directory? directory;
@@ -102,54 +105,116 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                       fontSize: (28 / Dimensions.designWidth).w,
                     ),
                   ),
+                  const SizeBox(height: 20),
+                  Text(
+                    "Please select the duration from the below dropdown",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.dark50,
+                      fontSize: (14 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 15),
+                  Row(
+                    children: [
+                      Text(
+                        "Duration",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (14 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const Asterisk(),
+                    ],
+                  ),
+                  const SizeBox(height: 10),
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      return CustomDropDown(
+                        title: "Select from the list",
+                        items: statementDurationDDs,
+                        value: selectedDuration,
+                        onChanged: onSelectedDuration,
+                      );
+                    },
+                  ),
+
+                  const SizeBox(height: 15),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Or",
+                      style: TextStyles.primaryMedium.copyWith(
+                        color: AppColors.dark50,
+                        fontSize: (14 / Dimensions.designWidth).w,
+                      ),
+                    ),
+                  ),
+                  const SizeBox(height: 15),
+
+                  Text(
+                    "Please select the date range from the below dropdowns",
+                    style: TextStyles.primaryMedium.copyWith(
+                      color: AppColors.dark50,
+                      fontSize: (14 / Dimensions.designWidth).w,
+                    ),
+                  ),
+                  const SizeBox(height: 15),
+                  BlocBuilder<ShowButtonBloc, ShowButtonState>(
+                    builder: (context, state) {
+                      return Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "From Date",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (14 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          const SizeBox(height: 10),
+                          BlocBuilder<DateSelectionBloc, DateSelectionState>(
+                            builder: (context, state) {
+                              return DateDropdown(
+                                onTap: onFromDateSelected,
+                                isSelected: isFromDateSelected,
+                                text: fromDate,
+                              );
+                            },
+                          ),
+                          const SizeBox(height: 20),
+                          Row(
+                            children: [
+                              Text(
+                                "To Date",
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.dark80,
+                                  fontSize: (14 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
+                          ),
+                          const SizeBox(height: 10),
+                          BlocBuilder<DateSelectionBloc, DateSelectionState>(
+                            builder: (context, state) {
+                              return DateDropdown(
+                                isSelected: isToDateSelected,
+                                onTap: onToDateSelected,
+                                text: toDate,
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
 
                   const SizeBox(height: 20),
-                  Row(
-                    children: [
-                      Text(
-                        "From Date",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.dark80,
-                          fontSize: (14 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const Asterisk(),
-                    ],
-                  ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<DateSelectionBloc, DateSelectionState>(
-                    builder: (context, state) {
-                      return DateDropdown(
-                        onTap: onFromDateSelected,
-                        isSelected: isFromDateSelected,
-                        text: fromDate,
-                      );
-                    },
-                  ),
-                  const SizeBox(height: 20),
-                  Row(
-                    children: [
-                      Text(
-                        "To Date",
-                        style: TextStyles.primaryMedium.copyWith(
-                          color: AppColors.dark80,
-                          fontSize: (14 / Dimensions.designWidth).w,
-                        ),
-                      ),
-                      const Asterisk(),
-                    ],
-                  ),
-                  const SizeBox(height: 10),
-                  BlocBuilder<DateSelectionBloc, DateSelectionState>(
-                    builder: (context, state) {
-                      return DateDropdown(
-                        isSelected: isToDateSelected,
-                        onTap: onToDateSelected,
-                        text: toDate,
-                      );
-                    },
-                  ),
-                  const SizeBox(height: 20),
+
                   Row(
                     children: [
                       Text(
@@ -162,7 +227,6 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                       const Asterisk(),
                     ],
                   ),
-
                   const SizeBox(height: 10),
                   BlocBuilder<DropdownSelectedBloc, DropdownSelectedState>(
                     builder: (context, state) {
@@ -174,17 +238,7 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
                       );
                     },
                   ),
-                  // Align(
-                  //   alignment: Alignment.center,
-                  //   child: Text(
-                  //     "Or",
-                  //     style: TextStyles.primaryMedium.copyWith(
-                  //       color: AppColors.grey40,
-                  //       fontSize: (16 / Dimensions.designWidth).w,
-                  //     ),
-                  //   ),
-                  // ),
-                  // const SizeBox(height: 10),
+
                   // BlocBuilder<ShowButtonBloc, ShowButtonState>(
                   //   builder: (context, state) {
                   //     return ActionButton(
@@ -221,7 +275,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
               builder: (context, state) {
                 if (isFormatSelected &&
                     ((isOneMonth || isThreeMonths || isSixMonths) ||
-                        (isFromDateSelected && isToDateSelected)) &&
+                        (isFromDateSelected && isToDateSelected) ||
+                        isDurationSelected) &&
                     auxFromDate.difference(auxToDate).inDays <= 0) {
                   return Column(
                     children: [
@@ -368,6 +423,43 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     formatSelectionBloc.add(
       DropdownSelectedEvent(
         isDropdownSelected: isFormatSelected,
+        toggles: toggles,
+      ),
+    );
+    showButtonBloc.add(
+      ShowButtonEvent(
+        show: isFormatSelected &&
+            ((isOneMonth || isThreeMonths || isSixMonths) ||
+                (isFromDateSelected && isToDateSelected)),
+      ),
+    );
+  }
+
+  onSelectedDuration(Object? value) {
+    final DropdownSelectedBloc durationSelectionBloc =
+        context.read<DropdownSelectedBloc>();
+    final ShowButtonBloc showButtonBloc = context.read<ShowButtonBloc>();
+    toggles++;
+    isDurationSelected = true;
+    selectedDuration = value as String;
+    log("selectedDuration -> $selectedDuration");
+    auxToDate = DateTime.now();
+    auxFromDate = DateTime.now().subtract(
+      Duration(
+        days: selectedDuration == "1 Month"
+            ? 30
+            : selectedDuration == "3 Months"
+                ? 90
+                : 180,
+      ),
+    );
+    isFromDateSelected = false;
+    fromDate = "From Date";
+    isToDateSelected = false;
+    toDate = "To Date";
+    durationSelectionBloc.add(
+      DropdownSelectedEvent(
+        isDropdownSelected: isDurationSelected,
         toggles: toggles,
       ),
     );
@@ -537,6 +629,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     isOneMonth = false;
     isThreeMonths = false;
     isSixMonths = false;
+    isDurationSelected = false;
+    selectedDuration = null;
     fromDateSelectionBloc.add(
       DateSelectionEvent(isDateSelected: isFromDateSelected),
     );
@@ -712,6 +806,8 @@ class _DownloadStatementScreenState extends State<DownloadStatementScreen> {
     toDateSelectionBloc.add(
       DateSelectionEvent(isDateSelected: isToDateSelected),
     );
+    isDurationSelected = false;
+    selectedDuration = null;
     showButtonBloc.add(
       ShowButtonEvent(
         show: isFormatSelected &&

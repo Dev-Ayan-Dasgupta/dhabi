@@ -11,6 +11,7 @@ import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
@@ -41,6 +42,8 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
 
   bool isClickable = true;
 
+  bool isLoggingIn = false;
+
   @override
   void initState() {
     super.initState();
@@ -62,76 +65,96 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
         centerTitle: true,
         elevation: 0,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal:
-              (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
-        ),
-        child: Column(
-          children: [
-            Expanded(
+      body: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal:
+                  (PaddingConstants.horizontalPadding / Dimensions.designWidth)
+                      .w,
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Welcome",
+                        style: TextStyles.primaryBold.copyWith(
+                          color: AppColors.primary,
+                          fontSize: (28 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                      const SizeBox(height: 15),
+                      Text(
+                        // "Mr. Mohamed Abood",
+                        storageCustomerName ?? "",
+                        style: TextStyles.primaryMedium.copyWith(
+                          color: AppColors.dark80,
+                          fontSize: (16 / Dimensions.designWidth).w,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    SolidButton(
+                      onTap: () {
+                        if (isClickable) {
+                          isShowBiometric = false;
+                          Navigator.pushReplacementNamed(
+                            context,
+                            Routes.loginPassword,
+                            arguments: LoginPasswordArgumentModel(
+                              emailId: storageEmail ?? "",
+                              userId: storageUserId ?? 0,
+                              userTypeId: storageUserTypeId ?? 1,
+                              companyId: storageCompanyId ?? 0,
+                            ).toMap(),
+                          );
+                        }
+                      },
+                      text: "Use password instead",
+                      color: Colors.white,
+                      fontColor: AppColors.primary,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          offset: Offset(
+                            (4 / Dimensions.designWidth).w,
+                            (4 / Dimensions.designHeight).h,
+                          ),
+                          blurRadius: (8 / Dimensions.designWidth).w,
+                        )
+                      ],
+                    ),
+                    SizeBox(
+                      height: PaddingConstants.bottomPadding +
+                          MediaQuery.of(context).padding.bottom,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          Ternary(
+            condition: isLoggingIn,
+            falsy: const SizeBox(),
+            truthy: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "Welcome",
-                    style: TextStyles.primaryBold.copyWith(
-                      color: AppColors.primary,
-                      fontSize: (28 / Dimensions.designWidth).w,
-                    ),
-                  ),
-                  const SizeBox(height: 15),
-                  Text(
-                    // "Mr. Mohamed Abood",
-                    storageCustomerName ?? "",
-                    style: TextStyles.primaryMedium.copyWith(
-                      color: AppColors.dark80,
-                      fontSize: (16 / Dimensions.designWidth).w,
-                    ),
+                  SpinKitFadingCircle(
+                    color: AppColors.primary,
+                    size: (50 / Dimensions.designWidth).w,
                   ),
                 ],
               ),
             ),
-            Column(
-              children: [
-                SolidButton(
-                  onTap: () {
-                    if (isClickable) {
-                      isShowBiometric = false;
-                      Navigator.pushReplacementNamed(
-                        context,
-                        Routes.loginPassword,
-                        arguments: LoginPasswordArgumentModel(
-                          emailId: storageEmail ?? "",
-                          userId: storageUserId ?? 0,
-                          userTypeId: storageUserTypeId ?? 1,
-                          companyId: storageCompanyId ?? 0,
-                        ).toMap(),
-                      );
-                    }
-                  },
-                  text: "Use password instead",
-                  color: Colors.white,
-                  fontColor: AppColors.primary,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      offset: Offset(
-                        (4 / Dimensions.designWidth).w,
-                        (4 / Dimensions.designHeight).h,
-                      ),
-                      blurRadius: (8 / Dimensions.designWidth).w,
-                    )
-                  ],
-                ),
-                SizeBox(
-                  height: PaddingConstants.bottomPadding +
-                      MediaQuery.of(context).padding.bottom,
-                ),
-              ],
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -156,6 +179,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
           if (isAuthenticated) {
             setState(() {
               isClickable = false;
+              isLoggingIn = true;
             });
 
             if (context.mounted) {
@@ -337,6 +361,9 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
         }
       }
     }
+    setState(() {
+      isLoggingIn = false;
+    });
   }
 
   void promptWrongCredentials() {

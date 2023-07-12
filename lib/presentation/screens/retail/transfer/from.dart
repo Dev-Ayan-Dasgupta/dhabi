@@ -15,6 +15,7 @@ import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/vault_account_card.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class SendMoneyFromScreen extends StatefulWidget {
   const SendMoneyFromScreen({
@@ -86,7 +87,7 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
             builder: (context) {
               return CustomDialog(
                 svgAssetPath: ImageConstants.warning,
-                title: "Error {200} Exchange Rate",
+                title: "Sorry!",
                 message: getExchangeRateApi["message"] ??
                     "Error while getting exchange rate, please try again later",
                 actionWidget: GradientButton(
@@ -268,15 +269,34 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                           : foreignSeedAccounts[index].currency,
                               amount: sendMoneyArgument.isRetail
                                   ? double.parse(accountDetails[index]
-                                          ["currentBalance"]
-                                      .split(" ")
-                                      .last
-                                      .replaceAll(",", ""))
+                                                  ["currentBalance"]
+                                              .split(" ")
+                                              .last
+                                              .replaceAll(",", "")) >
+                                          1000
+                                      ? NumberFormat('#,000.00').format(
+                                          double.parse(accountDetails[index]
+                                                  ["currentBalance"]
+                                              .split(" ")
+                                              .last
+                                              .replaceAll(",", "")))
+                                      : double.parse(accountDetails[index]
+                                                  ["currentBalance"]
+                                              .split(" ")
+                                              .last
+                                              .replaceAll(",", ""))
+                                          .toStringAsFixed(2)
                                   : sendMoneyArgument.isBetweenAccounts
-                                      ? internalSeedAccounts[index].bal
+                                      ? internalSeedAccounts[index].bal >= 1000
+                                          ? NumberFormat('#,000.00').format(internalSeedAccounts[index].bal)
+                                          : internalSeedAccounts[index].bal.toStringAsFixed(2)
                                       : sendMoneyArgument.isWithinDhabi
-                                          ? dhabiSeedAccounts[index].bal
-                                          : foreignSeedAccounts[index].bal,
+                                          ? dhabiSeedAccounts[index].bal >= 1000
+                                              ? NumberFormat('#,000.00').format(dhabiSeedAccounts[index].bal)
+                                              : dhabiSeedAccounts[index].bal.toStringAsFixed(2)
+                                          : foreignSeedAccounts[index].bal >= 1000
+                                              ? NumberFormat('#,000.00').format(foreignSeedAccounts[index].bal)
+                                              : foreignSeedAccounts[index].bal,
                               isSelected: selectedAccountIndex == index,
                             );
                           },

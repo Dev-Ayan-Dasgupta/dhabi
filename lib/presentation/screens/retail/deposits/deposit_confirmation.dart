@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:dialup_mobile_app/data/repositories/accounts/index.dart';
 import 'package:dialup_mobile_app/data/repositories/corporateAccounts/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -56,16 +57,19 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
     depositDetails.add(DetailsTileModel(
         key: "Deposit Amount",
         value:
-            "USD ${depositConfirmationModel.depositAmount.toStringAsFixed(0)}"));
+            "USD ${depositConfirmationModel.depositAmount >= 1000 ? NumberFormat('#,000.00').format(depositConfirmationModel.depositAmount) : depositConfirmationModel.depositAmount.toStringAsFixed(2)
+            // depositConfirmationModel.depositAmount.toStringAsFixed(2)
+            }"));
     depositDetails.add(DetailsTileModel(
-        key: "Tenure", value: "${depositConfirmationModel.tenureDays} day(s)"));
+        key: "Tenure",
+        value: DaysToMonths.daysToMonths(depositConfirmationModel.tenureDays)));
     depositDetails.add(DetailsTileModel(
         key: "Interest Rate",
         value: "${depositConfirmationModel.interestRate}%"));
     depositDetails.add(DetailsTileModel(
         key: "Interest Amount",
         value:
-            "USD ${depositConfirmationModel.interestAmount.toStringAsFixed(2)}"));
+            "USD ${depositConfirmationModel.interestAmount >= 1000 ? NumberFormat('#,000.00').format(depositConfirmationModel.interestAmount) : depositConfirmationModel.interestAmount.toStringAsFixed(2)}"));
     depositDetails.add(DetailsTileModel(
         key: "Interest Payout",
         value: depositConfirmationModel.interestPayout));

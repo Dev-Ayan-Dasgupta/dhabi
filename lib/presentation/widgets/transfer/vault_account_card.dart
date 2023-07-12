@@ -5,6 +5,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class VaultAccountCard extends StatelessWidget {
   const VaultAccountCard({
@@ -25,7 +26,7 @@ class VaultAccountCard extends StatelessWidget {
   final String? imgUrl;
   final String accountNo;
   final String currency;
-  final double amount;
+  final String amount;
   final bool isSelected;
 
   @override
@@ -84,7 +85,7 @@ class VaultAccountCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "$currency ${amount.toStringAsFixed(2)}",
+                      "$currency ${double.parse(amount.replaceAll(',', '')).abs() >= 1000 ? NumberFormat('#,000.00').format(double.parse(amount.replaceAll(',', ''))) : double.parse(amount.replaceAll(',', '')).toStringAsFixed(2)} ",
                       style: TextStyles.primaryBold.copyWith(
                         fontSize: (16 / Dimensions.designWidth).w,
                         color: AppColors.primaryDark,

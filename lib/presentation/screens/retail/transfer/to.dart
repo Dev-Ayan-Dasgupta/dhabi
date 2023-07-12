@@ -12,6 +12,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/transfer/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:intl/intl.dart';
 
 class SendMoneyToScreen extends StatefulWidget {
   const SendMoneyToScreen({
@@ -142,10 +143,22 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
                             accountNo: accountDetails[index]["accountNumber"],
                             currency: accountDetails[index]["accountCurrency"],
                             amount: double.parse(accountDetails[index]
-                                    ["currentBalance"]
-                                .split(" ")
-                                .last
-                                .replaceAll(",", "")),
+                                            ["currentBalance"]
+                                        .split(" ")
+                                        .last
+                                        .replaceAll(",", "")) >
+                                    1000
+                                ? NumberFormat('#,000.00').format(double.parse(
+                                    accountDetails[index]["currentBalance"]
+                                        .split(" ")
+                                        .last
+                                        .replaceAll(",", "")))
+                                : double.parse(accountDetails[index]
+                                            ["currentBalance"]
+                                        .split(" ")
+                                        .last
+                                        .replaceAll(",", ""))
+                                    .toStringAsFixed(2),
                             isSelected: selectedAccountIndex == index,
                           ),
                         ),
@@ -222,7 +235,7 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
                                       builder: (context) {
                                         return CustomDialog(
                                           svgAssetPath: ImageConstants.warning,
-                                          title: "Error {200}",
+                                          title: "Sorry!",
                                           message: getExchRateApiResult[
                                                   "message"] ??
                                               "There was an error fetching exchange rate, please try again later.",

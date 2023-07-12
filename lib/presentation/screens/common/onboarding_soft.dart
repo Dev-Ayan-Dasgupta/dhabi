@@ -58,7 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     super.initState();
     onboardingArgumentModel =
         OnboardingArgumentModel.fromMap(widget.argument as dynamic ?? {});
-    // moveCaption();
+    moveCaption();
     animateCaption();
     animateToPage();
   }

@@ -7,12 +7,12 @@ import 'package:dialup_mobile_app/presentation/widgets/shimmers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class DepositDetailsScreen extends StatefulWidget {
@@ -66,23 +66,27 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
             value: getFDDetailsResult["depositAccountNo"]));
         depositDetails.add(DetailsTileModel(
             key: "Deposit Amount",
-            value: "USD ${getFDDetailsResult["depositAmount"]}"));
+            value:
+                "USD ${double.parse(getFDDetailsResult["depositAmount"]) >= 1000 ? NumberFormat('#,000.00').format(double.parse(getFDDetailsResult["depositAmount"])) : double.parse(getFDDetailsResult["depositAmount"]).toStringAsFixed(2)}"));
         depositDetails.add(DetailsTileModel(
             key: "Tenure", value: "${getFDDetailsResult["tenure"] ?? ""}"));
         depositDetails.add(DetailsTileModel(
             key: "Total Interest Earned",
-            value: "USD ${getFDDetailsResult["interestAmount"]}"));
+            value:
+                "USD ${double.parse(getFDDetailsResult["interestAmount"]) >= 1000 ? NumberFormat('#,000.00').format(double.parse(getFDDetailsResult["interestAmount"])) : double.parse(getFDDetailsResult["interestAmount"]).toStringAsFixed(2)}"));
         depositDetails.add(DetailsTileModel(
             key: "Interest Payout",
             value: getFDDetailsResult["interestPayout"]));
         depositDetails.add(DetailsTileModel(
             key: "Payout Amount",
-            value: "USD ${getFDDetailsResult["payoutAmount"].toString()}"));
+            value:
+                "USD ${(getFDDetailsResult["payoutAmount"]) >= 1000 ? NumberFormat('#,000.00').format((getFDDetailsResult["payoutAmount"])) : (getFDDetailsResult["payoutAmount"]).toStringAsFixed(2)}"));
         depositDetails.add(DetailsTileModel(
             key: "On Maturity", value: getFDDetailsResult["onMaturity"]));
         depositDetails.add(DetailsTileModel(
             key: "Maturity Amount",
-            value: "USD ${getFDDetailsResult["maturityAmount"].toString()}"));
+            value:
+                "USD ${(getFDDetailsResult["maturityAmount"]) >= 1000 ? NumberFormat('#,000.00').format((getFDDetailsResult["maturityAmount"])) : (getFDDetailsResult["maturityAmount"]).toStringAsFixed(2)}"));
         depositDetails.add(DetailsTileModel(
             key: "Credit Account",
             value: getFDDetailsResult["creditAccountNo"]));
@@ -136,7 +140,7 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
             ),
             child: InkWell(
               onTap: () {
-                Navigator.pushNamed(context, Routes.downloadStatement);
+                // Navigator.pushNamed(context, Routes.downloadStatement);
               },
               child: SvgPicture.asset(ImageConstants.certificate),
             ),
