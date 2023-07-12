@@ -107,6 +107,10 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                 log("cif -> $cif");
                                 log("cif RTT -> ${cif.runtimeType}");
 
+                                await storage.write(key: "cif", value: cif);
+                                storageCif = await storage.read(key: "cif");
+                                log("storageCif -> $storageCif");
+
                                 isCompany = selectAccountArgument
                                     .cifDetails[index]["isCompany"];
                                 log("isCompany -> $isCompany");

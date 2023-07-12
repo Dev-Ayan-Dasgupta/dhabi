@@ -3,7 +3,7 @@ description: Digital Banking Application for Dhabi
 
 publish_to: "none"
 
-version: 1.0.0+65
+version: 1.0.0+64
 
 environment:
   sdk: ">=2.19.4 <3.0.0"

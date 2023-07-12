@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (65)
+## Release notes - 1.0.0 (64)
 
 1. Exchange rate 2 decimal places ¶
 2. Label 168
@@ -39,3 +39,4 @@ Digital Banking Application for Dhabi
 33. Implemented lazy loading for dashboard
 34. Put spinner while waiting for login after biometric validation
 35. Fixed alignment issue of tabs in dashboard
+36. Fixed routing to business dashboard after corporate money transfer
