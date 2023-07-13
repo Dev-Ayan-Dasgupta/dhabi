@@ -692,6 +692,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                     "benCustomerName": benCustomerName,
                     "benBankName": benBankName,
                     "benBankCode": benBankCode,
+                    "benSubBankCode": benSubBankCode,
                   }}");
                   var quotationApiResult = await MapQuotation.mapQuotation(
                     {
@@ -706,6 +707,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                       "benCustomerName": benCustomerName,
                       "benBankName": benBankName,
                       "benBankCode": benBankCode,
+                      "benSubBankCode": benSubBankCode,
                     },
                     token ?? "",
                   );

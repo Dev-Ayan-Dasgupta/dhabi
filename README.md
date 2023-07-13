@@ -44,3 +44,4 @@ Digital Banking Application for Dhabi
 38. Updated api call for pdf and excel download statement
 39. Fixed highest/lowest sort issue of statement in draggable sheet
 40. Changed tabbar color
+41. Made City field mandatory in Address

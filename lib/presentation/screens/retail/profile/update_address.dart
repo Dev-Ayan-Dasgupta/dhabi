@@ -61,6 +61,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
   bool isEmirateSelected = true;
 
   bool isCountrySelected = true;
+
   int dhabiCountryIndex = 0;
 
   int toggles = 0;
@@ -203,15 +204,12 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             onChanged: (p0) {
                               if (p0.isEmpty) {
                                 isShowButton = false;
-                                showButtonBloc.add(
-                                  ShowButtonEvent(show: isShowButton),
-                                );
                               } else {
                                 isShowButton = true;
-                                showButtonBloc.add(
-                                  ShowButtonEvent(show: isShowButton),
-                                );
                               }
+                              showButtonBloc.add(
+                                ShowButtonEvent(show: isShowButton),
+                              );
                               checkHasEdited();
                             },
                           ),
@@ -233,18 +231,33 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                             },
                           ),
                           const SizeBox(height: 20),
-                          Text(
-                            labels[331]["labelText"],
-                            style: TextStyles.primaryMedium.copyWith(
-                              color: AppColors.black63,
-                              fontSize: (16 / Dimensions.designWidth).w,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                labels[331]["labelText"],
+                                style: TextStyles.primaryMedium.copyWith(
+                                  color: AppColors.black63,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                              ),
+                              const Asterisk(),
+                            ],
                           ),
                           const SizeBox(height: 10),
                           CustomTextField(
                             hintText: labels[331]["labelText"],
                             controller: _cityController,
                             onChanged: (p0) {
+                              final ShowButtonBloc showButtonBloc =
+                                  context.read<ShowButtonBloc>();
+                              if (p0.isEmpty) {
+                                isShowButton = false;
+                              } else {
+                                isShowButton = true;
+                              }
+                              showButtonBloc.add(
+                                ShowButtonEvent(show: isShowButton),
+                              );
                               checkHasEdited();
                             },
                           ),
