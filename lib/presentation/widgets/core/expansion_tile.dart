@@ -24,13 +24,6 @@ class CustomExpansionTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Text(
-        //   "${index + 1}",
-        //   style: TextStyles.primaryBold.copyWith(
-        //     color: AppColors.primary,
-        //     fontSize: (32 / Dimensions.designWidth).w,
-        //   ),
-        // ),
         Theme(
           data: ThemeData(
             dividerColor: Colors.transparent,
