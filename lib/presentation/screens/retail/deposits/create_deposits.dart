@@ -67,9 +67,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
 
   String date = "";
   DateTime auxToDate = DateTime(
-    DateTime.now().add(const Duration(days: 7)).year,
-    DateTime.now().add(const Duration(days: 7)).month,
-    DateTime.now().add(const Duration(days: 7)).day,
+    DateTime.now().add(const Duration(days: 31)).year,
+    DateTime.now().add(const Duration(days: 31)).month,
+    DateTime.now().add(const Duration(days: 31)).day,
     0,
     0,
     0,
@@ -593,15 +593,31 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                         const SizeBox(height: 20),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: (22 / Dimensions.designWidth).w,
+                            horizontal: (PaddingConstants.horizontalPadding /
+                                    Dimensions.designWidth)
+                                .w,
                           ),
                           // vertical: (22 / Dimensions.designHeight).h),
-                          child: Text(
-                            labels[104]["labelText"],
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (28 / Dimensions.designWidth).w,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Duration",
+                                style: TextStyles.primaryBold.copyWith(
+                                  color: AppColors.primary,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "USD Rates",
+                                style: TextStyles.primaryBold.copyWith(
+                                  color: AppColors.primary,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+                            ],
                           ),
                         ),
                         const SizeBox(height: 20),
@@ -701,9 +717,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       initialDateTime:
                           auxToDate.add(const Duration(seconds: 1)),
                       minimumDate: DateTime(
-                        DateTime.now().add(const Duration(days: 7)).year,
-                        DateTime.now().add(const Duration(days: 7)).month,
-                        DateTime.now().add(const Duration(days: 7)).day,
+                        DateTime.now().add(const Duration(days: 31)).year,
+                        DateTime.now().add(const Duration(days: 31)).month,
+                        DateTime.now().add(const Duration(days: 31)).day,
                         0,
                         0,
                         0,
@@ -722,9 +738,9 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                       looping: false,
                       initialDate: auxToDate.add(const Duration(seconds: 1)),
                       firstDate: DateTime(
-                        DateTime.now().add(const Duration(days: 7)).year,
-                        DateTime.now().add(const Duration(days: 7)).month,
-                        DateTime.now().add(const Duration(days: 7)).day,
+                        DateTime.now().add(const Duration(days: 31)).year,
+                        DateTime.now().add(const Duration(days: 31)).month,
+                        DateTime.now().add(const Duration(days: 31)).day,
                         0,
                         0,
                         0,

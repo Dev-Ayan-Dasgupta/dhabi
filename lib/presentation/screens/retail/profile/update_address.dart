@@ -410,7 +410,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                       storageAddressPoBox = await storage.read(key: "poBox");
 
                       profileAddress =
-                          "${storageAddressLine1 ?? ""}, ${storageAddressLine2 ?? ""}, ${storageAddressCity ?? ""}, ${storageAddressState ?? ""}, ${storageAddressPoBox ?? ""}";
+                          "${storageAddressLine1 ?? ""}${storageAddressLine1 == "" ? "" : ",\n"}${storageAddressLine2 ?? ""}${storageAddressLine2 == "" ? "" : ",\n"}${storageAddressCity ?? ""}${storageAddressCity == "" ? "" : ",\n"}${storageAddressState ?? ""}${storageAddressState == "" ? "" : ",\n"}${storageAddressPoBox ?? ""}";
                       promptSuccessfulAddressUpdate();
                     } else {
                       promptUnsuccessfulAddressUpdate();
@@ -479,7 +479,7 @@ class _UpdateAddressScreenState extends State<UpdateAddressScreen> {
                         storageAddressPoBox = await storage.read(key: "poBox");
 
                         profileAddress =
-                            "${storageAddressLine1 ?? ""}, ${storageAddressLine2 ?? ""}, ${storageAddressCity ?? ""}, ${storageAddressState ?? ""}, ${storageAddressPoBox ?? ""}";
+                            "${storageAddressLine1 ?? ""}${storageAddressLine1 == "" ? "" : ",\n"}${storageAddressLine2 ?? ""}${storageAddressLine2 == "" ? "" : ",\n"}${storageAddressCity ?? ""}${storageAddressCity == "" ? "" : ",\n"}${storageAddressState ?? ""}${storageAddressState == "" ? "" : ",\n"}${storageAddressPoBox ?? ""}";
                         promptSuccessfulAddressUpdate();
                       } else {
                         if (context.mounted) {

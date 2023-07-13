@@ -1143,8 +1143,9 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                               .uaeFlag
                                                           : ImageConstants
                                                               .usaFlag,
-                                                      accountType:
-                                                          "Fixed Deposit",
+                                                      accountType: depositDetails[
+                                                              index][
+                                                          "depositAccountNumber"],
                                                       currency: depositDetails[
                                                                   index][
                                                               "depositPrincipalAmount"]
@@ -3657,15 +3658,29 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                         const SizeBox(height: 20),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: (22 / Dimensions.designWidth).w,
+                            horizontal: (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
                           ),
                           // vertical: (22 / Dimensions.designHeight).h),
-                          child: Text(
-                            labels[104]["labelText"],
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (28 / Dimensions.designWidth).w,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Duration",
+                                style: TextStyles.primaryBold.copyWith(
+                                  color: AppColors.primary,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "USD Rates",
+                                style: TextStyles.primaryBold.copyWith(
+                                  color: AppColors.primary,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+                            ],
                           ),
                         ),
                         const SizeBox(height: 20),

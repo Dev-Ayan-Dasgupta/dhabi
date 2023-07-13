@@ -634,8 +634,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
         storageAddressPoBox = await storage.read(key: "poBox");
 
         profileAddress =
-            "$profileAddressLine1, $profileAddressLine2, $profileCity, $profileState, $profilePinCode";
-        // "${getProfileDataResult["addressLine_1"]} ${getProfileDataResult["addressLine_2"]} ${getProfileDataResult["city"] ?? ""} ${getProfileDataResult["state"] ?? ""} ${getProfileDataResult["pinCode"]}";
+            "$profileAddressLine1${profileAddressLine1 == "" ? '' : ",\n"}$profileAddressLine2${profileAddressLine2 == "" ? '' : ",\n"}$profileCity${profileCity == "" ? '' : ",\n"}$profileState${profileState == "" ? '' : ",\n"}$profilePinCode";
 
         log("profileName -> $profileName");
         log("profilePhotoBase64 -> $profilePhotoBase64");

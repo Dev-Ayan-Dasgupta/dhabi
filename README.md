@@ -45,3 +45,6 @@ Digital Banking Application for Dhabi
 39. Fixed highest/lowest sort issue of statement in draggable sheet
 40. Changed tabbar color
 41. Made City field mandatory in Address
+42. FUAT-72
+43. FUAT-84
+44. FUAT-48
