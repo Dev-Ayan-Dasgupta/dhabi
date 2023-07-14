@@ -320,8 +320,10 @@ class _SelectAccountScreenState extends State<SelectAccountScreen> {
                                       }
                                     } else {
                                       // TODO: Navigate to dashboard
-                                      Navigator.pushNamed(
-                                          context, Routes.loginUserId);
+                                      if (context.mounted) {
+                                        Navigator.pushNamed(
+                                            context, Routes.loginUserId);
+                                      }
                                     }
                                   }
                                 }

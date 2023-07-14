@@ -6,3 +6,4 @@ export './request_type.dart';
 export './security.dart';
 export './update_address.dart';
 export './select_account.dart';
+export './password.dart';

@@ -48,3 +48,4 @@ Digital Banking Application for Dhabi
 42. FUAT-72
 43. FUAT-84
 44. FUAT-48
+45. Updated calendar in create deposits to 31 days

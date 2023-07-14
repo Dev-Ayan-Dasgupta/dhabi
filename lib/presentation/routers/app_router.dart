@@ -156,6 +156,12 @@ class AppRouter {
             argument: args,
           ),
         );
+      case Routes.profileUpdatePassword:
+        return MaterialPageRoute(
+          builder: (_) => ProfileDetailsPasswordScreen(
+            argument: args,
+          ),
+        );
       case Routes.verifyMobile:
         return MaterialPageRoute(
           builder: (_) => VerifyMobileScreen(
