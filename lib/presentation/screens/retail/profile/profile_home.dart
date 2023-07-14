@@ -191,7 +191,16 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                                   color: const Color(0XFFFAFAFA),
                                   onTap: () {
                                     Navigator.pushNamed(
-                                        context, Routes.security);
+                                      context,
+                                      Routes.security,
+                                      arguments:
+                                          ProfileUpdatePasswordArgumentModel(
+                                        isRetail: profileArgument.isRetail,
+                                        isEmailChange: false,
+                                        isMobileChange: false,
+                                        isPasswordChange: true,
+                                      ).toMap(),
+                                    );
                                   },
                                   iconPath: ImageConstants.security,
                                   text: labels[13]["labelText"],

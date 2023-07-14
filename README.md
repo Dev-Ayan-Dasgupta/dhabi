@@ -49,3 +49,4 @@ Digital Banking Application for Dhabi
 43. FUAT-84
 44. FUAT-48
 45. Updated calendar in create deposits to 31 days
+46. Implemented biometric check before change email/mobile

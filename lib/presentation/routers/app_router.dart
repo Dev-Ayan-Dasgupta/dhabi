@@ -367,7 +367,9 @@ class AppRouter {
         );
       case Routes.security:
         return MaterialPageRoute(
-          builder: (_) => const SecurityScreen(),
+          builder: (_) => SecurityScreen(
+            argument: args,
+          ),
         );
       case Routes.changePassword:
         return MaterialPageRoute(

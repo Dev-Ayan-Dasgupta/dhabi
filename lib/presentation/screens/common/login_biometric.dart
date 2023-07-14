@@ -186,7 +186,6 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
               onSubmit(storagePassword ?? "");
             }
           } else {
-            // TODO: Verify from client if they want a dialog box to enable biometric
             // OpenSettings.openBiometricEnrollSetting();
             if (context.mounted) {
               biometricFailedCount++;

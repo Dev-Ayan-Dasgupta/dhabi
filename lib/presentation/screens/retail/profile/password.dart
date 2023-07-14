@@ -303,6 +303,9 @@ class _ProfileDetailsPasswordScreenState
                                   );
                                 }
                               }
+                            } else {
+                              Navigator.pushNamed(
+                                  context, Routes.changePassword);
                             }
                           } else {
                             showDialog(
