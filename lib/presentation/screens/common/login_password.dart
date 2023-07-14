@@ -273,6 +273,10 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
     log("token -> $token");
 
     if (result["success"]) {
+      passwordChangesToday = result["passwordChangesToday"];
+      emailChangesToday = result["emailChangesToday"];
+      mobileChangesToday = result["mobileChangesToday"];
+
       await storage.write(key: "cif", value: result["cif"]);
       storageCif = await storage.read(key: "cif");
       log("storageCif -> $storageCif");
@@ -489,6 +493,10 @@ class _LoginPasswordScreenState extends State<LoginPasswordScreen> {
                     token = result["token"];
                     log("token -> $token");
                     if (result["success"]) {
+                      passwordChangesToday = result["passwordChangesToday"];
+                      emailChangesToday = result["emailChangesToday"];
+                      mobileChangesToday = result["mobileChangesToday"];
+
                       await persistOnboardingState(result["onboardingState"]);
                       if (result["isTemporaryPassword"]) {
                         if (context.mounted) {

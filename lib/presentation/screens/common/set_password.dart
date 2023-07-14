@@ -505,6 +505,12 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                           );
                           log("BG login API result -> $loginApiResult");
                           if (loginApiResult["success"]) {
+                            passwordChangesToday =
+                                loginApiResult["passwordChangesToday"];
+                            emailChangesToday =
+                                loginApiResult["emailChangesToday"];
+                            mobileChangesToday =
+                                loginApiResult["mobileChangesToday"];
                             token = loginApiResult["token"];
                             log("token -> $token");
                             await getProfileData();

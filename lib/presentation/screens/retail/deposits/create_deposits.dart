@@ -184,7 +184,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                           Row(
                             children: [
                               Text(
-                                "Select an Account",
+                                "Choose the Account you wish to fund your Fixed Deposit",
                                 style: TextStyles.primaryMedium.copyWith(
                                   color: AppColors.dark80,
                                   fontSize: (16 / Dimensions.designWidth).w,
@@ -974,7 +974,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                     Row(
                       children: [
                         Text(
-                          "Do you want to set Standing Instruction for Maturity?",
+                          "Do you want to move fundsoutside Dhabi post maturity?",
                           style: TextStyles.primaryMedium.copyWith(
                             color: AppColors.dark80,
                             fontSize: (14 / Dimensions.designWidth).w,

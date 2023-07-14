@@ -162,35 +162,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizeBox(width: 20),
                           InkWell(
                             onTap: () {
-                              if (profileArgument.isRetail) {
+                              if (emailChangesToday > 1) {
                                 Navigator.pushNamed(
                                   context,
                                   Routes.errorSuccessScreen,
                                   arguments: ErrorArgumentModel(
-                                    hasSecondaryButton: true,
-                                    iconPath: ImageConstants.warning,
-                                    title: labels[250]["labelText"],
-                                    message: messages[53]["messageText"],
-                                    buttonText: labels[31]["labelText"],
+                                    hasSecondaryButton: false,
+                                    iconPath: ImageConstants.errorOutlined,
+                                    title: "Limit exceeded!",
+                                    message:
+                                        "Email cannot be changed more than once a day",
+                                    buttonText: labels[347]["labelText"],
                                     onTap: () {
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        Routes.registration,
-                                        arguments: RegistrationArgumentModel(
-                                          isInitial: false,
-                                          isUpdateCorpEmail: false,
-                                        ).toMap(),
-                                      );
-                                    },
-                                    buttonTextSecondary: labels[347]
-                                        ["labelText"],
-                                    onTapSecondary: () {
+                                      // Navigator.pushNamedAndRemoveUntil(
+                                      //   context,
+                                      //   Routes.retailDashboard,
+                                      //   (route) => false,
+                                      //   arguments: RetailDashboardArgumentModel(
+                                      //     imgUrl: "",
+                                      //     name: customerName ?? "",
+                                      //     isFirst: storageIsFirstLogin == true
+                                      //         ? false
+                                      //         : true,
+                                      //   ).toMap(),
+                                      // );
                                       Navigator.pop(context);
                                     },
+                                    buttonTextSecondary: "",
+                                    onTapSecondary: () {},
                                   ).toMap(),
                                 );
                               } else {
-                                if (canChangeEmailId) {
+                                if (profileArgument.isRetail) {
                                   Navigator.pushNamed(
                                     context,
                                     Routes.errorSuccessScreen,
@@ -206,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           Routes.registration,
                                           arguments: RegistrationArgumentModel(
                                             isInitial: false,
-                                            isUpdateCorpEmail: true,
+                                            isUpdateCorpEmail: false,
                                           ).toMap(),
                                         );
                                       },
@@ -218,23 +221,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ).toMap(),
                                   );
                                 } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return CustomDialog(
-                                        svgAssetPath: ImageConstants.warning,
-                                        title: "No Permission",
-                                        message:
-                                            "You do not have permission to update your Email ID",
-                                        actionWidget: GradientButton(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          text: labels[346]["labelText"],
-                                        ),
-                                      );
-                                    },
-                                  );
+                                  if (canChangeEmailId) {
+                                    Navigator.pushNamed(
+                                      context,
+                                      Routes.errorSuccessScreen,
+                                      arguments: ErrorArgumentModel(
+                                        hasSecondaryButton: true,
+                                        iconPath: ImageConstants.warning,
+                                        title: labels[250]["labelText"],
+                                        message: messages[53]["messageText"],
+                                        buttonText: labels[31]["labelText"],
+                                        onTap: () {
+                                          Navigator.pushReplacementNamed(
+                                            context,
+                                            Routes.registration,
+                                            arguments:
+                                                RegistrationArgumentModel(
+                                              isInitial: false,
+                                              isUpdateCorpEmail: true,
+                                            ).toMap(),
+                                          );
+                                        },
+                                        buttonTextSecondary: labels[347]
+                                            ["labelText"],
+                                        onTapSecondary: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ).toMap(),
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CustomDialog(
+                                          svgAssetPath: ImageConstants.warning,
+                                          title: "No Permission",
+                                          message:
+                                              "You do not have permission to update your Email ID",
+                                          actionWidget: GradientButton(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            text: labels[346]["labelText"],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
                                 }
                               }
                             },
@@ -276,45 +309,77 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizeBox(width: 20),
                           InkWell(
                             onTap: () {
-                              if (profileArgument.isRetail) {
+                              if (mobileChangesToday > 0) {
                                 Navigator.pushNamed(
                                   context,
-                                  Routes.verifyMobile,
-                                  arguments: VerifyMobileArgumentModel(
-                                    isBusiness: false,
-                                    isUpdate: true,
-                                    isReKyc: false,
+                                  Routes.errorSuccessScreen,
+                                  arguments: ErrorArgumentModel(
+                                    hasSecondaryButton: false,
+                                    iconPath: ImageConstants.errorOutlined,
+                                    title: "Limit exceeded!",
+                                    message:
+                                        "Mobile number cannot be changed more than once a day",
+                                    buttonText: labels[347]["labelText"],
+                                    onTap: () {
+                                      // Navigator.pushNamedAndRemoveUntil(
+                                      //   context,
+                                      //   Routes.retailDashboard,
+                                      //   (route) => false,
+                                      //   arguments: RetailDashboardArgumentModel(
+                                      //     imgUrl: "",
+                                      //     name: customerName ?? "",
+                                      //     isFirst: storageIsFirstLogin == true
+                                      //         ? false
+                                      //         : true,
+                                      //   ).toMap(),
+                                      // );
+                                      Navigator.pop(context);
+                                    },
+                                    buttonTextSecondary: "",
+                                    onTapSecondary: () {},
                                   ).toMap(),
                                 );
                               } else {
-                                if (canChangeMobileNumber) {
+                                if (profileArgument.isRetail) {
                                   Navigator.pushNamed(
                                     context,
                                     Routes.verifyMobile,
                                     arguments: VerifyMobileArgumentModel(
-                                      isBusiness: true,
+                                      isBusiness: false,
                                       isUpdate: true,
                                       isReKyc: false,
                                     ).toMap(),
                                   );
                                 } else {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return CustomDialog(
-                                        svgAssetPath: ImageConstants.warning,
-                                        title: "No Permission",
-                                        message:
-                                            "You do not have permission to update your Mobile Number",
-                                        actionWidget: GradientButton(
-                                          onTap: () {
-                                            Navigator.pop(context);
-                                          },
-                                          text: labels[346]["labelText"],
-                                        ),
-                                      );
-                                    },
-                                  );
+                                  if (canChangeMobileNumber) {
+                                    Navigator.pushNamed(
+                                      context,
+                                      Routes.verifyMobile,
+                                      arguments: VerifyMobileArgumentModel(
+                                        isBusiness: true,
+                                        isUpdate: true,
+                                        isReKyc: false,
+                                      ).toMap(),
+                                    );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return CustomDialog(
+                                          svgAssetPath: ImageConstants.warning,
+                                          title: "No Permission",
+                                          message:
+                                              "You do not have permission to update your Mobile Number",
+                                          actionWidget: GradientButton(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            text: labels[346]["labelText"],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
                                 }
                               }
                             },

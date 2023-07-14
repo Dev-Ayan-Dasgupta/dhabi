@@ -715,7 +715,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
 
                   if (quotationApiResult["success"]) {
                     quotationId = quotationApiResult["quotationReferenceNo"];
-                    senderAmount =
+                    receiverAmount =
                         double.parse(quotationApiResult["exchangeAmount"]);
                     if (context.mounted) {
                       Navigator.pushNamed(

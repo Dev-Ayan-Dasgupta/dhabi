@@ -232,6 +232,9 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
     log("token -> $token");
 
     if (result["success"]) {
+      passwordChangesToday = result["passwordChangesToday"];
+      emailChangesToday = result["emailChangesToday"];
+      mobileChangesToday = result["mobileChangesToday"];
       await storage.write(key: "cif", value: result["cif"]);
       storageCif = await storage.read(key: "cif");
       log("storageCif -> $storageCif");
@@ -421,6 +424,9 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                   token = result["token"];
                   log("token -> $token");
                   if (result["success"]) {
+                    passwordChangesToday = result["passwordChangesToday"];
+                    emailChangesToday = result["emailChangesToday"];
+                    mobileChangesToday = result["mobileChangesToday"];
                     await storage.write(
                         key: "newInstall", value: true.toString());
                     storageIsNotNewInstall =

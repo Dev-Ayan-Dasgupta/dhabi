@@ -10,6 +10,7 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
 import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
 import 'package:dialup_mobile_app/utils/lists/onboarding_soft.dart';
+import 'package:flutter_stories/flutter_stories.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({
@@ -46,6 +48,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   int time = 0;
   int time2 = 0;
 
+  List images = [
+    Image.asset(ImageConstants.onboarding1, fit: BoxFit.fill),
+    Image.asset(ImageConstants.onboarding2, fit: BoxFit.fill),
+    Image.asset(ImageConstants.onboarding3, fit: BoxFit.fill),
+    Image.asset(ImageConstants.onboarding4, fit: BoxFit.fill),
+  ];
+
   bool isLoading = false;
   Timer? _timer;
   Timer? _timer2;
@@ -58,9 +67,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     super.initState();
     onboardingArgumentModel =
         OnboardingArgumentModel.fromMap(widget.argument as dynamic ?? {});
-    moveCaption();
-    animateCaption();
-    animateToPage();
+    // moveCaption();
+    // animateCaption();
+    // animateToPage();
   }
 
   void animateToPage() {
@@ -122,7 +131,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        toolbarHeight: 0,
+        toolbarHeight: 10,
         backgroundColor: Colors.transparent,
         elevation: 0,
         systemOverlayStyle: const SystemUiOverlayStyle(
@@ -133,122 +142,170 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       ),
       body: Stack(
         children: [
-          PageView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            controller: pageController,
-            itemCount: onboardingSoftList.length,
-            itemBuilder: (context, index) {
-              if (pageController.position.haveDimensions) {
-                return Stack(
-                  children: [
-                    AnimatedPositioned(
-                      duration: const Duration(seconds: 5),
-                      curve: Curves.linear,
-                      right: (time % 5) * (25 / Dimensions.designWidth).w,
-                      child: Transform.scale(
-                        scaleX: pageController.page == 0
-                            ? 2
-                            : pageController.page == 2
-                                ? 3.5
-                                : pageController.page == 3
-                                    ? 2.2
-                                    : 1,
-                        child: Container(
-                          width: 100.w,
-                          height: 100.h,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  onboardingSoftList[index].backgroundImage),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 100.w,
-                      height: 100.h,
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.black87,
-                            Colors.transparent,
-                            Colors.black38,
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: MediaQuery.of(context).padding.top +
-                          (20 / Dimensions.designHeight).h,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: (PaddingConstants.horizontalPadding /
-                                  Dimensions.designWidth)
-                              .w,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            PageIndicator(
-                              count: onboardingSoftList.length,
-                              page: index,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                        top: MediaQuery.of(context).padding.top +
-                            (72 / Dimensions.designHeight).h +
-                            _progressLengthAnimation.value,
-                        child: Opacity(
-                          opacity: 1,
-                          // ((400 / Dimensions.designHeight).h -
-                          //         _progressLengthAnimation.value) /
-                          //     (400 / Dimensions.designHeight).h,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal:
-                                    (PaddingConstants.horizontalPadding /
-                                            Dimensions.designWidth)
-                                        .w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "DHABI",
-                                  style: TextStyle(
-                                    color: const Color.fromRGBO(
-                                        255, 255, 255, 0.5),
-                                    fontFamily: "Montserrat",
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: (16 / Dimensions.designWidth).w,
-                                  ),
-                                ),
-                                const SizeBox(height: 10),
-                                SizedBox(
-                                  width: 67.w,
-                                  child: Text(
-                                    onboardingSoftList[index].caption,
-                                    style: TextStyles.primaryMedium.copyWith(
-                                      fontSize: (35 / Dimensions.designWidth).w,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ))
-                  ],
-                );
-              } else {
-                return null;
-              }
-            },
+          // PageView.builder(
+          //   physics: const NeverScrollableScrollPhysics(),
+          //   controller: pageController,
+          //   itemCount: onboardingSoftList.length,
+          //   itemBuilder: (context, index) {
+          //     if (pageController.position.haveDimensions) {
+          //       return Stack(
+          //         children: [
+          //           AnimatedPositioned(
+          //             duration: const Duration(seconds: 5),
+          //             curve: Curves.linear,
+          //             right: (time % 5) * (33 / Dimensions.designWidth).w,
+          //             child: Transform.scale(
+          //               scaleX: pageController.page == 0
+          //                   ? 2
+          //                   : pageController.page == 2
+          //                       ? 3.5
+          //                       : pageController.page == 3
+          //                           ? 2.2
+          //                           : 1,
+          //               child: Container(
+          //                 width: 100.w,
+          //                 height: 100.h,
+          //                 decoration: BoxDecoration(
+          //                   image: DecorationImage(
+          //                     image: AssetImage(
+          //                         onboardingSoftList[index].backgroundImage),
+          //                     fit: BoxFit.fill,
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //           Container(
+          //             width: 100.w,
+          //             height: 100.h,
+          //             decoration: const BoxDecoration(
+          //               gradient: LinearGradient(
+          //                 begin: Alignment.topCenter,
+          //                 end: Alignment.bottomCenter,
+          //                 colors: [
+          //                   Colors.black87,
+          //                   Colors.transparent,
+          //                   Colors.black38,
+          //                 ],
+          //               ),
+          //             ),
+          //           ),
+          //           Positioned(
+          //             top: MediaQuery.of(context).padding.top +
+          //                 (20 / Dimensions.designHeight).h,
+          //             child: Padding(
+          //               padding: EdgeInsets.symmetric(
+          //                 horizontal: (PaddingConstants.horizontalPadding /
+          //                         Dimensions.designWidth)
+          //                     .w,
+          //               ),
+          //               child: Column(
+          //                 crossAxisAlignment: CrossAxisAlignment.start,
+          //                 children: [
+          //                   PageIndicator(
+          //                     count: onboardingSoftList.length,
+          //                     page: index,
+          //                   ),
+          //                 ],
+          //               ),
+          //             ),
+          //           ),
+          //           Positioned(
+          //               top: MediaQuery.of(context).padding.top +
+          //                   (72 / Dimensions.designHeight).h +
+          //                   _progressLengthAnimation.value,
+          //               child: Opacity(
+          //                 opacity: 1,
+          //                 // ((400 / Dimensions.designHeight).h -
+          //                 //         _progressLengthAnimation.value) /
+          //                 //     (400 / Dimensions.designHeight).h,
+          //                 child: Padding(
+          //                   padding: EdgeInsets.symmetric(
+          //                       horizontal:
+          //                           (PaddingConstants.horizontalPadding /
+          //                                   Dimensions.designWidth)
+          //                               .w),
+          //                   child: Column(
+          //                     crossAxisAlignment: CrossAxisAlignment.start,
+          //                     children: [
+          //                       Text(
+          //                         "DHABI",
+          //                         style: TextStyle(
+          //                           color: const Color.fromRGBO(
+          //                               255, 255, 255, 0.5),
+          //                           fontFamily: "Montserrat",
+          //                           fontWeight: FontWeight.w700,
+          //                           fontSize: (16 / Dimensions.designWidth).w,
+          //                         ),
+          //                       ),
+          //                       const SizeBox(height: 10),
+          //                       SizedBox(
+          //                         width: 67.w,
+          //                         child: Text(
+          //                           onboardingSoftList[index].caption,
+          //                           style: TextStyles.primaryMedium.copyWith(
+          //                             fontSize: (35 / Dimensions.designWidth).w,
+          //                           ),
+          //                         ),
+          //                       ),
+          //                     ],
+          //                   ),
+          //                 ),
+          //               )),
+          //           Positioned(
+          //             child: InkWell(
+          //               onTap: () {
+          //                 if (index > 0) {
+          //                   page = index - 1;
+          //                   time = 5 * (page);
+          //                   pageController.animateToPage(
+          //                     page,
+          //                     duration: const Duration(milliseconds: 1),
+          //                     curve: Curves.linear,
+          //                   );
+          //                   animateToPage();
+          //                 }
+          //               },
+          //               child: SizeBox(
+          //                 width: 50.w,
+          //                 height: 100.h,
+          //               ),
+          //             ),
+          //           ),
+          //           Positioned(
+          //             right: 0,
+          //             child: InkWell(
+          //               onTap: () {
+          //                 if (index < 3) {
+          //                   page = index + 1;
+          //                   time = 5 * (page);
+          //                   pageController.animateToPage(
+          //                     page,
+          //                     duration: const Duration(milliseconds: 1),
+          //                     curve: Curves.linear,
+          //                   );
+          //                   animateToPage();
+          //                 }
+          //               },
+          //               child: SizeBox(
+          //                 width: 50.w,
+          //                 height: 100.h,
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       );
+          //     } else {
+          //       return null;
+          //     }
+          //   },
+          // ),
+          CupertinoPageScaffold(
+            child: Story(
+              momentCount: 4,
+              momentDurationGetter: (index) => const Duration(seconds: 5),
+              momentBuilder: (context, index) => images[index],
+            ),
           ),
           Positioned(
             top: MediaQuery.of(context).padding.top +
@@ -517,6 +574,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           //     isLogin: false,
                           //     isEmailIdUpdate: false,
                           //     isMobileUpdate: false,
+                          //     isReKyc: false,
                           //   ).toMap(),
                           // );
                           // Navigator.pushNamed(
@@ -602,6 +660,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     log("Login API Response -> $result");
     token = result["token"];
     log("token -> $token");
+    passwordChangesToday = result["passwordChangesToday"];
+    emailChangesToday = result["emailChangesToday"];
+    mobileChangesToday = result["mobileChangesToday"];
     customerName = result["customerName"];
     await storage.write(key: "customerName", value: customerName);
     storageCustomerName = await storage.read(key: "customerName");

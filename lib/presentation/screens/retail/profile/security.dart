@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
 import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
@@ -103,7 +104,39 @@ class _SecurityScreenState extends State<SecurityScreen> {
             const SizeBox(height: 30),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, Routes.changePassword);
+                if (passwordChangesToday > 2) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.errorSuccessScreen,
+                    arguments: ErrorArgumentModel(
+                      hasSecondaryButton: false,
+                      iconPath: ImageConstants.errorOutlined,
+                      title: "Limit exceeded!",
+                      message:
+                          "Password cannot be changed more than thrice a day",
+                      buttonText: labels[347]["labelText"],
+                      onTap: () {
+                        // Navigator.pushNamedAndRemoveUntil(
+                        //   context,
+                        //   Routes.retailDashboard,
+                        //   (route) => false,
+                        //   arguments: RetailDashboardArgumentModel(
+                        //     imgUrl: "",
+                        //     name: customerName ?? "",
+                        //     isFirst: storageIsFirstLogin == true
+                        //         ? false
+                        //         : true,
+                        //   ).toMap(),
+                        // );
+                        Navigator.pop(context);
+                      },
+                      buttonTextSecondary: "",
+                      onTapSecondary: () {},
+                    ).toMap(),
+                  );
+                } else {
+                  Navigator.pushNamed(context, Routes.changePassword);
+                }
               },
               child: Container(
                 padding: EdgeInsets.symmetric(

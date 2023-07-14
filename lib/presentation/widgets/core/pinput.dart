@@ -27,6 +27,7 @@ class _CustomPinputState extends State<CustomPinput> {
   @override
   Widget build(BuildContext context) {
     return Pinput(
+      // autofocus: true,
       length: 6,
       controller: widget.pinController,
       defaultPinTheme: PinTheme(

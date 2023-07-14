@@ -356,6 +356,10 @@ class _OTPScreenState extends State<OTPScreen> {
                     token = result["token"];
                     log("token -> $token");
 
+                    passwordChangesToday = result["passwordChangesToday"];
+                    emailChangesToday = result["emailChangesToday"];
+                    mobileChangesToday = result["mobileChangesToday"];
+
                     await storage.write(
                         key: "emailAddress", value: updatedEmail);
                     storageEmail = await storage.read(key: "emailAddress");
@@ -1299,6 +1303,9 @@ class _OTPScreenState extends State<OTPScreen> {
                 log("loginApiResult -> $loginApiResult");
 
                 if (loginApiResult["success"]) {
+                  passwordChangesToday = loginApiResult["passwordChangesToday"];
+                  emailChangesToday = loginApiResult["emailChangesToday"];
+                  mobileChangesToday = loginApiResult["mobileChangesToday"];
                   await getProfileData();
                   await storage.write(
                       key: "loggedOut", value: false.toString());
@@ -1367,6 +1374,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             message: messages[52]["messageText"],
                             actionWidget: GradientButton(
                               onTap: () {
+                                mobileChangesToday++;
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                                 Navigator.pop(context);

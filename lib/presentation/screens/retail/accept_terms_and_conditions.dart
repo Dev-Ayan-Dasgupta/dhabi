@@ -271,6 +271,12 @@ class _AcceptTermsAndConditionsScreenState
                                     log("token -> $token");
 
                                     if (result["success"]) {
+                                      passwordChangesToday =
+                                          result["passwordChangesToday"];
+                                      emailChangesToday =
+                                          result["emailChangesToday"];
+                                      mobileChangesToday =
+                                          result["mobileChangesToday"];
                                       await storage.write(
                                           key: "loggedOut",
                                           value: false.toString());
