@@ -65,7 +65,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                 ),
                 const SizeBox(height: 10),
                 Text(
-                  "Please select an option from the list below",
+                  "Please select an option to transfer funds",
                   style: TextStyles.primaryMedium.copyWith(
                     color: AppColors.dark50,
                     fontSize: (16 / Dimensions.designWidth).w,
