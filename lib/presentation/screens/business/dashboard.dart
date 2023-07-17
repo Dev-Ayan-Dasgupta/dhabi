@@ -1710,7 +1710,7 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                                                                                             style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
                                                                                           ),
                                                                                           trailing: Text(
-                                                                                            accountDetails[index]["currentBalance"],
+                                                                                            "${accountDetails[index]["accountCurrency"]} ${double.parse(accountDetails[index]["currentBalance"].split(' ').last) >= 1000 ? NumberFormat('#,000.00').format(double.parse(accountDetails[index]["currentBalance"].split(' ').last.replaceAll(',', ''))) : double.parse(accountDetails[index]["currentBalance"].split(' ').last.replaceAll(',', '')).toStringAsFixed(2)}",
                                                                                             style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
                                                                                           ),
                                                                                         );
@@ -3658,7 +3658,9 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
                         const SizeBox(height: 20),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: (PaddingConstants.horizontalPadding / Dimensions.designWidth).w,
+                            horizontal: (PaddingConstants.horizontalPadding /
+                                    Dimensions.designWidth)
+                                .w,
                           ),
                           // vertical: (22 / Dimensions.designHeight).h),
                           child: Row(

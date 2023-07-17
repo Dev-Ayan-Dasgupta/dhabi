@@ -109,4 +109,5 @@ abstract class BaseConfig {
   String get getQuotation;
   String get makeInter;
   String get getExchangeRate;
+  String get getRecentTransactions;
 }

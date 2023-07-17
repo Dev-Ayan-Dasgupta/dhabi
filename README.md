@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (64)
+## Release notes - 1.0.0 (68)
 
 1. Exchange rate 2 decimal places ¶
 2. Label 168
@@ -49,4 +49,5 @@ Digital Banking Application for Dhabi
 43. FUAT-84
 44. FUAT-48
 45. Updated calendar in create deposits to 31 days
-46. Implemented biometric check before change email/mobile
+46. Implemented biometric check before change email/mobile/password
+47. Added Recent Transactions for Send Money
