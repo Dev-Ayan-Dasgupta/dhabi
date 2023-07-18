@@ -780,21 +780,31 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
 
   void sortDisplayStatementList(
       bool isNewest, bool isOldest, bool isHighest, bool isLowest) {
-    // if (isNewest) {
-    //   displayStatementList.sort((a, b) => DateTime.parse(b["transferDate"])
-    //       .compareTo(DateTime.parse(a["transferDate"])));
-    // }
-    // if (isOldest) {
-    //   displayStatementList.sort((a, b) => DateTime.parse(a["transferDate"])
-    //       .compareTo(DateTime.parse(b["transferDate"])));
-    // }
-    // if (isHighest) {
-    //   displayStatementList.sort((a, b) => (double.parse(b["debitAmount"])
-    //       .compareTo(double.parse(a["debitAmount"]))));
-    // }
-    // if (isLowest) {
-    //   displayStatementList.sort((a, b) => (double.parse(a["debitAmount"])
-    //       .compareTo(double.parse(b["debitAmount"]))));
-    // }
+    if (isNewest) {
+      displayStatementList.sort((a, b) => DateTime.parse(b["transferDate"])
+          .compareTo(DateTime.parse(a["transferDate"])));
+    }
+    if (isOldest) {
+      displayStatementList.sort((a, b) => DateTime.parse(a["transferDate"])
+          .compareTo(DateTime.parse(b["transferDate"])));
+    }
+    if (isHighest) {
+      displayStatementList.sort((a, b) => (double.parse(
+              b["transferAmount"] != null
+                  ? b["transferAmount"].split(' ').first
+                  : "0")
+          .compareTo(double.parse(a["transferAmount"] != null
+              ? a["transferAmount"].split(' ').first
+              : "0"))));
+    }
+    if (isLowest) {
+      displayStatementList.sort((a, b) => (double.parse(
+              a["transferAmount"] != null
+                  ? a["transferAmount"].split(' ').first
+                  : "0")
+          .compareTo(double.parse(b["transferAmount"] != null
+              ? b["transferAmount"].split(' ').first
+              : "0"))));
+    }
   }
 }
