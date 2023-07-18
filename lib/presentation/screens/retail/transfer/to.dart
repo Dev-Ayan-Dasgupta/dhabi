@@ -98,12 +98,17 @@ class _SendMoneyToScreenState extends State<SendMoneyToScreen> {
             //   isSelected: false,
             // ),
             // const SizeBox(height: 30),
-            Text(
-              labels[156]["labelText"],
-              style: TextStyles.primaryMedium.copyWith(
-                color: AppColors.dark80,
-                fontSize: (14 / Dimensions.designWidth).w,
-              ),
+            Row(
+              children: [
+                Text(
+                  labels[156]["labelText"],
+                  style: TextStyles.primaryMedium.copyWith(
+                    color: AppColors.dark80,
+                    fontSize: (14 / Dimensions.designWidth).w,
+                  ),
+                ),
+                const Asterisk(),
+              ],
             ),
             const SizeBox(height: 10),
             Expanded(

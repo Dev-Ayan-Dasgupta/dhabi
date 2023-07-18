@@ -76,10 +76,10 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
         prematureDetails.clear();
 
         prematureDetails.add(DetailsTileModel(
-            key: "Deposit Account",
+            key: "Debit Acount",
             value: prematureWithdrawalArgument.accountNumber));
         prematureDetails.add(DetailsTileModel(
-            key: "Debit Account",
+            key: "Deposit Number",
             value: apiResult["depositAccountNumber"] ?? ""));
         prematureDetails.add(DetailsTileModel(
             key: "Deposit Amount",
@@ -99,8 +99,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
         prematureDetails.add(DetailsTileModel(
             key: "Interest Rate", value: "${apiResult["interestRate"]} %"));
         prematureDetails.add(DetailsTileModel(
-            key: "Credit Account No.",
-            value: apiResult["creditAccount"] ?? ""));
+            key: "Credit Account", value: apiResult["creditAccount"] ?? ""));
         prematureDetails.add(DetailsTileModel(
             key: "Maturity Date",
             value: DateFormat('dd MMMM yyyy').format(
@@ -325,7 +324,7 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
                   }
                 }
 
-                isWithdrawing = true;
+                isWithdrawing = false;
                 showButtonBloc.add(ShowButtonEvent(show: isWithdrawing));
               }
             },

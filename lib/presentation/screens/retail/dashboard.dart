@@ -91,6 +91,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   bool isShowExplore = false;
 
+  bool isNavigating = false;
+
   @override
   void initState() {
     super.initState();
@@ -553,20 +555,24 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     accountDetails.length
                                                 ? AccountSummaryTile(
                                                     onTap: () {
-                                                      Navigator.pushNamed(
-                                                        context,
-                                                        Routes
-                                                            .applicationAccount,
-                                                        arguments:
-                                                            ApplicationAccountArgumentModel(
-                                                          isInitial: false,
-                                                          isRetail: true,
-                                                          savingsAccountsCreated:
-                                                              savingsAccountCount,
-                                                          currentAccountsCreated:
-                                                              currentAccountCount,
-                                                        ).toMap(),
-                                                      );
+                                                      if (!isNavigating) {
+                                                        isNavigating = true;
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          Routes
+                                                              .applicationAccount,
+                                                          arguments:
+                                                              ApplicationAccountArgumentModel(
+                                                            isInitial: false,
+                                                            isRetail: true,
+                                                            savingsAccountsCreated:
+                                                                savingsAccountCount,
+                                                            currentAccountsCreated:
+                                                                currentAccountCount,
+                                                          ).toMap(),
+                                                        );
+                                                        isNavigating = false;
+                                                      }
                                                     },
                                                     imgUrl: ImageConstants
                                                         .addAccount,

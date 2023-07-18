@@ -106,6 +106,8 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
 
   bool isChangingDepositAccount = false;
 
+  bool isNavigating = false;
+
   @override
   void initState() {
     super.initState();
@@ -799,53 +801,61 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
 
                                                           await getCustomerAccountStatement();
                                                           if (context.mounted) {
-                                                            Navigator.pushNamed(
-                                                              context,
-                                                              Routes
-                                                                  .accountDetails,
-                                                              arguments:
-                                                                  AccountDetailsArgumentModel(
-                                                                flagImgUrl: corpCustPermApiResult[
-                                                                            "permissions"]
-                                                                        [index][
-                                                                    "currencyFlagBase64"],
-                                                                accountNumber:
-                                                                    corpCustPermApiResult["permissions"]
-                                                                            [
-                                                                            index]
-                                                                        [
-                                                                        "accountNumber"],
-                                                                currency: corpCustPermApiResult[
-                                                                            "permissions"]
-                                                                        [index][
-                                                                    "currency"],
-                                                                accountType: corpCustPermApiResult["permissions"][index]
-                                                                            [
-                                                                            "accountType"] ==
-                                                                        1
-                                                                    ? "Savings"
-                                                                    : "Current",
-                                                                balance: double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"]
-                                                                            .split(
-                                                                                " ")
-                                                                            .last
-                                                                            .replaceAll(",",
-                                                                                "")) >
-                                                                        1000000000
-                                                                    ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
-                                                                    : double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",",
-                                                                                "")) >
-                                                                            1000000
-                                                                        ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000).toStringAsFixed(2)} M"
-                                                                        : corpCustPermApiResult["permissions"][index]["currentBalance"]
-                                                                            .split(" ")
-                                                                            .last,
-                                                                iban: "",
-                                                                displayStatementList:
-                                                                    statementList,
-                                                                isRetail: false,
-                                                              ).toMap(),
-                                                            );
+                                                            if (!isNavigating) {
+                                                              isNavigating =
+                                                                  true;
+                                                              Navigator
+                                                                  .pushNamed(
+                                                                context,
+                                                                Routes
+                                                                    .accountDetails,
+                                                                arguments:
+                                                                    AccountDetailsArgumentModel(
+                                                                  flagImgUrl: corpCustPermApiResult[
+                                                                              "permissions"]
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      "currencyFlagBase64"],
+                                                                  accountNumber:
+                                                                      corpCustPermApiResult["permissions"]
+                                                                              [
+                                                                              index]
+                                                                          [
+                                                                          "accountNumber"],
+                                                                  currency: corpCustPermApiResult[
+                                                                              "permissions"]
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      "currency"],
+                                                                  accountType: corpCustPermApiResult["permissions"][index]
+                                                                              [
+                                                                              "accountType"] ==
+                                                                          1
+                                                                      ? "Savings"
+                                                                      : "Current",
+                                                                  balance: double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(
+                                                                              ",",
+                                                                              "")) >
+                                                                          1000000000
+                                                                      ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
+                                                                      : double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) >
+                                                                              1000000
+                                                                          ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000).toStringAsFixed(2)} M"
+                                                                          : corpCustPermApiResult["permissions"][index]["currentBalance"]
+                                                                              .split(" ")
+                                                                              .last,
+                                                                  iban: "",
+                                                                  displayStatementList:
+                                                                      statementList,
+                                                                  isRetail:
+                                                                      false,
+                                                                ).toMap(),
+                                                              );
+                                                              isNavigating =
+                                                                  false;
+                                                            }
                                                           }
                                                         },
                                                         imgUrl: corpCustPermApiResult[
@@ -912,56 +922,63 @@ class _BusinessDashboardScreenState extends State<BusinessDashboardScreen>
 
                                                       await getCustomerAccountStatement();
                                                       if (context.mounted) {
-                                                        Navigator.pushNamed(
-                                                          context,
-                                                          Routes.accountDetails,
-                                                          arguments:
-                                                              AccountDetailsArgumentModel(
-                                                            flagImgUrl: corpCustPermApiResult[
-                                                                        "permissions"]
-                                                                    [index][
-                                                                "currencyFlagBase64"],
-                                                            accountNumber:
-                                                                corpCustPermApiResult[
-                                                                            "permissions"]
-                                                                        [index][
-                                                                    "accountNumber"],
-                                                            currency:
-                                                                corpCustPermApiResult[
-                                                                            "permissions"]
-                                                                        [index][
-                                                                    "currency"],
-                                                            accountType:
-                                                                corpCustPermApiResult["permissions"][index]
-                                                                            [
-                                                                            "accountType"] ==
-                                                                        1
-                                                                    ? "Savings"
-                                                                    : "Current",
-                                                            balance: double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"]
-                                                                        .split(
-                                                                            " ")
-                                                                        .last
-                                                                        .replaceAll(
-                                                                            ",",
-                                                                            "")) >
-                                                                    1000000000
-                                                                ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
-                                                                : double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(
-                                                                            ",",
-                                                                            "")) >
-                                                                        1000000
-                                                                    ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000).toStringAsFixed(2)} M"
-                                                                    : corpCustPermApiResult["permissions"][index]
-                                                                            ["currentBalance"]
-                                                                        .split(" ")
-                                                                        .last,
-                                                            iban: "",
-                                                            displayStatementList:
-                                                                statementList,
-                                                            isRetail: false,
-                                                          ).toMap(),
-                                                        );
+                                                        if (!isNavigating) {
+                                                          isNavigating = true;
+                                                          Navigator.pushNamed(
+                                                            context,
+                                                            Routes
+                                                                .accountDetails,
+                                                            arguments:
+                                                                AccountDetailsArgumentModel(
+                                                              flagImgUrl: corpCustPermApiResult[
+                                                                          "permissions"]
+                                                                      [index][
+                                                                  "currencyFlagBase64"],
+                                                              accountNumber:
+                                                                  corpCustPermApiResult[
+                                                                              "permissions"]
+                                                                          [
+                                                                          index]
+                                                                      [
+                                                                      "accountNumber"],
+                                                              currency: corpCustPermApiResult[
+                                                                          "permissions"]
+                                                                      [index]
+                                                                  ["currency"],
+                                                              accountType: corpCustPermApiResult["permissions"]
+                                                                              [
+                                                                              index]
+                                                                          [
+                                                                          "accountType"] ==
+                                                                      1
+                                                                  ? "Savings"
+                                                                  : "Current",
+                                                              balance: double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"]
+                                                                          .split(
+                                                                              " ")
+                                                                          .last
+                                                                          .replaceAll(
+                                                                              ",",
+                                                                              "")) >
+                                                                      1000000000
+                                                                  ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
+                                                                  : double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(
+                                                                              ",",
+                                                                              "")) >
+                                                                          1000000
+                                                                      ? "${(double.parse(corpCustPermApiResult["permissions"][index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000).toStringAsFixed(2)} M"
+                                                                      : corpCustPermApiResult["permissions"][index]
+                                                                              ["currentBalance"]
+                                                                          .split(" ")
+                                                                          .last,
+                                                              iban: "",
+                                                              displayStatementList:
+                                                                  statementList,
+                                                              isRetail: false,
+                                                            ).toMap(),
+                                                          );
+                                                          isNavigating = false;
+                                                        }
                                                       }
                                                     },
                                                     imgUrl: corpCustPermApiResult[
