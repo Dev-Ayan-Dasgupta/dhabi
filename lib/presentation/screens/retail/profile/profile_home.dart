@@ -251,59 +251,66 @@ class _ProfileHomeScreenState extends State<ProfileHomeScreen> {
                                   iconPath: ImageConstants.faq,
                                   text: labels[16]["labelText"],
                                 ),
-                                const SizeBox(height: 10),
-                                TopicTile(
-                                  color: const Color(0XFFFAFAFA),
-                                  onTap: () async {
-                                    var getCustomerDetailsResponse =
-                                        await MapCustomerDetails
-                                            .mapCustomerDetails(token ?? "");
-                                    log("Get Customer Details API response -> $getCustomerDetailsResponse");
+                                SizeBox(
+                                  height: storageHasSingleCif == true ? 0 : 10,
+                                ),
+                                Ternary(
+                                  condition: storageHasSingleCif == true,
+                                  truthy: const SizeBox(),
+                                  falsy: TopicTile(
+                                    color: const Color(0XFFFAFAFA),
+                                    onTap: () async {
+                                      var getCustomerDetailsResponse =
+                                          await MapCustomerDetails
+                                              .mapCustomerDetails(token ?? "");
+                                      log("Get Customer Details API response -> $getCustomerDetailsResponse");
 
-                                    List cifDetails =
-                                        getCustomerDetailsResponse[
-                                            "cifDetails"];
+                                      List cifDetails =
+                                          getCustomerDetailsResponse[
+                                              "cifDetails"];
 
-                                    if (cifDetails.length > 1) {
-                                      if (context.mounted) {
-                                        Navigator.pushNamed(
-                                          context,
-                                          Routes.selectAccount,
-                                          arguments: SelectAccountArgumentModel(
-                                            emailId: storageEmail ?? "",
-                                            cifDetails: cifDetails,
-                                            isPwChange: false,
-                                            isLogin: true,
-                                            isSwitching: true,
-                                            isIncompleteOnboarding: false,
-                                          ).toMap(),
-                                        );
+                                      if (cifDetails.length > 1) {
+                                        if (context.mounted) {
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.selectAccount,
+                                            arguments:
+                                                SelectAccountArgumentModel(
+                                              emailId: storageEmail ?? "",
+                                              cifDetails: cifDetails,
+                                              isPwChange: false,
+                                              isLogin: true,
+                                              isSwitching: true,
+                                              isIncompleteOnboarding: false,
+                                            ).toMap(),
+                                          );
+                                        }
+                                      } else {
+                                        if (context.mounted) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                svgAssetPath:
+                                                    ImageConstants.warning,
+                                                title: "No Other Acount",
+                                                message:
+                                                    "You have only one registered account.",
+                                                actionWidget: GradientButton(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    text: labels[347]
+                                                        ["labelText"]),
+                                              );
+                                            },
+                                          );
+                                        }
                                       }
-                                    } else {
-                                      if (context.mounted) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return CustomDialog(
-                                              svgAssetPath:
-                                                  ImageConstants.warning,
-                                              title: "No Other Acount",
-                                              message:
-                                                  "You have only one registered account.",
-                                              actionWidget: GradientButton(
-                                                  onTap: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  text: labels[347]
-                                                      ["labelText"]),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    }
-                                  },
-                                  iconPath: ImageConstants.rotate,
-                                  text: labels[17]["labelText"],
+                                    },
+                                    iconPath: ImageConstants.rotate,
+                                    text: labels[17]["labelText"],
+                                  ),
                                 ),
                                 const SizeBox(height: 10),
                                 TopicTile(
