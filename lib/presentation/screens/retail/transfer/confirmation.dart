@@ -485,9 +485,9 @@ class _TransferConfirmationScreenState
                                           "countryCode": beneficiaryCountryCode,
                                           "debitAccount": senderAccountNumber,
                                           "debitAmount":
-                                              receiverAmount.toString(),
-                                          "transferAmount":
                                               senderAmount.toString(),
+                                          "transferAmount":
+                                              receiverAmount.toString(),
                                           "benBankCode": benBankCode,
                                           "benMobileNo": benMobileNo,
                                           "benSubBankCode": benSubBankCode,
@@ -894,8 +894,8 @@ class _TransferConfirmationScreenState
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
                                     "debitAccount": senderAccountNumber,
-                                    "debitAmount": receiverAmount.toString(),
-                                    "transferAmount": senderAmount.toString(),
+                                    "debitAmount": senderAmount.toString(),
+                                    "transferAmount": receiverAmount.toString(),
                                     "benBankCode": benBankCode,
                                     "benMobileNo": benMobileNo,
                                     "benSubBankCode": benSubBankCode,
@@ -2582,9 +2582,9 @@ class _TransferConfirmationScreenState
                                           "countryCode": beneficiaryCountryCode,
                                           "debitAccount": senderAccountNumber,
                                           "debitAmount":
-                                              receiverAmount.toString(),
-                                          "transferAmount":
                                               senderAmount.toString(),
+                                          "transferAmount":
+                                              receiverAmount.toString(),
                                           "benBankCode": benBankCode,
                                           "benMobileNo": benMobileNo,
                                           "benSubBankCode": benSubBankCode,
@@ -3328,8 +3328,8 @@ class _TransferConfirmationScreenState
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
                                     "debitAccount": senderAccountNumber,
-                                    "debitAmount": receiverAmount.toString(),
-                                    "transferAmount": senderAmount.toString(),
+                                    "debitAmount": senderAmount.toString(),
+                                    "transferAmount": receiverAmount.toString(),
                                     "benBankCode": benBankCode,
                                     "benMobileNo": benMobileNo,
                                     "benSubBankCode": benSubBankCode,

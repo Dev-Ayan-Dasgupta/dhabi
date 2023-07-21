@@ -242,8 +242,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                       "targetCurrency": receiverCurrency,
                                       "countryCode": beneficiaryCountryCode,
                                       "debitAccount": senderAccountNumber,
-                                      "debitAmount": receiverAmount.toString(),
-                                      "transferAmount": senderAmount.toString(),
+                                      "debitAmount": senderAmount.toString(),
+                                      "transferAmount":
+                                          receiverAmount.toString(),
                                       "benBankCode": benBankCode,
                                       "benMobileNo": benMobileNo,
                                       "benSubBankCode": benSubBankCode,
@@ -1145,8 +1146,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                       "targetCurrency": receiverCurrency,
                                       "countryCode": beneficiaryCountryCode,
                                       "debitAccount": senderAccountNumber,
-                                      "debitAmount": receiverAmount.toString(),
-                                      "transferAmount": senderAmount.toString(),
+                                      "debitAmount": senderAmount.toString(),
+                                      "transferAmount":
+                                          receiverAmount.toString(),
                                       "benBankCode": benBankCode,
                                       "benMobileNo": benMobileNo,
                                       "benSubBankCode": benSubBankCode,
