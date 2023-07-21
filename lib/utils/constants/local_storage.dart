@@ -75,3 +75,5 @@ int? storageChosenAccountForCreateFD;
 String? storageProfilePhotoBase64;
 
 bool? storageLoggedOut;
+
+bool? storageHasSingleCif;

@@ -198,48 +198,23 @@ class _PasswordScreenState extends State<PasswordScreen> {
                     children: [
                       GradientButton(
                         onTap: () async {
-                          if (!isTransferring) {
-                            final ShowButtonBloc showButtonBloc =
-                                context.read<ShowButtonBloc>();
-                            isTransferring = true;
-                            showButtonBloc
-                                .add(ShowButtonEvent(show: isTransferring));
-                            if (sendMoneyArgument.isRetail) {
-                              if (sendMoneyArgument.isRemittance) {
-                                log("Remittance request -> ${{
-                                  "quotationId": quotationId,
-                                  "sourceCurrency": senderCurrency,
-                                  "targetCurrency": receiverCurrency,
-                                  "countryCode": beneficiaryCountryCode,
-                                  "debitAccount": senderAccountNumber,
-                                  "debitAmount": senderAmount,
-                                  "benBankCode": benBankCode,
-                                  "benMobileNo": benMobileNo,
-                                  "benSubBankCode": benSubBankCode,
-                                  "accountType":
-                                      isBankSelected ? "Account" : "Wallet",
-                                  "benIdType": benIdType,
-                                  "benIdNo": benIdNo,
-                                  "benIdExpiryDate": benIdExpiryDate,
-                                  "benBankName": benBankName,
-                                  "benAccountNo": receiverAccountNumber,
-                                  "benCustomerName": benCustomerName,
-                                  "address": benAddress,
-                                  "city": benCity,
-                                  "swiftCode": benSwiftCode,
-                                  "remittancePurpose": remittancePurpose ?? "",
-                                  "sourceOfFunds": sourceOfFunds ?? "",
-                                  "relation": relation ?? "",
-                                }}");
-                                var remittanceApiResult =
-                                    await MapInter.mapInter(
-                                  {
+                          if (_passwordController.text == storagePassword) {
+                            if (!isTransferring) {
+                              final ShowButtonBloc showButtonBloc =
+                                  context.read<ShowButtonBloc>();
+                              isTransferring = true;
+                              showButtonBloc
+                                  .add(ShowButtonEvent(show: isTransferring));
+                              if (sendMoneyArgument.isRetail) {
+                                if (sendMoneyArgument.isRemittance) {
+                                  log("Remittance request -> ${{
                                     "quotationId": quotationId,
                                     "sourceCurrency": senderCurrency,
                                     "targetCurrency": receiverCurrency,
                                     "countryCode": beneficiaryCountryCode,
                                     "debitAccount": senderAccountNumber,
-                                    "debitAmount": senderAmount.toString(),
+                                    "debitAmount": receiverAmount.toString(),
+                                    "transferAmount": senderAmount.toString(),
                                     "benBankCode": benBankCode,
                                     "benMobileNo": benMobileNo,
                                     "benSubBankCode": benSubBankCode,
@@ -258,40 +233,43 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                         remittancePurpose ?? "",
                                     "sourceOfFunds": sourceOfFunds ?? "",
                                     "relation": relation ?? "",
-                                  },
-                                  token ?? "",
-                                );
-                                log("Remittance API Response -> $remittanceApiResult");
-                                if (remittanceApiResult["success"]) {
-                                  if (isAddRemBeneficiary) {
-                                    log("create beneficiary request -> ${{
-                                      "beneficiaryType": 2,
-                                      "accountNumber": receiverAccountNumber,
-                                      "name": benCustomerName,
-                                      "address": benAddress,
-                                      "accountType": benAccountType,
-                                      "swiftReference": 0,
+                                  }}");
+                                  var remittanceApiResult =
+                                      await MapInter.mapInter(
+                                    {
+                                      "quotationId": quotationId,
+                                      "sourceCurrency": senderCurrency,
                                       "targetCurrency": receiverCurrency,
                                       "countryCode": beneficiaryCountryCode,
+                                      "debitAccount": senderAccountNumber,
+                                      "debitAmount": senderAmount.toString(),
+                                      "transferAmount":
+                                          receiverAmount.toString(),
                                       "benBankCode": benBankCode,
                                       "benMobileNo": benMobileNo,
                                       "benSubBankCode": benSubBankCode,
+                                      "accountType":
+                                          isBankSelected ? "Account" : "Wallet",
                                       "benIdType": benIdType,
                                       "benIdNo": benIdNo,
                                       "benIdExpiryDate": benIdExpiryDate,
                                       "benBankName": benBankName,
-                                      "benSwiftCodeText": benSwiftCode,
+                                      "benAccountNo": receiverAccountNumber,
+                                      "benCustomerName": benCustomerName,
+                                      "address": benAddress,
                                       "city": benCity,
+                                      "swiftCode": benSwiftCode,
                                       "remittancePurpose":
                                           remittancePurpose ?? "",
                                       "sourceOfFunds": sourceOfFunds ?? "",
                                       "relation": relation ?? "",
-                                    }}");
-
-                                    var createBeneficiaryAPiResult =
-                                        await MapCreateBeneficiary
-                                            .mapCreateBeneficiary(
-                                      {
+                                    },
+                                    token ?? "",
+                                  );
+                                  log("Remittance API Response -> $remittanceApiResult");
+                                  if (remittanceApiResult["success"]) {
+                                    if (isAddRemBeneficiary) {
+                                      log("create beneficiary request -> ${{
                                         "beneficiaryType": 2,
                                         "accountNumber": receiverAccountNumber,
                                         "name": benCustomerName,
@@ -313,13 +291,173 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                             remittancePurpose ?? "",
                                         "sourceOfFunds": sourceOfFunds ?? "",
                                         "relation": relation ?? "",
-                                      },
-                                      token ?? "",
-                                    );
+                                      }}");
 
-                                    log("createBeneficiaryAPiResult -> $createBeneficiaryAPiResult");
+                                      var createBeneficiaryAPiResult =
+                                          await MapCreateBeneficiary
+                                              .mapCreateBeneficiary(
+                                        {
+                                          "beneficiaryType": 2,
+                                          "accountNumber":
+                                              receiverAccountNumber,
+                                          "name": benCustomerName,
+                                          "address": benAddress,
+                                          "accountType": benAccountType,
+                                          "swiftReference": 0,
+                                          "targetCurrency": receiverCurrency,
+                                          "countryCode": beneficiaryCountryCode,
+                                          "benBankCode": benBankCode,
+                                          "benMobileNo": benMobileNo,
+                                          "benSubBankCode": benSubBankCode,
+                                          "benIdType": benIdType,
+                                          "benIdNo": benIdNo,
+                                          "benIdExpiryDate": benIdExpiryDate,
+                                          "benBankName": benBankName,
+                                          "benSwiftCodeText": benSwiftCode,
+                                          "city": benCity,
+                                          "remittancePurpose":
+                                              remittancePurpose ?? "",
+                                          "sourceOfFunds": sourceOfFunds ?? "",
+                                          "relation": relation ?? "",
+                                        },
+                                        token ?? "",
+                                      );
 
-                                    if (createBeneficiaryAPiResult["success"]) {
+                                      log("createBeneficiaryAPiResult -> $createBeneficiaryAPiResult");
+
+                                      if (createBeneficiaryAPiResult[
+                                          "success"]) {
+                                        if (context.mounted) {
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.errorSuccessScreen,
+                                            arguments: ErrorArgumentModel(
+                                              hasSecondaryButton: true,
+                                              iconPath: ImageConstants
+                                                  .checkCircleOutlined,
+                                              title: "Success!",
+                                              message:
+                                                  "Your transaction has been completed\n\nTransfer reference: ${remittanceApiResult["ftReferenceNumber"]}",
+                                              buttonTextSecondary: "Go Home",
+                                              onTapSecondary: () {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.retailDashboard,
+                                                  (route) => false,
+                                                  arguments:
+                                                      RetailDashboardArgumentModel(
+                                                    imgUrl: "",
+                                                    name: profileName ?? "",
+                                                    isFirst:
+                                                        storageIsFirstLogin ==
+                                                                true
+                                                            ? false
+                                                            : true,
+                                                  ).toMap(),
+                                                );
+                                              },
+                                              buttonText:
+                                                  "Make another transaction",
+                                              onTap: () async {
+                                                var result =
+                                                    await MapCustomerAccountDetails
+                                                        .mapCustomerAccountDetails(
+                                                            token ?? "");
+                                                if (result["success"]) {
+                                                  if (context.mounted) {
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    accountDetails = result[
+                                                            "crCustomerProfileRes"]
+                                                        [
+                                                        "body"]["accountDetails"];
+                                                    Navigator.pushNamed(
+                                                      context,
+                                                      Routes.sendMoneyFrom,
+                                                      arguments:
+                                                          SendMoneyArgumentModel(
+                                                        isBetweenAccounts:
+                                                            sendMoneyArgument
+                                                                .isBetweenAccounts,
+                                                        isWithinDhabi:
+                                                            sendMoneyArgument
+                                                                .isWithinDhabi,
+                                                        isRemittance:
+                                                            sendMoneyArgument
+                                                                .isRemittance,
+                                                        isRetail:
+                                                            sendMoneyArgument
+                                                                .isRetail,
+                                                      ).toMap(),
+                                                    );
+                                                  }
+                                                } else {
+                                                  if (context.mounted) {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return CustomDialog(
+                                                          svgAssetPath:
+                                                              ImageConstants
+                                                                  .warning,
+                                                          title: "Sorry!",
+                                                          message: result[
+                                                                  "message"][
+                                                              "Something went wrong, please try again later"],
+                                                          actionWidget:
+                                                              GradientButton(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            text: labels[346]
+                                                                ["labelText"],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                }
+                                              },
+                                            ).toMap(),
+                                          );
+                                        }
+
+                                        isAddRemBeneficiary = false;
+                                        isNewRemittanceBeneficiary = false;
+                                      } else {
+                                        if (context.mounted) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                svgAssetPath:
+                                                    ImageConstants.warning,
+                                                title: "Sorry!",
+                                                message: createBeneficiaryAPiResult[
+                                                        "message"] ??
+                                                    "Something went wrong while adding beneficiary, please try again later",
+                                                actionWidget: GradientButton(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  text: labels[346]
+                                                      ["labelText"],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    } else {
                                       if (context.mounted) {
                                         Navigator.pushNamed(
                                           context,
@@ -333,354 +471,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                 "Your transaction has been completed\n\nTransfer reference: ${remittanceApiResult["ftReferenceNumber"]}",
                                             buttonTextSecondary: "Go Home",
                                             onTapSecondary: () {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                context,
-                                                Routes.retailDashboard,
-                                                (route) => false,
-                                                arguments:
-                                                    RetailDashboardArgumentModel(
-                                                  imgUrl: "",
-                                                  name: profileName ?? "",
-                                                  isFirst:
-                                                      storageIsFirstLogin ==
-                                                              true
-                                                          ? false
-                                                          : true,
-                                                ).toMap(),
-                                              );
-                                            },
-                                            buttonText:
-                                                "Make another transaction",
-                                            onTap: () async {
-                                              var result =
-                                                  await MapCustomerAccountDetails
-                                                      .mapCustomerAccountDetails(
-                                                          token ?? "");
-                                              if (result["success"]) {
-                                                if (context.mounted) {
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  accountDetails = result[
-                                                          "crCustomerProfileRes"]
-                                                      [
-                                                      "body"]["accountDetails"];
-                                                  Navigator.pushNamed(
-                                                    context,
-                                                    Routes.sendMoneyFrom,
-                                                    arguments:
-                                                        SendMoneyArgumentModel(
-                                                      isBetweenAccounts:
-                                                          sendMoneyArgument
-                                                              .isBetweenAccounts,
-                                                      isWithinDhabi:
-                                                          sendMoneyArgument
-                                                              .isWithinDhabi,
-                                                      isRemittance:
-                                                          sendMoneyArgument
-                                                              .isRemittance,
-                                                      isRetail:
-                                                          sendMoneyArgument
-                                                              .isRetail,
-                                                    ).toMap(),
-                                                  );
-                                                }
-                                              } else {
-                                                if (context.mounted) {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return CustomDialog(
-                                                        svgAssetPath:
-                                                            ImageConstants
-                                                                .warning,
-                                                        title: "Sorry!",
-                                                        message: result[
-                                                                "message"][
-                                                            "Something went wrong, please try again later"],
-                                                        actionWidget:
-                                                            GradientButton(
-                                                          onTap: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          text: labels[346]
-                                                              ["labelText"],
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                }
-                                              }
-                                            },
-                                          ).toMap(),
-                                        );
-                                      }
-
-                                      isAddRemBeneficiary = false;
-                                      isNewRemittanceBeneficiary = false;
-                                    } else {
-                                      if (context.mounted) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return CustomDialog(
-                                              svgAssetPath:
-                                                  ImageConstants.warning,
-                                              title: "Sorry!",
-                                              message: createBeneficiaryAPiResult[
-                                                      "message"] ??
-                                                  "Something went wrong while adding beneficiary, please try again later",
-                                              actionWidget: GradientButton(
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                text: labels[346]["labelText"],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
-                                    }
-                                  } else {
-                                    if (context.mounted) {
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.errorSuccessScreen,
-                                        arguments: ErrorArgumentModel(
-                                          hasSecondaryButton: true,
-                                          iconPath: ImageConstants
-                                              .checkCircleOutlined,
-                                          title: "Success!",
-                                          message:
-                                              "Your transaction has been completed\n\nTransfer reference: ${remittanceApiResult["ftReferenceNumber"]}",
-                                          buttonTextSecondary: "Go Home",
-                                          onTapSecondary: () {
-                                            isAddRemBeneficiary = false;
-                                            isNewRemittanceBeneficiary = false;
-                                            Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              Routes.retailDashboard,
-                                              (route) => false,
-                                              arguments:
-                                                  RetailDashboardArgumentModel(
-                                                imgUrl: "",
-                                                name: profileName ?? "",
-                                                isFirst:
-                                                    storageIsFirstLogin == true
-                                                        ? false
-                                                        : true,
-                                              ).toMap(),
-                                            );
-                                          },
-                                          buttonText:
-                                              "Make another transaction",
-                                          onTap: () async {
-                                            var result =
-                                                await MapCustomerAccountDetails
-                                                    .mapCustomerAccountDetails(
-                                                        token ?? "");
-                                            if (result["success"]) {
-                                              if (context.mounted) {
-                                                if (isNewRemittanceBeneficiary) {
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                } else {
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                }
-
-                                                accountDetails = result[
-                                                        "crCustomerProfileRes"]
-                                                    ["body"]["accountDetails"];
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  Routes.sendMoneyFrom,
-                                                  arguments:
-                                                      SendMoneyArgumentModel(
-                                                    isBetweenAccounts:
-                                                        sendMoneyArgument
-                                                            .isBetweenAccounts,
-                                                    isWithinDhabi:
-                                                        sendMoneyArgument
-                                                            .isWithinDhabi,
-                                                    isRemittance:
-                                                        sendMoneyArgument
-                                                            .isRemittance,
-                                                    isRetail: sendMoneyArgument
-                                                        .isRetail,
-                                                  ).toMap(),
-                                                );
-                                                isAddRemBeneficiary = false;
-                                                isNewRemittanceBeneficiary =
-                                                    false;
-                                              }
-                                            } else {
-                                              if (context.mounted) {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return CustomDialog(
-                                                      svgAssetPath:
-                                                          ImageConstants
-                                                              .warning,
-                                                      title: "Sorry!",
-                                                      message: result["message"]
-                                                          [
-                                                          "Something went wrong, please try again later"],
-                                                      actionWidget:
-                                                          GradientButton(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        text: labels[346]
-                                                            ["labelText"],
-                                                      ),
-                                                    );
-                                                  },
-                                                );
-                                              }
-                                            }
-                                          },
-                                        ).toMap(),
-                                      );
-                                    }
-                                  }
-                                } else {
-                                  if (context.mounted) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return CustomDialog(
-                                          svgAssetPath: ImageConstants.warning,
-                                          title: "Sorry!",
-                                          message: remittanceApiResult[
-                                                  "message"] ??
-                                              "Something went wrong while remittance transfer, please try again later",
-                                          actionWidget: GradientButton(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            text: labels[346]["labelText"],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                }
-                              } else {
-                                log("Internal Transfer Api request -> ${{
-                                  "debitAccount": senderAccountNumber,
-                                  "creditAccount": receiverAccountNumber,
-                                  "debitAmount": senderAmount.toString(),
-                                  "currency": senderCurrency,
-                                  "beneficiaryName": benCustomerName,
-                                }}");
-                                var makeInternalTransferApiResult =
-                                    await MapInternalMoneyTransfer
-                                        .mapInternalMoneyTransfer(
-                                  {
-                                    "debitAccount": senderAccountNumber,
-                                    "creditAccount": receiverAccountNumber,
-                                    "debitAmount": senderAmount.toString(),
-                                    "currency": senderCurrency,
-                                    "beneficiaryName": benCustomerName,
-                                  },
-                                  token ?? "",
-                                );
-                                log("Make Internal Transfer Response -> $makeInternalTransferApiResult");
-                                if (makeInternalTransferApiResult["success"]) {
-                                  if (isAddWithinDhabiBeneficiary) {
-                                    log("create beneficiary request -> ${{
-                                      "beneficiaryType": 3,
-                                      "accountNumber": receiverAccountNumber,
-                                      "name": benCustomerName,
-                                      "address": benAddress,
-                                      "accountType": benAccountType,
-                                      "swiftReference": 0,
-                                      "targetCurrency": receiverCurrency,
-                                      "countryCode": "AE",
-                                      "benBankCode": benBankCode,
-                                      "benMobileNo": benMobileNo,
-                                      "benSubBankCode": benSubBankCode,
-                                      "benIdType": benIdType,
-                                      "benIdNo": benIdNo,
-                                      "benIdExpiryDate": benIdExpiryDate,
-                                      "benBankName": benBankName,
-                                      "benSwiftCodeText": benSwiftCode,
-                                      "city": benCity,
-                                      "remittancePurpose":
-                                          remittancePurpose ?? "",
-                                      "sourceOfFunds": sourceOfFunds ?? "",
-                                      "relation": relation ?? "",
-                                    }}");
-
-                                    var createBeneficiaryAPiResult =
-                                        await MapCreateBeneficiary
-                                            .mapCreateBeneficiary(
-                                      {
-                                        "beneficiaryType": 3,
-                                        "accountNumber": receiverAccountNumber,
-                                        "name": benCustomerName,
-                                        "address": benAddress,
-                                        "accountType": benAccountType,
-                                        "swiftReference": 0,
-                                        "targetCurrency": receiverCurrency,
-                                        "countryCode": "AE",
-                                        "benBankCode": benBankCode,
-                                        "benMobileNo": benMobileNo,
-                                        "benSubBankCode": benSubBankCode,
-                                        "benIdType": benIdType,
-                                        "benIdNo": benIdNo,
-                                        "benIdExpiryDate": benIdExpiryDate,
-                                        "benBankName": benBankName,
-                                        "benSwiftCodeText": benSwiftCode,
-                                        "city": benCity,
-                                        "remittancePurpose":
-                                            remittancePurpose ?? "",
-                                        "sourceOfFunds": sourceOfFunds ?? "",
-                                        "relation": relation ?? "",
-                                      },
-                                      token ?? "",
-                                    );
-
-                                    log("createBeneficiaryAPiResult -> $createBeneficiaryAPiResult");
-
-                                    if (createBeneficiaryAPiResult["success"]) {
-                                      if (context.mounted) {
-                                        Navigator.pushNamed(
-                                          context,
-                                          Routes.errorSuccessScreen,
-                                          arguments: ErrorArgumentModel(
-                                            hasSecondaryButton: true,
-                                            iconPath: ImageConstants
-                                                .checkCircleOutlined,
-                                            title: "Success!",
-                                            message:
-                                                "Your transaction has been completed\n\nTransfer reference: ${makeInternalTransferApiResult["ftReferenceNumber"]}",
-                                            buttonTextSecondary: "Go Home",
-                                            onTapSecondary: () {
-                                              isAddWithinDhabiBeneficiary =
-                                                  false;
-                                              isNewWithinDhabiBeneficiary =
+                                              isAddRemBeneficiary = false;
+                                              isNewRemittanceBeneficiary =
                                                   false;
                                               Navigator.pushNamedAndRemoveUntil(
                                                 context,
@@ -707,7 +499,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                           token ?? "");
                                               if (result["success"]) {
                                                 if (context.mounted) {
-                                                  if (isNewWithinDhabiBeneficiary) {
+                                                  if (isNewRemittanceBeneficiary) {
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
                                                     Navigator.pop(context);
                                                     Navigator.pop(context);
                                                     Navigator.pop(context);
@@ -747,9 +541,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                               .isRetail,
                                                     ).toMap(),
                                                   );
-                                                  isAddWithinDhabiBeneficiary =
-                                                      false;
-                                                  isNewWithinDhabiBeneficiary =
+                                                  isAddRemBeneficiary = false;
+                                                  isNewRemittanceBeneficiary =
                                                       false;
                                                 }
                                               } else {
@@ -783,384 +576,605 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                           ).toMap(),
                                         );
                                       }
-                                    } else {
-                                      if (context.mounted) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return CustomDialog(
-                                              svgAssetPath:
-                                                  ImageConstants.warning,
-                                              title: "Sorry!",
-                                              message: createBeneficiaryAPiResult[
-                                                      "message"] ??
-                                                  "Something went wrong while adding beneficiary, please try again later",
-                                              actionWidget: GradientButton(
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                text: labels[346]["labelText"],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
                                     }
                                   } else {
                                     if (context.mounted) {
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.errorSuccessScreen,
-                                        arguments: ErrorArgumentModel(
-                                          hasSecondaryButton: true,
-                                          iconPath: ImageConstants
-                                              .checkCircleOutlined,
-                                          title: "Success!",
-                                          message:
-                                              "Your transaction has been completed\n\nTransfer reference: ${makeInternalTransferApiResult["ftReferenceNumber"]}",
-                                          buttonTextSecondary: "Go Home",
-                                          onTapSecondary: () {
-                                            Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              Routes.retailDashboard,
-                                              (route) => false,
-                                              arguments:
-                                                  RetailDashboardArgumentModel(
-                                                imgUrl: "",
-                                                name: profileName ?? "",
-                                                isFirst:
-                                                    storageIsFirstLogin == true
-                                                        ? false
-                                                        : true,
-                                              ).toMap(),
-                                            );
-                                          },
-                                          buttonText:
-                                              "Make another transaction",
-                                          onTap: () async {
-                                            var corpCustPermApiResult =
-                                                await MapCorporateCustomerPermissions
-                                                    .mapCorporateCustomerPermissions(
-                                                        token ?? "");
-                                            if (corpCustPermApiResult[
-                                                "success"]) {
-                                              fdSeedAccounts.clear();
-                                              internalSeedAccounts.clear();
-                                              dhabiSeedAccounts.clear();
-                                              foreignSeedAccounts.clear();
-                                              for (var permission
-                                                  in corpCustPermApiResult[
-                                                      "permissions"]) {
-                                                if (permission["canCreateFD"]) {
-                                                  fdSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "fdCreationThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                                  "currentBalance"]
-                                                              .split(" ")
-                                                              .last
-                                                              .replaceAll(
-                                                                  ',', ''))
-                                                          .abs(),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferInternalFund"]) {
-                                                  internalSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "internalFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferDhabiFund"]) {
-                                                  dhabiSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "dhabiFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferInternationalFund"]) {
-                                                  foreignSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "foreignFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                              }
-
-                                              canCreateSavingsAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCreateSavingsAccount"];
-                                              canCreateCurrentAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCreateCurrentAccount"];
-
-                                              canChangeAddress =
-                                                  corpCustPermApiResult[
-                                                      "canChangeAddress"];
-                                              canChangeMobileNumber =
-                                                  corpCustPermApiResult[
-                                                      "canChangeMobileNumber"];
-                                              canChangeEmailId =
-                                                  corpCustPermApiResult[
-                                                      "canChangeEmailId"];
-
-                                              canUpdateKYC =
-                                                  corpCustPermApiResult[
-                                                      "canUpdateKYC"];
-                                              canCloseAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCloseAccount"];
-                                              canRequestChequeBook =
-                                                  corpCustPermApiResult[
-                                                      "canRequestChequeBook"];
-                                              canRequestCertificate =
-                                                  corpCustPermApiResult[
-                                                      "canRequestCertificate"];
-                                              canRequestAccountStatement =
-                                                  corpCustPermApiResult[
-                                                      "canRequestAccountStatement"];
-                                              canRequestCard =
-                                                  corpCustPermApiResult[
-                                                      "canRequestCard"];
-
-                                              if (context.mounted) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return CustomDialog(
+                                            svgAssetPath:
+                                                ImageConstants.warning,
+                                            title: "Sorry!",
+                                            message: remittanceApiResult[
+                                                    "message"] ??
+                                                "Something went wrong while remittance transfer, please try again later",
+                                            actionWidget: GradientButton(
+                                              onTap: () {
                                                 Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                accountDetails =
-                                                    corpCustPermApiResult[
-                                                            "crCustomerProfileRes"]
-                                                        [
-                                                        "body"]["accountDetails"];
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  Routes.sendMoneyFrom,
-                                                  arguments:
-                                                      SendMoneyArgumentModel(
-                                                    isBetweenAccounts:
-                                                        sendMoneyArgument
-                                                            .isBetweenAccounts,
-                                                    isWithinDhabi:
-                                                        sendMoneyArgument
-                                                            .isWithinDhabi,
-                                                    isRemittance:
-                                                        sendMoneyArgument
-                                                            .isRemittance,
-                                                    isRetail: sendMoneyArgument
-                                                        .isRetail,
-                                                  ).toMap(),
-                                                );
-                                              }
-                                            } else {
-                                              if (context.mounted) {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return CustomDialog(
-                                                      svgAssetPath:
-                                                          ImageConstants
-                                                              .warning,
-                                                      title: "Sorry!",
-                                                      message:
-                                                          corpCustPermApiResult[
-                                                                  "message"][
-                                                              "Something went wrong, please try again later"],
-                                                      actionWidget:
-                                                          GradientButton(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        text: labels[346]
-                                                            ["labelText"],
-                                                      ),
-                                                    );
-                                                  },
-                                                );
-                                              }
-                                            }
-                                          },
-                                        ).toMap(),
+                                              },
+                                              text: labels[346]["labelText"],
+                                            ),
+                                          );
+                                        },
                                       );
                                     }
                                   }
-                                  isAddWithinDhabiBeneficiary = false;
-                                  isNewWithinDhabiBeneficiary = false;
                                 } else {
-                                  if (context.mounted) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return CustomDialog(
-                                          svgAssetPath: ImageConstants.warning,
-                                          title: "Sorry!",
-                                          message: makeInternalTransferApiResult[
-                                                  "message"] ??
-                                              "Something went wrong while within Dhabi transfer, please try again later",
-                                          actionWidget: GradientButton(
-                                            onTap: () {
-                                              Navigator.pop(context);
+                                  log("Internal Transfer Api request -> ${{
+                                    "debitAccount": senderAccountNumber,
+                                    "creditAccount": receiverAccountNumber,
+                                    "debitAmount": senderAmount.toString(),
+                                    "currency": senderCurrency,
+                                    "beneficiaryName": benCustomerName,
+                                  }}");
+                                  var makeInternalTransferApiResult =
+                                      await MapInternalMoneyTransfer
+                                          .mapInternalMoneyTransfer(
+                                    {
+                                      "debitAccount": senderAccountNumber,
+                                      "creditAccount": receiverAccountNumber,
+                                      "debitAmount": senderAmount.toString(),
+                                      "currency": senderCurrency,
+                                      "beneficiaryName": benCustomerName,
+                                    },
+                                    token ?? "",
+                                  );
+                                  log("Make Internal Transfer Response -> $makeInternalTransferApiResult");
+                                  if (makeInternalTransferApiResult[
+                                      "success"]) {
+                                    if (isAddWithinDhabiBeneficiary) {
+                                      log("create beneficiary request -> ${{
+                                        "beneficiaryType": 3,
+                                        "accountNumber": receiverAccountNumber,
+                                        "name": benCustomerName,
+                                        "address": benAddress,
+                                        "accountType": benAccountType,
+                                        "swiftReference": 0,
+                                        "targetCurrency": receiverCurrency,
+                                        "countryCode": "AE",
+                                        "benBankCode": benBankCode,
+                                        "benMobileNo": benMobileNo,
+                                        "benSubBankCode": benSubBankCode,
+                                        "benIdType": benIdType,
+                                        "benIdNo": benIdNo,
+                                        "benIdExpiryDate": benIdExpiryDate,
+                                        "benBankName": benBankName,
+                                        "benSwiftCodeText": benSwiftCode,
+                                        "city": benCity,
+                                        "remittancePurpose":
+                                            remittancePurpose ?? "",
+                                        "sourceOfFunds": sourceOfFunds ?? "",
+                                        "relation": relation ?? "",
+                                      }}");
+
+                                      var createBeneficiaryAPiResult =
+                                          await MapCreateBeneficiary
+                                              .mapCreateBeneficiary(
+                                        {
+                                          "beneficiaryType": 3,
+                                          "accountNumber":
+                                              receiverAccountNumber,
+                                          "name": benCustomerName,
+                                          "address": benAddress,
+                                          "accountType": benAccountType,
+                                          "swiftReference": 0,
+                                          "targetCurrency": receiverCurrency,
+                                          "countryCode": "AE",
+                                          "benBankCode": benBankCode,
+                                          "benMobileNo": benMobileNo,
+                                          "benSubBankCode": benSubBankCode,
+                                          "benIdType": benIdType,
+                                          "benIdNo": benIdNo,
+                                          "benIdExpiryDate": benIdExpiryDate,
+                                          "benBankName": benBankName,
+                                          "benSwiftCodeText": benSwiftCode,
+                                          "city": benCity,
+                                          "remittancePurpose":
+                                              remittancePurpose ?? "",
+                                          "sourceOfFunds": sourceOfFunds ?? "",
+                                          "relation": relation ?? "",
+                                        },
+                                        token ?? "",
+                                      );
+
+                                      log("createBeneficiaryAPiResult -> $createBeneficiaryAPiResult");
+
+                                      if (createBeneficiaryAPiResult[
+                                          "success"]) {
+                                        if (context.mounted) {
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.errorSuccessScreen,
+                                            arguments: ErrorArgumentModel(
+                                              hasSecondaryButton: true,
+                                              iconPath: ImageConstants
+                                                  .checkCircleOutlined,
+                                              title: "Success!",
+                                              message:
+                                                  "Your transaction has been completed\n\nTransfer reference: ${makeInternalTransferApiResult["ftReferenceNumber"]}",
+                                              buttonTextSecondary: "Go Home",
+                                              onTapSecondary: () {
+                                                isAddWithinDhabiBeneficiary =
+                                                    false;
+                                                isNewWithinDhabiBeneficiary =
+                                                    false;
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.retailDashboard,
+                                                  (route) => false,
+                                                  arguments:
+                                                      RetailDashboardArgumentModel(
+                                                    imgUrl: "",
+                                                    name: profileName ?? "",
+                                                    isFirst:
+                                                        storageIsFirstLogin ==
+                                                                true
+                                                            ? false
+                                                            : true,
+                                                  ).toMap(),
+                                                );
+                                              },
+                                              buttonText:
+                                                  "Make another transaction",
+                                              onTap: () async {
+                                                var result =
+                                                    await MapCustomerAccountDetails
+                                                        .mapCustomerAccountDetails(
+                                                            token ?? "");
+                                                if (result["success"]) {
+                                                  if (context.mounted) {
+                                                    if (isNewWithinDhabiBeneficiary) {
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    } else {
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    }
+
+                                                    accountDetails = result[
+                                                            "crCustomerProfileRes"]
+                                                        [
+                                                        "body"]["accountDetails"];
+                                                    Navigator.pushNamed(
+                                                      context,
+                                                      Routes.sendMoneyFrom,
+                                                      arguments:
+                                                          SendMoneyArgumentModel(
+                                                        isBetweenAccounts:
+                                                            sendMoneyArgument
+                                                                .isBetweenAccounts,
+                                                        isWithinDhabi:
+                                                            sendMoneyArgument
+                                                                .isWithinDhabi,
+                                                        isRemittance:
+                                                            sendMoneyArgument
+                                                                .isRemittance,
+                                                        isRetail:
+                                                            sendMoneyArgument
+                                                                .isRetail,
+                                                      ).toMap(),
+                                                    );
+                                                    isAddWithinDhabiBeneficiary =
+                                                        false;
+                                                    isNewWithinDhabiBeneficiary =
+                                                        false;
+                                                  }
+                                                } else {
+                                                  if (context.mounted) {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return CustomDialog(
+                                                          svgAssetPath:
+                                                              ImageConstants
+                                                                  .warning,
+                                                          title: "Sorry!",
+                                                          message: result[
+                                                                  "message"][
+                                                              "Something went wrong, please try again later"],
+                                                          actionWidget:
+                                                              GradientButton(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            text: labels[346]
+                                                                ["labelText"],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                }
+                                              },
+                                            ).toMap(),
+                                          );
+                                        }
+                                      } else {
+                                        if (context.mounted) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                svgAssetPath:
+                                                    ImageConstants.warning,
+                                                title: "Sorry!",
+                                                message: createBeneficiaryAPiResult[
+                                                        "message"] ??
+                                                    "Something went wrong while adding beneficiary, please try again later",
+                                                actionWidget: GradientButton(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  text: labels[346]
+                                                      ["labelText"],
+                                                ),
+                                              );
                                             },
-                                            text: labels[346]["labelText"],
-                                          ),
+                                          );
+                                        }
+                                      }
+                                    } else {
+                                      if (context.mounted) {
+                                        Navigator.pushNamed(
+                                          context,
+                                          Routes.errorSuccessScreen,
+                                          arguments: ErrorArgumentModel(
+                                            hasSecondaryButton: true,
+                                            iconPath: ImageConstants
+                                                .checkCircleOutlined,
+                                            title: "Success!",
+                                            message:
+                                                "Your transaction has been completed\n\nTransfer reference: ${makeInternalTransferApiResult["ftReferenceNumber"]}",
+                                            buttonTextSecondary: "Go Home",
+                                            onTapSecondary: () {
+                                              Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                Routes.retailDashboard,
+                                                (route) => false,
+                                                arguments:
+                                                    RetailDashboardArgumentModel(
+                                                  imgUrl: "",
+                                                  name: profileName ?? "",
+                                                  isFirst:
+                                                      storageIsFirstLogin ==
+                                                              true
+                                                          ? false
+                                                          : true,
+                                                ).toMap(),
+                                              );
+                                            },
+                                            buttonText:
+                                                "Make another transaction",
+                                            onTap: () async {
+                                              var corpCustPermApiResult =
+                                                  await MapCorporateCustomerPermissions
+                                                      .mapCorporateCustomerPermissions(
+                                                          token ?? "");
+                                              if (corpCustPermApiResult[
+                                                  "success"]) {
+                                                fdSeedAccounts.clear();
+                                                internalSeedAccounts.clear();
+                                                dhabiSeedAccounts.clear();
+                                                foreignSeedAccounts.clear();
+                                                for (var permission
+                                                    in corpCustPermApiResult[
+                                                        "permissions"]) {
+                                                  if (permission[
+                                                      "canCreateFD"]) {
+                                                    fdSeedAccounts.add(
+                                                      SeedAccount(
+                                                        accountNumber:
+                                                            permission[
+                                                                "accountNumber"],
+                                                        threshold: permission[
+                                                                "fdCreationThreshold"]
+                                                            .toDouble(),
+                                                        currency: permission[
+                                                            "currency"],
+                                                        bal: double.parse(
+                                                                permission[
+                                                                        "currentBalance"]
+                                                                    .split(" ")
+                                                                    .last
+                                                                    .replaceAll(
+                                                                        ',',
+                                                                        ''))
+                                                            .abs(),
+                                                        accountType: permission[
+                                                            "accountType"],
+                                                        currencyFlag: permission[
+                                                            "currencyFlagBase64"],
+                                                      ),
+                                                    );
+                                                  }
+                                                  if (permission[
+                                                      "canTransferInternalFund"]) {
+                                                    internalSeedAccounts.add(
+                                                      SeedAccount(
+                                                        accountNumber:
+                                                            permission[
+                                                                "accountNumber"],
+                                                        threshold: permission[
+                                                                "internalFundTransferThreshold"]
+                                                            .toDouble(),
+                                                        currency: permission[
+                                                            "currency"],
+                                                        bal: double.parse(
+                                                            permission[
+                                                                    "currentBalance"]
+                                                                .split(" ")
+                                                                .last
+                                                                .replaceAll(
+                                                                    ',', '')),
+                                                        accountType: permission[
+                                                            "accountType"],
+                                                        currencyFlag: permission[
+                                                            "currencyFlagBase64"],
+                                                      ),
+                                                    );
+                                                  }
+                                                  if (permission[
+                                                      "canTransferDhabiFund"]) {
+                                                    dhabiSeedAccounts.add(
+                                                      SeedAccount(
+                                                        accountNumber:
+                                                            permission[
+                                                                "accountNumber"],
+                                                        threshold: permission[
+                                                                "dhabiFundTransferThreshold"]
+                                                            .toDouble(),
+                                                        currency: permission[
+                                                            "currency"],
+                                                        bal: double.parse(
+                                                            permission[
+                                                                    "currentBalance"]
+                                                                .split(" ")
+                                                                .last
+                                                                .replaceAll(
+                                                                    ',', '')),
+                                                        accountType: permission[
+                                                            "accountType"],
+                                                        currencyFlag: permission[
+                                                            "currencyFlagBase64"],
+                                                      ),
+                                                    );
+                                                  }
+                                                  if (permission[
+                                                      "canTransferInternationalFund"]) {
+                                                    foreignSeedAccounts.add(
+                                                      SeedAccount(
+                                                        accountNumber:
+                                                            permission[
+                                                                "accountNumber"],
+                                                        threshold: permission[
+                                                                "foreignFundTransferThreshold"]
+                                                            .toDouble(),
+                                                        currency: permission[
+                                                            "currency"],
+                                                        bal: double.parse(
+                                                            permission[
+                                                                    "currentBalance"]
+                                                                .split(" ")
+                                                                .last
+                                                                .replaceAll(
+                                                                    ',', '')),
+                                                        accountType: permission[
+                                                            "accountType"],
+                                                        currencyFlag: permission[
+                                                            "currencyFlagBase64"],
+                                                      ),
+                                                    );
+                                                  }
+                                                }
+
+                                                canCreateSavingsAccount =
+                                                    corpCustPermApiResult[
+                                                        "canCreateSavingsAccount"];
+                                                canCreateCurrentAccount =
+                                                    corpCustPermApiResult[
+                                                        "canCreateCurrentAccount"];
+
+                                                canChangeAddress =
+                                                    corpCustPermApiResult[
+                                                        "canChangeAddress"];
+                                                canChangeMobileNumber =
+                                                    corpCustPermApiResult[
+                                                        "canChangeMobileNumber"];
+                                                canChangeEmailId =
+                                                    corpCustPermApiResult[
+                                                        "canChangeEmailId"];
+
+                                                canUpdateKYC =
+                                                    corpCustPermApiResult[
+                                                        "canUpdateKYC"];
+                                                canCloseAccount =
+                                                    corpCustPermApiResult[
+                                                        "canCloseAccount"];
+                                                canRequestChequeBook =
+                                                    corpCustPermApiResult[
+                                                        "canRequestChequeBook"];
+                                                canRequestCertificate =
+                                                    corpCustPermApiResult[
+                                                        "canRequestCertificate"];
+                                                canRequestAccountStatement =
+                                                    corpCustPermApiResult[
+                                                        "canRequestAccountStatement"];
+                                                canRequestCard =
+                                                    corpCustPermApiResult[
+                                                        "canRequestCard"];
+
+                                                if (context.mounted) {
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  accountDetails =
+                                                      corpCustPermApiResult[
+                                                                  "crCustomerProfileRes"]
+                                                              ["body"]
+                                                          ["accountDetails"];
+                                                  Navigator.pushNamed(
+                                                    context,
+                                                    Routes.sendMoneyFrom,
+                                                    arguments:
+                                                        SendMoneyArgumentModel(
+                                                      isBetweenAccounts:
+                                                          sendMoneyArgument
+                                                              .isBetweenAccounts,
+                                                      isWithinDhabi:
+                                                          sendMoneyArgument
+                                                              .isWithinDhabi,
+                                                      isRemittance:
+                                                          sendMoneyArgument
+                                                              .isRemittance,
+                                                      isRetail:
+                                                          sendMoneyArgument
+                                                              .isRetail,
+                                                    ).toMap(),
+                                                  );
+                                                }
+                                              } else {
+                                                if (context.mounted) {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return CustomDialog(
+                                                        svgAssetPath:
+                                                            ImageConstants
+                                                                .warning,
+                                                        title: "Sorry!",
+                                                        message:
+                                                            corpCustPermApiResult[
+                                                                    "message"][
+                                                                "Something went wrong, please try again later"],
+                                                        actionWidget:
+                                                            GradientButton(
+                                                          onTap: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          text: labels[346]
+                                                              ["labelText"],
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                }
+                                              }
+                                            },
+                                          ).toMap(),
                                         );
-                                      },
-                                    );
+                                      }
+                                    }
+                                    isAddWithinDhabiBeneficiary = false;
+                                    isNewWithinDhabiBeneficiary = false;
+                                  } else {
+                                    if (context.mounted) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return CustomDialog(
+                                            svgAssetPath:
+                                                ImageConstants.warning,
+                                            title: "Sorry!",
+                                            message: makeInternalTransferApiResult[
+                                                    "message"] ??
+                                                "Something went wrong while within Dhabi transfer, please try again later",
+                                            actionWidget: GradientButton(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              text: labels[346]["labelText"],
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    }
                                   }
                                 }
-                              }
-                            } else {
-                              if (sendMoneyArgument.isRemittance) {
-                                log("corpRemittanceApi Request -> ${{
-                                  "quotationId": quotationId,
-                                  "sourceCurrency": senderCurrency,
-                                  "targetCurrency": receiverCurrency,
-                                  "countryCode": beneficiaryCountryCode,
-                                  "debitAccount": senderAccountNumber,
-                                  "debitAmount": senderAmount.toString(),
-                                  "benBankCode": benBankCode,
-                                  "benMobileNo": benMobileNo,
-                                  "benSubBankCode": benSubBankCode,
-                                  "accountType":
-                                      isBankSelected ? "Account" : "Wallet",
-                                  "benIdType": benIdType,
-                                  "benIdNo": benIdNo,
-                                  "benIdExpiryDate": benIdExpiryDate,
-                                  "benBankName": benBankName,
-                                  "benAccountNo": receiverAccountNumber,
-                                  "benCustomerName": benCustomerName,
-                                  "address": benAddress,
-                                  "city": benCity,
-                                  "swiftCode": benSwiftCode,
-                                  "remittancePurpose": remittancePurpose ?? "",
-                                  "sourceOfFunds": sourceOfFunds ?? "",
-                                  "relation": relation ?? "",
-                                }}");
-                                var corpRemittanceApiResult =
-                                    await MapForeignMoneyTransfer
-                                        .mapForeignMoneyTransfer(
-                                  {
-                                    "quotationId": quotationId,
-                                    "sourceCurrency": senderCurrency,
-                                    "targetCurrency": receiverCurrency,
-                                    "countryCode": beneficiaryCountryCode,
-                                    "debitAccount": senderAccountNumber,
-                                    "debitAmount": senderAmount.toString(),
-                                    "benBankCode": benBankCode,
-                                    "benMobileNo": benMobileNo,
-                                    "benSubBankCode": benSubBankCode,
-                                    "accountType":
-                                        isBankSelected ? "Account" : "Wallet",
-                                    "benIdType": benIdType,
-                                    "benIdNo": benIdNo,
-                                    "benIdExpiryDate": benIdExpiryDate,
-                                    "benBankName": benBankName,
-                                    "benAccountNo": receiverAccountNumber,
-                                    "benCustomerName": benCustomerName,
-                                    "address": benAddress,
-                                    "city": benCity,
-                                    "swiftCode": benSwiftCode,
-                                    "remittancePurpose":
-                                        remittancePurpose ?? "",
-                                    "sourceOfFunds": sourceOfFunds ?? "",
-                                    "relation": relation ?? "",
-                                  },
-                                  token ?? "",
-                                );
-                                log("corpRemittanceApiResult -> $corpRemittanceApiResult");
-
-                                if (corpRemittanceApiResult["success"]) {
-                                  if (isAddRemBeneficiary) {
-                                    log("create beneficiary request -> ${{
-                                      "beneficiaryType": 2,
-                                      "accountNumber": receiverAccountNumber,
-                                      "name": benCustomerName,
-                                      "address": benAddress,
-                                      "accountType": benAccountType,
-                                      "swiftReference": 0,
+                              } else {
+                                if (sendMoneyArgument.isRemittance) {
+                                  log("corpRemittanceApi Request -> ${{
+                                    {
+                                      "quotationId": quotationId,
+                                      "sourceCurrency": senderCurrency,
                                       "targetCurrency": receiverCurrency,
                                       "countryCode": beneficiaryCountryCode,
+                                      "debitAccount": senderAccountNumber,
+                                      "debitAmount": receiverAmount.toString(),
+                                      "transferAmount": senderAmount.toString(),
                                       "benBankCode": benBankCode,
                                       "benMobileNo": benMobileNo,
                                       "benSubBankCode": benSubBankCode,
+                                      "accountType":
+                                          isBankSelected ? "Account" : "Wallet",
                                       "benIdType": benIdType,
                                       "benIdNo": benIdNo,
                                       "benIdExpiryDate": benIdExpiryDate,
                                       "benBankName": benBankName,
-                                      "benSwiftCodeText": benSwiftCode,
+                                      "benAccountNo": receiverAccountNumber,
+                                      "benCustomerName": benCustomerName,
+                                      "address": benAddress,
                                       "city": benCity,
+                                      "swiftCode": benSwiftCode,
                                       "remittancePurpose":
                                           remittancePurpose ?? "",
                                       "sourceOfFunds": sourceOfFunds ?? "",
                                       "relation": relation ?? "",
-                                    }}");
+                                    }
+                                  }}");
+                                  var corpRemittanceApiResult =
+                                      await MapForeignMoneyTransfer
+                                          .mapForeignMoneyTransfer(
+                                    {
+                                      "quotationId": quotationId,
+                                      "sourceCurrency": senderCurrency,
+                                      "targetCurrency": receiverCurrency,
+                                      "countryCode": beneficiaryCountryCode,
+                                      "debitAccount": senderAccountNumber,
+                                      "debitAmount": senderAmount.toString(),
+                                      "transferAmount":
+                                          receiverAmount.toString(),
+                                      "benBankCode": benBankCode,
+                                      "benMobileNo": benMobileNo,
+                                      "benSubBankCode": benSubBankCode,
+                                      "accountType":
+                                          isBankSelected ? "Account" : "Wallet",
+                                      "benIdType": benIdType,
+                                      "benIdNo": benIdNo,
+                                      "benIdExpiryDate": benIdExpiryDate,
+                                      "benBankName": benBankName,
+                                      "benAccountNo": receiverAccountNumber,
+                                      "benCustomerName": benCustomerName,
+                                      "address": benAddress,
+                                      "city": benCity,
+                                      "swiftCode": benSwiftCode,
+                                      "remittancePurpose":
+                                          remittancePurpose ?? "",
+                                      "sourceOfFunds": sourceOfFunds ?? "",
+                                      "relation": relation ?? "",
+                                    },
+                                    token ?? "",
+                                  );
+                                  log("corpRemittanceApiResult -> $corpRemittanceApiResult");
 
-                                    var createBeneficiaryAPiResult =
-                                        await MapCreateBeneficiary
-                                            .mapCreateBeneficiary(
-                                      {
+                                  if (corpRemittanceApiResult["success"]) {
+                                    if (isAddRemBeneficiary) {
+                                      log("create beneficiary request -> ${{
                                         "beneficiaryType": 2,
                                         "accountNumber": receiverAccountNumber,
                                         "name": benCustomerName,
@@ -1182,13 +1196,335 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                             remittancePurpose ?? "",
                                         "sourceOfFunds": sourceOfFunds ?? "",
                                         "relation": relation ?? "",
-                                      },
-                                      token ?? "",
-                                    );
+                                      }}");
 
-                                    log("createBeneficiaryAPiResult -> $createBeneficiaryAPiResult");
+                                      var createBeneficiaryAPiResult =
+                                          await MapCreateBeneficiary
+                                              .mapCreateBeneficiary(
+                                        {
+                                          "beneficiaryType": 2,
+                                          "accountNumber":
+                                              receiverAccountNumber,
+                                          "name": benCustomerName,
+                                          "address": benAddress,
+                                          "accountType": benAccountType,
+                                          "swiftReference": 0,
+                                          "targetCurrency": receiverCurrency,
+                                          "countryCode": beneficiaryCountryCode,
+                                          "benBankCode": benBankCode,
+                                          "benMobileNo": benMobileNo,
+                                          "benSubBankCode": benSubBankCode,
+                                          "benIdType": benIdType,
+                                          "benIdNo": benIdNo,
+                                          "benIdExpiryDate": benIdExpiryDate,
+                                          "benBankName": benBankName,
+                                          "benSwiftCodeText": benSwiftCode,
+                                          "city": benCity,
+                                          "remittancePurpose":
+                                              remittancePurpose ?? "",
+                                          "sourceOfFunds": sourceOfFunds ?? "",
+                                          "relation": relation ?? "",
+                                        },
+                                        token ?? "",
+                                      );
 
-                                    if (createBeneficiaryAPiResult["success"]) {
+                                      log("createBeneficiaryAPiResult -> $createBeneficiaryAPiResult");
+
+                                      if (createBeneficiaryAPiResult[
+                                          "success"]) {
+                                        if (context.mounted) {
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.errorSuccessScreen,
+                                            arguments: ErrorArgumentModel(
+                                              hasSecondaryButton: true,
+                                              iconPath: ImageConstants
+                                                  .checkCircleOutlined,
+                                              title: corpRemittanceApiResult[
+                                                      "isDirectlyCreated"]
+                                                  ? "Success!"
+                                                  : "Foreign Transfer Request Placed",
+                                              message: corpRemittanceApiResult[
+                                                      "isDirectlyCreated"]
+                                                  ? "Your transaction has been completed"
+                                                  : "${messages[121]["messageText"]}: ${corpRemittanceApiResult["reference"]}",
+                                              buttonTextSecondary: "Go Home",
+                                              onTapSecondary: () {
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.businessDashboard,
+                                                  (route) => false,
+                                                  arguments:
+                                                      RetailDashboardArgumentModel(
+                                                    imgUrl:
+                                                        storageProfilePhotoBase64 ??
+                                                            "",
+                                                    name: profileName ?? "",
+                                                    isFirst:
+                                                        storageIsFirstLogin ==
+                                                                true
+                                                            ? false
+                                                            : true,
+                                                  ).toMap(),
+                                                );
+                                              },
+                                              buttonText:
+                                                  "Make another transaction",
+                                              onTap: () async {
+                                                var corpCustPermApiResult =
+                                                    await MapCorporateCustomerPermissions
+                                                        .mapCorporateCustomerPermissions(
+                                                            token ?? "");
+                                                if (corpCustPermApiResult[
+                                                    "success"]) {
+                                                  fdSeedAccounts.clear();
+                                                  internalSeedAccounts.clear();
+                                                  dhabiSeedAccounts.clear();
+                                                  foreignSeedAccounts.clear();
+                                                  for (var permission
+                                                      in corpCustPermApiResult[
+                                                          "permissions"]) {
+                                                    if (permission[
+                                                        "canCreateFD"]) {
+                                                      fdSeedAccounts.add(
+                                                        SeedAccount(
+                                                          accountNumber:
+                                                              permission[
+                                                                  "accountNumber"],
+                                                          threshold: permission[
+                                                                  "fdCreationThreshold"]
+                                                              .toDouble(),
+                                                          currency: permission[
+                                                              "currency"],
+                                                          bal: double.parse(
+                                                                  permission[
+                                                                          "currentBalance"]
+                                                                      .split(
+                                                                          " ")
+                                                                      .last
+                                                                      .replaceAll(
+                                                                          ',',
+                                                                          ''))
+                                                              .abs(),
+                                                          accountType:
+                                                              permission[
+                                                                  "accountType"],
+                                                          currencyFlag: permission[
+                                                              "currencyFlagBase64"],
+                                                        ),
+                                                      );
+                                                    }
+                                                    if (permission[
+                                                        "canTransferInternalFund"]) {
+                                                      internalSeedAccounts.add(
+                                                        SeedAccount(
+                                                          accountNumber:
+                                                              permission[
+                                                                  "accountNumber"],
+                                                          threshold: permission[
+                                                                  "internalFundTransferThreshold"]
+                                                              .toDouble(),
+                                                          currency: permission[
+                                                              "currency"],
+                                                          bal: double.parse(
+                                                              permission[
+                                                                      "currentBalance"]
+                                                                  .split(" ")
+                                                                  .last
+                                                                  .replaceAll(
+                                                                      ',', '')),
+                                                          accountType:
+                                                              permission[
+                                                                  "accountType"],
+                                                          currencyFlag: permission[
+                                                              "currencyFlagBase64"],
+                                                        ),
+                                                      );
+                                                    }
+                                                    if (permission[
+                                                        "canTransferDhabiFund"]) {
+                                                      dhabiSeedAccounts.add(
+                                                        SeedAccount(
+                                                          accountNumber:
+                                                              permission[
+                                                                  "accountNumber"],
+                                                          threshold: permission[
+                                                                  "dhabiFundTransferThreshold"]
+                                                              .toDouble(),
+                                                          currency: permission[
+                                                              "currency"],
+                                                          bal: double.parse(
+                                                              permission[
+                                                                      "currentBalance"]
+                                                                  .split(" ")
+                                                                  .last
+                                                                  .replaceAll(
+                                                                      ',', '')),
+                                                          accountType:
+                                                              permission[
+                                                                  "accountType"],
+                                                          currencyFlag: permission[
+                                                              "currencyFlagBase64"],
+                                                        ),
+                                                      );
+                                                    }
+                                                    if (permission[
+                                                        "canTransferInternationalFund"]) {
+                                                      foreignSeedAccounts.add(
+                                                        SeedAccount(
+                                                          accountNumber:
+                                                              permission[
+                                                                  "accountNumber"],
+                                                          threshold: permission[
+                                                                  "foreignFundTransferThreshold"]
+                                                              .toDouble(),
+                                                          currency: permission[
+                                                              "currency"],
+                                                          bal: double.parse(
+                                                              permission[
+                                                                      "currentBalance"]
+                                                                  .split(" ")
+                                                                  .last
+                                                                  .replaceAll(
+                                                                      ',', '')),
+                                                          accountType:
+                                                              permission[
+                                                                  "accountType"],
+                                                          currencyFlag: permission[
+                                                              "currencyFlagBase64"],
+                                                        ),
+                                                      );
+                                                    }
+                                                  }
+
+                                                  canCreateSavingsAccount =
+                                                      corpCustPermApiResult[
+                                                          "canCreateSavingsAccount"];
+                                                  canCreateCurrentAccount =
+                                                      corpCustPermApiResult[
+                                                          "canCreateCurrentAccount"];
+
+                                                  canChangeAddress =
+                                                      corpCustPermApiResult[
+                                                          "canChangeAddress"];
+                                                  canChangeMobileNumber =
+                                                      corpCustPermApiResult[
+                                                          "canChangeMobileNumber"];
+                                                  canChangeEmailId =
+                                                      corpCustPermApiResult[
+                                                          "canChangeEmailId"];
+
+                                                  canUpdateKYC =
+                                                      corpCustPermApiResult[
+                                                          "canUpdateKYC"];
+                                                  canCloseAccount =
+                                                      corpCustPermApiResult[
+                                                          "canCloseAccount"];
+                                                  canRequestChequeBook =
+                                                      corpCustPermApiResult[
+                                                          "canRequestChequeBook"];
+                                                  canRequestCertificate =
+                                                      corpCustPermApiResult[
+                                                          "canRequestCertificate"];
+                                                  canRequestAccountStatement =
+                                                      corpCustPermApiResult[
+                                                          "canRequestAccountStatement"];
+                                                  canRequestCard =
+                                                      corpCustPermApiResult[
+                                                          "canRequestCard"];
+                                                  if (context.mounted) {
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+
+                                                    Navigator.pushNamed(
+                                                      context,
+                                                      Routes.sendMoneyFrom,
+                                                      arguments:
+                                                          SendMoneyArgumentModel(
+                                                        isBetweenAccounts:
+                                                            sendMoneyArgument
+                                                                .isBetweenAccounts,
+                                                        isWithinDhabi:
+                                                            sendMoneyArgument
+                                                                .isWithinDhabi,
+                                                        isRemittance:
+                                                            sendMoneyArgument
+                                                                .isRemittance,
+                                                        isRetail:
+                                                            sendMoneyArgument
+                                                                .isRetail,
+                                                      ).toMap(),
+                                                    );
+                                                  }
+                                                } else {
+                                                  if (context.mounted) {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return CustomDialog(
+                                                          svgAssetPath:
+                                                              ImageConstants
+                                                                  .warning,
+                                                          title: "Sorry!",
+                                                          message:
+                                                              corpCustPermApiResult[
+                                                                      "message"]
+                                                                  [
+                                                                  "Something went wrong, please try again later"],
+                                                          actionWidget:
+                                                              GradientButton(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            text: labels[346]
+                                                                ["labelText"],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                }
+                                              },
+                                            ).toMap(),
+                                          );
+                                        }
+
+                                        isAddRemBeneficiary = false;
+                                        isNewRemittanceBeneficiary = false;
+                                      } else {
+                                        if (context.mounted) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                svgAssetPath:
+                                                    ImageConstants.warning,
+                                                title: "Sorry!",
+                                                message: createBeneficiaryAPiResult[
+                                                        "message"] ??
+                                                    "Something went wrong while adding beneficiary, please try again later",
+                                                actionWidget: GradientButton(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  text: labels[346]
+                                                      ["labelText"],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    } else {
                                       if (context.mounted) {
                                         Navigator.pushNamed(
                                           context,
@@ -1209,13 +1545,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                             onTapSecondary: () {
                                               Navigator.pushNamedAndRemoveUntil(
                                                 context,
-                                                Routes.businessDashboard,
+                                                Routes.retailDashboard,
                                                 (route) => false,
                                                 arguments:
                                                     RetailDashboardArgumentModel(
-                                                  imgUrl:
-                                                      storageProfilePhotoBase64 ??
-                                                          "",
+                                                  imgUrl: "",
                                                   name: profileName ?? "",
                                                   isFirst:
                                                       storageIsFirstLogin ==
@@ -1450,350 +1784,56 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
                                       isAddRemBeneficiary = false;
                                       isNewRemittanceBeneficiary = false;
-                                    } else {
-                                      if (context.mounted) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return CustomDialog(
-                                              svgAssetPath:
-                                                  ImageConstants.warning,
-                                              title: "Sorry!",
-                                              message: createBeneficiaryAPiResult[
-                                                      "message"] ??
-                                                  "Something went wrong while adding beneficiary, please try again later",
-                                              actionWidget: GradientButton(
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                text: labels[346]["labelText"],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
                                     }
                                   } else {
                                     if (context.mounted) {
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.errorSuccessScreen,
-                                        arguments: ErrorArgumentModel(
-                                          hasSecondaryButton: true,
-                                          iconPath: ImageConstants
-                                              .checkCircleOutlined,
-                                          title: corpRemittanceApiResult[
-                                                  "isDirectlyCreated"]
-                                              ? "Success!"
-                                              : "Foreign Transfer Request Placed",
-                                          message: corpRemittanceApiResult[
-                                                  "isDirectlyCreated"]
-                                              ? "Your transaction has been completed"
-                                              : "${messages[121]["messageText"]}: ${corpRemittanceApiResult["reference"]}",
-                                          buttonTextSecondary: "Go Home",
-                                          onTapSecondary: () {
-                                            Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              Routes.retailDashboard,
-                                              (route) => false,
-                                              arguments:
-                                                  RetailDashboardArgumentModel(
-                                                imgUrl: "",
-                                                name: profileName ?? "",
-                                                isFirst:
-                                                    storageIsFirstLogin == true
-                                                        ? false
-                                                        : true,
-                                              ).toMap(),
-                                            );
-                                          },
-                                          buttonText:
-                                              "Make another transaction",
-                                          onTap: () async {
-                                            var corpCustPermApiResult =
-                                                await MapCorporateCustomerPermissions
-                                                    .mapCorporateCustomerPermissions(
-                                                        token ?? "");
-                                            if (corpCustPermApiResult[
-                                                "success"]) {
-                                              fdSeedAccounts.clear();
-                                              internalSeedAccounts.clear();
-                                              dhabiSeedAccounts.clear();
-                                              foreignSeedAccounts.clear();
-                                              for (var permission
-                                                  in corpCustPermApiResult[
-                                                      "permissions"]) {
-                                                if (permission["canCreateFD"]) {
-                                                  fdSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "fdCreationThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                                  "currentBalance"]
-                                                              .split(" ")
-                                                              .last
-                                                              .replaceAll(
-                                                                  ',', ''))
-                                                          .abs(),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferInternalFund"]) {
-                                                  internalSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "internalFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferDhabiFund"]) {
-                                                  dhabiSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "dhabiFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferInternationalFund"]) {
-                                                  foreignSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "foreignFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                              }
-
-                                              canCreateSavingsAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCreateSavingsAccount"];
-                                              canCreateCurrentAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCreateCurrentAccount"];
-
-                                              canChangeAddress =
-                                                  corpCustPermApiResult[
-                                                      "canChangeAddress"];
-                                              canChangeMobileNumber =
-                                                  corpCustPermApiResult[
-                                                      "canChangeMobileNumber"];
-                                              canChangeEmailId =
-                                                  corpCustPermApiResult[
-                                                      "canChangeEmailId"];
-
-                                              canUpdateKYC =
-                                                  corpCustPermApiResult[
-                                                      "canUpdateKYC"];
-                                              canCloseAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCloseAccount"];
-                                              canRequestChequeBook =
-                                                  corpCustPermApiResult[
-                                                      "canRequestChequeBook"];
-                                              canRequestCertificate =
-                                                  corpCustPermApiResult[
-                                                      "canRequestCertificate"];
-                                              canRequestAccountStatement =
-                                                  corpCustPermApiResult[
-                                                      "canRequestAccountStatement"];
-                                              canRequestCard =
-                                                  corpCustPermApiResult[
-                                                      "canRequestCard"];
-                                              if (context.mounted) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return CustomDialog(
+                                            svgAssetPath:
+                                                ImageConstants.warning,
+                                            title: "Sorry!",
+                                            message: corpRemittanceApiResult[
+                                                    "message"] ??
+                                                "Something went wrong while remittance transfer, please try again later",
+                                            actionWidget: GradientButton(
+                                              onTap: () {
                                                 Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  Routes.sendMoneyFrom,
-                                                  arguments:
-                                                      SendMoneyArgumentModel(
-                                                    isBetweenAccounts:
-                                                        sendMoneyArgument
-                                                            .isBetweenAccounts,
-                                                    isWithinDhabi:
-                                                        sendMoneyArgument
-                                                            .isWithinDhabi,
-                                                    isRemittance:
-                                                        sendMoneyArgument
-                                                            .isRemittance,
-                                                    isRetail: sendMoneyArgument
-                                                        .isRetail,
-                                                  ).toMap(),
-                                                );
-                                              }
-                                            } else {
-                                              if (context.mounted) {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return CustomDialog(
-                                                      svgAssetPath:
-                                                          ImageConstants
-                                                              .warning,
-                                                      title: "Sorry!",
-                                                      message:
-                                                          corpCustPermApiResult[
-                                                                  "message"][
-                                                              "Something went wrong, please try again later"],
-                                                      actionWidget:
-                                                          GradientButton(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        text: labels[346]
-                                                            ["labelText"],
-                                                      ),
-                                                    );
-                                                  },
-                                                );
-                                              }
-                                            }
-                                          },
-                                        ).toMap(),
+                                              },
+                                              text: labels[346]["labelText"],
+                                            ),
+                                          );
+                                        },
                                       );
                                     }
-
-                                    isAddRemBeneficiary = false;
-                                    isNewRemittanceBeneficiary = false;
                                   }
                                 } else {
-                                  if (context.mounted) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return CustomDialog(
-                                          svgAssetPath: ImageConstants.warning,
-                                          title: "Sorry!",
-                                          message: corpRemittanceApiResult[
-                                                  "message"] ??
-                                              "Something went wrong while remittance transfer, please try again later",
-                                          actionWidget: GradientButton(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            text: labels[346]["labelText"],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                }
-                              } else {
-                                log("corpDhabiMoneyTransferApiResult Request -> ${{
-                                  "debitAccount": senderAccountNumber,
-                                  "creditAccount": receiverAccountNumber,
-                                  "debitAmount": senderAmount.toString(),
-                                  "currency": senderCurrency,
-                                  "beneficiaryName": benCustomerName,
-                                }}");
-                                var corpDhabiMoneyTransferApiResult =
-                                    await MapDhabiMoneyTransfer
-                                        .mapDhabiMoneyTransfer(
-                                  {
+                                  log("corpDhabiMoneyTransferApiResult Request -> ${{
                                     "debitAccount": senderAccountNumber,
                                     "creditAccount": receiverAccountNumber,
                                     "debitAmount": senderAmount.toString(),
                                     "currency": senderCurrency,
                                     "beneficiaryName": benCustomerName,
-                                  },
-                                  token ?? "",
-                                );
-                                log("corpDomesticMoneyTransferApiResult -> $corpDhabiMoneyTransferApiResult");
+                                  }}");
+                                  var corpDhabiMoneyTransferApiResult =
+                                      await MapDhabiMoneyTransfer
+                                          .mapDhabiMoneyTransfer(
+                                    {
+                                      "debitAccount": senderAccountNumber,
+                                      "creditAccount": receiverAccountNumber,
+                                      "debitAmount": senderAmount.toString(),
+                                      "currency": senderCurrency,
+                                      "beneficiaryName": benCustomerName,
+                                    },
+                                    token ?? "",
+                                  );
+                                  log("corpDomesticMoneyTransferApiResult -> $corpDhabiMoneyTransferApiResult");
 
-                                if (corpDhabiMoneyTransferApiResult[
-                                    "success"]) {
-                                  if (isAddWithinDhabiBeneficiary) {
-                                    log("create beneficiary request -> ${{
-                                      "beneficiaryType": 3,
-                                      "accountNumber": receiverAccountNumber,
-                                      "name": benCustomerName,
-                                      "address": benAddress,
-                                      "accountType": benAccountType,
-                                      "swiftReference": 0,
-                                      "targetCurrency": receiverCurrency,
-                                      "countryCode": "AE",
-                                      "benBankCode": benBankCode,
-                                      "benMobileNo": benMobileNo,
-                                      "benSubBankCode": benSubBankCode,
-                                      "benIdType": benIdType,
-                                      "benIdNo": benIdNo,
-                                      "benIdExpiryDate": benIdExpiryDate,
-                                      "benBankName": benBankName,
-                                      "benSwiftCodeText": benSwiftCode,
-                                      "city": benCity,
-                                      "remittancePurpose":
-                                          remittancePurpose ?? "",
-                                      "sourceOfFunds": sourceOfFunds ?? "",
-                                      "relation": relation ?? "",
-                                    }}");
-
-                                    var createBeneficiaryAPiResult =
-                                        await MapCreateBeneficiary
-                                            .mapCreateBeneficiary(
-                                      {
+                                  if (corpDhabiMoneyTransferApiResult[
+                                      "success"]) {
+                                    if (isAddWithinDhabiBeneficiary) {
+                                      log("create beneficiary request -> ${{
                                         "beneficiaryType": 3,
                                         "accountNumber": receiverAccountNumber,
                                         "name": benCustomerName,
@@ -1815,13 +1855,346 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                             remittancePurpose ?? "",
                                         "sourceOfFunds": sourceOfFunds ?? "",
                                         "relation": relation ?? "",
-                                      },
-                                      token ?? "",
-                                    );
+                                      }}");
 
-                                    log("createBeneficiaryAPiResult -> $createBeneficiaryAPiResult");
+                                      var createBeneficiaryAPiResult =
+                                          await MapCreateBeneficiary
+                                              .mapCreateBeneficiary(
+                                        {
+                                          "beneficiaryType": 3,
+                                          "accountNumber":
+                                              receiverAccountNumber,
+                                          "name": benCustomerName,
+                                          "address": benAddress,
+                                          "accountType": benAccountType,
+                                          "swiftReference": 0,
+                                          "targetCurrency": receiverCurrency,
+                                          "countryCode": "AE",
+                                          "benBankCode": benBankCode,
+                                          "benMobileNo": benMobileNo,
+                                          "benSubBankCode": benSubBankCode,
+                                          "benIdType": benIdType,
+                                          "benIdNo": benIdNo,
+                                          "benIdExpiryDate": benIdExpiryDate,
+                                          "benBankName": benBankName,
+                                          "benSwiftCodeText": benSwiftCode,
+                                          "city": benCity,
+                                          "remittancePurpose":
+                                              remittancePurpose ?? "",
+                                          "sourceOfFunds": sourceOfFunds ?? "",
+                                          "relation": relation ?? "",
+                                        },
+                                        token ?? "",
+                                      );
 
-                                    if (createBeneficiaryAPiResult["success"]) {
+                                      log("createBeneficiaryAPiResult -> $createBeneficiaryAPiResult");
+
+                                      if (createBeneficiaryAPiResult[
+                                          "success"]) {
+                                        if (context.mounted) {
+                                          Navigator.pushNamed(
+                                            context,
+                                            Routes.errorSuccessScreen,
+                                            arguments: ErrorArgumentModel(
+                                              hasSecondaryButton: true,
+                                              iconPath: ImageConstants
+                                                  .checkCircleOutlined,
+                                              title: corpDhabiMoneyTransferApiResult[
+                                                      "isDirectlyCreated"]
+                                                  ? "Success!"
+                                                  : "Domestic Transfer Request Placed",
+                                              message: corpDhabiMoneyTransferApiResult[
+                                                      "isDirectlyCreated"]
+                                                  ? "Your transaction has been completed ${corpDhabiMoneyTransferApiResult["reference"]}"
+                                                  : "${messages[121]["messageText"]}: ${corpDhabiMoneyTransferApiResult["reference"]}",
+                                              buttonTextSecondary: "Go Home",
+                                              onTapSecondary: () {
+                                                isAddWithinDhabiBeneficiary =
+                                                    false;
+                                                isNewWithinDhabiBeneficiary =
+                                                    false;
+                                                Navigator
+                                                    .pushNamedAndRemoveUntil(
+                                                  context,
+                                                  Routes.businessDashboard,
+                                                  (route) => false,
+                                                  arguments:
+                                                      RetailDashboardArgumentModel(
+                                                    imgUrl:
+                                                        storageProfilePhotoBase64 ??
+                                                            "",
+                                                    name: profileName ?? "",
+                                                    isFirst:
+                                                        storageIsFirstLogin ==
+                                                                true
+                                                            ? false
+                                                            : true,
+                                                  ).toMap(),
+                                                );
+                                              },
+                                              buttonText:
+                                                  "Make another transaction",
+                                              onTap: () async {
+                                                var corpCustPermApiResult =
+                                                    await MapCorporateCustomerPermissions
+                                                        .mapCorporateCustomerPermissions(
+                                                            token ?? "");
+                                                if (corpCustPermApiResult[
+                                                    "success"]) {
+                                                  fdSeedAccounts.clear();
+                                                  internalSeedAccounts.clear();
+                                                  dhabiSeedAccounts.clear();
+                                                  foreignSeedAccounts.clear();
+                                                  for (var permission
+                                                      in corpCustPermApiResult[
+                                                          "permissions"]) {
+                                                    if (permission[
+                                                        "canCreateFD"]) {
+                                                      fdSeedAccounts.add(
+                                                        SeedAccount(
+                                                          accountNumber:
+                                                              permission[
+                                                                  "accountNumber"],
+                                                          threshold: permission[
+                                                                  "fdCreationThreshold"]
+                                                              .toDouble(),
+                                                          currency: permission[
+                                                              "currency"],
+                                                          bal: double.parse(
+                                                                  permission[
+                                                                          "currentBalance"]
+                                                                      .split(
+                                                                          " ")
+                                                                      .last
+                                                                      .replaceAll(
+                                                                          ',',
+                                                                          ''))
+                                                              .abs(),
+                                                          accountType:
+                                                              permission[
+                                                                  "accountType"],
+                                                          currencyFlag: permission[
+                                                              "currencyFlagBase64"],
+                                                        ),
+                                                      );
+                                                    }
+                                                    if (permission[
+                                                        "canTransferInternalFund"]) {
+                                                      internalSeedAccounts.add(
+                                                        SeedAccount(
+                                                          accountNumber:
+                                                              permission[
+                                                                  "accountNumber"],
+                                                          threshold: permission[
+                                                                  "internalFundTransferThreshold"]
+                                                              .toDouble(),
+                                                          currency: permission[
+                                                              "currency"],
+                                                          bal: double.parse(
+                                                              permission[
+                                                                      "currentBalance"]
+                                                                  .split(" ")
+                                                                  .last
+                                                                  .replaceAll(
+                                                                      ',', '')),
+                                                          accountType:
+                                                              permission[
+                                                                  "accountType"],
+                                                          currencyFlag: permission[
+                                                              "currencyFlagBase64"],
+                                                        ),
+                                                      );
+                                                    }
+                                                    if (permission[
+                                                        "canTransferDhabiFund"]) {
+                                                      dhabiSeedAccounts.add(
+                                                        SeedAccount(
+                                                          accountNumber:
+                                                              permission[
+                                                                  "accountNumber"],
+                                                          threshold: permission[
+                                                                  "dhabiFundTransferThreshold"]
+                                                              .toDouble(),
+                                                          currency: permission[
+                                                              "currency"],
+                                                          bal: double.parse(
+                                                              permission[
+                                                                      "currentBalance"]
+                                                                  .split(" ")
+                                                                  .last
+                                                                  .replaceAll(
+                                                                      ',', '')),
+                                                          accountType:
+                                                              permission[
+                                                                  "accountType"],
+                                                          currencyFlag: permission[
+                                                              "currencyFlagBase64"],
+                                                        ),
+                                                      );
+                                                    }
+                                                    if (permission[
+                                                        "canTransferInternationalFund"]) {
+                                                      foreignSeedAccounts.add(
+                                                        SeedAccount(
+                                                          accountNumber:
+                                                              permission[
+                                                                  "accountNumber"],
+                                                          threshold: permission[
+                                                                  "foreignFundTransferThreshold"]
+                                                              .toDouble(),
+                                                          currency: permission[
+                                                              "currency"],
+                                                          bal: double.parse(
+                                                              permission[
+                                                                      "currentBalance"]
+                                                                  .split(" ")
+                                                                  .last
+                                                                  .replaceAll(
+                                                                      ',', '')),
+                                                          accountType:
+                                                              permission[
+                                                                  "accountType"],
+                                                          currencyFlag: permission[
+                                                              "currencyFlagBase64"],
+                                                        ),
+                                                      );
+                                                    }
+                                                  }
+
+                                                  canCreateSavingsAccount =
+                                                      corpCustPermApiResult[
+                                                          "canCreateSavingsAccount"];
+                                                  canCreateCurrentAccount =
+                                                      corpCustPermApiResult[
+                                                          "canCreateCurrentAccount"];
+
+                                                  canChangeAddress =
+                                                      corpCustPermApiResult[
+                                                          "canChangeAddress"];
+                                                  canChangeMobileNumber =
+                                                      corpCustPermApiResult[
+                                                          "canChangeMobileNumber"];
+                                                  canChangeEmailId =
+                                                      corpCustPermApiResult[
+                                                          "canChangeEmailId"];
+
+                                                  canUpdateKYC =
+                                                      corpCustPermApiResult[
+                                                          "canUpdateKYC"];
+                                                  canCloseAccount =
+                                                      corpCustPermApiResult[
+                                                          "canCloseAccount"];
+                                                  canRequestChequeBook =
+                                                      corpCustPermApiResult[
+                                                          "canRequestChequeBook"];
+                                                  canRequestCertificate =
+                                                      corpCustPermApiResult[
+                                                          "canRequestCertificate"];
+                                                  canRequestAccountStatement =
+                                                      corpCustPermApiResult[
+                                                          "canRequestAccountStatement"];
+                                                  canRequestCard =
+                                                      corpCustPermApiResult[
+                                                          "canRequestCard"];
+                                                  if (context.mounted) {
+                                                    if (isNewWithinDhabiBeneficiary) {
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    } else {
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                      Navigator.pop(context);
+                                                    }
+
+                                                    Navigator.pushNamed(
+                                                      context,
+                                                      Routes.sendMoneyFrom,
+                                                      arguments:
+                                                          SendMoneyArgumentModel(
+                                                        isBetweenAccounts:
+                                                            sendMoneyArgument
+                                                                .isBetweenAccounts,
+                                                        isWithinDhabi:
+                                                            sendMoneyArgument
+                                                                .isWithinDhabi,
+                                                        isRemittance:
+                                                            sendMoneyArgument
+                                                                .isRemittance,
+                                                        isRetail:
+                                                            sendMoneyArgument
+                                                                .isRetail,
+                                                      ).toMap(),
+                                                    );
+                                                    isAddWithinDhabiBeneficiary =
+                                                        false;
+                                                    isNewWithinDhabiBeneficiary =
+                                                        false;
+                                                  }
+                                                } else {
+                                                  if (context.mounted) {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return CustomDialog(
+                                                          svgAssetPath:
+                                                              ImageConstants
+                                                                  .warning,
+                                                          title: "Sorry!",
+                                                          message:
+                                                              corpCustPermApiResult[
+                                                                      "message"]
+                                                                  [
+                                                                  "Something went wrong, please try again later"],
+                                                          actionWidget:
+                                                              GradientButton(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            text: labels[346]
+                                                                ["labelText"],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                }
+                                              },
+                                            ).toMap(),
+                                          );
+                                        }
+                                      } else {
+                                        if (context.mounted) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return CustomDialog(
+                                                svgAssetPath:
+                                                    ImageConstants.warning,
+                                                title: "Sorry!",
+                                                message: createBeneficiaryAPiResult[
+                                                        "message"] ??
+                                                    "Something went wrong while adding beneficiary, please try again later",
+                                                actionWidget: GradientButton(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  text: labels[346]
+                                                      ["labelText"],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    } else {
                                       if (context.mounted) {
                                         Navigator.pushNamed(
                                           context,
@@ -1846,13 +2219,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                   false;
                                               Navigator.pushNamedAndRemoveUntil(
                                                 context,
-                                                Routes.businessDashboard,
+                                                Routes.retailDashboard,
                                                 (route) => false,
                                                 arguments:
                                                     RetailDashboardArgumentModel(
-                                                  imgUrl:
-                                                      storageProfilePhotoBase64 ??
-                                                          "",
+                                                  imgUrl: "",
                                                   name: profileName ?? "",
                                                   isFirst:
                                                       storageIsFirstLogin ==
@@ -2037,7 +2408,35 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                     Navigator.pop(context);
                                                     Navigator.pop(context);
                                                   }
+                                                } else {
+                                                  if (context.mounted) {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return CustomDialog(
+                                                          svgAssetPath:
+                                                              ImageConstants
+                                                                  .warning,
+                                                          title: "Sorry!",
+                                                          message: corpCustPermApiResult[
+                                                                  "message"] ??
+                                                              "Error fetching account details, please try again later",
+                                                          actionWidget:
+                                                              GradientButton(
+                                                            onTap: () {
+                                                              Navigator.pop(
+                                                                  context);
+                                                            },
+                                                            text: labels[293]
+                                                                ["labelText"],
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                }
 
+                                                if (context.mounted) {
                                                   Navigator.pushNamed(
                                                     context,
                                                     Routes.sendMoneyFrom,
@@ -2057,11 +2456,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                               .isRetail,
                                                     ).toMap(),
                                                   );
-                                                  isAddWithinDhabiBeneficiary =
-                                                      false;
-                                                  isNewWithinDhabiBeneficiary =
-                                                      false;
                                                 }
+                                                isAddWithinDhabiBeneficiary =
+                                                    false;
+                                                isNewWithinDhabiBeneficiary =
+                                                    false;
                                               } else {
                                                 if (context.mounted) {
                                                   showDialog(
@@ -2094,339 +2493,55 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                           ).toMap(),
                                         );
                                       }
-                                    } else {
-                                      if (context.mounted) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return CustomDialog(
-                                              svgAssetPath:
-                                                  ImageConstants.warning,
-                                              title: "Sorry!",
-                                              message: createBeneficiaryAPiResult[
-                                                      "message"] ??
-                                                  "Something went wrong while adding beneficiary, please try again later",
-                                              actionWidget: GradientButton(
-                                                onTap: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                text: labels[346]["labelText"],
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      }
                                     }
                                   } else {
                                     if (context.mounted) {
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.errorSuccessScreen,
-                                        arguments: ErrorArgumentModel(
-                                          hasSecondaryButton: true,
-                                          iconPath: ImageConstants
-                                              .checkCircleOutlined,
-                                          title: corpDhabiMoneyTransferApiResult[
-                                                  "isDirectlyCreated"]
-                                              ? "Success!"
-                                              : "Domestic Transfer Request Placed",
-                                          message: corpDhabiMoneyTransferApiResult[
-                                                  "isDirectlyCreated"]
-                                              ? "Your transaction has been completed ${corpDhabiMoneyTransferApiResult["reference"]}"
-                                              : "${messages[121]["messageText"]}: ${corpDhabiMoneyTransferApiResult["reference"]}",
-                                          buttonTextSecondary: "Go Home",
-                                          onTapSecondary: () {
-                                            isAddWithinDhabiBeneficiary = false;
-                                            isNewWithinDhabiBeneficiary = false;
-                                            Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              Routes.retailDashboard,
-                                              (route) => false,
-                                              arguments:
-                                                  RetailDashboardArgumentModel(
-                                                imgUrl: "",
-                                                name: profileName ?? "",
-                                                isFirst:
-                                                    storageIsFirstLogin == true
-                                                        ? false
-                                                        : true,
-                                              ).toMap(),
-                                            );
-                                          },
-                                          buttonText:
-                                              "Make another transaction",
-                                          onTap: () async {
-                                            var corpCustPermApiResult =
-                                                await MapCorporateCustomerPermissions
-                                                    .mapCorporateCustomerPermissions(
-                                                        token ?? "");
-                                            if (corpCustPermApiResult[
-                                                "success"]) {
-                                              fdSeedAccounts.clear();
-                                              internalSeedAccounts.clear();
-                                              dhabiSeedAccounts.clear();
-                                              foreignSeedAccounts.clear();
-                                              for (var permission
-                                                  in corpCustPermApiResult[
-                                                      "permissions"]) {
-                                                if (permission["canCreateFD"]) {
-                                                  fdSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "fdCreationThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                                  "currentBalance"]
-                                                              .split(" ")
-                                                              .last
-                                                              .replaceAll(
-                                                                  ',', ''))
-                                                          .abs(),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferInternalFund"]) {
-                                                  internalSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "internalFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferDhabiFund"]) {
-                                                  dhabiSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "dhabiFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                                if (permission[
-                                                    "canTransferInternationalFund"]) {
-                                                  foreignSeedAccounts.add(
-                                                    SeedAccount(
-                                                      accountNumber: permission[
-                                                          "accountNumber"],
-                                                      threshold: permission[
-                                                              "foreignFundTransferThreshold"]
-                                                          .toDouble(),
-                                                      currency: permission[
-                                                          "currency"],
-                                                      bal: double.parse(permission[
-                                                              "currentBalance"]
-                                                          .split(" ")
-                                                          .last
-                                                          .replaceAll(',', '')),
-                                                      accountType: permission[
-                                                          "accountType"],
-                                                      currencyFlag: permission[
-                                                          "currencyFlagBase64"],
-                                                    ),
-                                                  );
-                                                }
-                                              }
-
-                                              canCreateSavingsAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCreateSavingsAccount"];
-                                              canCreateCurrentAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCreateCurrentAccount"];
-
-                                              canChangeAddress =
-                                                  corpCustPermApiResult[
-                                                      "canChangeAddress"];
-                                              canChangeMobileNumber =
-                                                  corpCustPermApiResult[
-                                                      "canChangeMobileNumber"];
-                                              canChangeEmailId =
-                                                  corpCustPermApiResult[
-                                                      "canChangeEmailId"];
-
-                                              canUpdateKYC =
-                                                  corpCustPermApiResult[
-                                                      "canUpdateKYC"];
-                                              canCloseAccount =
-                                                  corpCustPermApiResult[
-                                                      "canCloseAccount"];
-                                              canRequestChequeBook =
-                                                  corpCustPermApiResult[
-                                                      "canRequestChequeBook"];
-                                              canRequestCertificate =
-                                                  corpCustPermApiResult[
-                                                      "canRequestCertificate"];
-                                              canRequestAccountStatement =
-                                                  corpCustPermApiResult[
-                                                      "canRequestAccountStatement"];
-                                              canRequestCard =
-                                                  corpCustPermApiResult[
-                                                      "canRequestCard"];
-                                              if (context.mounted) {
-                                                if (isNewWithinDhabiBeneficiary) {
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                } else {
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                }
-                                              } else {
-                                                if (context.mounted) {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return CustomDialog(
-                                                        svgAssetPath:
-                                                            ImageConstants
-                                                                .warning,
-                                                        title: "Sorry!",
-                                                        message: corpCustPermApiResult[
-                                                                "message"] ??
-                                                            "Error fetching account details, please try again later",
-                                                        actionWidget:
-                                                            GradientButton(
-                                                          onTap: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          text: labels[293]
-                                                              ["labelText"],
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                }
-                                              }
-
-                                              if (context.mounted) {
-                                                Navigator.pushNamed(
-                                                  context,
-                                                  Routes.sendMoneyFrom,
-                                                  arguments:
-                                                      SendMoneyArgumentModel(
-                                                    isBetweenAccounts:
-                                                        sendMoneyArgument
-                                                            .isBetweenAccounts,
-                                                    isWithinDhabi:
-                                                        sendMoneyArgument
-                                                            .isWithinDhabi,
-                                                    isRemittance:
-                                                        sendMoneyArgument
-                                                            .isRemittance,
-                                                    isRetail: sendMoneyArgument
-                                                        .isRetail,
-                                                  ).toMap(),
-                                                );
-                                              }
-                                              isAddWithinDhabiBeneficiary =
-                                                  false;
-                                              isNewWithinDhabiBeneficiary =
-                                                  false;
-                                            } else {
-                                              if (context.mounted) {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return CustomDialog(
-                                                      svgAssetPath:
-                                                          ImageConstants
-                                                              .warning,
-                                                      title: "Sorry!",
-                                                      message:
-                                                          corpCustPermApiResult[
-                                                                  "message"][
-                                                              "Something went wrong, please try again later"],
-                                                      actionWidget:
-                                                          GradientButton(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        text: labels[346]
-                                                            ["labelText"],
-                                                      ),
-                                                    );
-                                                  },
-                                                );
-                                              }
-                                            }
-                                          },
-                                        ).toMap(),
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return CustomDialog(
+                                            svgAssetPath:
+                                                ImageConstants.warning,
+                                            title: "Sorry!",
+                                            message:
+                                                corpDhabiMoneyTransferApiResult[
+                                                        "message"] ??
+                                                    "Something went wrong while corporate domestic transfer, please try again later",
+                                            actionWidget: GradientButton(
+                                              onTap: () {
+                                                Navigator.pop(context);
+                                              },
+                                              text: labels[346]["labelText"],
+                                            ),
+                                          );
+                                        },
                                       );
                                     }
                                   }
-                                } else {
-                                  if (context.mounted) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return CustomDialog(
-                                          svgAssetPath: ImageConstants.warning,
-                                          title: "Sorry!",
-                                          message: corpDhabiMoneyTransferApiResult[
-                                                  "message"] ??
-                                              "Something went wrong while corporate domestic transfer, please try again later",
-                                          actionWidget: GradientButton(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            text: labels[346]["labelText"],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
                                 }
                               }
+                              isTransferring = false;
+                              showButtonBloc
+                                  .add(ShowButtonEvent(show: isTransferring));
                             }
-                            isTransferring = false;
-                            showButtonBloc
-                                .add(ShowButtonEvent(show: isTransferring));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CustomDialog(
+                                  svgAssetPath: ImageConstants.warning,
+                                  title: "No Permission",
+                                  message:
+                                      "You do not have permission to update your Mobile Number",
+                                  actionWidget: GradientButton(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    text: labels[346]["labelText"],
+                                  ),
+                                );
+                              },
+                            );
                           }
                         },
                         text: labels[31]["labelText"],

@@ -36,7 +36,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
       TextEditingController(text: storageAddressPoBox ?? "");
 
   bool isAddress1Entered = storageAddressLine1 == null ? false : true;
-  // bool isEmirateSelected = false;
+  bool isCitySelected = true;
   bool isCountrySelected = true;
 
   int toggles = 0;
@@ -210,13 +210,24 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
                             fontSize: (16 / Dimensions.designWidth).w,
                           ),
                         ),
-                        // const Asterisk(),
+                        const Asterisk(),
                       ],
                     ),
                     const SizeBox(height: 9),
                     CustomTextField(
                       controller: _cityController,
-                      onChanged: (p0) {},
+                      onChanged: (p0) {
+                        final ShowButtonBloc showButtonBloc =
+                            context.read<ShowButtonBloc>();
+                        if (p0.isEmpty) {
+                          isCitySelected = false;
+                        } else {
+                          isCitySelected = true;
+                        }
+                        showButtonBloc.add(
+                          ShowButtonEvent(show: isCitySelected),
+                        );
+                      },
                       hintText: "City",
                     ),
                     const SizeBox(height: 20),
@@ -320,7 +331,7 @@ class _ApplicationAddressScreenState extends State<ApplicationAddressScreen> {
               builder: (context, state) {
                 if (
                     // isEmirateSelected &&
-                    isAddress1Entered && isCountrySelected) {
+                    isAddress1Entered && isCountrySelected && isCitySelected) {
                   return Column(
                     children: [
                       GradientButton(

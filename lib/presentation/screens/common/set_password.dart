@@ -505,6 +505,12 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
                           );
                           log("BG login API result -> $loginApiResult");
                           if (loginApiResult["success"]) {
+                            passwordChangesToday =
+                                loginApiResult["passwordChangesToday"];
+                            emailChangesToday =
+                                loginApiResult["emailChangesToday"];
+                            mobileChangesToday =
+                                loginApiResult["mobileChangesToday"];
                             token = loginApiResult["token"];
                             log("token -> $token");
                             await getProfileData();
@@ -731,7 +737,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
         storageAddressPoBox = await storage.read(key: "poBox");
 
         profileAddress =
-            "$profileAddressLine1, $profileAddressLine2, $profileCity, $profileState, $profilePinCode";
+            "$profileAddressLine1,\n $profileAddressLine2,\n $profileCity,\n $profileState,\n $profilePinCode";
         // "${getProfileDataResult["addressLine_1"]} ${getProfileDataResult["addressLine_2"]} ${getProfileDataResult["city"] ?? ""} ${getProfileDataResult["state"] ?? ""} ${getProfileDataResult["pinCode"]}";
 
         log("profileName -> $profileName");

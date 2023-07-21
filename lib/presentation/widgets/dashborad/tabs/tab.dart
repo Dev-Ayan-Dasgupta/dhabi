@@ -24,12 +24,20 @@ class CustomTab extends StatelessWidget {
         borderRadius: BorderRadius.all(
           Radius.circular((10 / Dimensions.designWidth).w),
         ),
-        color: isSelected ? const Color(0XFFE8EBEC) : Colors.transparent,
+        image: isSelected
+            ? const DecorationImage(
+                image: AssetImage(ImageConstants.buttonGradient),
+                fit: BoxFit.fill,
+              )
+            : null,
+        // color: isSelected ? const Color(0XFFE8EBEC) : Colors.transparent,
       ),
       child: Text(
         title,
         style: TextStyles.primaryMedium.copyWith(
-            color: AppColors.dark80, fontSize: (14 / Dimensions.designWidth).w),
+          color: isSelected ? Colors.white : AppColors.dark80,
+          fontSize: (14 / Dimensions.designWidth).w,
+        ),
       ),
     );
   }

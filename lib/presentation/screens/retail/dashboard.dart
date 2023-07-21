@@ -91,6 +91,8 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
 
   bool isShowExplore = false;
 
+  bool isNavigating = false;
+
   @override
   void initState() {
     super.initState();
@@ -553,20 +555,24 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     accountDetails.length
                                                 ? AccountSummaryTile(
                                                     onTap: () {
-                                                      Navigator.pushNamed(
-                                                        context,
-                                                        Routes
-                                                            .applicationAccount,
-                                                        arguments:
-                                                            ApplicationAccountArgumentModel(
-                                                          isInitial: false,
-                                                          isRetail: true,
-                                                          savingsAccountsCreated:
-                                                              savingsAccountCount,
-                                                          currentAccountsCreated:
-                                                              currentAccountCount,
-                                                        ).toMap(),
-                                                      );
+                                                      if (!isNavigating) {
+                                                        isNavigating = true;
+                                                        Navigator.pushNamed(
+                                                          context,
+                                                          Routes
+                                                              .applicationAccount,
+                                                          arguments:
+                                                              ApplicationAccountArgumentModel(
+                                                            isInitial: false,
+                                                            isRetail: true,
+                                                            savingsAccountsCreated:
+                                                                savingsAccountCount,
+                                                            currentAccountsCreated:
+                                                                currentAccountCount,
+                                                          ).toMap(),
+                                                        );
+                                                        isNavigating = false;
+                                                      }
                                                     },
                                                     imgUrl: ImageConstants
                                                         .addAccount,
@@ -667,11 +673,29 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                     currency:
                                                         accountDetails[index]
                                                             ["accountCurrency"],
-                                                    amount: accountDetails[
-                                                                index]
-                                                            ["currentBalance"]
-                                                        .split(" ")
-                                                        .last,
+                                                    amount: double.parse(accountDetails[index][
+                                                                        "currentBalance"]
+                                                                    .split(" ")
+                                                                    .last
+                                                                    .replaceAll(
+                                                                        ',', ''))
+                                                                .abs() >
+                                                            1000000000
+                                                        ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(',', '')) / 1000000000).toStringAsFixed(2)} B"
+                                                        : double.parse(accountDetails[index]["currentBalance"]
+                                                                        .split(
+                                                                            " ")
+                                                                        .last
+                                                                        .replaceAll(
+                                                                            ',',
+                                                                            ''))
+                                                                    .abs() >
+                                                                1000000
+                                                            ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(',', '')) / 1000000).toStringAsFixed(2)} M"
+                                                            : accountDetails[index]
+                                                                    ["currentBalance"]
+                                                                .split(" ")
+                                                                .last,
                                                     subText: "",
                                                     subImgUrl: "",
                                                   ),
@@ -806,8 +830,9 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                         ? ImageConstants.uaeFlag
                                                         : ImageConstants
                                                             .usaFlag,
-                                                    accountType:
-                                                        "Fixed Deposit",
+                                                    accountType: depositDetails[
+                                                            index][
+                                                        "depositAccountNumber"],
                                                     currency: depositDetails[
                                                                 index][
                                                             "depositPrincipalAmount"]
@@ -1077,13 +1102,17 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                   context,
                                                                   Routes
                                                                       .downloadStatement,
-                                                                  arguments:
-                                                                      DownloadStatementArgumentModel(
-                                                                    accountNumber:
-                                                                        accountDetails[0]
-                                                                            [
-                                                                            "accountNumber"],
-                                                                  ).toMap(),
+                                                                  arguments: DownloadStatementArgumentModel(
+                                                                          accountNumber: accountDetails[storageChosenAccount ?? 0]
+                                                                              [
+                                                                              "accountNumber"],
+                                                                          ibanNumber: accountDetails[storageChosenAccount ?? 0]
+                                                                              [
+                                                                              "iban"],
+                                                                          accountType: accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001"
+                                                                              ? "Current"
+                                                                              : "Savings")
+                                                                      .toMap(),
                                                                 );
                                                               },
                                                               child: Row(
@@ -1235,7 +1264,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                                             style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
                                                                                           ),
                                                                                           trailing: Text(
-                                                                                            accountDetails[index]["currentBalance"],
+                                                                                            "${accountDetails[index]["accountCurrency"]} ${double.parse(accountDetails[index]["currentBalance"].split(' ').last) >= 1000 ? NumberFormat('#,000.00').format(double.parse(accountDetails[index]["currentBalance"].split(' ').last.replaceAll(',', ''))) : double.parse(accountDetails[index]["currentBalance"].split(' ').last.replaceAll(',', '')).toStringAsFixed(2)}",
                                                                                             style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
                                                                                           ),
                                                                                         );
@@ -2126,13 +2155,17 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                   context,
                                                                   Routes
                                                                       .downloadStatement,
-                                                                  arguments:
-                                                                      DownloadStatementArgumentModel(
-                                                                    accountNumber:
-                                                                        accountDetails[0]
-                                                                            [
-                                                                            "accountNumber"],
-                                                                  ).toMap(),
+                                                                  arguments: DownloadStatementArgumentModel(
+                                                                          accountNumber: accountDetails[storageChosenAccount ?? 0]
+                                                                              [
+                                                                              "accountNumber"],
+                                                                          ibanNumber: accountDetails[storageChosenAccount ?? 0]
+                                                                              [
+                                                                              "iban"],
+                                                                          accountType: accountDetails[storageChosenAccount ?? 0]["productCode"] == "1001"
+                                                                              ? "Current"
+                                                                              : "Savings")
+                                                                      .toMap(),
                                                                 );
                                                               },
                                                               child: Row(
@@ -3164,12 +3197,14 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
           .compareTo(DateTime.parse(b["bookingDate"])));
     }
     if (isHighest) {
-      displayStatementList.sort((a, b) => (double.parse(b["creditAmount"])
-          .compareTo(double.parse(a["creditAmount"]))));
+      displayStatementList.sort((a, b) =>
+          (double.parse(b["creditAmount"].toString())
+              .compareTo(double.parse(a["creditAmount"].toString()))));
     }
     if (isLowest) {
-      displayStatementList.sort((a, b) => (double.parse(a["creditAmount"])
-          .compareTo(double.parse(b["creditAmount"]))));
+      displayStatementList.sort((a, b) =>
+          (double.parse(a["creditAmount"].toString())
+              .compareTo(double.parse(b["creditAmount"].toString()))));
     }
   }
 
@@ -3236,15 +3271,31 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                         const SizeBox(height: 20),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: (22 / Dimensions.designWidth).w,
+                            horizontal: (PaddingConstants.horizontalPadding /
+                                    Dimensions.designWidth)
+                                .w,
                           ),
                           // vertical: (22 / Dimensions.designHeight).h),
-                          child: Text(
-                            labels[104]["labelText"],
-                            style: TextStyles.primaryBold.copyWith(
-                              color: AppColors.primary,
-                              fontSize: (28 / Dimensions.designWidth).w,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Duration",
+                                style: TextStyles.primaryBold.copyWith(
+                                  color: AppColors.primary,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                "USD Rates",
+                                style: TextStyles.primaryBold.copyWith(
+                                  color: AppColors.primary,
+                                  fontSize: (16 / Dimensions.designWidth).w,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+                            ],
                           ),
                         ),
                         const SizeBox(height: 20),

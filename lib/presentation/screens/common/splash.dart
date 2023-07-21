@@ -325,6 +325,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await storage.delete(key: "loggedOut");
       await storage.delete(key: "chosenAccountForCreateFD");
       await storage.delete(key: "chosenprofilePhotoBase64Account");
+      await storage.delete(key: "hasSingleCif");
       prefs.setBool('first_run', false);
     }
 
@@ -339,6 +340,9 @@ class _SplashScreenState extends State<SplashScreen> {
       log("storageHasFirstLoggedIn -> $storageHasFirstLoggedIn");
       storageIsFirstLogin = (await storage.read(key: "isFirstLogin")) == "true";
       log("storageIsFirstLogin -> $storageIsFirstLogin");
+
+      storageHasSingleCif = (await storage.read(key: "hasSingleCif")) == "true";
+      log("storageHasSingleCif -> $storageHasSingleCif");
 
       storageEmail = await storage.read(key: "emailAddress");
       log("storageEmail -> $storageEmail");

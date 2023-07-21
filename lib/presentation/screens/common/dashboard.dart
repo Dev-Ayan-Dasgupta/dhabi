@@ -282,7 +282,7 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
           svgAssetPath: ImageConstants.checkCircleOutlined,
           title: "Done exploring?",
           message: "Register now and enjoy the world of digital banking!",
-          actionWidget: GradientButton(
+          auxWidget: GradientButton(
             onTap: () {
               // Navigator.pop(context);
               Navigator.pop(context);
@@ -297,6 +297,15 @@ class _ExploreDashboardScreenState extends State<ExploreDashboardScreen>
               );
             },
             text: "Register Now",
+          ),
+          actionWidget: SolidButton(
+            fontColor: AppColors.primary,
+            color: AppColors.primaryBright17,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            text: labels[166]["labelText"],
           ),
         );
       },

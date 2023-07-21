@@ -87,6 +87,8 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                 Routes.downloadStatement,
                 arguments: DownloadStatementArgumentModel(
                   accountNumber: accountDetailsArgument.accountNumber,
+                  accountType: accountDetailsArgument.accountType,
+                  ibanNumber: accountDetailsArgument.iban,
                 ).toMap(),
               );
             },
@@ -365,11 +367,22 @@ class _AccountDetailsScreenState extends State<AccountDetailsScreen> {
                                             Navigator.pushNamed(
                                               context,
                                               Routes.downloadStatement,
-                                              arguments:
-                                                  DownloadStatementArgumentModel(
-                                                accountNumber: accountDetails[0]
-                                                    ["accountNumber"],
-                                              ).toMap(),
+                                              arguments: DownloadStatementArgumentModel(
+                                                      accountNumber: accountDetails[
+                                                              storageChosenAccount ??
+                                                                  0]
+                                                          ["accountNumber"],
+                                                      ibanNumber: accountDetails[
+                                                          storageChosenAccount ??
+                                                              0]["iban"],
+                                                      accountType: accountDetails[
+                                                                      storageChosenAccount ??
+                                                                          0][
+                                                                  "productCode"] ==
+                                                              "1001"
+                                                          ? "Current"
+                                                          : "Savings")
+                                                  .toMap(),
                                             );
                                           },
                                           child: Row(

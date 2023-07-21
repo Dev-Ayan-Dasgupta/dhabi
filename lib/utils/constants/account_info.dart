@@ -22,3 +22,7 @@ String? profilePinCode = "";
 String? customerName;
 
 String updatedEmail = "";
+
+int passwordChangesToday = 0;
+int emailChangesToday = 0;
+int mobileChangesToday = 0;

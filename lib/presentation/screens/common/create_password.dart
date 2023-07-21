@@ -656,6 +656,9 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
                   if (result["success"]) {
                     // customerName = result["customerName"];
+                    passwordChangesToday = result["passwordChangesToday"];
+                    emailChangesToday = result["emailChangesToday"];
+                    mobileChangesToday = result["mobileChangesToday"];
                     await storage.write(
                         key: "loggedOut", value: false.toString());
                     storageLoggedOut =
@@ -757,6 +760,9 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
                   if (result["success"]) {
                     // customerName = result["customerName"];
+                    passwordChangesToday = result["passwordChangesToday"];
+                    emailChangesToday = result["emailChangesToday"];
+                    mobileChangesToday = result["mobileChangesToday"];
                     await storage.write(
                         key: "loggedOut", value: false.toString());
                     storageLoggedOut =
@@ -890,6 +896,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                           log("token -> $token");
                           if (result["success"]) {
                             // customerName = result["customerName"];
+                            passwordChangesToday =
+                                result["passwordChangesToday"];
+                            emailChangesToday = result["emailChangesToday"];
+                            mobileChangesToday = result["mobileChangesToday"];
                             await storage.write(
                                 key: "loggedOut", value: false.toString());
                             storageLoggedOut =

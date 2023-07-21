@@ -688,6 +688,11 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                     "requestAmount": _sendController.text.replaceAll(',', ''),
                     "sourceCurrency": senderCurrency,
                     "targetCurrency": receiverCurrency,
+                    "customerMobileNo": storageMobileNumber,
+                    "benCustomerName": benCustomerName,
+                    "benBankName": benBankName,
+                    "benBankCode": benBankCode,
+                    "benSubBankCode": benSubBankCode,
                   }}");
                   var quotationApiResult = await MapQuotation.mapQuotation(
                     {
@@ -698,6 +703,11 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
                       "requestAmount": _sendController.text.replaceAll(',', ''),
                       "sourceCurrency": senderCurrency,
                       "targetCurrency": receiverCurrency,
+                      "customerMobileNo": storageMobileNumber,
+                      "benCustomerName": benCustomerName,
+                      "benBankName": benBankName,
+                      "benBankCode": benBankCode,
+                      "benSubBankCode": benSubBankCode,
                     },
                     token ?? "",
                   );
@@ -705,7 +715,7 @@ class _TransferAmountScreenState extends State<TransferAmountScreen> {
 
                   if (quotationApiResult["success"]) {
                     quotationId = quotationApiResult["quotationReferenceNo"];
-                    senderAmount =
+                    receiverAmount =
                         double.parse(quotationApiResult["exchangeAmount"]);
                     if (context.mounted) {
                       Navigator.pushNamed(

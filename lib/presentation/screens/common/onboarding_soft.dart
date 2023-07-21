@@ -10,6 +10,8 @@ import 'package:dialup_mobile_app/data/models/index.dart';
 import 'package:dialup_mobile_app/data/repositories/authentication/index.dart';
 import 'package:dialup_mobile_app/main.dart';
 import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator.dart';
+import 'package:dialup_mobile_app/utils/lists/onboarding_soft.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,9 +19,7 @@ import 'package:flutter_sizer/flutter_sizer.dart';
 
 import 'package:dialup_mobile_app/presentation/routers/routes.dart';
 import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/presentation/widgets/onboarding/page_indicator.dart';
 import 'package:dialup_mobile_app/utils/constants/index.dart';
-import 'package:dialup_mobile_app/utils/lists/onboarding_soft.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({
@@ -34,7 +34,7 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late OnboardingArgumentModel onboardingArgumentModel;
 
   final padding = (PaddingConstants.horizontalPadding / Dimensions.designWidth);
@@ -45,6 +45,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   int page = 0;
   int time = 0;
   int time2 = 0;
+
+  List images = [
+    Image.asset(ImageConstants.onboarding1, fit: BoxFit.fill),
+    Image.asset(ImageConstants.onboarding2, fit: BoxFit.fill),
+    Image.asset(ImageConstants.onboarding3, fit: BoxFit.fill),
+    Image.asset(ImageConstants.onboarding4, fit: BoxFit.fill),
+  ];
 
   bool isLoading = false;
   Timer? _timer;
@@ -122,7 +129,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
       backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        toolbarHeight: 0,
+        toolbarHeight: 10,
         backgroundColor: Colors.transparent,
         elevation: 0,
         systemOverlayStyle: const SystemUiOverlayStyle(
@@ -144,7 +151,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     AnimatedPositioned(
                       duration: const Duration(seconds: 5),
                       curve: Curves.linear,
-                      right: (time % 5) * (25 / Dimensions.designWidth).w,
+                      right: (time % 5) * (33 / Dimensions.designWidth).w,
                       child: Transform.scale(
                         scaleX: pageController.page == 0
                             ? 2
@@ -242,7 +249,48 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                               ],
                             ),
                           ),
-                        ))
+                        )),
+                    Positioned(
+                      child: InkWell(
+                        onTap: () {
+                          if (index > 0) {
+                            page = index - 1;
+                            time = 5 * (page);
+                            pageController.animateToPage(
+                              page,
+                              duration: const Duration(milliseconds: 1),
+                              curve: Curves.linear,
+                            );
+                            animateToPage();
+                          }
+                        },
+                        child: SizeBox(
+                          width: 50.w,
+                          height: 100.h,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 0,
+                      child: InkWell(
+                        onTap: () {
+                          if (index < 3) {
+                            page = index + 1;
+                            time = 5 * (page);
+                            pageController.animateToPage(
+                              page,
+                              duration: const Duration(milliseconds: 1),
+                              curve: Curves.linear,
+                            );
+                            animateToPage();
+                          }
+                        },
+                        child: SizeBox(
+                          width: 50.w,
+                          height: 100.h,
+                        ),
+                      ),
+                    ),
                   ],
                 );
               } else {
@@ -250,6 +298,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               }
             },
           ),
+          // CupertinoPageScaffold(
+          //   backgroundColor: Colors.black,
+          //   child: Story(
+          //     momentCount: 4,
+          //     momentDurationGetter: (index) => const Duration(seconds: 5),
+          //     momentBuilder: (context, index) => images[index],
+          //   ),
+          // ),
           Positioned(
             top: MediaQuery.of(context).padding.top +
                 (20 / Dimensions.designHeight).h,
@@ -517,6 +573,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                           //     isLogin: false,
                           //     isEmailIdUpdate: false,
                           //     isMobileUpdate: false,
+                          //     isReKyc: false,
                           //   ).toMap(),
                           // );
                           // Navigator.pushNamed(
@@ -602,6 +659,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     log("Login API Response -> $result");
     token = result["token"];
     log("token -> $token");
+    passwordChangesToday = result["passwordChangesToday"];
+    emailChangesToday = result["emailChangesToday"];
+    mobileChangesToday = result["mobileChangesToday"];
     customerName = result["customerName"];
     await storage.write(key: "customerName", value: customerName);
     storageCustomerName = await storage.read(key: "customerName");

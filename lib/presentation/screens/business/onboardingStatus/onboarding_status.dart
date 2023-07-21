@@ -349,6 +349,9 @@ class _BusinessOnboardingStatusScreenState
     log("Login API Response -> $result");
     token = result["token"];
     log("token -> $token");
+    passwordChangesToday = result["passwordChangesToday"];
+    emailChangesToday = result["emailChangesToday"];
+    mobileChangesToday = result["mobileChangesToday"];
     customerName = result["customerName"];
     await storage.write(key: "customerName", value: customerName);
     storageCustomerName = await storage.read(key: "customerName");

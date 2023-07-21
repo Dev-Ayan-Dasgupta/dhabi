@@ -272,11 +272,10 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                                   ["currentBalance"]
                                               .split(" ")
                                               .last
-                                              .replaceAll(",", "")) >
+                                              .replaceAll(",", "")) >=
                                           1000
-                                      ? NumberFormat('#,000.00').format(
-                                          double.parse(accountDetails[index]
-                                                  ["currentBalance"]
+                                      ? NumberFormat('#,000.00').format(double.parse(
+                                          accountDetails[index]["currentBalance"]
                                               .split(" ")
                                               .last
                                               .replaceAll(",", "")))
@@ -296,7 +295,7 @@ class _SendMoneyFromScreenState extends State<SendMoneyFromScreen> {
                                               : dhabiSeedAccounts[index].bal.toStringAsFixed(2)
                                           : foreignSeedAccounts[index].bal >= 1000
                                               ? NumberFormat('#,000.00').format(foreignSeedAccounts[index].bal)
-                                              : foreignSeedAccounts[index].bal,
+                                              : foreignSeedAccounts[index].bal.toStringAsFixed(2),
                               isSelected: selectedAccountIndex == index,
                             );
                           },

@@ -68,6 +68,9 @@ class _AddRecipientDetailsRemittanceScreenState
   void argumentInitialization() async {
     sendMoneyArgument =
         SendMoneyArgumentModel.fromMap(widget.argument as dynamic ?? {});
+    remittancePurpose = null;
+    sourceOfFunds = null;
+    relation = null;
   }
 
   Future<void> getDynamicFields() async {

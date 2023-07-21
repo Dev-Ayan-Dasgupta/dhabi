@@ -62,7 +62,10 @@ class _DepositDetailsScreenState extends State<DepositDetailsScreen> {
       if (getFDDetailsResult["success"]) {
         depositDetails.clear();
         depositDetails.add(DetailsTileModel(
-            key: "Deposit Account No.",
+            key: "Debit Account",
+            value: depositDetailsArgumentModel.accountNumber));
+        depositDetails.add(DetailsTileModel(
+            key: "Deposit Number",
             value: getFDDetailsResult["depositAccountNo"]));
         depositDetails.add(DetailsTileModel(
             key: "Deposit Amount",

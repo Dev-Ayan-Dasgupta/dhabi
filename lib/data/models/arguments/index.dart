@@ -26,3 +26,4 @@ export './profile.dart';
 export './workflow.dart';
 export './account_details.dart';
 export './loan_details.dart';
+export './profile_update_password.dart';

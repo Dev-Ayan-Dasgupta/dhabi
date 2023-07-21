@@ -33,6 +33,7 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   cameras = await availableCameras();
   HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp(appRouter: AppRouter()));

@@ -264,6 +264,12 @@ class _LoginUserIdScreenState extends State<LoginUserIdScreen> {
               log("storageUserTypeId -> $storageUserTypeId");
 
               await storage.write(
+                  key: 'hasSingleCif', value: singleCifResult["hasSingleCif"]);
+              storageHasSingleCif =
+                  (await storage.read(key: "hasSingleCif")) == "true";
+              log("storageUserTypeId -> $storageUserTypeId");
+
+              await storage.write(
                   key: "companyId", value: singleCifResult["cid"].toString());
               storageCompanyId =
                   int.parse(await storage.read(key: "companyId") ?? "0");

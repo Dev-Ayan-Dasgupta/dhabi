@@ -446,4 +446,9 @@ class EnvConfig implements BaseConfig {
   String get getExchangeRate {
     return dotenv.env['GET_EXCHANGE_RATE'] ?? "";
   }
+
+  @override
+  String get getRecentTransactions {
+    return dotenv.env['GET_RECENT_TRANSACTIONS'] ?? "";
+  }
 }

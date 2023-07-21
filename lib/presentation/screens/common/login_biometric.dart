@@ -186,7 +186,6 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
               onSubmit(storagePassword ?? "");
             }
           } else {
-            // TODO: Verify from client if they want a dialog box to enable biometric
             // OpenSettings.openBiometricEnrollSetting();
             if (context.mounted) {
               biometricFailedCount++;
@@ -232,6 +231,9 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
     log("token -> $token");
 
     if (result["success"]) {
+      passwordChangesToday = result["passwordChangesToday"];
+      emailChangesToday = result["emailChangesToday"];
+      mobileChangesToday = result["mobileChangesToday"];
       await storage.write(key: "cif", value: result["cif"]);
       storageCif = await storage.read(key: "cif");
       log("storageCif -> $storageCif");
@@ -421,6 +423,9 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
                   token = result["token"];
                   log("token -> $token");
                   if (result["success"]) {
+                    passwordChangesToday = result["passwordChangesToday"];
+                    emailChangesToday = result["emailChangesToday"];
+                    mobileChangesToday = result["mobileChangesToday"];
                     await storage.write(
                         key: "newInstall", value: true.toString());
                     storageIsNotNewInstall =
@@ -634,8 +639,7 @@ class _LoginBiometricScreenState extends State<LoginBiometricScreen> {
         storageAddressPoBox = await storage.read(key: "poBox");
 
         profileAddress =
-            "$profileAddressLine1, $profileAddressLine2, $profileCity, $profileState, $profilePinCode";
-        // "${getProfileDataResult["addressLine_1"]} ${getProfileDataResult["addressLine_2"]} ${getProfileDataResult["city"] ?? ""} ${getProfileDataResult["state"] ?? ""} ${getProfileDataResult["pinCode"]}";
+            "$profileAddressLine1${profileAddressLine1 == "" ? '' : ",\n"}$profileAddressLine2${profileAddressLine2 == "" ? '' : ",\n"}$profileCity${profileCity == "" ? '' : ",\n"}$profileState${profileState == "" ? '' : ",\n"}$profilePinCode";
 
         log("profileName -> $profileName");
         log("profilePhotoBase64 -> $profilePhotoBase64");

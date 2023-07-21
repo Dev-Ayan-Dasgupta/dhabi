@@ -1,13 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
-import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
-import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
-import 'package:dialup_mobile_app/main.dart';
-import 'package:dialup_mobile_app/presentation/routers/routes.dart';
-import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
-import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
-import 'package:dialup_mobile_app/utils/constants/index.dart';
+import 'package:dialup_mobile_app/utils/helpers/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
@@ -15,8 +9,23 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:local_auth/local_auth.dart';
 
+import 'package:dialup_mobile_app/bloc/showButton/show_button_bloc.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_event.dart';
+import 'package:dialup_mobile_app/bloc/showButton/show_button_state.dart';
+import 'package:dialup_mobile_app/data/models/index.dart';
+import 'package:dialup_mobile_app/main.dart';
+import 'package:dialup_mobile_app/presentation/routers/routes.dart';
+import 'package:dialup_mobile_app/presentation/screens/common/index.dart';
+import 'package:dialup_mobile_app/presentation/widgets/core/index.dart';
+import 'package:dialup_mobile_app/utils/constants/index.dart';
+
 class SecurityScreen extends StatefulWidget {
-  const SecurityScreen({Key? key}) : super(key: key);
+  const SecurityScreen({
+    Key? key,
+    this.argument,
+  }) : super(key: key);
+
+  final Object? argument;
 
   @override
   State<SecurityScreen> createState() => _SecurityScreenState();
@@ -26,10 +35,18 @@ class _SecurityScreenState extends State<SecurityScreen> {
   bool isEnabled = persistBiometric == true;
   bool isBioAvailable = true;
 
+  late ProfileUpdatePasswordArgumentModel profileUpdatePasswordArgument;
+
   @override
   void initState() {
     super.initState();
+    initializeArgument();
     checkBioAvailability();
+  }
+
+  void initializeArgument() {
+    profileUpdatePasswordArgument = ProfileUpdatePasswordArgumentModel.fromMap(
+        widget.argument as dynamic ?? {});
   }
 
   Future<void> checkBioAvailability() async {
@@ -102,8 +119,96 @@ class _SecurityScreenState extends State<SecurityScreen> {
             ),
             const SizeBox(height: 30),
             InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, Routes.changePassword);
+              onTap: () async {
+                if (passwordChangesToday > 2) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.errorSuccessScreen,
+                    arguments: ErrorArgumentModel(
+                      hasSecondaryButton: false,
+                      iconPath: ImageConstants.errorOutlined,
+                      title: "Limit exceeded!",
+                      message:
+                          "Password cannot be changed more than thrice a day",
+                      buttonText: labels[347]["labelText"],
+                      onTap: () {
+                        // Navigator.pushNamedAndRemoveUntil(
+                        //   context,
+                        //   Routes.retailDashboard,
+                        //   (route) => false,
+                        //   arguments: RetailDashboardArgumentModel(
+                        //     imgUrl: "",
+                        //     name: customerName ?? "",
+                        //     isFirst: storageIsFirstLogin == true
+                        //         ? false
+                        //         : true,
+                        //   ).toMap(),
+                        // );
+                        Navigator.pop(context);
+                      },
+                      buttonTextSecondary: "",
+                      onTapSecondary: () {},
+                    ).toMap(),
+                  );
+                } else {
+                  bool isBioCapable =
+                      await LocalAuthentication().canCheckBiometrics;
+                  if (!isBioCapable) {
+                    // navigate to password screen
+                    if (context.mounted) {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.profileUpdatePassword,
+                        arguments: ProfileUpdatePasswordArgumentModel(
+                          isRetail: profileUpdatePasswordArgument.isRetail,
+                          isEmailChange: false,
+                          isMobileChange: false,
+                          isPasswordChange: true,
+                        ).toMap(),
+                      );
+                    }
+                  } else {
+                    List availableBios =
+                        await LocalAuthentication().getAvailableBiometrics();
+                    if (availableBios.isEmpty || persistBiometric != true) {
+                      // navigate to password screen
+                      if (context.mounted) {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.profileUpdatePassword,
+                          arguments: ProfileUpdatePasswordArgumentModel(
+                            isRetail: profileUpdatePasswordArgument.isRetail,
+                            isEmailChange: false,
+                            isMobileChange: false,
+                            isPasswordChange: true,
+                          ).toMap(),
+                        );
+                      }
+                    } else {
+                      bool isAuthenticated =
+                          await BiometricHelper.authenticateUser();
+                      if (!isAuthenticated) {
+                        // navigate to password screen
+                        if (context.mounted) {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.profileUpdatePassword,
+                            arguments: ProfileUpdatePasswordArgumentModel(
+                              isRetail: profileUpdatePasswordArgument.isRetail,
+                              isEmailChange: false,
+                              isMobileChange: false,
+                              isPasswordChange: true,
+                            ).toMap(),
+                          );
+                        }
+                      } else {
+                        if (context.mounted) {
+                          Navigator.pushNamed(context, Routes.changePassword);
+                        }
+                      }
+                    }
+                  }
+                }
               },
               child: Container(
                 padding: EdgeInsets.symmetric(
