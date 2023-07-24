@@ -410,8 +410,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                                   .warning,
                                                           title: "Sorry!",
                                                           message: result[
-                                                                  "message"][
-                                                              "Something went wrong, please try again later"],
+                                                                  "message"] ??
+                                                              "Something went wrong, please try again later",
                                                           actionWidget:
                                                               GradientButton(
                                                             onTap: () {
@@ -556,8 +556,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                                 .warning,
                                                         title: "Sorry!",
                                                         message: result[
-                                                                "message"][
-                                                            "Something went wrong, please try again later"],
+                                                                "message"] ??
+                                                            "Something went wrong, please try again later",
                                                         actionWidget:
                                                             GradientButton(
                                                           onTap: () {
@@ -781,8 +781,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                                   .warning,
                                                           title: "Sorry!",
                                                           message: result[
-                                                                  "message"][
-                                                              "Something went wrong, please try again later"],
+                                                                  "message"] ??
+                                                              "Something went wrong, please try again later",
                                                           actionWidget:
                                                               GradientButton(
                                                             onTap: () {
@@ -1057,10 +1057,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                             ImageConstants
                                                                 .warning,
                                                         title: "Sorry!",
-                                                        message:
-                                                            corpCustPermApiResult[
-                                                                    "message"][
-                                                                "Something went wrong, please try again later"],
+                                                        message: corpCustPermApiResult[
+                                                                "message"] ??
+                                                            "Something went wrong, please try again later",
                                                         actionWidget:
                                                             GradientButton(
                                                           onTap: () {
@@ -1759,10 +1758,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                             ImageConstants
                                                                 .warning,
                                                         title: "Sorry!",
-                                                        message:
-                                                            corpCustPermApiResult[
-                                                                    "message"][
-                                                                "Something went wrong, please try again later"],
+                                                        message: corpCustPermApiResult[
+                                                                "message"] ??
+                                                            "Something went wrong, please try again later",
                                                         actionWidget:
                                                             GradientButton(
                                                           onTap: () {
@@ -2471,10 +2469,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                                                             ImageConstants
                                                                 .warning,
                                                         title: "Sorry!",
-                                                        message:
-                                                            corpCustPermApiResult[
-                                                                    "message"][
-                                                                "Something went wrong, please try again later"],
+                                                        message: corpCustPermApiResult[
+                                                                "message"] ??
+                                                            "Something went wrong, please try again later",
                                                         actionWidget:
                                                             GradientButton(
                                                           onTap: () {

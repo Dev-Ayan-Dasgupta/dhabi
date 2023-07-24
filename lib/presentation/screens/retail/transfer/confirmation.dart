@@ -341,8 +341,8 @@ class _TransferConfirmationScreenState
                                                   svgAssetPath:
                                                       ImageConstants.warning,
                                                   title: "Sorry!",
-                                                  message: result["message"][
-                                                      "Something went wrong, please try again later"],
+                                                  message: result["message"] ??
+                                                      "Something went wrong, please try again later",
                                                   actionWidget: GradientButton(
                                                     onTap: () {
                                                       Navigator.pop(context);
@@ -811,8 +811,8 @@ class _TransferConfirmationScreenState
                                                                     .warning,
                                                             title: "Sorry!",
                                                             message: result[
-                                                                    "message"][
-                                                                "Something went wrong, please try again later"],
+                                                                    "message"] ??
+                                                                "Something went wrong, please try again later",
                                                             actionWidget:
                                                                 GradientButton(
                                                               onTap: () {
@@ -1057,8 +1057,8 @@ class _TransferConfirmationScreenState
                                                                 .warning,
                                                         title: "Sorry!",
                                                         message: result[
-                                                                "message"][
-                                                            "Something went wrong, please try again later"],
+                                                                "message"] ??
+                                                            "Something went wrong, please try again later",
                                                         actionWidget:
                                                             GradientButton(
                                                           onTap: () {
@@ -1799,8 +1799,8 @@ class _TransferConfirmationScreenState
                                                                     .warning,
                                                             title: "Sorry!",
                                                             message: corpCustPermApiResult[
-                                                                    "message"][
-                                                                "Something went wrong, please try again later"],
+                                                                    "message"] ??
+                                                                "Something went wrong, please try again later",
                                                             actionWidget:
                                                                 GradientButton(
                                                               onTap: () {
@@ -2024,8 +2024,8 @@ class _TransferConfirmationScreenState
                                                                 .warning,
                                                         title: "Sorry!",
                                                         message: result[
-                                                                "message"][
-                                                            "Something went wrong, please try again later"],
+                                                                "message"] ??
+                                                            "Something went wrong, please try again later",
                                                         actionWidget:
                                                             GradientButton(
                                                           onTap: () {
@@ -2437,8 +2437,8 @@ class _TransferConfirmationScreenState
                                                       ImageConstants.warning,
                                                   title: "Sorry!",
                                                   message: corpCustPermApiResult[
-                                                          "message"][
-                                                      "Something went wrong, please try again later"],
+                                                          "message"] ??
+                                                      "Something went wrong, please try again later",
                                                   actionWidget: GradientButton(
                                                     onTap: () {
                                                       Navigator.pop(context);
@@ -3241,8 +3241,8 @@ class _TransferConfirmationScreenState
                                                                     .warning,
                                                             title: "Sorry!",
                                                             message: corpCustPermApiResult[
-                                                                    "message"][
-                                                                "Something went wrong, please try again later"],
+                                                                    "message"] ??
+                                                                "Something went wrong, please try again later",
                                                             actionWidget:
                                                                 GradientButton(
                                                               onTap: () {
@@ -3644,10 +3644,9 @@ class _TransferConfirmationScreenState
                                                             ImageConstants
                                                                 .warning,
                                                         title: "Sorry!",
-                                                        message:
-                                                            corpCustPermApiResult[
-                                                                    "message"][
-                                                                "Something went wrong, please try again later"],
+                                                        message: corpCustPermApiResult[
+                                                                "message"] ??
+                                                            "Something went wrong, please try again later",
                                                         actionWidget:
                                                             GradientButton(
                                                           onTap: () {
@@ -3913,8 +3912,8 @@ class _TransferConfirmationScreenState
                                                       title: "Sorry!",
                                                       message:
                                                           corpCustPermApiResult[
-                                                                  "message"][
-                                                              "Something went wrong, please try again later"],
+                                                                  "message"] ??
+                                                              "Something went wrong, please try again later",
                                                       actionWidget:
                                                           GradientButton(
                                                         onTap: () {
@@ -4741,8 +4740,8 @@ class _TransferConfirmationScreenState
                                                                     .warning,
                                                             title: "Sorry!",
                                                             message: corpCustPermApiResult[
-                                                                    "message"][
-                                                                "Something went wrong, please try again later"],
+                                                                    "message"] ??
+                                                                "Something went wrong, please try again later",
                                                             actionWidget:
                                                                 GradientButton(
                                                               onTap: () {
@@ -5117,10 +5116,9 @@ class _TransferConfirmationScreenState
                                                             ImageConstants
                                                                 .warning,
                                                         title: "Sorry!",
-                                                        message:
-                                                            corpCustPermApiResult[
-                                                                    "message"][
-                                                                "Something went wrong, please try again later"],
+                                                        message: corpCustPermApiResult[
+                                                                "message"] ??
+                                                            "Something went wrong, please try again later",
                                                         actionWidget:
                                                             GradientButton(
                                                           onTap: () {
@@ -5422,8 +5420,8 @@ class _TransferConfirmationScreenState
                                                       title: "Sorry!",
                                                       message:
                                                           corpCustPermApiResult[
-                                                                  "message"][
-                                                              "Something went wrong, please try again later"],
+                                                                  "message"] ??
+                                                              "Something went wrong, please try again later",
                                                       actionWidget:
                                                           GradientButton(
                                                         onTap: () {
