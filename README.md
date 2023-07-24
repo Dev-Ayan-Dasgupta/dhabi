@@ -20,3 +20,5 @@ Digital Banking Application for Dhabi
 46. Implemented biometric check before change email/mobile/password
 47. Added Recent Transactions for Send Money
 48. Now displaying Switch Between Profiles only when more than one CIF exists
+49. Fixed nl check while switching accounts in dashboard
+50. Fixed multiple stack additions while viewing acount details
