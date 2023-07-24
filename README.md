@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (75)
+## Release notes - 1.0.0 (76)
 
 33. Implemented lazy loading for dashboard
 34. Put spinner while waiting for login after biometric validation
