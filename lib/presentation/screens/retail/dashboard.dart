@@ -551,138 +551,134 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                       .w
                                                   : 0,
                                             ),
-                                            child: index ==
-                                                    accountDetails.length
-                                                ? AccountSummaryTile(
-                                                    onTap: () {
-                                                      if (!isNavigating) {
-                                                        isNavigating = true;
-                                                        Navigator.pushNamed(
-                                                          context,
-                                                          Routes
-                                                              .applicationAccount,
-                                                          arguments:
-                                                              ApplicationAccountArgumentModel(
-                                                            isInitial: false,
-                                                            isRetail: true,
-                                                            savingsAccountsCreated:
-                                                                savingsAccountCount,
-                                                            currentAccountsCreated:
-                                                                currentAccountCount,
-                                                          ).toMap(),
-                                                        );
-                                                        isNavigating = false;
-                                                      }
-                                                    },
-                                                    imgUrl: ImageConstants
-                                                        .addAccount,
-                                                    accountType: "",
-                                                    currency: "Open Account",
-                                                    amount: "",
-                                                    subText: "",
-                                                    subImgUrl: "",
-                                                    fontSize: 14,
-                                                  )
-                                                : AccountSummaryTile(
-                                                    onTap: () async {
-                                                      await storage.write(
-                                                          key: "chosenAccount",
-                                                          value:
-                                                              index.toString());
-                                                      storageChosenAccount = int
-                                                          .parse(await storage.read(
-                                                                  key:
-                                                                      "chosenAccount") ??
-                                                              "0");
-                                                      log("storageChosenAccount -> $storageChosenAccount");
+                                            child:
+                                                index == accountDetails.length
+                                                    ? AccountSummaryTile(
+                                                        onTap: () {
+                                                          if (!isNavigating) {
+                                                            isNavigating = true;
+                                                            Navigator.pushNamed(
+                                                              context,
+                                                              Routes
+                                                                  .applicationAccount,
+                                                              arguments:
+                                                                  ApplicationAccountArgumentModel(
+                                                                isInitial:
+                                                                    false,
+                                                                isRetail: true,
+                                                                savingsAccountsCreated:
+                                                                    savingsAccountCount,
+                                                                currentAccountsCreated:
+                                                                    currentAccountCount,
+                                                              ).toMap(),
+                                                            );
+                                                            isNavigating =
+                                                                false;
+                                                          }
+                                                        },
+                                                        imgUrl: ImageConstants
+                                                            .addAccount,
+                                                        accountType: "",
+                                                        currency:
+                                                            "Open Account",
+                                                        amount: "",
+                                                        subText: "",
+                                                        subImgUrl: "",
+                                                        fontSize: 14,
+                                                      )
+                                                    : AccountSummaryTile(
+                                                        onTap: () async {
+                                                          if (!isNavigating) {
+                                                            isNavigating = true;
+                                                            await storage.write(
+                                                                key:
+                                                                    "chosenAccount",
+                                                                value: index
+                                                                    .toString());
+                                                            storageChosenAccount =
+                                                                int.parse(
+                                                                    await storage.read(
+                                                                            key:
+                                                                                "chosenAccount") ??
+                                                                        "0");
+                                                            log("storageChosenAccount -> $storageChosenAccount");
 
-                                                      await getCustomerAcountDetails();
-                                                      await getCustomerAccountStatement();
+                                                            await getCustomerAcountDetails();
+                                                            await getCustomerAccountStatement();
 
-                                                      if (context.mounted) {
-                                                        Navigator.pushNamed(
-                                                          context,
-                                                          Routes.accountDetails,
-                                                          arguments:
-                                                              AccountDetailsArgumentModel(
-                                                            flagImgUrl:
-                                                                accountDetails[
+                                                            if (context
+                                                                .mounted) {
+                                                              Navigator
+                                                                  .pushNamed(
+                                                                context,
+                                                                Routes
+                                                                    .accountDetails,
+                                                                arguments:
+                                                                    AccountDetailsArgumentModel(
+                                                                  flagImgUrl: accountDetails[
+                                                                          index]
+                                                                      [
+                                                                      "currencyFlagBase64"],
+                                                                  accountNumber:
+                                                                      accountDetails[
+                                                                              index]
+                                                                          [
+                                                                          "accountNumber"],
+                                                                  currency: accountDetails[
+                                                                          index]
+                                                                      [
+                                                                      "accountCurrency"],
+                                                                  accountType: accountDetails[index]
+                                                                              [
+                                                                              "productCode"] ==
+                                                                          "1001"
+                                                                      ? "Current"
+                                                                      : "Savings",
+                                                                  balance: double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(
+                                                                              ",",
+                                                                              "")) >
+                                                                          1000000000
+                                                                      ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
+                                                                      : double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) >
+                                                                              1000000
+                                                                          ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} M"
+                                                                          : accountDetails[index]["currentBalance"]
+                                                                              .split(" ")
+                                                                              .last,
+                                                                  iban: accountDetails[
+                                                                          index]
+                                                                      ["iban"],
+                                                                  displayStatementList:
+                                                                      statementList,
+                                                                  isRetail:
+                                                                      true,
+                                                                ).toMap(),
+                                                              );
+                                                              isNavigating =
+                                                                  false;
+                                                            }
+                                                          }
+                                                        },
+                                                        imgUrl: accountDetails[
                                                                         index][
-                                                                    "currencyFlagBase64"],
-                                                            accountNumber:
-                                                                accountDetails[
+                                                                    "accountCurrency"] ==
+                                                                "AED"
+                                                            ? ImageConstants
+                                                                .uaeFlag
+                                                            : ImageConstants
+                                                                .usaFlag,
+                                                        accountType: accountDetails[
                                                                         index][
-                                                                    "accountNumber"],
-                                                            currency:
-                                                                accountDetails[
-                                                                        index][
-                                                                    "accountCurrency"],
-                                                            accountType:
-                                                                accountDetails[index]
-                                                                            [
-                                                                            "productCode"] ==
-                                                                        "1001"
-                                                                    ? "Current"
-                                                                    : "Savings",
-                                                            balance: double.parse(accountDetails[index]["currentBalance"]
-                                                                        .split(
-                                                                            " ")
-                                                                        .last
-                                                                        .replaceAll(
-                                                                            ",",
-                                                                            "")) >
-                                                                    1000000000
-                                                                ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} B"
-                                                                : double.parse(accountDetails[index]["currentBalance"]
-                                                                            .split(
-                                                                                " ")
-                                                                            .last
-                                                                            .replaceAll(",",
-                                                                                "")) >
-                                                                        1000000
-                                                                    ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(",", "")) / 1000000000).toStringAsFixed(2)} M"
-                                                                    : accountDetails[index]
-                                                                            ["currentBalance"]
-                                                                        .split(" ")
-                                                                        .last,
-                                                            iban:
-                                                                accountDetails[
-                                                                        index]
-                                                                    ["iban"],
-                                                            displayStatementList:
-                                                                statementList,
-                                                            isRetail: true,
-                                                          ).toMap(),
-                                                        );
-                                                      }
-                                                    },
-                                                    imgUrl: accountDetails[
-                                                                    index][
-                                                                "accountCurrency"] ==
-                                                            "AED"
-                                                        ? ImageConstants.uaeFlag
-                                                        : ImageConstants
-                                                            .usaFlag,
-                                                    accountType: accountDetails[
-                                                                    index][
-                                                                "productCode"] ==
-                                                            "1001"
-                                                        ? labels[7]["labelText"]
-                                                        : labels[92]
-                                                            ["labelText"],
-                                                    currency:
-                                                        accountDetails[index]
+                                                                    "productCode"] ==
+                                                                "1001"
+                                                            ? labels[7]
+                                                                ["labelText"]
+                                                            : labels[92]
+                                                                ["labelText"],
+                                                        currency: accountDetails[
+                                                                index]
                                                             ["accountCurrency"],
-                                                    amount: double.parse(accountDetails[index][
-                                                                        "currentBalance"]
-                                                                    .split(" ")
-                                                                    .last
-                                                                    .replaceAll(
-                                                                        ',', ''))
-                                                                .abs() >
-                                                            1000000000
-                                                        ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(',', '')) / 1000000000).toStringAsFixed(2)} B"
-                                                        : double.parse(accountDetails[index]["currentBalance"]
+                                                        amount: double.parse(accountDetails[index]["currentBalance"]
                                                                         .split(
                                                                             " ")
                                                                         .last
@@ -690,15 +686,24 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                             ',',
                                                                             ''))
                                                                     .abs() >
-                                                                1000000
-                                                            ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(',', '')) / 1000000).toStringAsFixed(2)} M"
-                                                            : accountDetails[index]
-                                                                    ["currentBalance"]
-                                                                .split(" ")
-                                                                .last,
-                                                    subText: "",
-                                                    subImgUrl: "",
-                                                  ),
+                                                                1000000000
+                                                            ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(',', '')) / 1000000000).toStringAsFixed(2)} B"
+                                                            : double.parse(accountDetails[index]["currentBalance"]
+                                                                            .split(
+                                                                                " ")
+                                                                            .last
+                                                                            .replaceAll(
+                                                                                ',', ''))
+                                                                        .abs() >
+                                                                    1000000
+                                                                ? "${(double.parse(accountDetails[index]["currentBalance"].split(" ").last.replaceAll(',', '')) / 1000000).toStringAsFixed(2)} M"
+                                                                : accountDetails[index]
+                                                                        ["currentBalance"]
+                                                                    .split(" ")
+                                                                    .last,
+                                                        subText: "",
+                                                        subImgUrl: "",
+                                                      ),
                                           );
                                         },
                                       ),
@@ -1264,7 +1269,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
                                                                                             style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
                                                                                           ),
                                                                                           trailing: Text(
-                                                                                            "${accountDetails[index]["accountCurrency"]} ${double.parse(accountDetails[index]["currentBalance"].split(' ').last) >= 1000 ? NumberFormat('#,000.00').format(double.parse(accountDetails[index]["currentBalance"].split(' ').last.replaceAll(',', ''))) : double.parse(accountDetails[index]["currentBalance"].split(' ').last.replaceAll(',', '')).toStringAsFixed(2)}",
+                                                                                            "${accountDetails[index]["accountCurrency"]} ${double.parse(accountDetails[index]["currentBalance"].replaceAll(',', '').split(' ').last) >= 1000 ? NumberFormat('#,000.00').format(double.parse(accountDetails[index]["currentBalance"].split(' ').last.replaceAll(',', ''))) : double.parse(accountDetails[index]["currentBalance"].split(' ').last.replaceAll(',', '')).toStringAsFixed(2)}",
                                                                                             style: TextStyles.primaryMedium.copyWith(color: AppColors.dark50, fontSize: (14 / Dimensions.designWidth).w),
                                                                                           ),
                                                                                         );
