@@ -618,13 +618,13 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
     } else {
       log("Create Account Corporate Request -> ${{
         "accountType": storageAccountType,
-        "IsFirstAccount": false,
+        // "IsFirstAccount": false,
       }}");
       var responseAccount =
           await MapCreateAccountCorporate.mapCreateAccountCorporate(
         {
           "accountType": storageAccountType,
-          "IsFirstAccount": false,
+          // "IsFirstAccount": false,
         },
         token ?? "",
       );
