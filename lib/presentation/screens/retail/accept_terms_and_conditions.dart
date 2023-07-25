@@ -241,10 +241,18 @@ class _AcceptTermsAndConditionsScreenState
                                         token ?? "");
 
                                 if (createCustomerResult["success"]) {
+                                  log("Create Account Request -> ${{
+                                    "accountType": storageAccountType,
+                                    "IsFirstAccount": true,
+                                  }}");
                                   var responseAccount =
                                       await MapCreateAccount.mapCreateAccount(
-                                          {"accountType": storageAccountType},
-                                          token ?? "");
+                                    {
+                                      "accountType": storageAccountType,
+                                      "IsFirstAccount": true,
+                                    },
+                                    token ?? "",
+                                  );
                                   log("Create Account API response -> $responseAccount");
 
                                   log("Email ID -> $storageEmail");

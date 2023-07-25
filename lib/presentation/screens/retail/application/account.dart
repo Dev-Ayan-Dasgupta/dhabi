@@ -578,8 +578,17 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
     showButtonBloc.add(ShowButtonEvent(show: isUploading));
 
     if (applicationAccountArgument.isRetail) {
+      log("Create Account Request -> ${{
+        "accountType": storageAccountType,
+        "IsFirstAccount": false,
+      }}");
       var responseAccount = await MapCreateAccount.mapCreateAccount(
-          {"accountType": storageAccountType}, token ?? "");
+        {
+          "accountType": storageAccountType,
+          "IsFirstAccount": false,
+        },
+        token ?? "",
+      );
       log("Create Account API response -> $responseAccount");
       if (responseAccount["success"]) {
         if (context.mounted) {
@@ -609,11 +618,13 @@ class _ApplicationAccountScreenState extends State<ApplicationAccountScreen> {
     } else {
       log("Create Account Corporate Request -> ${{
         "accountType": storageAccountType,
+        "IsFirstAccount": false,
       }}");
       var responseAccount =
           await MapCreateAccountCorporate.mapCreateAccountCorporate(
         {
           "accountType": storageAccountType,
+          "IsFirstAccount": false,
         },
         token ?? "",
       );
