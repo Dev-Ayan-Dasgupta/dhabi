@@ -186,7 +186,7 @@ class _CreateDepositsScreenState extends State<CreateDepositsScreen> {
                                 "Choose the Account you wish to fund your Fixed Deposit",
                                 style: TextStyles.primaryMedium.copyWith(
                                   color: AppColors.dark80,
-                                  fontSize: (16 / Dimensions.designWidth).w,
+                                  fontSize: (14 / Dimensions.designWidth).w,
                                 ),
                               ),
                               const Asterisk(),
