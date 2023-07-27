@@ -2,7 +2,7 @@
 
 Digital Banking Application for Dhabi
 
-## Release notes - 1.0.0 (76)
+## Release notes - 1.0.0 (80)
 
 33. Implemented lazy loading for dashboard
 34. Put spinner while waiting for login after biometric validation
@@ -22,3 +22,4 @@ Digital Banking Application for Dhabi
 48. Now displaying Switch Between Profiles only when more than one CIF exists
 49. Fixed nl check while switching accounts in dashboard
 50. Fixed multiple stack additions while viewing acount details
+51. Refreshing APIs 30 seconds after creating deposits and withdrawals
