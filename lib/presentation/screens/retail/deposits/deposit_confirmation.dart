@@ -276,7 +276,7 @@ class _DepositConfirmationScreenState extends State<DepositConfirmationScreen> {
                     iconPath: ImageConstants.checkCircleOutlined,
                     title: "Congratulations!",
                     message:
-                        "Your deposit account has been created.\nAcc. ${createFDResult["accountNumber"]}",
+                        "Your deposit number ${createFDResult["accountNumber"]} has been created. It will be visible soon on the mobile application. For assistance, please call us at (+971) 6005 DHABI.",
                     buttonText: labels[1]["labelText"],
                     onTap: () {
                       Navigator.pushNamedAndRemoveUntil(

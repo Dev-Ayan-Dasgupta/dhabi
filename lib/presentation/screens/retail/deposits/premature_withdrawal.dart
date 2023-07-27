@@ -291,15 +291,31 @@ class _PrematureWithdrawalScreenState extends State<PrematureWithdrawalScreen> {
 
                 if (premWdrwApiResult["success"]) {
                   if (context.mounted) {
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      Routes.retailDashboard,
-                      (route) => false,
-                      arguments: RetailDashboardArgumentModel(
-                        imgUrl: "",
-                        name: storageFullName ?? "",
-                        isFirst: false,
-                      ).toMap(),
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return CustomDialog(
+                          svgAssetPath: ImageConstants.checkCircle,
+                          title: "Successful",
+                          message:
+                              "Your deposit closure request is in process, it will be visible soon on the mobile application. For assistance, please call us at (+971) 6005 DHABI.",
+                          actionWidget: GradientButton(
+                            onTap: () {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                Routes.retailDashboard,
+                                (route) => false,
+                                arguments: RetailDashboardArgumentModel(
+                                  imgUrl: "",
+                                  name: storageFullName ?? "",
+                                  isFirst: false,
+                                ).toMap(),
+                              );
+                            },
+                            text: labels[346]["labelText"],
+                          ),
+                        );
+                      },
                     );
                   }
                 } else {

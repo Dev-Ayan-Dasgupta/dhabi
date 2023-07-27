@@ -100,6 +100,7 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     getApiData();
     argumentInitialization();
     tabbarInitialization();
+    refreshAPIs();
   }
 
   void argumentInitialization() async {
@@ -388,6 +389,14 @@ class _RetailDashboardScreenState extends State<RetailDashboardScreen>
     } catch (_) {
       rethrow;
     }
+  }
+
+  Future<void> refreshAPIs() async {
+    await Future.delayed(const Duration(seconds: 30));
+    await getApiData();
+    setState(() {
+      log("APIs Refreshed");
+    });
   }
 
   Future<void> getFdRates() async {
