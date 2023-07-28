@@ -8,7 +8,7 @@ List fdRatesDates = [];
 
 String? profileName = "";
 String? profilePhotoBase64 = "";
-String? profileDoB = "";
+String? profileDoB = "1900-01-01";
 String? profileEmailId = "";
 String? profileMobileNumber = "";
 
