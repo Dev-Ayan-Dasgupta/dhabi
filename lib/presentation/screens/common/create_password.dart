@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
+import 'package:dialup_mobile_app/bloc/checkBox/check_box_bloc.dart';
+import 'package:dialup_mobile_app/bloc/checkBox/check_box_event.dart';
+import 'package:dialup_mobile_app/bloc/checkBox/check_box_state.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_event.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_state.dart';

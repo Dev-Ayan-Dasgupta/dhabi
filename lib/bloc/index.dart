@@ -1,7 +1,7 @@
 export './applicationCRS/index.dart';
 export './applicationTax/index.dart';
 export './buttonFocus/index.dart';
-export './checkBox.dart/index.dart';
+export 'checkBox/index.dart';
 export './createPassword/index.dart';
 export './criteria/index.dart';
 export './currencyPicker/index.dart';

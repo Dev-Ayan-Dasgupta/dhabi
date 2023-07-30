@@ -1,6 +1,6 @@
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_event.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_state.dart';
+import 'package:dialup_mobile_app/bloc/checkBox/check_box_bloc.dart';
+import 'package:dialup_mobile_app/bloc/checkBox/check_box_event.dart';
+import 'package:dialup_mobile_app/bloc/checkBox/check_box_state.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_bloc.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_event.dart';
 import 'package:dialup_mobile_app/bloc/dropdown/dropdown_selected_state.dart';

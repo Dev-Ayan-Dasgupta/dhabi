@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:dialup_mobile_app/bloc/applicationCRS/application_crs_bloc.dart';
 import 'package:dialup_mobile_app/bloc/applicationTax/application_tax_bloc.dart';
 import 'package:dialup_mobile_app/bloc/buttonFocus/button_focus_bloc.dart';
-import 'package:dialup_mobile_app/bloc/checkBox.dart/check_box_bloc.dart';
+import 'package:dialup_mobile_app/bloc/checkBox/check_box_bloc.dart';
 import 'package:dialup_mobile_app/bloc/createPassword/create_password_bloc.dart';
 import 'package:dialup_mobile_app/bloc/criteria/criteria_bloc.dart';
 import 'package:dialup_mobile_app/bloc/currencyPicker/currency_picker_bloc.dart';
